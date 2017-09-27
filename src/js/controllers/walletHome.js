@@ -467,13 +467,18 @@
             if (!asset) {
               throw Error('no asset');
             }
-            if (asset === 'base') {
-              amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
-            } else if (asset === constants.DAGCOIN_ASSET) {
-              amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
-            } else {
-              amountInSmallestUnits = amount;
+
+            switch (asset) {
+              case 'base':
+                amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
+                break;
+              case constants.DAGCOIN_ASSET:
+                amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
+                break;
+              default:
+                amountInSmallestUnits = amount;
             }
+
             return $timeout(() => {
               $scope.customizedAmountUnit = `${amount} ${(asset === 'base') ? $scope.unitName : (asset === constants.DAGCOIN_ASSET ? $scope.dagUnitName : `of ${asset}`)}`;
               $scope.amountInSmallestUnits = amountInSmallestUnits;
@@ -483,7 +488,6 @@
 
 
           $scope.shareAddress = function (uri) {
-            debugger
             if (isCordova) {
               if (isMobile.Android() || isMobile.Windows()) {
                 window.ignoreMobilePause = true;
@@ -690,7 +694,6 @@
           this.error = gettext('Unable to send transaction proposal');
           return;
         }
-
         if (fc.isPrivKeyEncrypted()) {
           profileService.unlockFC(null, (err) => {
             if (err) {
@@ -921,6 +924,9 @@
                go.walletHome();
                });
                } */
+              $scope._amount = '';
+              $scope._address = '';
+              $scope.sendForm.$setPristine();
             }
           });
         }, 100);
