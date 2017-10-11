@@ -9,9 +9,9 @@
       self.fundingNodeSettings = {};
       self.isLight = conf.bLight;
       self.canChangeWalletType = changeWalletTypeService.canChange();
-      self.hasBalance = sharedService.hasBalance('stable');
-      self.hasBytes = sharedService.hasBytes('stable');
-      self.hasDags = sharedService.hasDags('stable');
+      self.hasBalance = sharedService.hasBalance('total');
+      self.hasBytes = sharedService.hasBytes('total');
+      self.hasDags = sharedService.hasDags('total');
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 
@@ -144,6 +144,7 @@
       self.changeWalletType = function () {
         if (self.isLight) {
           const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
+            $scopeModal.header = $sce.trustAsHtml('Change wallet type!');
             $scopeModal.title = $sce.trustAsHtml(`
             The wallet will contain the most current state of the entire Dagcoin database. 
             This option is better for privacy but will take several gigabytes of storage and the initial sync will take several days. 
