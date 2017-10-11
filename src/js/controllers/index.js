@@ -533,7 +533,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
             self.bHasMerkle = bHasMerkle;
             walletDefinedByAddresses.readSharedAddressCosigners(sharedAddress, (cosigners) => {
-              self.shared_address_cosigners = cosigners.map((cosigner) => { return cosigner.name; }).join(', ');
+              self.shared_address_cosigners = cosigners.map(cosigner => cosigner.name).join(', ');
               $timeout(() => {
                 $rootScope.$apply();
               });

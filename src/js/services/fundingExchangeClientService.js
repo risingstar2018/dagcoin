@@ -289,9 +289,7 @@
 
             resolve();
           });
-        }).then(() => {
-          return checkConfigurationInTime(10);
-        });
+        }).then(() => checkConfigurationInTime(10));
       }
 
       function checkConfigurationInTime(times) {

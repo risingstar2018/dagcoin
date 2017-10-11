@@ -512,11 +512,11 @@
           return cb(configServiceError);
         }
         return root.createNewProfile(opts, (createNewProfileError, p) => {
-          if (createNewProfileError){
+          if (createNewProfileError) {
             return cb(createNewProfileError);
           }
           return root.bindProfile(p, (bindProfileError) => {
-            if (bindProfileError){
+            if (bindProfileError) {
               cb(bindProfileError);
             }
             storageService.storeNewProfile(p, storeNewProfileError => cb(storeNewProfileError));

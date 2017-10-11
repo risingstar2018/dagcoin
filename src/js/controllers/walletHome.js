@@ -853,6 +853,7 @@
             // compose and send
             function composeAndSend(toAddress) {
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
+              let opts;
               if (fc.credentials.m < fc.credentials.n) {
                 $scope.index.copayers.forEach((copayer) => {
                   if (copayer.me || copayer.signs) {
@@ -906,8 +907,7 @@
                   });
                 }
                   resolve();
-              }).then(() => {
-                return new Promise((resolve, reject) => {
+              }).then(() => new Promise((resolve, reject) => {
                   console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
                   fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
                     let error = sendMultiPaymentError;
@@ -956,8 +956,7 @@
                    });
                    } */
                   $scope.sendForm.$setPristine();
-                });
-              })
+                }))
               .catch((error) => {
                 delete self.current_payment_key;
                 indexScope.setOngoingProcess(gettext('sending'), false);
