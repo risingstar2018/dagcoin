@@ -37,6 +37,7 @@
       const home = this;
       const conf = require('byteballcore/conf.js');
       const DAG_FEE = 500; // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
+      const MIN_BYTE_FEE = 950;
       this.protocol = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
       $rootScope.hideMenuBar = false;
       $rootScope.wpInputFocused = false;
@@ -678,13 +679,7 @@
           return console.log('send payment: no balances yet');
         }
         const fc = profileService.focusedClient;
-        const unitValue = this.unitValue;
         const dagUnitValue = this.dagUnitValue;
-        let feeType;
-        chooseFeeTypeService.getFeeDefaultMethod()
-        .then((res) => {
-          feeType = res;
-        });
 
         if (isCordova && this.isWindowsPhoneApp) {
           this.hideAddress = false;
@@ -851,17 +846,7 @@
             // compose and send
             function composeAndSend(toAddress) {
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
-              let opts = {
-                shared_address: indexScope.shared_address,
-                merkleProof,
-                asset,
-                to_address: toAddress,
-                amount,
-                send_all: false,
-                arrSigningDeviceAddresses,
-                recipientDeviceAddress,
-              };
-
+              let opts = {};
               if (fc.credentials.m < fc.credentials.n) {
                 $scope.index.copayers.forEach((copayer) => {
                   if (copayer.me || copayer.signs) {
@@ -871,12 +856,20 @@
               } else if (indexScope.shared_address) {
                 arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address);
               }
+              opts = {
+                shared_address: indexScope.shared_address,
+                merkleProof,
+                asset,
+                to_address: toAddress,
+                amount,
+                send_all: false,
+                arrSigningDeviceAddresses,
+                recipientDeviceAddress,
+              };
               breadcrumbs.add(`sending payment in ${asset}`);
-
               profileService.bKeepUnlocked = true;
-
               const paymentPromise = new Promise((resolve, reject) => {
-                if (feeType === 'hub') { // Using a shared address
+                if (indexScope.baseBalance.stable < MIN_BYTE_FEE) { // Using a funding hub
                   const sharedAddress = fundingExchangeClientService.byteOrigin;
                   if (!fundingExchangeClientService.active) {
                     return reject('THE FUNDING EXCHANGE CLIENT IS NOT READY.');
@@ -953,17 +946,12 @@
                       });
                     }
                   } else {
+                    // todo: should redirect to transaction detail
                     // redirect to history
                     $rootScope.$emit('Local/SetTab', 'history');
                   }
                   resolve();
                 });
-                /*
-                 if (fc.credentials.n > 1){
-                 $rootScope.$emit('Local/ShowAlert', "Transaction created.\nPlease approve it on the other devices.", 'fi-key', function(){
-                 go.walletHome();
-                 });
-                 } */
                 $scope.sendForm.$setPristine();
               }))
               .catch((error) => {
@@ -1241,13 +1229,12 @@
       };
 
       this.setSendAll = function () {
-        const BYTE_FEE = 500;
         const form = $scope.sendForm;
         if (!form || !form.amount || indexScope.arrBalances.length === 0) {
           return;
         }
         const fullAmount = indexScope.dagBalance.stable;
-        this._amount = indexScope.baseBalance.stable > BYTE_FEE ? fullAmount : fullAmount - DAG_FEE;
+        this._amount = indexScope.baseBalance.stable > MIN_BYTE_FEE ? fullAmount : fullAmount - DAG_FEE;
         this._amount /= this.dagUnitValue;
         this.bSendAll = true;
         form.amount.$setViewValue('');
