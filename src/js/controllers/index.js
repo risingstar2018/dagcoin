@@ -37,7 +37,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       backButton,
       faucetService,
       changeWalletTypeService,
-      sharedService,
       autoRefreshClientService,
       connectionService,
       newVersion) {
