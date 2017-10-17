@@ -288,12 +288,12 @@
 									</small>
 								</div>
 								<span class="available">Available <span>{{index.dagBalance.stable / 1e6}}</span></span>
-                <a ng-click="home.setSendAll()" ng-show="!home.bSendAll && !home.lockAmount" style="text-transform: none; margin-left: 10px" translate>Send all</a>
+                <a ng-click="home.setSendAll()" ng-show="!home.lockAmount" style="text-transform: none; margin-left: 10px" translate>Send all</a>
 							</div>
 
 							<div class="input-wrap input-icon">
-								<input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount || home.bSendAll"
-									   name="amount" ng-attr-placeholder="{{(home.bSendAll ? 'All minus fees' : 'Amount')|translate}}" min="0.000001"
+								<input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
+									   name="amount" ng-attr-placeholder="{{('Amount')|translate}}" min="0.000001"
 									   ng-minlength="1" ng-maxlength="16" ng-model="_amount"
 									   ng-required="!home.bSendAll"
 									   autocomplete="off" ng-focus="home.formFocus('amount')"
