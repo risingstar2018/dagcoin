@@ -36,6 +36,8 @@
       const self = this;
       const home = this;
       const conf = require('byteballcore/conf.js');
+      const DAG_FEE = 500; // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
+      const MIN_BYTE_FEE = 950;
       this.protocol = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
       $rootScope.hideMenuBar = false;
       $rootScope.wpInputFocused = false;
@@ -677,13 +679,7 @@
           return console.log('send payment: no balances yet');
         }
         const fc = profileService.focusedClient;
-        const unitValue = this.unitValue;
         const dagUnitValue = this.dagUnitValue;
-        let feeType;
-        chooseFeeTypeService.getFeeDefaultMethod()
-        .then((res) => {
-          feeType = res;
-        });
 
         if (isCordova && this.isWindowsPhoneApp) {
           this.hideAddress = false;
@@ -693,9 +689,6 @@
         const form = $scope.sendForm;
         if (!form) {
           return console.log('form is gone');
-        }
-        if (self.bSendAll) {
-          form.amount.$setValidity('validAmount', true);
         }
         if (form.$invalid) {
           this.error = gettext('Unable to send transaction proposal');
@@ -724,7 +717,7 @@
         console.log(`asset ${asset}`);
         const address = form.address.$modelValue;
         const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
-        let amount = form.amount.$modelValue;
+        let amount = this.bSendAll ? this._amount : form.amount.$modelValue;
         let merkleProof = '';
         if (form.merkle_proof && form.merkle_proof.$modelValue) {
           merkleProof = form.merkle_proof.$modelValue.trim();
@@ -853,7 +846,7 @@
             // compose and send
             function composeAndSend(toAddress) {
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
-              let opts;
+              let opts = {};
               if (fc.credentials.m < fc.credentials.n) {
                 $scope.index.copayers.forEach((copayer) => {
                   if (copayer.me || copayer.signs) {
@@ -863,12 +856,20 @@
               } else if (indexScope.shared_address) {
                 arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address);
               }
+              opts = {
+                shared_address: indexScope.shared_address,
+                merkleProof,
+                asset,
+                to_address: toAddress,
+                amount,
+                send_all: false,
+                arrSigningDeviceAddresses,
+                recipientDeviceAddress,
+              };
               breadcrumbs.add(`sending payment in ${asset}`);
-
               profileService.bKeepUnlocked = true;
-
               const paymentPromise = new Promise((resolve, reject) => {
-                if (feeType === 'hub') { // Using a shared address
+                if (indexScope.baseBalance.stable < MIN_BYTE_FEE) { // Using a funding hub
                   const sharedAddress = fundingExchangeClientService.byteOrigin;
                   if (!fundingExchangeClientService.active) {
                     return reject('THE FUNDING EXCHANGE CLIENT IS NOT READY.');
@@ -887,15 +888,15 @@
                         merkleProof,
                         asset,
                         /* to_address: toAddress,
-                        amount, */
-                        send_all: self.bSendAll,
+                         amount, */
+                        send_all: false,
                         arrSigningDeviceAddresses,
                         recipientDeviceAddress,
                         externallyFundedPayment: true,
                         asset_outputs: [
                           {
                             address: fundingExchangeClientService.dagcoinDestination,
-                            amount: 500 // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
+                            amount: DAG_FEE // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
                           }, {
                             address: toAddress,
                             amount
@@ -906,57 +907,53 @@
                     }
                   });
                 }
-                  resolve();
+                resolve();
               }).then(() => new Promise((resolve, reject) => {
-                  console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
-                  fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
-                    let error = sendMultiPaymentError;
-                    // if multisig, it might take very long before the callback is called
-                    indexScope.setOngoingProcess(gettext('sending'), false);
-                    breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
-                    delete self.current_payment_key;
-                    profileService.bKeepUnlocked = false;
-                    if (sendMultiPaymentError) {
-                      if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
-                        error = 'Not enough dagcoins';
-                      }
-
-                      return self.setSendError(error);
+                console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
+                fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
+                  let error = sendMultiPaymentError;
+                  // if multisig, it might take very long before the callback is called
+                  indexScope.setOngoingProcess(gettext('sending'), false);
+                  breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
+                  delete self.current_payment_key;
+                  profileService.bKeepUnlocked = false;
+                  if (sendMultiPaymentError) {
+                    if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
+                      error = 'Not enough dagcoins';
+                    } else if (sendMultiPaymentError.match(/connection closed/)) {
+                      error = 'Problems with connecting to the hub. Please try again later';
                     }
-                    const binding = self.binding;
-                    self.resetForm();
-                    $rootScope.$emit('NewOutgoingTx');
-                    if (recipientDeviceAddress) { // show payment in chat window
-                      eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
-                      if (binding && binding.reverseAmount) { // create a request for reverse payment
-                        if (!myAddress) {
-                          throw Error('my address not known');
-                        }
-                        const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
-                        const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
-                        device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
-                        correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
-                          bIncoming: false,
-                          message: correspondentListService.formatOutgoingMessage(paymentRequestText)
-                        });
-                        // issue next address to avoid reusing the reverse payment address
-                        walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
-                        });
+                    return self.setSendError(error);
+                  }
+                  const binding = self.binding;
+                  self.resetForm();
+                  $rootScope.$emit('NewOutgoingTx');
+                  if (recipientDeviceAddress) { // show payment in chat window
+                    eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
+                    if (binding && binding.reverseAmount) { // create a request for reverse payment
+                      if (!myAddress) {
+                        throw Error('my address not known');
                       }
-                    } else {
-                      // redirect to history
-                      $rootScope.$emit('Local/SetTab', 'history');
+                      const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                      const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
+                      device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
+                      correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
+                        bIncoming: false,
+                        message: correspondentListService.formatOutgoingMessage(paymentRequestText)
+                      });
+                      // issue next address to avoid reusing the reverse payment address
+                      walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
+                      });
                     }
-                    resolve();
-                  });
-                  /*
-                   if (fc.credentials.n > 1){
-                   $rootScope.$emit('Local/ShowAlert', "Transaction created.\nPlease approve it on the other devices.", 'fi-key', function(){
-                   go.walletHome();
-                   });
-                   } */
-                  $scope.sendForm.$setPristine();
-                }))
+                  } else {
+                    // todo: should redirect to transaction detail
+                    // redirect to history
+                    $rootScope.$emit('Local/SetTab', 'history');
+                  }
+                  resolve();
+                });
+                $scope.sendForm.$setPristine();
+              }))
               .catch((error) => {
                 delete self.current_payment_key;
                 indexScope.setOngoingProcess(gettext('sending'), false);
@@ -1233,29 +1230,16 @@
 
       this.setSendAll = function () {
         const form = $scope.sendForm;
-        if (!form || !form.amount) {
-          return console.log('form.amount has disappeared');
+        if (!form || !form.amount || indexScope.arrBalances.length === 0) {
+          return;
         }
-        if (indexScope.arrBalances[indexScope.assetIndex].asset === 'base') {
-          this._amount = null;
-          this.bSendAll = true;
-          form.amount.$setViewValue('');
-          form.amount.$setValidity('validAmount', true);
-          form.amount.$render();
-        } else {
-          let fullAmount = indexScope.arrBalances[indexScope.assetIndex].stable;
-          if (indexScope.arrBalances[indexScope.assetIndex].asset === constants.DAGCOIN_ASSET) {
-            fullAmount /= this.dagUnitValue;
-          }
-          form.amount.$setViewValue(`${fullAmount}`);
-          form.amount.$render();
-        }
-        // console.log('done setsendall')
-        /* $timeout(function() {
-         $rootScope.$digest();
-         console.log('-- amount invalid? '+form.amount.$invalid);
-         console.log('-- form invalid? '+form.$invalid);
-         }, 1); */
+        const fullAmount = indexScope.dagBalance.stable;
+        this._amount = indexScope.baseBalance.stable > MIN_BYTE_FEE ? fullAmount : fullAmount - DAG_FEE;
+        this._amount /= this.dagUnitValue;
+        this.bSendAll = true;
+        form.amount.$setViewValue('');
+        form.amount.$setValidity('validAmount', true);
+        form.amount.$render();
       };
 
 
@@ -1429,23 +1413,6 @@
 
       this.hasAction = function (actions) {
         return Object.prototype.hasOwnProperty.call(actions, 'create');
-      };
-
-      this.doSendAll = function (amount) {
-        this.setForm(null, amount, null);
-      };
-
-      this.sendAll = function (amount, feeStr) {
-        const self = this;
-        const msg = gettextCatalog.getString('{{fee}} will be deducted for bitcoin networking fees', {
-          fee: feeStr,
-        });
-
-        confirmDialog.show(msg, (confirmed) => {
-          if (confirmed) {
-            self.doSendAll(amount);
-          }
-        });
       };
 
       /* Start setup */

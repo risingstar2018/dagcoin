@@ -319,7 +319,6 @@
             if (!addr) {
               reject('NO ADDRESSES AVAILABLE');
             } else {
-              console.log(`FOUND AN ADDRESS: ${addr}`);
               resolve(addr);
             }
           });

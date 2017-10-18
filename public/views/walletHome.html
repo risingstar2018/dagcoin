@@ -278,7 +278,7 @@
 						</div>
 						<div class="form-group">
 							<div class="title clearfix"><span class="name">Amount</span>
-								<div class="left" ng-hide="sendForm.amount.$pristine ">
+								<div class="left" ng-hide="sendForm.amount.$pristine && !sendForm.amount.$modelValue">
 									<span class="has-error right size-12" ng-if="sendForm.amount.$invalid">
 										<i class="icon-close-circle size-14"></i>
 										<span clas="vm" translate>Not valid</span>
@@ -288,12 +288,13 @@
 									</small>
 								</div>
 								<span class="available">Available <span>{{index.dagBalance.stable / 1e6}}</span></span>
+                <a ng-click="home.setSendAll()" ng-show="!home.bSendAll && !home.lockAmount" style="text-transform: none; margin-left: 10px" translate>Send all</a>
 							</div>
 
 							<div class="input-wrap input-icon">
-								<input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
-									   name="amount" ng-attr-placeholder="{{'Amount'|translate}}" min="0.00000001"
-									   ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="_amount"
+								<input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount || home.bSendAll"
+									   name="amount" ng-attr-placeholder="{{(home.bSendAll ? 'All minus fees' : 'Amount')|translate}}" min="0.000001"
+									   ng-minlength="1" ng-maxlength="16" ng-model="_amount"
 									   ng-required="!home.bSendAll"
 									   autocomplete="off" ng-focus="home.formFocus('amount')"
 									   ng-blur="home.formFocus(false)">
