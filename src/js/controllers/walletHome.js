@@ -715,7 +715,7 @@
         console.log(`asset ${asset}`);
         const address = form.address.$modelValue;
         const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
-        let amount = this.bSendAll ? this._amount : form.amount.$modelValue;
+        let amount = form.amount.$modelValue;
         let merkleProof = '';
         if (form.merkle_proof && form.merkle_proof.$modelValue) {
           merkleProof = form.merkle_proof.$modelValue.trim();
@@ -1231,13 +1231,21 @@
         if (!form || !form.amount || indexScope.arrBalances.length === 0) {
           return;
         }
-        const fullAmount = indexScope.dagBalance.stable;
-        this._amount = indexScope.baseBalance.stable > constants.MIN_BYTE_FEE ? fullAmount : fullAmount - constants.DAG_FEE;
-        this._amount /= this.dagUnitValue;
-        this.bSendAll = true;
-        form.amount.$setViewValue('');
-        form.amount.$setValidity('validAmount', true);
-        form.amount.$render();
+        let availableDags = indexScope.dagBalance.stable;
+        const availableBytes = indexScope.baseBalance.stable;
+
+        if (availableBytes < constants.MIN_BYTE_FEE) {
+          $rootScope.$emit('Local/ShowAlert', 'You are sending all your stable amount. Transaction fee will be automatically excluded!', 'fi-alert', () => {
+            availableDags = availableDags > constants.DAG_FEE ? availableDags - constants.DAG_FEE : 0;
+            availableDags /= this.dagUnitValue;
+            form.amount.$setViewValue(`${availableDags}`);
+            form.amount.$render();
+          });
+        } else {
+          availableDags /= this.dagUnitValue;
+          form.amount.$setViewValue(`${availableDags}`);
+          form.amount.$render();
+        }
       };
 
 
