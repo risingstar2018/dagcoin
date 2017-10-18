@@ -46,22 +46,22 @@
         self.validationErrors = [];
 
         if (self.password.length < 8) {
-            self.validationErrors.push("Password must be at least 8 characters long");
+            self.validationErrors.push('Password must be at least 8 characters long');
         }
         if (self.password.search(/[a-z]/i) < 0) {
-            self.validationErrors.push("Password must contain at least one letter"); 
+            self.validationErrors.push('Password must contain at least one letter');
         }
         if (self.password.search(/[0-9]/) < 0) {
-            self.validationErrors.push("Password must contain at least one digit");
+            self.validationErrors.push('Password must contain at least one digit');
         }
         if (self.password.search(/[!@#$%^&*]/) < 0) {
-            self.validationErrors.push("Password must contain at least one special character");
+            self.validationErrors.push('Password must contain at least one special character');
         }
         if (self.validationErrors.length > 0) {
             return false;
         }
 
         return true;
-      }
+      };
     });
 }());
