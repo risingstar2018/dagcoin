@@ -36,8 +36,6 @@
       const self = this;
       const home = this;
       const conf = require('byteballcore/conf.js');
-      const DAG_FEE = 500; // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
-      const MIN_BYTE_FEE = 950;
       this.protocol = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
       $rootScope.hideMenuBar = false;
       $rootScope.wpInputFocused = false;
@@ -869,7 +867,7 @@
               breadcrumbs.add(`sending payment in ${asset}`);
               profileService.bKeepUnlocked = true;
               const paymentPromise = new Promise((resolve, reject) => {
-                if (indexScope.baseBalance.stable < MIN_BYTE_FEE) { // Using a funding hub
+                if (indexScope.baseBalance.stable < constants.MIN_BYTE_FEE) { // Using a funding hub
                   const sharedAddress = fundingExchangeClientService.byteOrigin;
                   if (!fundingExchangeClientService.active) {
                     return reject('THE FUNDING EXCHANGE CLIENT IS NOT READY.');
@@ -896,7 +894,7 @@
                         asset_outputs: [
                           {
                             address: fundingExchangeClientService.dagcoinDestination,
-                            amount: DAG_FEE // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
+                            amount: constants.DAG_FEE // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
                           }, {
                             address: toAddress,
                             amount
@@ -1236,9 +1234,9 @@
         let availableDags = indexScope.dagBalance.stable;
         const availableBytes = indexScope.baseBalance.stable;
 
-        if (availableBytes < MIN_BYTE_FEE) {
+        if (availableBytes < constants.MIN_BYTE_FEE) {
           $rootScope.$emit('Local/ShowAlert', 'You are sending all your stable amount. Transaction fee will be automatically excluded!', 'fi-alert', () => {
-            availableDags = availableDags > DAG_FEE ? availableDags - DAG_FEE : 0;
+            availableDags = availableDags > constants.DAG_FEE ? availableDags - constants.DAG_FEE : 0;
             availableDags /= this.dagUnitValue;
             form.amount.$setViewValue(`${availableDags}`);
             form.amount.$render();
@@ -1293,8 +1291,13 @@
         return this.unitName;
       };
 
+      this.checkFeeIsPayedByHub = function (btx, txHistory) {
+        const fundingNodeTx = txHistory.filter(x => (x.time === btx.time && x.unit === btx.unit && x.amount === constants.DAG_FEE))[0];
 
-      this.openTxModal = function (btx) {
+        return (fundingNodeTx && btx.amount !== constants.DAG_FEE);
+      };
+
+      this.openTxModal = function (btx, txHistory) {
         $rootScope.modalOpened = true;
         const self = this;
         const fc = profileService.focusedClient;
@@ -1304,6 +1307,11 @@
           $scope.isPrivate = indexScope.arrBalances[assetIndex].is_private;
           $scope.settings = walletSettings;
           $scope.color = fc.backgroundColor;
+
+          if (self.checkFeeIsPayedByHub(btx, txHistory)) {
+            $scope.feeIsPayedByHub = true;
+            $scope.btx.feeStr = getAmountInDisplayUnits(constants.DAG_FEE, constants.DAGCOIN_ASSET);
+          }
 
           $scope.getAmount = function (amount) {
             return self.getAmount(amount);

@@ -64,6 +64,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
       self.usePushNotifications = false;
 
+      constants.DAG_FEE = 500; // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
+      constants.MIN_BYTE_FEE = 950;
+
       fundingExchangeClientService.setIndex(this);
 
       self.triggerUrl = (state) => {
@@ -924,6 +927,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         lodash.each(txs, (tx) => {
           const transaction = txFormatService.processTx(tx);
+          const fundingNodeTx = txs.filter(x => (x.time === tx.time && x.unit === tx.unit &&
+                x.amount === constants.DAG_FEE && x.amount === tx.amount));
+
+          transaction.isFundingNodeTransaction = fundingNodeTx.length > 0;
 
           // no future transactions...
           if (transaction.time > now) {
