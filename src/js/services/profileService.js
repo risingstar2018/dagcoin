@@ -699,18 +699,18 @@
       return cb();
     };
 
-    root.setSingleAddressFlag = function(newValue) {
-      var fc = root.focusedClient;
+    root.setSingleAddressFlag = function (newValue) {
+      const fc = root.focusedClient;
       fc.isSingleAddress = newValue;
-      var walletId = fc.credentials.walletId;
-      var config = configService.getSync();
-      var oldValue = config.isSingleAddress || false;
+      const walletId = fc.credentials.walletId;
+      const config = configService.getSync();
+      const oldValue = config.isSingleAddress || false;
 
-      var opts = {
+      const opts = {
         isSingleAddress: {}
       };
       opts.isSingleAddress[walletId] = newValue;
-      configService.set(opts, function(err) {
+      configService.set(opts, (err) => {
         if (err) {
           fc.isSingleAddress = oldValue;
           $rootScope.$emit('Local/DeviceError', err);
@@ -718,7 +718,7 @@
         }
         $rootScope.$emit('Local/SingleAddressFlagUpdated');
       });
-    }
+    };
 
     root.replaceProfile = function (xPrivKey, mnemonic, myDeviceAddress, cb) {
       const device = require('byteballcore/device.js');

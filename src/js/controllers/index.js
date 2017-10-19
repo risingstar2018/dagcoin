@@ -961,11 +961,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         fc.backgroundColor = '#d51f26'; // self.backgroundColor;
       };
 
-      self.updateSingleAddressFlag = function() {
-        var config = configService.getSync();
+      self.updateSingleAddressFlag = function () {
+        const config = configService.getSync();
         config.isSingleAddress = config.isSingleAddress || {};
         self.isSingleAddress = config.isSingleAddress[self.walletId];
-        var fc = profileService.focusedClient;
+        const fc = profileService.focusedClient;
         fc.isSingleAddress = self.isSingleAddress;
       };
 

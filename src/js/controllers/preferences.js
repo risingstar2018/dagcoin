@@ -12,12 +12,12 @@
         if (fc) {
           // $scope.encrypt = fc.hasPrivKeyEncrypted();
           this.externalSource = null;
-          var walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
-					walletDefinedByKeys.readAddresses(fc.credentials.walletId, {}, function(addresses) {
-						$scope.numAddresses = addresses.length;
-						$rootScope.$apply();
-					});
-					$scope.numCosigners = fc.credentials.n;
+          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+          walletDefinedByKeys.readAddresses(fc.credentials.walletId, {}, (addresses) => {
+            $scope.numAddresses = addresses.length;
+            $rootScope.$apply();
+          });
+          $scope.numCosigners = fc.credentials.n;
           // TODO externalAccount
           // this.externalIndex = fc.getExternalIndex();
         }
@@ -31,7 +31,9 @@
       };
 
       const unwatchSpendUnconfirmed = $scope.$watch('spendUnconfirmed', (newVal, oldVal) => {
-        if (newVal === oldVal) return;
+        if (newVal === oldVal) {
+          return;
+        }
         const opts = {
           wallet: {
             spendUnconfirmed: newVal,
@@ -39,7 +41,9 @@
         };
         configService.set(opts, (err) => {
           $rootScope.$emit('Local/SpendUnconfirmedUpdated');
-          if (err) $log.debug(err);
+          if (err) {
+            $log.debug(err);
+          }
         });
       });
 
@@ -80,9 +84,9 @@
         unwatchRequestTouchid();
       });
 
-      $scope.$watch('index.isSingleAddress', function(newValue, oldValue) {
-				if (oldValue == newValue) return;
-				profileService.setSingleAddressFlag(newValue);
-			});
+      $scope.$watch('index.isSingleAddress', (newValue, oldValue) => {
+        if (oldValue === newValue) { return; }
+          profileService.setSingleAddressFlag(newValue);
+        });
     });
 }());

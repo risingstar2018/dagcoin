@@ -912,7 +912,7 @@
                 resolve();
               }).then(() => new Promise((resolve, reject) => {
                 console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
-                useOrIssueNextAddress(fc.credentials.walletId, 0, function(addressInfo){
+                useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
                   opts.change_address = addressInfo.address;
                   fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
                     let error = sendMultiPaymentError;
@@ -946,7 +946,7 @@
                           message: correspondentListService.formatOutgoingMessage(paymentRequestText)
                         });
                         // issue next address to avoid reusing the reverse payment address
-                        if (!fc.isSingleAddress) walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, function(){});
+                        if (!fc.isSingleAddress) walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {});
                       }
                     } else {
                       // todo: should redirect to transaction detail
@@ -964,11 +964,15 @@
                 $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {});
               });
             }
-            
-            function useOrIssueNextAddress(wallet, is_change, handleAddress) {
-              if (fc.isSingleAddress)
-                handleAddress({address: self.addr[fc.credentials.walletId]});
-              else walletDefinedByKeys.issueNextAddress(wallet, is_change, handleAddress);
+
+            function useOrIssueNextAddress(wallet, isChange, handleAddress) {
+              if (fc.isSingleAddress) {
+                handleAddress({
+                  address: self.addr[fc.credentials.walletId]
+                });
+              } else {
+                walletDefinedByKeys.issueNextAddress(wallet, isChange, handleAddress);
+              }
             }
           });
         }, 100);
