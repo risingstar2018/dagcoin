@@ -12,6 +12,12 @@
         if (fc) {
           // $scope.encrypt = fc.hasPrivKeyEncrypted();
           this.externalSource = null;
+          var walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+					walletDefinedByKeys.readAddresses(fc.credentials.walletId, {}, function(addresses) {
+						$scope.numAddresses = addresses.length;
+						$rootScope.$apply();
+					});
+					$scope.numCosigners = fc.credentials.n;
           // TODO externalAccount
           // this.externalIndex = fc.getExternalIndex();
         }
@@ -73,5 +79,10 @@
         unwatchSpendUnconfirmed();
         unwatchRequestTouchid();
       });
+
+      $scope.$watch('index.isSingleAddress', function(newValue, oldValue) {
+				if (oldValue == newValue) return;
+				profileService.setSingleAddressFlag(newValue);
+			});
     });
 }());

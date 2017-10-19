@@ -343,7 +343,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       };
 
       // in arrOtherCosigners, 'other' is relative to the initiator
-      eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners) => {
+      eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
         const device = require('byteballcore/device.js');
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
         device.readCorrespondentsByDeviceAddresses(arrDeviceAddresses, (arrCorrespondentInfos) => {
@@ -375,6 +375,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                       walletClient.credentials.addWalletInfo(walletName, m, n);
                       updatePublicKeyRing(walletClient);
                       profileService.addWalletClient(walletClient, {}, () => {
+                        if (isSingleAddress) {
+                          profileService.setSingleAddressFlag(true);
+                        }
                         console.log(`switched to newly approved wallet ${walletId}`);
                       });
                     });
@@ -958,6 +961,14 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         fc.backgroundColor = '#d51f26'; // self.backgroundColor;
       };
 
+      self.updateSingleAddressFlag = function() {
+        var config = configService.getSync();
+        config.isSingleAddress = config.isSingleAddress || {};
+        self.isSingleAddress = config.isSingleAddress[self.walletId];
+        var fc = profileService.focusedClient;
+        fc.isSingleAddress = self.isSingleAddress;
+      };
+
       self.setBalance = function (assocBalances, assocSharedBalances) {
         if (!assocBalances) return;
         const config = configService.getSync().wallet.settings;
@@ -1403,6 +1414,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
       $rootScope.$on('Local/AliasUpdated', () => {
         self.updateAlias();
+        $timeout(() => {
+          $rootScope.$apply();
+        });
+      });
+
+      $rootScope.$on('Local/SingleAddressFlagUpdated', () => {
+        self.updateSingleAddressFlag();
         $timeout(() => {
           $rootScope.$apply();
         });

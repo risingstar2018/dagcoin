@@ -328,6 +328,7 @@
             network: opts.networkName,
             account: opts.account,
             cosigners: opts.cosigners,
+            isSingleAddress: opts.isSingleAddress
           }, (error) => {
             if (error) {
               return cb(`${gettext('Error creating wallet')}: ${error}`);
@@ -697,6 +698,27 @@
       }
       return cb();
     };
+
+    root.setSingleAddressFlag = function(newValue) {
+      var fc = root.focusedClient;
+      fc.isSingleAddress = newValue;
+      var walletId = fc.credentials.walletId;
+      var config = configService.getSync();
+      var oldValue = config.isSingleAddress || false;
+
+      var opts = {
+        isSingleAddress: {}
+      };
+      opts.isSingleAddress[walletId] = newValue;
+      configService.set(opts, function(err) {
+        if (err) {
+          fc.isSingleAddress = oldValue;
+          $rootScope.$emit('Local/DeviceError', err);
+          return;
+        }
+        $rootScope.$emit('Local/SingleAddressFlagUpdated');
+      });
+    }
 
     root.replaceProfile = function (xPrivKey, mnemonic, myDeviceAddress, cb) {
       const device = require('byteballcore/device.js');

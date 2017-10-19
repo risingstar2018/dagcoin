@@ -390,6 +390,10 @@
           throw Error('attempt to generate for shared address');
         }
 
+        if (fc.isSingleAddress && forceNew) {
+          throw Error('attempt to generate for single address wallets');
+        }
+
         self.generatingAddress = true;
         $timeout(() => {
           addressService.getAddress(fc.credentials.walletId, forceNew, (err, addr) => {
@@ -753,7 +757,7 @@
 
 
               // never reuse addresses as the required output could be already present
-              walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
+              useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
                 myAddress = addressInfo.address;
                 let arrDefinition;
                 let assocSignersByPath;
@@ -908,47 +912,49 @@
                 resolve();
               }).then(() => new Promise((resolve, reject) => {
                 console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
-                fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
-                  let error = sendMultiPaymentError;
-                  // if multisig, it might take very long before the callback is called
-                  indexScope.setOngoingProcess(gettext('sending'), false);
-                  breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
-                  delete self.current_payment_key;
-                  profileService.bKeepUnlocked = false;
-                  if (sendMultiPaymentError) {
-                    if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
-                      error = 'Not enough dagcoins';
-                    } else if (sendMultiPaymentError.match(/connection closed/)) {
-                      error = 'Problems with connecting to the hub. Please try again later';
-                    }
-                    return self.setSendError(error);
-                  }
-                  const binding = self.binding;
-                  self.resetForm();
-                  $rootScope.$emit('NewOutgoingTx');
-                  if (recipientDeviceAddress) { // show payment in chat window
-                    eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
-                    if (binding && binding.reverseAmount) { // create a request for reverse payment
-                      if (!myAddress) {
-                        throw Error('my address not known');
+                useOrIssueNextAddress(fc.credentials.walletId, 0, function(addressInfo){
+                  opts.change_address = addressInfo.address;
+                  fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
+                    let error = sendMultiPaymentError;
+                    // if multisig, it might take very long before the callback is called
+                    indexScope.setOngoingProcess(gettext('sending'), false);
+                    breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
+                    delete self.current_payment_key;
+                    profileService.bKeepUnlocked = false;
+                    if (sendMultiPaymentError) {
+                      if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
+                        error = 'Not enough dagcoins';
+                      } else if (sendMultiPaymentError.match(/connection closed/)) {
+                        error = 'Problems with connecting to the hub. Please try again later';
                       }
-                      const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
-                      const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
-                      device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
-                      correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
-                        bIncoming: false,
-                        message: correspondentListService.formatOutgoingMessage(paymentRequestText)
-                      });
-                      // issue next address to avoid reusing the reverse payment address
-                      walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
-                      });
+                      return self.setSendError(error);
                     }
-                  } else {
-                    // todo: should redirect to transaction detail
-                    // redirect to history
-                    $rootScope.$emit('Local/SetTab', 'history');
-                  }
-                  resolve();
+                    const binding = self.binding;
+                    self.resetForm();
+                    $rootScope.$emit('NewOutgoingTx');
+                    if (recipientDeviceAddress) { // show payment in chat window
+                      eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
+                      if (binding && binding.reverseAmount) { // create a request for reverse payment
+                        if (!myAddress) {
+                          throw Error('my address not known');
+                        }
+                        const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                        const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
+                        device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
+                        correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
+                          bIncoming: false,
+                          message: correspondentListService.formatOutgoingMessage(paymentRequestText)
+                        });
+                        // issue next address to avoid reusing the reverse payment address
+                        if (!fc.isSingleAddress) walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, function(){});
+                      }
+                    } else {
+                      // todo: should redirect to transaction detail
+                      // redirect to history
+                      $rootScope.$emit('Local/SetTab', 'history');
+                    }
+                    resolve();
+                  });
                 });
                 $scope.sendForm.$setPristine();
               }))
@@ -957,6 +963,12 @@
                 indexScope.setOngoingProcess(gettext('sending'), false);
                 $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {});
               });
+            }
+            
+            function useOrIssueNextAddress(wallet, is_change, handleAddress) {
+              if (fc.isSingleAddress)
+                handleAddress({address: self.addr[fc.credentials.walletId]});
+              else walletDefinedByKeys.issueNextAddress(wallet, is_change, handleAddress);
             }
           });
         }, 100);
