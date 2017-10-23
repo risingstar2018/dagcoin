@@ -10,40 +10,8 @@
                                               promiseService,
                                               addressService,
                                               profileService,
-                                              $interval,
-                                              go,
-                                              $modal,
-                                              animationService,
                                               proofingService) => {
       const self = {};
-      let sharedAddressFundsIntervalId;
-
-      const modalRequestApproval = function (question, callbacks) {
-        const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
-          $scope.title = $sce.trustAsHtml(question);
-          $scope.yes_icon = 'fi-check';
-          $scope.yes_button_class = 'primary';
-          $scope.loading = false;
-
-          $scope.ok = function () {
-            $scope.loading = true;
-            $modalInstance.close('OK');
-          };
-        };
-
-        const modalInstance = $modal.open({
-          templateUrl: 'views/modals/fundingNodeNotification.html',
-          windowClass: animationService.modalAnimated.slideUp,
-          controller: ModalInstanceCtrl
-        });
-
-        modalInstance.result.finally(() => {
-          const m = angular.element(document.getElementsByClassName('reveal-modal'));
-          m.addClass(animationService.modalAnimated.slideOutDown);
-        });
-
-        modalInstance.result.then(callbacks.ifYes);
-      };
 
       // Statuses
       self.active = false;
@@ -398,25 +366,6 @@
           (active) => {
             if (active) {
               console.log('FUNDING EXCHANGE CLIENT ACTIVATED');
-              let firsTime = true;
-              if (!sharedAddressFundsIntervalId) {
-                sharedAddressFundsIntervalId = $interval(() => {
-                  self.getSharedAddressBalance(self.byteOrigin).then((assocBalances) => {
-                    console.log(`BALANCE FOR ${self.byteOrigin}: ${JSON.stringify(assocBalances)}`);
-                    if (assocBalances.base.stable > 0) {
-                      $interval.cancel(sharedAddressFundsIntervalId);
-                    }
-                    if (assocBalances.base.stable === 0 || assocBalances.base.stable < 1500) {
-                      if (firsTime) {
-                        modalRequestApproval('Not able to make transactions until funding hub has fuelled your wallet. It may take several minutes, please try again a bit later.', () => {
-                          firsTime = false;
-                          go.walletHome();
-                        });
-                      }
-                    }
-                  });
-                }, 300000);
-              }
             } else {
               console.log('FUNDING EXCHANGE CLIENT STILL ACTIVATING. BE PATIENT');
             }
