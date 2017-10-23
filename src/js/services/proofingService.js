@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('proofingService', (profileService, addressService) => {
+  angular.module('copayApp.services').factory('proofingService', (profileService, addressService, $rootScope) => {
     const root = {};
 
     root.readCurrentAddress = function () {
@@ -176,6 +176,28 @@
         return Promise.resolve(ecdsaSig.sign(bufToSign, privKeyBuf));
       });
     };
+
+    $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
+      const eventBus = require('byteballcore/event_bus.js');
+      const db = require('byteballcore/db.js');
+      const device = require('byteballcore/device');
+
+      eventBus.on('dagcoin.request.proofing', (message, fromAddress) => {
+        console.log(`NEW PROOFING REQUEST FROM ${fromAddress}: ${JSON.stringify(message)}`);
+
+        let errors = [];
+
+        if (!message.addresses || message.addresses === 0) {
+          errors.push('No addresses specified for proofing');
+        } else {
+
+        }
+
+        device
+        // IS IT ONE OF MY ADDRESSES?
+        db.query('SELECT address FROM my_addresses', [], );
+      });
+    });
 
     return root;
   });

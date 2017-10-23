@@ -6,6 +6,8 @@
     const eventBus = require('byteballcore/event_bus.js');
     const root = {};
 
+    root.messageCounter = 0;
+
     const deviceConnectionPromiseMap = new Map();
 
     function pairAndConnectDevice(code, connectionCheckLifeSpan) {
@@ -153,10 +155,68 @@
       });
     }
 
+    function nextMessageId() {
+      const id = self.messageCounter;
+      root.messageCounter += 1;
+      return id;
+    }
+
+    function sendRequest(deviceAddress, messageType, subject, messageBody) {
+      sendMessage(deviceAddress, 'request', subject, messageBody);
+    }
+
+    function sendResponse() {
+      sendMessage(deviceAddress, 'response', subject, messageBody);
+    }
+
+    function sendMessage(deviceAddress, messageType, subject, messageBody) {
+      if (!deviceAddress) {
+        throw Error('PARAMETER deviceAddress UNSPECIFIED');
+      }
+
+      if (!messageType) {
+        throw Error('PARAMETER messageType UNSPECIFIED');
+      }
+
+      if (!subject) {
+        throw Error('PARAMETER subject UNSPECIFIED');
+      }
+
+      return makeSureDeviceIsConnected(deviceAddress, 30 * 60 * 1000).then(
+        (correspondent) => {
+          const device = require('byteballcore/device.js');
+          return new Promise((resolve, reject) => {
+            const message = {
+              protocol: 'dagcoin',
+              title: `${messageType}.${subject}`,
+              id: nextMessageId(),
+              messageType,
+              messageBody
+            };
+
+            device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
+              ifOk() {
+                resolve();
+              },
+              ifError(error) {
+                reject(error);
+              }
+            });
+          });
+        },
+        (error) => {
+          console.log(`COULD NOT DELIVER ${messageType} TO DISCOVERY SERVICE: ${error}`);
+        }
+      );
+    }
+
     root.FOREVER = -1;
 
     root.pairAndConnectDevice = pairAndConnectDevice;
     root.makeSureDeviceIsConnected = makeSureDeviceIsConnected;
+    root.sendMessage = sendMessage;
+    root.sendRequest = sendRequest;
+    root.sendResponse = sendResponse;
 
     return root;
   });
