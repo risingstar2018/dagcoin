@@ -156,17 +156,17 @@
     }
 
     function nextMessageId() {
-      const id = self.messageCounter;
+      const id = root.messageCounter;
       root.messageCounter += 1;
       return id;
     }
 
-    function sendRequest(deviceAddress, messageType, subject, messageBody) {
-      sendMessage(deviceAddress, 'request', subject, messageBody);
+    function sendRequest(deviceAddress, subject, messageBody) {
+      root.sendMessage(deviceAddress, 'request', subject, messageBody);
     }
 
-    function sendResponse() {
-      sendMessage(deviceAddress, 'response', subject, messageBody);
+    function sendResponse(deviceAddress, subject, messageBody) {
+      root.sendMessage(deviceAddress, 'response', subject, messageBody);
     }
 
     function sendMessage(deviceAddress, messageType, subject, messageBody) {
