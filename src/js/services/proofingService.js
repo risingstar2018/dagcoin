@@ -195,7 +195,7 @@
         const ecdsaSig = require('byteballcore/signature.js');
 
         const path = `m/44'/0'/${master.account}'/${master.is_change}/${master.address_index}`;
-        const privateKey = new Bitcore.HDPrivateKey.fromString(xPrivKey).derive(path);
+        const privateKey = new Bitcore.HDPrivateKey.fromString(xPrivKey).derive(path); // eslint-disable-line new-cap
         const privKeyBuf = privateKey.privateKey.bn.toBuffer({ size: 32 }); // https://github.com/bitpay/bitcore-lib/issues/47
 
         if (!PrivateKey.isValid(privateKey.privateKey)) {
@@ -222,7 +222,7 @@
         const ecdsaSig = require('byteballcore/signature.js');
 
         const path = `m/44'/0'/${current.account}'/${current.is_change}/${current.address_index}`;
-        const privateKey = new Bitcore.HDPrivateKey.fromString(xPrivKey).derive(path);
+        const privateKey = new Bitcore.HDPrivateKey.fromString(xPrivKey).derive(path); // eslint-disable-line new-cap
         const privKeyBuf = privateKey.privateKey.bn.toBuffer({ size: 32 }); // https://github.com/bitpay/bitcore-lib/issues/47
 
         if (!PrivateKey.isValid(privateKey.privateKey)) {
