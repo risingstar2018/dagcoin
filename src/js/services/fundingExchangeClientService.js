@@ -9,7 +9,8 @@
                                               dagcoinProtocolService,
                                               promiseService,
                                               addressService,
-                                              profileService) => {
+                                              profileService,
+                                              proofingService) => {
       const self = {};
 
       // Statuses
@@ -209,23 +210,22 @@
 
         const messageTitle = 'request.share-funded-address';
         const device = require('byteballcore/device.js');
-        const messageId = discoveryService.nextMessageId();
-
-        console.log(`Sending ${messageTitle} to ${device.getMyDeviceAddress()}:${self.dagcoinOrigin}`);
 
         const promise = listenToCreateNewSharedAddress();
 
-        device.sendMessageToDevice(
-          self.bytesProviderDeviceAddress,
-          'text',
-          JSON.stringify({
-            protocol: 'dagcoin',
-            title: messageTitle,
-            id: messageId,
-            deviceAddress: device.getMyDeviceAddress(),
-            address: self.dagcoinOrigin
-          })
-        );
+        proofingService.proofCurrentAddress().then((proof) => {
+          proof.protocol = 'dagcoin';
+          proof.title = messageTitle;
+          proof.id = discoveryService.nextMessageId();
+
+          console.log(`SENDING TO ${device.getMyDeviceAddress()}: ${JSON.stringify(proof)}`);
+
+          device.sendMessageToDevice(
+            self.bytesProviderDeviceAddress,
+            'text',
+            JSON.stringify(proof)
+          );
+        });
 
         return promise;
       }
@@ -366,6 +366,11 @@
           (active) => {
             if (active) {
               console.log('FUNDING EXCHANGE CLIENT ACTIVATED');
+              dagcoinProtocolService.sendRequest(
+                self.bytesProviderDeviceAddress,
+                'load-address',
+                {}
+              );
             } else {
               console.log('FUNDING EXCHANGE CLIENT STILL ACTIVATING. BE PATIENT');
             }
