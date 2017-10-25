@@ -40,7 +40,7 @@ let app = null;
 if (typeof fs.readFileSync === 'function') {
   app = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 } else {
-  app = {version: 'latest'};
+  app = { version: 'latest' };
 }
 
 // Assumes that in generated production package.json doesn't have env object
