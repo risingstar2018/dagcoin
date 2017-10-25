@@ -165,11 +165,11 @@
       root.sendMessage(deviceAddress, 'request', subject, messageBody);
     }
 
-    function sendResponse(deviceAddress, subject, messageBody) {
-      root.sendMessage(deviceAddress, 'response', subject, messageBody);
+    function sendResponse(deviceAddress, request, messageBody) {
+      root.sendMessage(deviceAddress, 'response', request.title.split('.').pop(), messageBody, request.id);
     }
 
-    function sendMessage(deviceAddress, messageType, subject, messageBody) {
+    function sendMessage(deviceAddress, messageType, subject, messageBody, messageId) {
       if (!deviceAddress) {
         throw Error('PARAMETER deviceAddress UNSPECIFIED');
       }
@@ -185,11 +185,18 @@
       return makeSureDeviceIsConnected(deviceAddress, 30 * 60 * 1000).then(
         (correspondent) => {
           const device = require('byteballcore/device.js');
+
+          let responseId = messageId;
+
+          if (responseId == null) {
+            responseId = nextMessageId();
+          }
+
           return new Promise((resolve, reject) => {
             const message = {
               protocol: 'dagcoin',
               title: `${messageType}.${subject}`,
-              id: nextMessageId(),
+              id: responseId,
               messageType,
               messageBody
             };

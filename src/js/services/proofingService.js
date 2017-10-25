@@ -10,6 +10,8 @@
   ) => {
     const root = {};
 
+    root.initialized = false;
+
     root.readAddress = function (addressToBeProofed) {
       const db = require('byteballcore/db.js');
 
@@ -124,7 +126,8 @@
 
     root.proofAddress = function (addressToBeProofed) {
       return root.readAddress(addressToBeProofed).then((currentAddressObject) => {
-        root.readMasterAddress().then((masterAddress) => {
+        console.log(`ADDRESS ${addressToBeProofed} ${currentAddressObject ? '' : ' NOT '} FOUND IN THE LOCAL DATABASE`);
+        return root.readMasterAddress().then((masterAddress) => {
           if (addressToBeProofed !== masterAddress.address) {
             currentAddressObject.master_address = masterAddress.address;
           }
@@ -137,7 +140,7 @@
           address_definition: AddressToBeProofedObject.definition
         };
 
-        return root.signWithCurrentAddress(AddressToBeProofedObject.device_address).then((deviceAddressSignature) => {
+        return root.signWithAddress(addressToBeProofed, AddressToBeProofedObject.device_address).then((deviceAddressSignature) => {
           proof.device_address_signature = deviceAddressSignature;
 
           if (AddressToBeProofedObject.master_address) {
@@ -199,7 +202,34 @@
         const privKeyBuf = privateKey.privateKey.bn.toBuffer({ size: 32 }); // https://github.com/bitpay/bitcore-lib/issues/47
 
         if (!PrivateKey.isValid(privateKey.privateKey)) {
-          const Networks = require('bitcore-lib/networks');
+          const Networks = require('bitcore-lib/lib/networks');
+          const error = PrivateKey.getValidationError(xPrivKey, Networks.defaultNetwork);
+          if (error) {
+            return Promise.reject(`INVALID PRIVATE KEY (${xPrivKey}) : ${error}`);
+          }
+        }
+
+        const crypto = require('crypto');
+        const bufToSign = crypto.createHash('sha256').update(text, 'utf8').digest();
+
+        return Promise.resolve(ecdsaSig.sign(bufToSign, privKeyBuf));
+      });
+    };
+
+    root.signWithAddress = (address, text) => {
+      const xPrivKey = profileService.focusedClient.credentials.xPrivKey;
+
+      return root.readAddress(address).then((addressObject) => {
+        const Bitcore = require('bitcore-lib');
+        const PrivateKey = require('bitcore-lib/lib/privatekey');
+        const ecdsaSig = require('byteballcore/signature.js');
+
+        const path = `m/44'/0'/${addressObject.account}'/${addressObject.is_change}/${addressObject.address_index}`;
+        const privateKey = new Bitcore.HDPrivateKey.fromString(xPrivKey).derive(path); // eslint-disable-line new-cap
+        const privKeyBuf = privateKey.privateKey.bn.toBuffer({ size: 32 }); // https://github.com/bitpay/bitcore-lib/issues/47
+
+        if (!PrivateKey.isValid(privateKey.privateKey)) {
+          const Networks = require('bitcore-lib/lib/networks');
           const error = PrivateKey.getValidationError(xPrivKey, Networks.defaultNetwork);
           if (error) {
             return Promise.reject(`INVALID PRIVATE KEY (${xPrivKey}) : ${error}`);
@@ -226,7 +256,7 @@
         const privKeyBuf = privateKey.privateKey.bn.toBuffer({ size: 32 }); // https://github.com/bitpay/bitcore-lib/issues/47
 
         if (!PrivateKey.isValid(privateKey.privateKey)) {
-          const Networks = require('bitcore-lib/networks');
+          const Networks = require('bitcore-lib/lib/networks');
           const error = PrivateKey.getValidationError(xPrivKey, Networks.defaultNetwork);
           if (error) {
             return Promise.reject(`INVALID PRIVATE KEY (${xPrivKey}) : ${error}`);
@@ -241,19 +271,28 @@
     };
 
     $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
+      if (root.initialized) {
+        return;
+      }
+
+      root.initialized = true;
+
       const eventBus = require('byteballcore/event_bus.js');
 
-      eventBus.on('dagcoin.request.proofing', (message, fromAddress) => {
-        console.log(`NEW PROOFING REQUEST FROM ${fromAddress}: ${JSON.stringify(message)}`);
+      eventBus.on('dagcoin.request.proofing', (request, fromAddress) => {
+        console.log(`NEW PROOFING REQUEST FROM ${fromAddress}: ${JSON.stringify(request)}`);
 
         const response = {};
 
-        if (!message.addresses || message.addresses === 0) {
+        const addressesToBeProofed = request.messageBody.addresses;
+
+        if (!addressesToBeProofed || addressesToBeProofed.length === 0) {
           response.error = 'No addresses specified for proofing';
+          dagcoinProtocolService.sendResponse(fromAddress, 'proofing', response);
         } else {
           const proofingPromises = [];
 
-          message.addresses.forEach((addressToBeProofed) => {
+          addressesToBeProofed.forEach((addressToBeProofed) => {
             proofingPromises.push(root.proofAddress(addressToBeProofed));
           });
 
@@ -262,12 +301,13 @@
               response.proofs = proofs;
             },
             (error) => {
-              response.error = error;
+              console.error(`REPLYING TO PROOFING REQUEST WITH ERROR: ${error.message} `);
+              response.error = error.message;
             }
-          );
+          ).then(() => {
+            dagcoinProtocolService.sendResponse(fromAddress, request, response);
+          });
         }
-
-        dagcoinProtocolService.sendResponse(fromAddress, 'proofing', response);
       });
     });
 
