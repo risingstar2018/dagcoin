@@ -35,7 +35,13 @@ angular.module('copayApp.addons', []);
 const constants = require('byteballcore/constants.js');
 const fs = require('fs');
 
-const app = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+let app = null;
+
+if (typeof fs.readFileSync === 'function') {
+  app = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+} else {
+  app = {version: 'latest'};
+}
 
 // Assumes that in generated production package.json doesn't have env object
 const isProduction = !constants.version.match(/t$/);
