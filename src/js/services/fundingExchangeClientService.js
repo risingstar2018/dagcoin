@@ -351,6 +351,50 @@
         });
       };
 
+      self.getByteOrigin = function () {
+        const db = require('byteballcore/db.js');
+
+        return new Promise((resolve, reject) => {
+          db.query(
+            'SELECT shared_address, address FROM shared_address_signing_paths sasp WHERE sasp.address IN (SELECT address FROM my_addresses)',
+            [],
+            (rows) => {
+              if (!rows || rows.length === 0) {
+                resolve(null);
+              } else if (rows.length > 1) {
+                reject('MULTIPLE SHARED ADDRESSES ARE NOT YET SUPPORTED');
+              } else {
+                resolve(rows[0]);
+              }
+            }
+          );
+        }).then((sharedAddressObject) => {
+          if (!sharedAddressObject) {
+            return Promise.resolve(null);
+          }
+
+          return new Promise((resolve) => {
+            db.query(
+              'SELECT wallet FROM my_addresses WHERE address = ?',
+              [sharedAddressObject.address],
+              (rows) => {
+                if (!rows || rows.length === 0) {
+                  resolve(null);
+                } else {
+                  const focusedClient = profileService.focusedClient;
+
+                  if (focusedClient.credentials.walletId === rows[0].wallet) {
+                    resolve(sharedAddressObject.shared_address);
+                  } else {
+                    resolve(null);
+                  }
+                }
+              }
+            );
+          });
+        });
+      };
+
       $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
         readMyAddresses().then((myAddresses) => {
           if (!myAddresses) {
