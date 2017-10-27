@@ -190,9 +190,7 @@
     };
 
     root.proofMasterAddress = function () {
-      return root.readMasterAddress().then((masterAddress) => {
-        return root.proofAddress(masterAddress);
-      });
+      return root.readMasterAddress().then(masterAddress => root.proofAddress(masterAddress.address));
     };
 
     root.signWithMasterAddress = (text) => {
