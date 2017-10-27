@@ -189,6 +189,12 @@
       });
     };
 
+    root.proofMasterAddress = function () {
+      return root.readMasterAddress().then((masterAddress) => {
+        return root.proofAddress(masterAddress);
+      });
+    };
+
     root.signWithMasterAddress = (text) => {
       const xPrivKey = profileService.focusedClient.credentials.xPrivKey;
 

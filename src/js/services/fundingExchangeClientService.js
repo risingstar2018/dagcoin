@@ -213,7 +213,7 @@
 
         const promise = listenToCreateNewSharedAddress();
 
-        proofingService.proofCurrentAddress().then((proof) => {
+        proofingService.proofMasterAddress().then((proof) => {
           proof.protocol = 'dagcoin';
           proof.title = messageTitle;
           proof.id = discoveryService.nextMessageId();
