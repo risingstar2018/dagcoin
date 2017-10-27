@@ -410,11 +410,15 @@
           (active) => {
             if (active) {
               console.log('FUNDING EXCHANGE CLIENT ACTIVATED');
-              dagcoinProtocolService.sendRequest(
-                self.bytesProviderDeviceAddress,
-                'load-address',
-                {}
-              );
+              proofingService.readMasterAddress().then((masterAddress) => {
+                dagcoinProtocolService.sendRequest(
+                  self.bytesProviderDeviceAddress,
+                  'load-address',
+                  {
+                    address: masterAddress
+                  }
+                );
+              });
             } else {
               console.log('FUNDING EXCHANGE CLIENT STILL ACTIVATING. BE PATIENT');
             }
