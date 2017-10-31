@@ -189,6 +189,10 @@
       });
     };
 
+    root.proofMasterAddress = function () {
+      return root.readMasterAddress().then(masterAddress => root.proofAddress(masterAddress.address));
+    };
+
     root.signWithMasterAddress = (text) => {
       const xPrivKey = profileService.focusedClient.credentials.xPrivKey;
 
@@ -270,6 +274,107 @@
       });
     };
 
+    root.buildListWithEnoughDagcoinsForFunding = function (addressList, fundingList, total) {
+      const db = require('byteballcore/db');
+      const constants = require('byteballcore/constants');
+
+      console.log(`LIST: ${JSON.stringify(addressList)}`);
+
+      if (!addressList || addressList.length === 0) {
+        // CONDITION FULFILLED
+        // TODO: use a value from the funding node or use some constants
+        if (total > 500000) {
+          return Promise.resolve(fundingList);
+        }
+
+        return Promise.reject('THERE ARE NOT ENOUGH DAGCOINS ON THIS WALLET FOR FUNDING');
+      }
+
+      const address = addressList.pop().address;
+
+      return new Promise((resolve, reject) => {
+        db.query(
+          'SELECT asset, address, is_stable, SUM(amount) AS balance ' +
+          'FROM outputs CROSS JOIN units USING(unit) ' +
+          'WHERE is_spent=0 AND sequence=\'good\' AND address = ? ' +
+          'GROUP BY asset, address, is_stable ' +
+          'UNION ALL ' +
+          'SELECT NULL AS asset, address, 1 AS is_stable, SUM(amount) AS balance FROM witnessing_outputs ' +
+          'WHERE is_spent=0 AND address = ? GROUP BY address ' +
+          'UNION ALL ' +
+          'SELECT NULL AS asset, address, 1 AS is_stable, SUM(amount) AS balance FROM headers_commission_outputs ' +
+          'WHERE is_spent=0 AND address = ? GROUP BY address',
+          [address, address, address],
+          (rows) => {
+            let totalAmount = 0;
+
+            if (rows && rows.length > 0) {
+              for (let i = 0; i < rows.length; i += 1) {
+                const row = rows[i];
+
+                if (row.asset === constants.DAGCOIN_ASSET) {
+                  totalAmount += row.balance;
+                }
+              }
+            }
+
+            if (totalAmount > 0) {
+              fundingList.push(address);
+
+              const fundingTotal = total + totalAmount;
+
+              if (fundingTotal < 500000) {
+                root.buildListWithEnoughDagcoinsForFunding(addressList, fundingList, fundingTotal).then(
+                  (list) => {
+                    resolve(list);
+                  }, (error) => {
+                    reject(error);
+                  }
+                );
+              } else {
+                root.buildListWithEnoughDagcoinsForFunding([], fundingList, fundingTotal).then(
+                  (list) => {
+                    resolve(list);
+                  }, (error) => {
+                    reject(error);
+                  }
+                );
+              }
+            } else {
+              // Just removed an empty address from the address list
+              root.buildListWithEnoughDagcoinsForFunding(addressList, fundingList, total).then(
+                (list) => {
+                  resolve(list);
+                }, (error) => {
+                  reject(error);
+                }
+              );
+            }
+          });
+      });
+    };
+
+    root.getAddressListWithEnoughDagcoins = function () {
+      const db = require('byteballcore/db.js');
+      const walletId = profileService.focusedClient.credentials.walletId;
+
+      console.log(`WALLET: ${walletId}`);
+
+      return new Promise((resolve, reject) => {
+        db.query(
+          'SELECT address FROM my_addresses WHERE wallet = ?',
+          [walletId],
+          (rows) => {
+            if (!rows || rows.length === 0) {
+              reject('NO ADDRESSES AVAILABLE');
+            } else {
+              resolve(rows);
+            }
+          }
+        );
+      }).then(addressList => root.buildListWithEnoughDagcoinsForFunding(addressList, [], 0));
+    };
+
     $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
       if (root.initialized) {
         return;
@@ -278,6 +383,36 @@
       root.initialized = true;
 
       const eventBus = require('byteballcore/event_bus.js');
+
+      eventBus.on('dagcoin.request.have-dagcoins', (request, fromAddress) => {
+        console.log(`NEW DAGCOIN CARRYING ADDRESS LIST REQUEST FROM ${fromAddress}: ${JSON.stringify(request)}`);
+
+        const response = {};
+
+        console.log('BEFORE getAddressListWithEnoughDagcoins BEGINS');
+
+        root.getAddressListWithEnoughDagcoins().then((addressList) => {
+          console.log(`DAGCOIN CARRYING ADDRESSES: ${addressList}`);
+
+          const proofingPromises = [];
+
+          addressList.forEach((addressToBeProofed) => {
+            proofingPromises.push(root.proofAddress(addressToBeProofed));
+          });
+
+          return Promise.all(proofingPromises).then((proofs) => {
+            response.proofs = proofs;
+          });
+        }).then(
+          () => {
+            dagcoinProtocolService.sendResponse(fromAddress, request, response);
+          }, (error) => {
+            console.error(`REPLYING TO DAGCOIN CARRYING ADDRESS LIST REQUEST WITH ERROR: ${error} `);
+            response.error = error;
+            dagcoinProtocolService.sendResponse(fromAddress, request, response);
+          }
+        );
+      });
 
       eventBus.on('dagcoin.request.proofing', (request, fromAddress) => {
         console.log(`NEW PROOFING REQUEST FROM ${fromAddress}: ${JSON.stringify(request)}`);
