@@ -12,7 +12,7 @@
       const faucetAddresses = [
         '0JMVEW6BBLT26R5C66HRN7YAP2Z77XCX7', // testnet faucet
       ];
-      if (ENV.name === 'TESTNET') {
+      if (ENV.isTestnet) {
         $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
           initService();
         });

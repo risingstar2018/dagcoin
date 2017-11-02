@@ -1,6 +1,6 @@
 {
   "ENV": {
-    "name": "TESTNET",
+    "isTestnet": true,
     "discoveryDeviceAddress": "0EPKJTMDEB5RUCOHTL77LHPR5K6KV3G7V",
     "DAGCOIN_ASSET": "B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=",
     "explorerPrefix": "testnet",
