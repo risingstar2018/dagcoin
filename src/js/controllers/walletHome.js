@@ -725,11 +725,11 @@
           amount *= dagUnitValue;
           amount = Math.round(amount);
 
-          const currentPaymentKey = `${asset}${address}${amount}`;
-          if (currentPaymentKey === self.current_payment_key) {
-            return $rootScope.$emit('Local/ShowErrorAlert', 'This payment is already under way');
-          }
-          self.current_payment_key = currentPaymentKey;
+        const currentPaymentKey = `${asset}${address}${amount}`;
+        if (currentPaymentKey === self.current_payment_key) {
+          return $rootScope.$emit('Local/ShowErrorAlert', 'This payment is being processed');
+        }
+        self.current_payment_key = currentPaymentKey;
 
           indexScope.setOngoingProcess(gettext('sending'), true);
           $timeout(() => {
@@ -933,7 +933,7 @@
                       if (sendMultiPaymentError) {
                         if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
                           error = 'Not enough dagcoins';
-                        } else if (sendMultiPaymentError.match(/connection closed/)) {
+                        } else if (sendMultiPaymentError.match(/connection closed/) || sendMultiPaymentError.match(/connect to light vendor failed/)) {
                           error = 'Problems with connecting to the hub. Please try again later';
                         }
                         return self.setSendError(error);
