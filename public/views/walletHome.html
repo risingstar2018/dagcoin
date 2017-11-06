@@ -279,7 +279,7 @@
 						<div class="form-group">
 							<div class="title clearfix"><span class="name">Amount</span>
 								<div class="left" ng-hide="sendForm.amount.$pristine && !sendForm.amount.$modelValue">
-									<span class="has-error right size-12" ng-if="sendForm.amount.$invalid">
+									<span class="has-error right size-12" ng-if="sendForm.amount.$invalid && !sendForm.amount.$error.required">
 										<i class="icon-close-circle size-14"></i>
 										<span clas="vm" translate>Not valid</span>
 									</span>
