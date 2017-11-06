@@ -156,7 +156,7 @@
 											</svg>
 
 											<span ng-if="btx.action == 'received'"
-												  ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address}}</span>
+												  ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address ? address : ('Incoming transaction' | translate)}}</span>
 											<span ng-if="btx.action == 'sent'"
 												  class="details-info">{{btx.addressTo}}</span>
 										</div>
@@ -402,7 +402,7 @@
 													<use
 															xlink:href="{{index.getSvgSrc(btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right')}}"></use>
 												</svg>
-												<span ng-if="btx.action == 'received'" ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address}}</span>
+												<span ng-if="btx.action == 'received'" ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address ? address : ('Incoming transaction' | translate)}}</span>
 
 												<span ng-if="btx.action == 'sent'" class="details-info">{{btx.addressTo}}</span>
 
