@@ -123,7 +123,7 @@
             console.log('A SHARED ADDRESS WAS FOUND IN THE DATABASE USED THAT ONE TO INITIALIZE');
             self.activating = false;
             self.active = true;
-            return Promise.resolve();
+            return Promise.resolve(true);
           }
 
           return queryDiscoveryService();
