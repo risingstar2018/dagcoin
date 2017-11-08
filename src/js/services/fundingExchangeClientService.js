@@ -176,13 +176,14 @@
             return Promise.resolve(self.dagcoinOrigin);
           }
 
-          return proofingService.readMasterAddress();
+          return proofingService.readMasterAddress().then((masterAddress) => {
+            self.dagcoinOrigin = masterAddress.address;
+            return Promise.resolve(self.dagcoinOrigin);
+          });
         }).then((masterAddress) => {
           if (!masterAddress) {
             return Promise.reject('COULD NOT FIND ANY ADDRESS IN THE DATABASE');
           }
-
-          self.dagcoinOrigin = masterAddress.address;
 
           const device = require('byteballcore/device');
 
