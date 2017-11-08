@@ -1,7 +1,5 @@
 
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/dagcoin/dagcoin.png?columns=all)](https://waffle.io/dagcoin/dagcoin?utm_source=badge)
-[![Stories in Ready](https://badge.waffle.io/dagcoin/dagcoin.png?label=ready&title=Ready)](https://waffle.io/dagcoin/dagcoin?utm_source=badge)
-[![Stories in Ready](https://badge.waffle.io/DagcoinOY/dagcoin.png?label=ready&title=Ready)](https://waffle.io/DagcoinOY/dagcoin?utm_source=badge)
 
 [![Build Status](https://travis-ci.org/dagcoin/dagcoin.svg?branch=master)](https://travis-ci.org/dagcoin/dagcoin)
 
