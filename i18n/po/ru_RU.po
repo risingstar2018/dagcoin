@@ -45,7 +45,7 @@ msgstr "Кошелек для децентрализованной стоимо�
 
 #: public/views/preferencesGlobal.html:73
 msgid "ABOUT"
-msgstr "О"
+msgstr "О программе"
 
 #: public/views/preferencesGlobal.html:76
 msgid "About Dagcoin"
@@ -954,7 +954,7 @@ msgstr "Получить"
 
 #: public/views/walletHome.html:312
 msgid "Receiver"
-msgstr "Приемник"
+msgstr "Получатель"
 
 #: public/views/walletHome.html:118
 msgid "Recent transactions"
@@ -1532,7 +1532,7 @@ msgstr "Ваш пароль"
 
 #: public/views/walletHome.html:380
 msgid "Your transaction history"
-msgstr ""
+msgstr "История транзакций"
 
 #: public/views/import.html:29
 msgid "Your wallet file:"
