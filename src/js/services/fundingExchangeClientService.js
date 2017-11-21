@@ -413,9 +413,20 @@
           return readMyAddresses().then((myAddresses) => {
             if (!myAddresses) {
               console.log('THIS WALLET DOES NOT HAVE ADDRESSES');
+            } else {
+              console.log(`ADDRESSES FOUND: ${JSON.stringify(myAddresses)}`);
             }
+
+            let readAddress = null;
+
+            if (typeof myAddresses === 'string') {
+              readAddress = [myAddresses];
+            } else {
+              readAddress = myAddresses;
+            }
+
             self.walletAddresses = [];
-            myAddresses.forEach((addr) => {
+            readAddress.forEach((addr) => {
               self.walletAddresses.push(addr.address);
             });
 
