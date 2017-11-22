@@ -114,4 +114,14 @@
       }
     }
   }
+
+  .wallet-addresses {
+    ul {
+      li {
+        display: flex;
+        flex-wrap: wrap;
+      }
+    }
+  }
+
 }
