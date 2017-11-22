@@ -392,7 +392,7 @@
       $rootScope.$on('Local/NewFocusedWallet', () => {
         const walletId = profileService.focusedClient.credentials.walletId;
 
-        self.dbManager = require('dagcoin-core/databaseManager').getInstance();
+        self.dbManager = require('dagcoin-core/lib/databaseManager').getInstance();
 
         self.dbManager.query('SELECT account FROM wallets WHERE wallet = ?', [walletId]).then((rows) => {
           if (rows == null || rows.length === 0) {
