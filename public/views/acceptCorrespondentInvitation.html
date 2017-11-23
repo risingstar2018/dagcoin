@@ -20,7 +20,7 @@
 
 
     <div class="m20b">
-        <form name="pairingCodeForm" class="page-form" no-validate>
+        <form name="pairingCodeForm" class="page-form" novalidate>
 		  <p translate style="text-align: center">Enter the pairing code received from the other device, or use your camera (icon at the upper right corner) to scan the QR code displayed on the other device.</p>
           <div class="text-warning size-12 m10b" ng-show="error">{{error|translate}}</div>
 
@@ -29,9 +29,9 @@
           </div>
           <div class="row">
             <div ng-style="{'text-align':'center'}">
-              <a class="btn btn_red-full"
-                 ng-disabled="!pairingCodeForm.$valid"
-                 ng-click="pair()">{{'Pair'|translate}}</a>
+              <button class="btn btn_red-full"
+                 ng-disabled="pairingCodeForm.$invalid"
+                 ng-click="pair()">{{'Pair'|translate}}</button>
             </div>
           </div>
         </form>
