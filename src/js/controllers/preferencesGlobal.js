@@ -3,7 +3,7 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $log, $modal, configService, uxLanguage, pushNotificationsService, profileService,
-              fundingExchangeProviderService, animationService, changeWalletTypeService, gettext) {
+              fundingExchangeProviderService, animationService, changeWalletTypeService, gettext, gettextCatalog) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
@@ -22,7 +22,7 @@
 
       this.init = function () {
         const config = configService.getSync();
-        this.type = conf.bLight ? gettext('light wallet') : gettext('full wallet');
+        this.type = conf.bLight ? gettextCatalog.getString('light wallet') : gettextCatalog.getString('full wallet');
         this.unitName = config.wallet.settings.unitName;
         this.dagUnitName = config.wallet.settings.dagUnitName;
         this.deviceName = config.deviceName;
@@ -148,13 +148,12 @@
       self.changeWalletType = function () {
         if (self.isLight) {
           const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
-            $scopeModal.header = $sce.trustAsHtml(gettext('Change wallet type!'));
-            $scopeModal.title = $sce.trustAsHtml(gettext(`
-            The wallet will contain the most current state of the entire Dagcoin database. 
+            $scopeModal.header = $sce.trustAsHtml(gettextCatalog.getString('Change wallet type!'));
+            $scopeModal.title = $sce.trustAsHtml(gettextCatalog.getString(`The wallet will contain the most current state of the entire Dagcoin database. 
             This option is better for privacy but will take several gigabytes of storage and the initial sync will take several days. 
             CPU load will be high during sync. After changing to full wallet your money won't be visible until database will synchronize your transactions.`));
 
-            $scopeModal.yes_label = gettext('Change it');
+            $scopeModal.yes_label = gettextCatalog.getString('Change it');
             $scopeModal.ok = function () {
               $modalInstance.close(true);
             };

@@ -11,13 +11,13 @@ msgstr ""
 "Last-Translator: Dagcoin <tech@dagcoin.org>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2017-11-17 08:32-0500\n"
+"PO-Revision-Date: 2017-11-23 08:25-0500\n"
 
 #: public/views/authConfirmation.html:10
 msgid "(The site won't see your balance and no money will be spent)"
 msgstr "(Situs tersebut tidak dapat melihat saldo anda dan tidak dipungut biaya)"
 
-#: public/views/create.html:98
+#: public/views/create.html:104
 msgid "-- Select co-signer --"
 msgstr "-- Pilih co-signer --"
 
@@ -35,7 +35,7 @@ msgid "<label>\n"
 "          I confirm that I have read, understood, and agree to these terms.</label>"
 msgstr ""
 
-#: public/views/walletHome.html:243
+#: public/views/walletHome.html:245
 msgid "<svg-icon name=\"done\"></svg-icon>Copied!"
 msgstr "<svg-icon name=\"done\"> </svg-icon> disalin!"
 
@@ -63,7 +63,7 @@ msgstr "Menerima undangan dari perangkat lain"
 
 #: public/views/preferencesInformation.html:41
 msgid "Account ({{derivationStrategy}})"
-msgstr ""
+msgstr "Akun({{derivationStrategy}})"
 
 #: public/views/correspondentDevices.html:33
 msgid "Add a new device"
@@ -93,9 +93,9 @@ msgstr "Buku alamat"
 msgid "Advanced"
 msgstr "Tingkat lanjut"
 
-#: public/views/preferencesInformation.html:69
+#: public/views/preferencesInformation.html:68
 msgid "All Wallet Addresses <button ng-click=\"info.setAddress()\" ng-disabled=\"index.isOffline\">{{'Generate new address' | translate}}</button>"
-msgstr ""
+msgstr "Semua Alamat Dompet<button ng-click=\"info.setAddress()\" ng-disabled=\"index.isOffline\">{{'Generate new address' | translate}}</button>"
 
 #: public/views/splash.html:52
 msgid "Allows to choose wallet type."
@@ -114,16 +114,20 @@ msgstr "Juga di menu Pengaturan, anda akan menemukan opsi keamanan seperti penga
 #: public/views/modals/offer-contract.html:41
 #: public/views/modals/tx-details.html:119
 #: public/views/paymentUri.html:16
-#: public/views/walletHome.html:280
+#: public/views/walletHome.html:282
 msgid "Amount"
 msgstr "Sebesar"
 
 #: public/views/modals/bind.html:26
 msgid "An event is posted by an oracle:"
-msgstr ""
+msgstr "Peristiwa dilansir oleh peramal:"
 
 #: public/views/correspondentDevice.html:289
 msgid "Application in Offline mode"
+msgstr ""
+
+#: src/js/services/changeWalletTypeService.js:175
+msgid "Application successfully updated, please restart the application."
 msgstr ""
 
 #: public/views/copayers.html:11
@@ -143,9 +147,9 @@ msgstr "Apakah anda yakin ingin menghapus dompet ini?"
 msgid "Asset"
 msgstr "Aset"
 
-#: public/views/walletHome.html:290
+#: public/views/walletHome.html:283
 msgid "Available <span>{{index.dagBalance.stable / 1e6}}</span>"
-msgstr ""
+msgstr "Saldo Yang Tersedia <span>{{index.dagBalance.stable / 1e6}}</span>"
 
 #: public/views/includes/available-balance.html:7
 msgid "Available Balance"
@@ -163,7 +167,7 @@ msgstr "CADANGAN"
 msgid "Back"
 msgstr "Kembali"
 
-#: public/views/walletHome.html:212
+#: public/views/walletHome.html:214
 msgid "Backup now"
 msgstr "Cadangkan sekarang"
 
@@ -175,11 +179,11 @@ msgstr "Cadangan benih dompet"
 msgid "Backup words deleted"
 msgstr "Cadangan kata-kata dihapus"
 
-#: public/views/preferencesInformation.html:91
+#: public/views/preferencesInformation.html:90
 msgid "Balance By Address"
 msgstr "Saldo Berdasarkan Alamat"
 
-#: public/views/walletHome.html:206
+#: public/views/walletHome.html:208
 msgid "Before receiving funds, it is highly recommended you backup your wallet keys."
 msgstr "Sebelum menerima dana, sangat disarankan mencadangkan kunci dompet anda."
 
@@ -229,7 +233,7 @@ msgstr ""
 msgid "Change hub:"
 msgstr "Ganti hub:"
 
-#: src/js/controllers/preferencesGlobal.js:157
+#: src/js/controllers/preferencesGlobal.js:156
 msgid "Change it"
 msgstr ""
 
@@ -240,7 +244,7 @@ msgstr ""
 #: public/views/preferencesAlias.html:24
 msgid "Changing wallet alias only affects the local wallet\n"
 "        name."
-msgstr ""
+msgstr "Mengganti alias dompet hanya berpengaruh pada nama dompet lokal."
 
 #: src/js/controllers/index.js:638
 msgid "Chat"
@@ -267,7 +271,7 @@ msgstr "Hapus riwayat obrolan"
 msgid "Close"
 msgstr "Tutup"
 
-#: public/views/create.html:94
+#: public/views/create.html:100
 msgid "Co-signer {{$index+1}}:"
 msgstr "Co-penandatangan {{$index + 1}}:"
 
@@ -296,7 +300,7 @@ msgid "Confirmed"
 msgstr "Telah disetujui"
 
 #: src/js/controllers/inviteCorrespondentDevice.js:29
-#: src/js/controllers/walletHome.js:413
+#: src/js/controllers/walletHome.js:415
 msgid "Copied to clipboard"
 msgstr "Disalin ke papan klip"
 
@@ -304,7 +308,7 @@ msgstr "Disalin ke papan klip"
 msgid "Correspondents are not restored."
 msgstr "Koresponden tidak dipulihkan."
 
-#: src/js/controllers/walletHome.js:644
+#: src/js/controllers/walletHome.js:646
 msgid "Could not create payment proposal"
 msgstr "Tidak dapat membuat proposal pembayaran"
 
@@ -320,12 +324,12 @@ msgstr "Tidak dapat membuat dengan menggunakan perpanjangan kunci publik spesifi
 msgid "Could not create: Invalid wallet seed"
 msgstr "Tidak dapat membuat: Benih dompet tidak valid"
 
-#: src/js/controllers/backup.js:90
+#: src/js/controllers/backup.js:91
 msgid "Could not decrypt"
 msgstr "Tidak dapat mendeskripsi"
 
-#: public/views/walletHome.html:123
-#: public/views/walletHome.html:384
+#: public/views/walletHome.html:125
+#: public/views/walletHome.html:365
 msgid "Could not fetch transaction history"
 msgstr "Tidak dapat memperbarui riwayat transaksi"
 
@@ -339,11 +343,11 @@ msgstr "Tidak dapat mengimpor"
 msgid "Could not import. Check input file and password"
 msgstr "Tidak dapat mengimpor. Periksa masukkan kata kunci dan berkas"
 
-#: src/js/controllers/walletHome.js:69
+#: src/js/controllers/walletHome.js:71
 msgid "Could not recognize a valid Dagcoin QR Code"
 msgstr "Tidak bisa mengenali kode QR Dagcoin berlaku"
 
-#: src/js/controllers/walletHome.js:644
+#: src/js/controllers/walletHome.js:646
 msgid "Could not send payment"
 msgstr "Tidak dapat mengirim pembayaran"
 
@@ -356,7 +360,7 @@ msgstr "Buat dompet baru"
 msgid "Create new wallet  together with  ?"
 msgstr "Buat dompet baru bersamaan dengan ?"
 
-#: public/views/create.html:112
+#: public/views/create.html:118
 msgid "Create {{requiredCosigners}}-of-{{totalCosigners}} wallet"
 msgstr "Buat {{requiredCosigners}}-of-{{totalCosigners}} dompet"
 
@@ -368,7 +372,7 @@ msgstr "Dibuat:"
 msgid "Creates light wallet which will contain minimum information relevant to you. The wallet vendor will be\n"
 "              able to know some of your balances and will be able to see which transactions are yours, but you can start\n"
 "              using the wallet immediately."
-msgstr ""
+msgstr "Dompet akan berisi minimal informasi yang relevan untuk Anda. Vendor dompet akan dapat mengetahui sebagian dari saldo anda dan dapat melihat transaksi mana yang menjadi milik anda, namun anda dapat segera mulai menggunakan dompet dan dompet berfungsi sepenuhnya."
 
 #: public/views/splash.html:136
 msgid "Creating Profile..."
@@ -406,7 +410,7 @@ msgstr ""
 
 #: public/views/modals/tx-details.html:72
 msgid "Date:"
-msgstr ""
+msgstr "Tanggal:"
 
 #: src/js/controllers/index.js:264
 msgid "Declined"
@@ -415,7 +419,7 @@ msgstr "Menolak"
 #: public/views/paperWallet.html:50
 msgid "Decrypting a paper wallet could take around 5 minutes on this device. please be patient and\n"
 "\t\t\t\t\t\t\tkeep the app open."
-msgstr ""
+msgstr "Mendeskripsi dompet kertas membutuhkan waktu sekitar 5 menit pada perangkat ini. harap bersabar dan membiarkan aplikasi tetap berjalan."
 
 #: public/views/splash.html:30
 msgid "Default settings (recommended)"
@@ -465,7 +469,7 @@ msgstr "Nama perangkat"
 #: public/views/preferencesDeviceName.html:24
 msgid "Device name is visible to other devices you communicate\n"
 "\t\t\t\twith."
-msgstr ""
+msgstr "Nama perangkat dapat dilihat oleh perangkat lain yang berkomunikasi."
 
 #: public/views/recoveryFromSeed.html:44
 msgid "Do not clone wallets, stop using the original wallet with this seed."
@@ -488,7 +492,7 @@ msgstr "Baik anda atau {{correspondent.name}} menonaktifkan rekaman riwayat obro
 msgid "Email for wallet notifications"
 msgstr "Surel untuk notifikasi dompet"
 
-#: public/views/acceptCorrespondentInvitation.html:59
+#: public/views/acceptCorrespondentInvitation.html:24
 msgid "Enter the pairing code received from the other device, or use your camera (icon at the upper right corner) to scan the QR code displayed on the other device."
 msgstr "Masukan kode pasangan yang diterima dari perangkat lain, atau gunakan kamera anda (ikon pada sisi kanan atas) untuk membaca kode QR yang ditampilkan pada perangkat lain."
 
@@ -503,7 +507,7 @@ msgstr "Kesalahan membuat dompet"
 
 #: public/views/modals/bind.html:65
 msgid "Expected value:"
-msgstr ""
+msgstr "Dengan nilai yang diharapkan:"
 
 #: public/views/export.html:61
 msgid "Export"
@@ -532,7 +536,7 @@ msgstr "Biaya"
 
 #: public/views/modals/tx-details.html:44
 msgid "From:"
-msgstr ""
+msgstr "Dari:"
 
 #: public/views/editCorrespondentDevice.html:28
 msgid "Full address:"
@@ -546,7 +550,7 @@ msgstr "Cadangan lengkap"
 msgid "Funding hub"
 msgstr ""
 
-#: src/js/controllers/walletHome.js:884
+#: src/js/controllers/walletHome.js:886
 msgid "Funding hub is fueling your wallet, it may take several minutes. Please try again a bit later."
 msgstr ""
 
@@ -566,11 +570,11 @@ msgstr "UMUM"
 msgid "GET STARTED"
 msgstr "MEMULAI"
 
-#: public/views/preferencesInformation.html:69
+#: public/views/preferencesInformation.html:68
 msgid "Generate new address"
 msgstr "Membuat alamat baru"
 
-#: public/views/walletHome.html:37
+#: public/views/walletHome.html:39
 msgid "Generating .csv file..."
 msgstr "Membuat berkas .csv..."
 
@@ -584,7 +588,7 @@ msgstr "Kembali"
 
 #: public/views/preferencesInformation.html:32
 msgid "Hardware Wallet"
-msgstr ""
+msgstr "Dompet perangkat keras"
 
 #: public/views/preferences.html:29
 msgid "Hardware wallet"
@@ -604,19 +608,19 @@ msgstr "Rumah"
 
 #: public/views/modals/offer-contract.html:22
 msgid "I pay:"
-msgstr ""
+msgstr "Saya membayar:"
 
 #: public/views/modals/bind.html:25
 msgid "I receive another payment:"
-msgstr ""
+msgstr "Saya menerima pembayaran lain dari:"
 
 #: public/views/modals/bind.html:83
 msgid "If the condition is not met, I can take this money back after:"
-msgstr ""
+msgstr "Jika kondisinya tidak terpenuhi, uang saya akan kembali setelah:"
 
 #: public/views/modals/offer-contract.html:59
 msgid "If the peer doesn't pay, I can take my money back after:"
-msgstr ""
+msgstr "Jika rekanan tidak membayar, uang saya akan kembali setelah:"
 
 #: public/views/import.html:45
 msgid "Import"
@@ -635,10 +639,11 @@ msgstr "Impor dompet"
 msgid "Importing wallet..."
 msgstr "Mengimpor dompet..."
 
-#: public/views/walletHome.html:367
+#: public/views/walletHome.html:348
 msgid "Initial transaction history synchronization can take some minutes for wallets with many transactions.<br>\n"
 "\t\t\t\t\tPlease stand by."
-msgstr ""
+msgstr "Sinkronisasi riwayat transaksi awal dapat memakan waktu beberapa menit untuk dompet dengan banyak transaksi.<br>\n"
+" Silahkan menunggu."
 
 #: public/views/correspondentDevice.html:296
 msgid "Insert my address"
@@ -662,15 +667,15 @@ msgstr "Mengundang perangkat lain"
 
 #: public/views/splash.html:93
 msgid "KEEP ONLY DATA RELEVANT TO YOU"
-msgstr ""
+msgstr "Simpan hanya data yang relevan bagi anda"
 
 #: public/views/modals/destination-address.html:120
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #: public/views/preferencesGlobal.html:21
 msgid "Language"
-msgstr ""
+msgstr "Bahasa"
 
 #: public/views/create.html:69
 msgid "Laptop + phone + tablet"
@@ -716,8 +721,8 @@ msgstr "Pesan"
 msgid "Mobile version supports only light wallets."
 msgstr ""
 
-#: public/views/walletHome.html:151
-#: public/views/walletHome.html:400
+#: public/views/walletHome.html:153
+#: public/views/walletHome.html:381
 msgid "My Account"
 msgstr ""
 
@@ -763,11 +768,11 @@ msgstr ""
 msgid "No private key"
 msgstr ""
 
-#: public/views/walletHome.html:140
+#: public/views/walletHome.html:142
 msgid "No recent transactions yet"
 msgstr "Belum ada transaksi"
 
-#: public/views/walletHome.html:387
+#: public/views/walletHome.html:368
 msgid "No transactions yet"
 msgstr "Belum ada transaksi"
 
@@ -775,7 +780,7 @@ msgstr "Belum ada transaksi"
 msgid "Not enough confirmed funds"
 msgstr ""
 
-#: src/js/controllers/walletHome.js:931
+#: src/js/controllers/walletHome.js:933
 msgid "Not enough dagcoins"
 msgstr "Tidak cukup dagcoins"
 
@@ -783,8 +788,6 @@ msgstr "Tidak cukup dagcoins"
 #: public/views/modals/customized-amount.html:51
 #: public/views/modals/destination-address.html:112
 #: public/views/modals/offer-contract.html:91
-#: public/views/walletHome.html:284
-#: public/views/walletHome.html:317
 msgid "Not valid"
 msgstr "Tidak sah"
 
@@ -814,7 +817,7 @@ msgstr "Hanya satu-sig dompet dapat dipulihkan."
 msgid "Oracle address:"
 msgstr ""
 
-#: public/views/acceptCorrespondentInvitation.html:70
+#: public/views/acceptCorrespondentInvitation.html:34
 msgid "Pair"
 msgstr "Pasangan"
 
@@ -876,7 +879,7 @@ msgstr "Pembayaran Diterima"
 msgid "Payment Proposal Created"
 msgstr "Proposal Pembayaran Dibuat"
 
-#: public/views/walletHome.html:175
+#: public/views/walletHome.html:177
 msgid "Payment Proposals"
 msgstr "Proposal Pembayaran"
 
@@ -900,7 +903,7 @@ msgstr ""
 msgid "Peer:"
 msgstr "Rekanan:"
 
-#: public/views/walletHome.html:101
+#: public/views/walletHome.html:103
 msgid "Pending wallet balance: {{index.dagBalance.pendingStr}}"
 msgstr ""
 
@@ -932,11 +935,11 @@ msgstr ""
 msgid "Press again to exit"
 msgstr "Tekan lagi untuk keluar"
 
-#: src/js/controllers/walletHome.js:1426
+#: src/js/controllers/walletHome.js:1428
 msgid "Private payloads sent"
 msgstr "Muatan pribadi dikirim"
 
-#: src/js/controllers/walletHome.js:933
+#: src/js/controllers/walletHome.js:935
 msgid "Problems with connecting to the hub. Please try again later"
 msgstr ""
 
@@ -952,11 +955,11 @@ msgstr ""
 msgid "Receive"
 msgstr "Terima"
 
-#: public/views/walletHome.html:312
+#: public/views/walletHome.html:306
 msgid "Receiver"
 msgstr ""
 
-#: public/views/walletHome.html:118
+#: public/views/walletHome.html:120
 msgid "Recent transactions"
 msgstr ""
 
@@ -965,7 +968,7 @@ msgstr ""
 msgid "Recipients"
 msgstr "Penerima"
 
-#: public/views/walletHome.html:16
+#: public/views/walletHome.html:18
 msgid "Reconnecting to Wallet Service..."
 msgstr "Menyambung kembali ke Layanan Dompet ..."
 
@@ -977,7 +980,7 @@ msgstr "Memulihkan"
 msgid "Recovery from seed"
 msgstr "Pemulihan dari benih"
 
-#: public/views/walletHome.html:36
+#: public/views/walletHome.html:38
 msgid "Recreating Wallet..."
 msgstr "Menciptakan Wallet ..."
 
@@ -1026,7 +1029,7 @@ msgstr "Meminta jumlah tertentu"
 msgid "Request payment"
 msgstr "Permintaan pembayaran"
 
-#: public/views/create.html:85
+#: public/views/create.html:91
 msgid "Required number of signatures"
 msgstr "Diperlukan jumlah tanda tangan"
 
@@ -1062,7 +1065,7 @@ msgstr "Pindai Sidik Jari"
 msgid "Scan Wallet Funds"
 msgstr "Pindai Dana Dompet"
 
-#: public/views/walletHome.html:78
+#: public/views/walletHome.html:80
 msgid "Scan status finished with error"
 msgstr "Status pemindaian selesai dengan kesalahan"
 
@@ -1074,7 +1077,7 @@ msgstr "Pindai kode QR di atas menggunakan perangkat lain, atau kirim kode penya
 msgid "Scan your fingerprint please"
 msgstr "Pindai sidik jari anda"
 
-#: public/views/walletHome.html:35
+#: public/views/walletHome.html:37
 msgid "Scanning Wallet funds..."
 msgstr "Memindai dana Dompet..."
 
@@ -1086,7 +1089,7 @@ msgstr "Memindai alamat..."
 msgid "Scanning wallet funds..."
 msgstr "Memindai dana dompet..."
 
-#: src/js/controllers/recoveryFromSeed.js:296
+#: src/js/controllers/recoveryFromSeed.js:297
 msgid "Seed is not valid"
 msgstr ""
 
@@ -1103,11 +1106,12 @@ msgid "Select your identity"
 msgstr "Pilih identitas anda"
 
 #: public/views/includes/transaction.html:10
+#: public/views/walletHome.html:321
 #: src/js/controllers/index.js:630
 msgid "Send"
 msgstr "Kirim"
 
-#: public/views/walletHome.html:272
+#: public/views/walletHome.html:274
 msgid "Send <span>dags</span>"
 msgstr ""
 
@@ -1115,11 +1119,11 @@ msgstr ""
 msgid "Send Payment"
 msgstr "Kirim Pembayaran"
 
-#: public/views/preferencesInformation.html:85
+#: public/views/preferencesInformation.html:84
 msgid "Send addresses by email"
 msgstr "Kirim alamat melalui surel"
 
-#: public/views/walletHome.html:291
+#: public/views/walletHome.html:284
 msgid "Send all"
 msgstr "Kirim semua"
 
@@ -1131,7 +1135,7 @@ msgstr "Kirim melalui surel"
 msgid "Sending funds..."
 msgstr "Mengirim dana..."
 
-#: public/views/walletHome.html:39
+#: public/views/walletHome.html:41
 msgid "Sending..."
 msgstr "Mengirim..."
 
@@ -1159,15 +1163,15 @@ msgstr "Pengaturan"
 msgid "Share address"
 msgstr "Bagikan alamat"
 
-#: public/views/walletHome.html:256
+#: public/views/walletHome.html:258
 msgid "Share the link above to receive payments."
 msgstr ""
 
-#: public/views/walletHome.html:253
+#: public/views/walletHome.html:255
 msgid "Share wallet link"
 msgstr ""
 
-#: public/views/walletHome.html:420
+#: public/views/walletHome.html:401
 msgid "Show all"
 msgstr "Tampilkan semua"
 
@@ -1180,14 +1184,16 @@ msgid "Sign transaction spending  from wallet ?"
 msgstr "Menandatangani pengeluaran transaksi dari dompet ?"
 
 #: public/views/create.html:46
-#: public/views/preferences.html:18
+#: public/views/create.html:77
+#: public/views/preferences.html:15
 msgid "Single address wallet"
 msgstr ""
 
 #: public/views/create.html:43
+#: public/views/create.html:74
 #: public/views/preferences.html:20
 msgid "Single address wallets will not spawn new addresses for every transaction, change will always go to the one and only address the wallet contains."
-msgstr ""
+msgstr "Dompet alamat tunggal tidak akan membuat alamat baru pada setiap transaksi, kembalian akan selalu ditujukan ke satu-satunya alamat pada dompet."
 
 #: src/js/services/profileService.js:274
 msgid "Small Expenses Wallet"
@@ -1216,34 +1222,34 @@ msgstr "Masih belum selesai"
 #: src/js/controllers/index.js:251
 #: src/js/controllers/index.js:284
 #: src/js/controllers/preferencesDelete.js:31
-#: src/js/controllers/walletHome.js:1426
+#: src/js/controllers/walletHome.js:1428
 msgid "Success"
 msgstr "Sukses"
 
 #: public/views/modals/pending-modal.html:3
 msgid "Successfully changed"
-msgstr ""
+msgstr "Berhasil mengubah"
 
 #: public/views/paperWallet.html:75
 msgid "Sweep Wallet"
 msgstr "Sapu Dompet"
 
-#: public/views/walletHome.html:38
+#: public/views/walletHome.html:40
 msgid "Syncing... {{index.syncProgress}}"
 msgstr "Sinkronisasi... {{index.syncProgress}}"
 
 #: public/views/preferencesDeleteWallet.html:11
 msgid "THIS ACTION CANNOT BE REVERSED"
-msgstr ""
+msgstr "TINDAKAN INI TIDAK DAPAT DIBALIK"
 
-#: public/views/walletHome.html:218
+#: public/views/walletHome.html:220
 msgid "Tap the <strong>QR-code</strong> to copy its address.<br>Share it with the sender via email or text."
 msgstr ""
 
-#: public/views/walletHome.html:124
-#: public/views/walletHome.html:385
-#: public/views/walletHome.html:73
-#: public/views/walletHome.html:79
+#: public/views/walletHome.html:126
+#: public/views/walletHome.html:366
+#: public/views/walletHome.html:75
+#: public/views/walletHome.html:81
 msgid "Tap to retry"
 msgstr "Ketuk untuk mencoba lagi"
 
@@ -1252,7 +1258,7 @@ msgstr "Ketuk untuk mencoba lagi"
 msgid "Terms of Use"
 msgstr "Syarat Penggunaan"
 
-#: src/js/controllers/walletHome.js:872
+#: src/js/controllers/walletHome.js:874
 msgid "The Funding Client is not ready"
 msgstr ""
 
@@ -1265,7 +1271,7 @@ msgstr ""
 msgid "The expected value will be posted:"
 msgstr ""
 
-#: src/js/controllers/walletHome.js:877
+#: src/js/controllers/walletHome.js:879
 msgid "The funding service is currently not supported on secondary wallets. Load some bytes on it"
 msgstr ""
 
@@ -1275,7 +1281,7 @@ msgstr "Hub menyarankan untuk mengganti saksi berikut ini:"
 
 #: public/views/modals/bind.html:22
 msgid "The peer receives this payment if:"
-msgstr ""
+msgstr "Rekanan menerima pembayaran ini jika:"
 
 #: src/js/controllers/copayers.js:40
 #: src/js/controllers/preferencesDelete.js:31
@@ -1291,7 +1297,7 @@ msgstr ""
 msgid "The wallet will contain minimum information relevant to you.  The wallet vendor will be able to know\n"
 "              some of your balances and will be able to see which transactions are yours, but you can start using the\n"
 "              wallet immediately and the wallet is fully functional."
-msgstr ""
+msgstr "Dompet akan berisi minimal informasi yang relevan untuk Anda. Vendor dompet akan dapat mengetahui sebagian dari saldo anda dan dapat melihat transaksi mana yang menjadi milik anda, namun anda dapat segera mulai menggunakan dompet dan dompet berfungsi sepenuhnya."
 
 #: src/js/controllers/preferencesGlobal.js:152
 msgid "The wallet will contain the most current state of the entire Dagcoin database. \n"
@@ -1356,11 +1362,11 @@ msgstr ""
 msgid "To:"
 msgstr "Untuk:"
 
-#: public/views/walletHome.html:183
+#: public/views/walletHome.html:185
 msgid "Total Locked Balance"
 msgstr "Total Saldo Terkunci"
 
-#: public/views/create.html:77
+#: public/views/create.html:83
 msgid "Total number of co-signers"
 msgstr "Jumlah total dari co-signers"
 
@@ -1368,11 +1374,11 @@ msgstr "Jumlah total dari co-signers"
 msgid "Transaction detail"
 msgstr "Rincian transaksi"
 
-#: public/views/walletHome.html:373
+#: public/views/walletHome.html:354
 msgid "Transactions<br> Downloaded"
 msgstr "Transaksi<br> Terunduh"
 
-#: src/js/controllers/walletHome.js:691
+#: src/js/controllers/walletHome.js:693
 msgid "Unable to send transaction proposal"
 msgstr "Tidak dapat mengirim proposal transaksi"
 
@@ -1384,7 +1390,7 @@ msgstr "Belum dikonfirmasi"
 msgid "Unit"
 msgstr "Unit"
 
-#: public/views/walletHome.html:176
+#: public/views/walletHome.html:178
 msgid "Unsent transactions"
 msgstr "Transaksi tidak terkirim"
 
@@ -1392,7 +1398,7 @@ msgstr "Transaksi tidak terkirim"
 msgid "Update to {{version}}"
 msgstr ""
 
-#: public/views/walletHome.html:29
+#: public/views/walletHome.html:31
 msgid "Updating Wallet..."
 msgstr "Memperbarui Dompet..."
 
@@ -1400,7 +1406,7 @@ msgstr "Memperbarui Dompet..."
 msgid "Version"
 msgstr "Versi"
 
-#: public/views/walletHome.html:202
+#: public/views/walletHome.html:204
 msgid "WARNING: Backup needed"
 msgstr "PERINGATAN: Cadangan diperlukan"
 
@@ -1418,7 +1424,7 @@ msgstr "PERINGATAN:"
 
 #: public/views/splash.html:114
 msgid "WELCOME TO DAGCOIN"
-msgstr ""
+msgstr "SELAMAT DATANG DI DAGCOIN"
 
 #: public/views/copayers.html:16
 msgid "Waiting for co-signers"
@@ -1459,19 +1465,19 @@ msgstr "Informasi Dompet"
 
 #: public/views/preferencesInformation.html:11
 msgid "Wallet Name"
-msgstr ""
+msgstr "Nama Dompet"
 
 #: public/views/preferencesAlias.html:16
 msgid "Wallet alias"
-msgstr ""
+msgstr "Alias Dompet"
 
-#: public/views/walletHome.html:102
+#: public/views/walletHome.html:104
 msgid "Wallet balance"
-msgstr ""
+msgstr "Keseimbangan dompet"
 
 #: public/views/preferences.html:21
 msgid "Wallet cannot be converted to single address wallet as it consists of multiple addresses or is multidevice"
-msgstr ""
+msgstr "Dompet ini tidak dapat dikonversi ke dompet alamat tunggal karena sudah terdiri dari beberapa alamat atau multi perangkat"
 
 #: public/views/create.html:31
 #: public/views/create.html:67
@@ -1481,6 +1487,10 @@ msgstr "Nama Dompet"
 #: public/views/backup.html:21
 msgid "Wallet seed not available."
 msgstr "Benih dompet tidak tersedia."
+
+#: src/js/services/changeWalletTypeService.js:62
+msgid "Wallet type successfully changed, please restart the application."
+msgstr ""
 
 #: public/views/modals/destination-address.html:15
 #: public/views/modals/destination-address.html:29
@@ -1513,7 +1523,7 @@ msgstr "Kata sandi salah"
 msgid "Yes"
 msgstr "Ya"
 
-#: src/js/controllers/walletHome.js:1264
+#: src/js/controllers/walletHome.js:1266
 msgid "You are sending all your stable amount. Transaction fee will be automatically excluded!"
 msgstr ""
 
@@ -1530,9 +1540,9 @@ msgstr "Kata sandi ekspor anda"
 msgid "Your password"
 msgstr "Kata sandi anda"
 
-#: public/views/walletHome.html:380
+#: public/views/walletHome.html:361
 msgid "Your transaction history"
-msgstr ""
+msgstr "Riwayat transaksi Anda"
 
 #: public/views/import.html:29
 msgid "Your wallet file:"
@@ -1546,7 +1556,7 @@ msgstr "Kunci dompet anda akan dienkripsi. Kata sandi tidak bisa dipulihkan. Pas
 msgid "Your wallet will be created on this device, keep it safe.  See your backup options in the Settings menu."
 msgstr "Dompet anda akan dibuat pada perangkat ini, jaga tetap aman.  Lihat pilihan cadangan dalam menu Pengaturan."
 
-#: public/views/create.html:104
+#: public/views/create.html:110
 msgid "[ Add new co-signer device ]"
 msgstr "[ Tambahkan perangkat co-signer baru ]"
 
@@ -1586,7 +1596,7 @@ msgstr "secara jelas"
 msgid "failed to create shared address :"
 msgstr ""
 
-#: src/js/controllers/walletHome.js:1201
+#: src/js/controllers/walletHome.js:1203
 msgid "failed to find asset index of asset"
 msgstr ""
 
@@ -1621,7 +1631,7 @@ msgstr "terkunci oleh pembayaran tertunda"
 msgid "more than 1 non-base asset not supported"
 msgstr ""
 
-#: src/js/controllers/walletHome.js:944
+#: src/js/controllers/walletHome.js:946
 msgid "my address not known"
 msgstr ""
 
@@ -1631,9 +1641,9 @@ msgstr ""
 
 #: src/js/controllers/acceptCorrespondentInvitation.js:44
 msgid "pairing"
-msgstr ""
+msgstr "berpasangan"
 
-#: src/js/controllers/walletHome.js:748
+#: src/js/controllers/walletHome.js:750
 msgid "recipient device address not known"
 msgstr ""
 
@@ -1641,11 +1651,11 @@ msgstr ""
 msgid "refused to sign the transaction"
 msgstr ""
 
-#: src/js/controllers/walletHome.js:730
-#: src/js/controllers/walletHome.js:735
-#: src/js/controllers/walletHome.js:830
-#: src/js/controllers/walletHome.js:925
-#: src/js/controllers/walletHome.js:972
+#: src/js/controllers/walletHome.js:732
+#: src/js/controllers/walletHome.js:737
+#: src/js/controllers/walletHome.js:832
+#: src/js/controllers/walletHome.js:927
+#: src/js/controllers/walletHome.js:974
 msgid "sending"
 msgstr "mengirim"
 
@@ -1655,7 +1665,7 @@ msgstr "ke"
 
 #: src/js/controllers/recoveryFromSeed.js:264
 msgid "wallets recovered, please restart the application to finish."
-msgstr ""
+msgstr "dompet ditemukan, silahkan restart applikasi untuk menyelesaikan."
 
 #: public/views/modals/address-definition.html:16
 msgid "{{address}} can be spent if:"

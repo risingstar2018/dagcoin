@@ -6,9 +6,9 @@
     .module('copayApp.services')
     .factory('changeWalletTypeService', changeWalletTypeService);
 
-  changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova'];
+  changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova', 'gettextCatalog'];
 
-  function changeWalletTypeService($rootScope, fileSystemService, isCordova) {
+  function changeWalletTypeService($rootScope, fileSystemService, isCordova, gettextCatalog) {
     const service = {};
 
     service.change = change;
@@ -59,7 +59,7 @@
             // transfer data
             createDatabaseAndTransferData(loadedData, () => {
               // reload application
-              const message = msg || 'Wallet type successfully changed, please restart the application.';
+              const message = msg || gettextCatalog.getString('Wallet type successfully changed, please restart the application.');
               $rootScope.$emit('Local/ShowAlert', message, 'fi-check', () => {
                 if (navigator && navigator.app) {
                   navigator.app.exitApp();
@@ -172,7 +172,7 @@
       if (excObj.message && excObj.message.toLowerCase().indexOf('wallet not found:') > -1) {
         // try to change wallet type
         if (canChange()) {
-          change('Application successfully updated, please restart the application.');
+          change(gettextCatalog.getString('Application successfully updated, please restart the application.'));
           return true;
         }
       }

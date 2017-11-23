@@ -13,7 +13,7 @@
 
     <li dag-right-icon="chevron-thin-right" ng-click="prefGlobal.changeWalletType()" ng-if="prefGlobal.canChangeWalletType">
       <div translate>Change Wallet type</div>
-      <div class="value">{{!prefGlobal.isLight ? 'Full-Wallet' : 'Light-Wallet'}}</div>
+      <div class="value">{{prefGlobal.type}}</div>
       <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
 
