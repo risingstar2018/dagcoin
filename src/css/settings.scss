@@ -64,10 +64,15 @@
         margin-top: -16px;
       }
 
-      .value{
+      .value {
         font-size: 12px;
         color: #999;
         text-align: right;
+      }
+
+      .wrapped {
+        word-break: break-all;
+        white-space: normal;
       }
 
       &.left_icon {
