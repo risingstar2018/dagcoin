@@ -91,6 +91,7 @@ public/lib/*
 public/js/*
 public/*.js
 public/languages
+public/migrations
 
 *.sublime-project
 *.sublime-workspace
