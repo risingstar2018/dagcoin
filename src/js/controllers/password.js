@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('passwordController',
-    function ($rootScope, $scope, $timeout, profileService, notification, go, gettext) {
+    function ($rootScope, $scope, $timeout, profileService, notification, go, gettextCatalog) {
       const self = this;
 
       self.validationErrors = [];
@@ -31,7 +31,7 @@
         }
         if (isSetup) {
           if (passwordTemp !== self.password) {
-            self.error = gettext('Passwords do not match');
+            self.error = gettextCatalog.getString('Passwords do not match');
             return;
           }
         }
@@ -42,16 +42,16 @@
         self.validationErrors = [];
 
         if (self.password.length < 8) {
-            self.validationErrors.push(gettext('Password must be at least 8 characters long'));
+            self.validationErrors.push(gettextCatalog.getString('Password must be at least 8 characters long'));
         }
         if (self.password.search(/[a-z]/i) < 0) {
-            self.validationErrors.push(gettext('Password must contain at least one letter'));
+            self.validationErrors.push(gettextCatalog.getString('Password must contain at least one letter'));
         }
         if (self.password.search(/[0-9]/) < 0) {
-            self.validationErrors.push(gettext('Password must contain at least one digit'));
+            self.validationErrors.push(gettextCatalog.getString('Password must contain at least one digit'));
         }
         if (self.password.search(/[!@#$%^&*]/) < 0) {
-            self.validationErrors.push(gettext('Password must contain at least one special character'));
+            self.validationErrors.push(gettextCatalog.getString('Password must contain at least one special character'));
         }
         return self.validationErrors.length <= 0;
       };

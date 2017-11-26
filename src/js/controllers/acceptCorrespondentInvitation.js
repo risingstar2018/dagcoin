@@ -2,10 +2,8 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('acceptCorrespondentInvitationController',
-    function ($scope, $rootScope, $timeout, configService, profileService, isCordova, go, correspondentListService, gettext) {
+    function ($scope, $rootScope, $timeout, configService, profileService, isCordova, go, correspondentListService, gettextCatalog) {
       const self = this;
-      console.log('acceptCorrespondentInvitationController');
-
       const fc = profileService.focusedClient;
       $scope.backgroundColor = fc.backgroundColor;
 
@@ -25,23 +23,20 @@
       };
 
       function handleCode(code) {
-        const conf = require('byteballcore/conf.js');
-        const re = new RegExp(`^${conf.program}:`, 'i');
-        const pairCode = code.replace(re, '');
-        const matches = pairCode.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
+        const matches = code.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
         if (!matches) {
-          return setError(gettext('Invalid pairing code'));
+          return setError(gettextCatalog.getString('Invalid pairing code'));
         }
         const pubkey = matches[1];
         const hub = matches[2];
         const pairingSecret = matches[3];
         if (pubkey.length !== 44) {
-          return setError(gettext('Invalid pubkey length'));
+          return setError(gettextCatalog.getString('Invalid pubkey length'));
         }
         // if (pairing_secret.length !== 12)
         //    return setError("Invalid pairing secret length");
         console.log(pubkey, hub, pairingSecret);
-        self.setOngoingProcess(gettext('pairing'));
+        self.setOngoingProcess(gettextCatalog.getString('pairing'));
         correspondentListService.acceptInvitation(hub, pubkey, pairingSecret, (err) => {
           if (err) {
             console.log('acceptInvitationError', err);

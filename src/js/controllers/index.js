@@ -19,7 +19,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       isCordova,
       storageService,
       addressService,
-      gettext,
       gettextCatalog,
       amMoment,
       nodeWebkit,
@@ -202,7 +201,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       eventBus.on('refused_to_sign', (deviceAddress) => {
         const device = require('byteballcore/device.js');
         device.readCorrespondent(deviceAddress, (correspondent) => {
-          notification.success(gettextCatalog.getString('Refused'), gettext(`${correspondent.name} refused to sign the transaction`));
+          notification.success(gettextCatalog.getString('Refused'), gettextCatalog.getString(`${correspondent.name} refused to sign the transaction`));
         });
       });
 
@@ -248,7 +247,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         updatePublicKeyRing(client);
         const device = require('byteballcore/device.js');
         device.readCorrespondent(deviceAddress, (correspondent) => {
-          notification.success(gettextCatalog.getString('Success'), gettext(`Wallet ${walletName} approved by ${correspondent.name}`));
+          notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(`Wallet ${walletName} approved by ${correspondent.name}`));
         });
       });
 
@@ -261,7 +260,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         const walletName = client.credentials.walletName;
         const device = require('byteballcore/device.js');
         device.readCorrespondent(deviceAddress, (correspondent) => {
-          notification.info(gettextCatalog.getString('Declined'), gettext(`Wallet ${walletName} declined by ${correspondent.name}`));
+          notification.info(gettextCatalog.getString('Declined'), gettextCatalog.getString(`Wallet ${walletName} declined by ${correspondent.name}`));
         });
         profileService.deleteWallet({ client }, (err) => {
           if (err) {
@@ -281,7 +280,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           if (!client.isComplete()) {
             throw Error('not complete');
           }
-          notification.success(gettextCatalog.getString('Success'), `Wallet ${walletName} is ready`);
+          notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(`Wallet ${walletName} is ready`));
           $rootScope.$emit('Local/WalletCompleted');
         });
       });
@@ -619,23 +618,23 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       };
 
       self.menu = [{
-        title: gettext('Home'),
+        title: gettextCatalog.getString('Home'),
         icon: 'icon-home',
         link: 'walletHome'
       }, {
-        title: gettext('Receive'),
+        title: gettextCatalog.getString('Receive'),
         icon: 'icon-recieve',
         link: 'receive'
       }, {
-        title: gettext('Send'),
+        title: gettextCatalog.getString('Send'),
         icon: 'icon-send',
         link: 'send'
       }, {
-        title: gettext('History'),
+        title: gettextCatalog.getString('History'),
         icon: 'icon-history',
         link: 'history'
       }, {
-        title: gettext('Chat'),
+        title: gettextCatalog.getString('Chat'),
         icon: 'icon-chat',
         new_state: 'correspondentDevices',
         link: 'chat'
@@ -1587,7 +1586,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           (msg) => {
             // ERROR
             $log.debug('Invalid Touch ID', msg);
-            cb(gettext('Invalid Touch ID'));
+            cb(gettextCatalog.getString('Invalid Touch ID'));
           });
       });
 

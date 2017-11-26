@@ -2,9 +2,9 @@
   ng-include="'views/includes/topbar.html'"
   ng-init="titleSection='Accept invitation'; goBackToState = 'correspondentDevices.addCorrespondentDevice';">
 </div>
-<qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
 <div ng-controller="acceptCorrespondentInvitationController">
-    
+  <qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
+
   <div class="onGoingProcess" ng-show="onGoingProcess">
     <div class="onGoingProcess-content" ng-style="{'background-color':backgroundColor}">
       <div class="spinner">

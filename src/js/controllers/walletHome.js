@@ -68,7 +68,7 @@
           if (form.address.$invalid && !self.blockUx) {
             console.log('invalid address, resetting form');
             self.resetForm();
-            self.error = gettext('Could not recognize a valid Dagcoin QR Code');
+            self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
           }
         });
 
@@ -690,7 +690,7 @@
             return console.log('form is gone');
           }
           if (form.$invalid) {
-            this.error = gettext('Unable to send transaction proposal');
+            this.error = gettextCatalog.getString('Unable to send transaction proposal');
             return;
           }
           if (fc.isPrivKeyEncrypted()) {
@@ -729,12 +729,12 @@
         }
         self.current_payment_key = currentPaymentKey;
 
-          indexScope.setOngoingProcess(gettext('sending'), true);
+          indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
           $timeout(() => {
             profileService.requestTouchid((err) => {
               if (err) {
                 profileService.lockFC();
-                indexScope.setOngoingProcess(gettext('sending'), false);
+                indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
                 self.error = err;
                 $timeout(() => {
                   delete self.current_payment_key;
@@ -747,7 +747,7 @@
               const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
               if (self.binding) {
                 if (!recipientDeviceAddress) {
-                  throw Error(gettext('recipient device address not known'));
+                  throw Error(gettextCatalog.getString('recipient device address not known'));
                 }
                 const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
 
@@ -829,7 +829,7 @@
                   walletDefinedByAddresses.createNewSharedAddress(arrDefinition, assocSignersByPath, {
                     ifError(err) {
                       delete self.current_payment_key;
-                      indexScope.setOngoingProcess(gettext('sending'), false);
+                      indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
                       self.setSendError(err);
                     },
                     ifOk(sharedAddress) {
@@ -871,19 +871,19 @@
 
                 if (indexScope.baseBalance.stable < constants.MIN_BYTE_FEE) {
                   if (!fundingExchangeClientService.active) {
-                    paymentPromise = Promise.reject(gettext('The Funding Client is not ready'));
+                    paymentPromise = Promise.reject(gettextCatalog.getString('The Funding Client is not ready'));
                   } else {
                     paymentPromise = fundingExchangeClientService.getByteOrigin().then((sharedAddress) => {
                       console.log(`ADDRESS${sharedAddress ? ' ' : ' NOT '}SERVED BY THE FUNDING NODE`);
                       if (!sharedAddress) {
-                        return Promise.reject(gettext('The funding service is currently not supported on secondary wallets. Load some bytes on it'));
+                        return Promise.reject(gettextCatalog.getString('The funding service is currently not supported on secondary wallets. Load some bytes on it'));
                       }
 
                       return fundingExchangeClientService.getSharedAddressBalance(sharedAddress).then((assocBalances) => {
                         console.log(`BALANCE FOR ${sharedAddress}: ${JSON.stringify(assocBalances)}`);
 
                         if (assocBalances.base.stable === 0 || assocBalances.base.stable < 1500) {
-                          return Promise.reject(gettext('Funding hub is fueling your wallet, it may take several minutes. Please try again a bit later.'));
+                          return Promise.reject(gettextCatalog.getString('Funding hub is fueling your wallet, it may take several minutes. Please try again a bit later.'));
                         }
 
                         opts = {
@@ -924,15 +924,15 @@
                     fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
                       let error = sendMultiPaymentError;
                       // if multisig, it might take very long before the callback is called
-                      indexScope.setOngoingProcess(gettext('sending'), false);
+                      indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
                       breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
                       delete self.current_payment_key;
                       profileService.bKeepUnlocked = false;
                       if (sendMultiPaymentError) {
                         if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
-                          error = gettext('Not enough dagcoins');
+                          error = gettextCatalog.getString('Not enough dagcoins');
                         } else if (sendMultiPaymentError.match(/connection closed/) || sendMultiPaymentError.match(/connect to light vendor failed/)) {
-                          error = gettext('Problems with connecting to the hub. Please try again later');
+                          error = gettextCatalog.getString('Problems with connecting to the hub. Please try again later');
                         }
                         return self.setSendError(error);
                       }
@@ -943,7 +943,7 @@
                         eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
                         if (binding && binding.reverseAmount) { // create a request for reverse payment
                           if (!myAddress) {
-                            throw Error(gettext('my address not known'));
+                            throw Error(gettextCatalog.getString('my address not known'));
                           }
                           const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
                           const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
@@ -971,7 +971,7 @@
                   $scope.sendForm.$setPristine();
                 })).catch((error) => {
                   delete self.current_payment_key;
-                  indexScope.setOngoingProcess(gettext('sending'), false);
+                  indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
                   $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {
                   });
                 });
@@ -1200,7 +1200,7 @@
           if (asset) {
             const assetIndex = lodash.findIndex($scope.index.arrBalances, { asset });
             if (assetIndex < 0) {
-              throw Error(gettext(`failed to find asset index of asset ${asset}`));
+              throw Error(gettextCatalog.getString(`failed to find asset index of asset ${asset}`));
             }
             $scope.index.assetIndex = assetIndex;
             this.lockAsset = true;
@@ -1263,7 +1263,7 @@
           const availableBytes = indexScope.baseBalance.stable;
 
           if (availableBytes < constants.MIN_BYTE_FEE) {
-            $rootScope.$emit('Local/ShowAlert', gettext('You are sending all your stable amount. Transaction fee will be automatically excluded!'), 'fi-alert', () => {
+            $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('You are sending all your stable amount. Transaction fee will be automatically excluded!'), 'fi-alert', () => {
               availableDags = availableDags > constants.DAG_FEE ? availableDags - constants.DAG_FEE : 0;
               availableDags /= this.dagUnitValue;
               form.amount.$setViewValue(`${availableDags}`);
