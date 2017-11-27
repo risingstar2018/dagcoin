@@ -17,9 +17,8 @@
       $rootScope,
       fundingExchangeClientService,
       proofingService,
-      dagcoinProtocolService
-    ) {
-      const constants = require('byteballcore/constants.js');
+      dagcoinProtocolService,
+      ENV) {
       const fc = profileService.focusedClient;
       const c = fc.credentials;
 
@@ -38,7 +37,7 @@
           if (err) {
             $rootScope.$emit('Local/ShowAlert', err, 'fi-alert', () => { });
           } else if (addr) {
-            $rootScope.$emit('Local/ShowAlert', 'New Address successfully generated.', 'fi-check', () => { });
+            $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('New Address successfully generated.'), 'fi-check', () => { });
             this.init();
             proofingService.proofCurrentAddress().then((proof) => {
               dagcoinProtocolService.sendRequest(
@@ -88,7 +87,7 @@
 
         fc.getListOfBalancesOnAddresses((listOfBalances) => {
           const balanceList = listOfBalances.map((row) => {
-            if (row.asset === 'base' || row.asset === constants.DAGCOIN_ASSET) {
+            if (row.asset === 'base' || row.asset === ENV.DAGCOIN_ASSET) {
               const assetName = row.asset !== 'base' ? 'DAG' : 'base';
               const unitName = row.asset !== 'base' ? config.dagUnitName : config.unitName;
               row.amount = `${profileService.formatAmount(row.amount, assetName, { dontRound: true })} ${unitName}`;

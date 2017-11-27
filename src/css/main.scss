@@ -1,6 +1,7 @@
 @import "variables";
 @import "mobile";
 @import "dagNavBar";
+@import "settings";
 /* Components */
 @import "components/buttons";
 @import "components/inputs";
@@ -40,6 +41,11 @@ svg-icon {
   vertical-align: middle;
   fill: currentColor;
   line-height: 0;
+  pointer-events: none;
+}
+
+svg {
+  pointer-events: none;
 }
 
 .color_red {
@@ -141,77 +147,6 @@ h4 {
       font-weight: 400;
       padding: 7px;
       font-size: 12px;
-    }
-  }
-}
-
-.preferences {
-  background: #f1f3f5;
-
-  form {
-    background: #fff;
-    padding-top: 10px;
-    margin-bottom: 10px;
-  }
-
-  .switch {
-    top: -5px !important;
-  }
-
-  h4 {
-    background: #f1f3f5;
-    padding: 25px 20px 5px;
-    text-transform: uppercase;
-    color: #555;
-    font-size: 12px;
-    font-weight: 300;
-    margin: 0;
-
-    button {
-      color: $red;
-      float: right;
-      background: transparent;
-
-      &:hover {
-        color: $red;
-        background: transparent;
-      }
-    }
-  }
-
-  ul {
-    font-size: 14px;
-    background: #fff;
-    margin: 5px 0;
-
-    li {
-      cursor: pointer !important;
-      overflow: hidden;
-      padding: 10px 20px;
-      border-bottom: 1px solid #e9e9ec;
-      position: relative;
-      word-break: break-all;
-
-      .arrow-right {
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        margin-top: -12px;
-      }
-
-      .switch {
-        position: absolute;
-        right: 20px;
-        top: 50% !important;
-        margin-top: -16px;
-      }
-
-      > div {
-        &.value {
-          color: #666;
-          font-size: 12px;
-        }
-      }
     }
   }
 }
@@ -2028,6 +1963,14 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     padding: 4px 10px;
     width: 100px;
   }
+
+  &.error{
+    border-color: $red;
+  }
+
+  &.success{
+    border-color: $green;
+  }
 }
 
 .animated {
@@ -2349,13 +2292,13 @@ a.a_none {
     margin-top: -8px
   }
 
-  svg-icon{
+  svg-icon {
     svg {
       width: 22px;
       height: 22px
     }
 
-    &.svg-icon-add{
+    &.svg-icon-add {
       svg {
         width: 16px;
         height: 16px
@@ -2377,29 +2320,25 @@ a.a_none {
   }
 }
 
-#send, #accept {
-  #qr-scanner {
+#qr-scanner {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 50px;
+  width: 50px;
+  z-index: 12;
+  color: #fff;
+
+  svg-icon {
     position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    background: #eee;
-    width: 50px;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    top: 50%;
+    left: 50%;
+    margin-left: -14px;
+    margin-top: -14px;
 
-    svg-icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-left: -13px;
-      margin-top: -14px;
-
-      svg {
-        width: 26px;
-        height: 26px;
-        fill: #666;
-      }
+    svg {
+      width: 28px;
+      height: 28px;
     }
   }
 }
@@ -3036,4 +2975,15 @@ p.color_red {
 .noclick {
   pointer-events: none;
   color: #8597a7;
+}
+
+.badge {
+  top: 3px;
+  right: 3px;
+  font-size: 0.6em;
+  padding: 3px 7.6px 2px;
+  background-color: $red;
+  border-radius: 10px;
+  color: #fff;
+  position: absolute;
 }

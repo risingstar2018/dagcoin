@@ -1,6 +1,6 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
-   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService) => {
+   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService, ENV) => {
     const eventBus = require('byteballcore/event_bus.js');
     const ValidationUtils = require('byteballcore/validation_utils.js');
     const objectHash = require('byteballcore/object_hash.js');
@@ -75,7 +75,6 @@ angular.module('copayApp.services').factory('correspondentListService',
       if ($state.is('walletHome') && $rootScope.tab === 'walletHome' && !faucetService.isFaucetAddress(peerAddress)) {
         setCurrentCorrespondent(peerAddress, () => {
           $stickyState.reset('correspondentDevices.correspondentDevice');
-          go.path('correspondentDevices.correspondentDevice');
         });
       } else {
         $rootScope.$digest();
@@ -123,7 +122,7 @@ angular.module('copayApp.services').factory('correspondentListService',
       let objMultiPaymentRequest;
       let assocPaymentsByAsset;
       let invalidChash;
-      const paymentJson = Buffer(paymentJsonBase64, 'base64').toString('utf8');
+      const paymentJson = new Buffer(paymentJsonBase64, 'base64').toString('utf8');
       console.log(paymentJson);
       try {
         objMultiPaymentRequest = JSON.parse(paymentJson);
@@ -271,7 +270,7 @@ angular.module('copayApp.services').factory('correspondentListService',
         const bbUnitName = walletSettings.bbUnitName;
         newAmount /= bbUnitValue;
         return `${newAmount} ${bbUnitName}`;
-      } else if (asset === constants.DAGCOIN_ASSET) {
+      } else if (asset === ENV.DAGCOIN_ASSET) {
         const dagUnitValue = walletSettings.dagUnitValue;
         const dagUnitName = walletSettings.dagUnitName;
         newAmount /= dagUnitValue;
@@ -501,7 +500,7 @@ angular.module('copayApp.services').factory('correspondentListService',
 
         if (message !== null) {
           if (message.protocol === 'dagcoin') {
-            console.log(`DAGCOIN MESSAGE RECEIVED FROM ${fromAddress}`);
+            console.log(`DAGCOIN MESSAGE RECEIVED FROM ${fromAddress} WITH TITLE ${message.title} AND BODY ${JSON.stringify(message)}`);
             eventBus.emit(`dagcoin.${message.title}`, message, fromAddress);
             return Promise.resolve(true);
           }

@@ -1,5 +1,4 @@
-
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/dagcoin/dagcoin.png?columns=all)](https://waffle.io/dagcoin/dagcoin?utm_source=badge)
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/dagcoin/localized.svg)](https://crowdin.com/project/dagcoin)
 
 [![Build Status](https://travis-ci.org/dagcoin/dagcoin.svg?branch=master)](https://travis-ci.org/dagcoin/dagcoin)
 

@@ -1,6 +1,6 @@
 <div
   ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Device name'; goBackToState = 'preferencesGlobal'; invert = true">
+  ng-init="titleSection='Device name'; goBackToState = 'preferencesGlobal';">
 </div>
 
 <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
@@ -19,7 +19,7 @@
 				</div>
 
 
-				<button type="submit" class="btn btn_red-full">{{'Save'|translate}}</button>
+				<button ng-disabled="prefDeviceName.deviceName.trim() === ''" type="submit" class="btn btn_red-full">{{'Save'|translate}}</button>
 			</form>
 			<div class="text-gray size-12 text-center" translate>Device name is visible to other devices you communicate
 				with.

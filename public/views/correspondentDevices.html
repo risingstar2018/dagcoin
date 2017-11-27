@@ -2,7 +2,7 @@
 
   <div
        ng-include="'views/includes/topbar.html'"
-       ng-init="titleSection='Paired devices'; showCamera = true; closeToHome = true"
+       ng-init="titleSection='Paired devices'; closeToHome = true"
        ng-show="state.is('correspondentDevices')">
   </div>
 
@@ -15,7 +15,7 @@
           <a ng-show="selectedCorrespondentList[correspondent.device_address]" 
             ng-hide="hideRemoveButton(correspondent.removable)"
             class="removeCorrespondentList" 
-            ng-click="remove(correspondent.device_address)" translate><i class="fi-trash size-24"></i></a>
+            ng-click="remove(correspondent.device_address)"><i class="fi-trash size-24"></i></a>
           <a class="selectCorrespondentList" 
             ng-show="editCorrespondentList" 
             ng-click="toggleSelectCorrespondentList(correspondent.device_address)">
@@ -42,3 +42,5 @@
       </ul>
     </div>
 </div>
+
+<div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>

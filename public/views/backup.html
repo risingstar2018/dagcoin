@@ -1,5 +1,5 @@
 <div ng-include="'views/includes/topbar.html'"
-     ng-init="titleSection='Backup'; goBackToState = 'preferencesGlobal'; invert = true;"></div>
+     ng-init="titleSection='Backup'; goBackToState = 'preferencesGlobal';"></div>
 
 <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 
@@ -38,7 +38,7 @@
 
 
 		<div class="row m10t m10b" ng-show="wordsC.show">
-			<div class="small-centered  text-gray columns size-14 text-center">
+			<div class="text-gray columns size-14 text-center">
 				<span translate>Your Wallet Seed:</span><br/>
 				<span translate class="text-bold">
           Write it down and keep it somewhere safe.
@@ -50,7 +50,7 @@
 			<div class="columns">
 				<div class="m10t columns size-14 text-gray" style="background:white;-webkit-user-select: text;"
 					 ng-class="{'enable_text_select': index.network == 'testnet'}">
-					<span ng-repeat="word in wordsC.mnemonicWords track by $index"><span style="white-space:nowrap">{{word}}</span><span
+					<span ><span>{{wordsC.mnemonicWordsJoined}}</span><span
 						ng-show="wordsC.useIdeograms">&#x3000;</span> </span>
 				</div>
 			</div>

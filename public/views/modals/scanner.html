@@ -1,19 +1,9 @@
-<nav class="tab-bar">
-	<header class="c-header c-header-android js-header">
-		<div class="c-header__logo"><a href="#">
-			<svg class="icon icon-logo">
-				<use xlink:href="img/svg/symbol-defs.svg#icon-logo"></use>
-			</svg></a></div>
-		<div class="c-header__settings"><span class="settings-trigger">
+  <div class="modal-content text-center fix-modals-touch" ng-init="init()">
+  <a class="close_modal" ng-click="cancel()"><svg-icon title="close"></svg-icon></a>
 
-            <a ng-click="cancel()">
-			<span>Back</span>
-			</a>
-		</span></div>
-
-	</header>
-</nav>
-<div class="modal-content text-center fix-modals-touch" ng-init="init()">
+  <div class="modal-content-header">
+    <h3 translate>Scan QR Code</h3>
+  </div>
   <canvas id="qr-canvas" width="200" height="150"></canvas>
   <video id="qrcode-scanner-video" width="300" height="225"></video>
 </div>
