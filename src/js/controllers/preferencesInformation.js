@@ -172,5 +172,9 @@
           go.walletHome();
         }, 100);
       };
+
+      this.isSingleAddressWallet = function () {
+        return fc.isSingleAddress;
+      };
     });
 }());
