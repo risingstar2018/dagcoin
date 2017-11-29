@@ -404,7 +404,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   const paymentJsonBase64 = Buffer(paymentJson).toString('base64');
                   paymentRequestCode = `payment:${paymentJsonBase64}`;
                 } else {
-                  paymentRequestCode = `byteball:${myAddress}?amount=${peerAmount}&asset=${encodeURIComponent(contract.peerAsset)}`;
+                  paymentRequestCode = `dagcoin:${myAddress}?amount=${peerAmount}&asset=${encodeURIComponent(contract.peerAsset)}`;
                 }
                 const paymentRequestText = gettext(`[your share of payment to the contract](${paymentRequestCode})`);
                 device.sendMessageToDevice(correspondent.device_address, 'text', paymentRequestText);
@@ -841,6 +841,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         $scopeModal.dagUnitValue = walletSettings.dagUnitValue;
         $scopeModal.color = fc.backgroundColor;
         $scopeModal.isCordova = isCordova;
+        $scopeModal.dagAsset = ENV.DAGCOIN_ASSET;
         $scopeModal.buttonLabel = gettext('Request payment');
         // $scopeModal.selectedAsset = $scopeModal.index.arrBalances[$scopeModal.index.assetIndex];
         // console.log($scopeModal.index.arrBalances.length+" assets, current: "+$scopeModal.asset);
@@ -862,36 +863,21 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             return console.log('showRequestPaymentModal: no balances yet');
           }
           const amount = form.amount.$modelValue;
-          // var asset = form.asset.$modelValue;
-          const asset = $scopeModal.index.arrBalances[$scopeModal.index.assetIndex].asset;
+          const asset = ENV.DAGCOIN_ASSET;
+
           if (!asset) {
             throw Error('no asset');
           }
-          let amountInSmallestUnits;
-          if (asset === 'base') {
-            amountInSmallestUnits = parseInt((amount * $scopeModal.unitValue).toFixed(0), 10);
-          } else if (asset === constants.BLACKBYTES_ASSET) {
-            amountInSmallestUnits = parseInt((amount * $scopeModal.bbUnitValue).toFixed(0), 10);
-          } else if (asset === ENV.DAGCOIN_ASSET) {
-            amountInSmallestUnits = amount * $scopeModal.dagUnitValue;
-          } else {
-            amountInSmallestUnits = amount;
-          }
+          const amountInSmallestUnits = amount * $scopeModal.dagUnitValue;
           let params = `amount=${amountInSmallestUnits}`;
+
           if (asset !== 'base') {
             params += `&asset=${encodeURIComponent(asset)}`;
           }
-          let units;
-          if (asset === 'base') {
-            units = $scopeModal.unitName;
-          } else if (asset === constants.BLACKBYTES_ASSET) {
-            units = $scopeModal.bbUnitName;
-          } else if (asset === ENV.DAGCOIN_ASSET) {
-            units = $scopeModal.dagUnitName;
-          } else {
-            units = `of ${asset}`;
-          }
-          appendText(`[${amount} ${units}](byteball:${myPaymentAddress}?${params})`);
+          const units = $scopeModal.dagUnitName;
+
+          appendText(`[${amount} ${units}](dagcoin:${myPaymentAddress}?${params})`);
+
           return $modalInstance.dismiss('cancel');
         };
 

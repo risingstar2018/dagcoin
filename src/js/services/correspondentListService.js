@@ -81,7 +81,7 @@ angular.module('copayApp.services').factory('correspondentListService',
       }
     }
 
-    const paymentRequestRegexp = /\[.*?\]\(byteball:([0-9A-Z]{32})\?([\w=&;+%]+)\)/g; // payment description within [] is ignored
+    const paymentRequestRegexp = /\[.*?\]\(dagcoin:([0-9A-Z]{32})\?([\w=&;+%]+)\)/g; // payment description within [] is ignored
 
     function highlightActions(text) {
       return text.replace(/\b[2-7A-Z]{32}\b(?!(\?(amount|asset|device_address)|"))/g, (address) => {

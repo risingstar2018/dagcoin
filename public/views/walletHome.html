@@ -257,7 +257,9 @@
 					<div ng-show="index.isCordova" class="page-action__info">
 						<span translate>Share the link above to receive payments.</span></div>
 				</div>
-
+        <a class="size-14" ng-click="home.openCustomizedAmountModal(index.shared_address || home.addr[index.walletId])">
+          <span translate>Request a specific amount</span>
+        </a>
 			</div>
 		</div> <!-- END Receive -->
 

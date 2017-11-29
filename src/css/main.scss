@@ -618,6 +618,10 @@ ul.manage li {
   background-color: #ed4a43;
 }
 
+.m0b {
+  margin-bottom: 0;
+}
+
 .m10b {
   margin-bottom: 10px;
 }
@@ -650,8 +654,16 @@ ul.manage li {
   margin-bottom: 50px;
 }
 
+.m0r {
+  margin-right: 0;
+}
+
 .m10r {
   margin-right: 10px;
+}
+
+.m0l {
+  margin-left: 0;
 }
 
 .m15l {
@@ -664,6 +676,10 @@ ul.manage li {
 
 .m20r {
   margin-right: 20px;
+}
+
+.m0t {
+  margin-top: 0;
 }
 
 .m20t {
@@ -1225,7 +1241,7 @@ label, a {
     color: #7a8c9e;
     border-radius: 0 2px 2px 0;
     position: absolute;
-    top: 0;
+    top: 5px;
     right: 0;
     width: auto;
     text-align: right;
@@ -2806,6 +2822,11 @@ input {
   font-weight: 700;
   color: #aaa;
   margin-bottom: 7px;
+}
+
+.title.no-margin {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .name {
