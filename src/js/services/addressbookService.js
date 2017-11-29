@@ -2,7 +2,7 @@
   'use strict';
 
   /* eslint-disable no-unused-vars */
-  angular.module('copayApp.services').factory('addressbookService', (storageService, profileService) => {
+  angular.module('copayApp.services').factory('addressbookService', (storageService, profileService, lodash) => {
     const root = {};
 
     root.getLabel = function (addr, cb) {
@@ -46,8 +46,15 @@
         if (!addressBook) {
           addressBook = {};
         }
+
+        const addressNames = lodash.values(addressBook);
+
+        if (addressNames.indexOf(entry.label) > -1) {
+          return cb('Entry with that label already exist');
+        }
+
         if (addressBook[entry.address]) {
-          return cb('Entry already exist');
+          return cb('Entry with that address already exist');
         }
         addressBook[entry.address] = entry.label;
         return storageService.setAddressbook(fc.credentials.network, JSON.stringify(addressBook), (setAddressbookError, address) => {

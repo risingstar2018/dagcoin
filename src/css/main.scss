@@ -48,6 +48,8 @@ svg {
   pointer-events: none;
 }
 
+
+
 .color_red {
   color: $red;
 }
@@ -409,6 +411,9 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill, inpu
   }
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
 .last-transactions-content {
   padding: 1.5rem 1rem;
   cursor: pointer;
@@ -1662,6 +1667,10 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   background: #000;
 }
 
+.modal-label {
+  margin-top: 10px;
+}
+
 .tx-details-blockchain {
   li {
     cursor: pointer !important;
@@ -2787,6 +2796,10 @@ canvas {
 
 .page-form {
   margin: 60px auto 0;
+  max-width: 300px;
+}
+
+.modal-form {
   max-width: 300px;
 }
 

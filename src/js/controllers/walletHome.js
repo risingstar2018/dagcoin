@@ -220,6 +220,12 @@
               });
             };
 
+            $scope.$watch('addressbook.label', (value) => {
+                if (value && value.length > 16) {
+                 $scope.addressbook.label = value.substr(0, 16);
+                }
+            });
+
             $scope.add = function (addressbook) {
               $scope.error = null;
               $timeout(() => {
