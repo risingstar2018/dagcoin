@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('correspondentDevicesController',
-    ($scope, $timeout, configService, profileService, go, correspondentListService, $state, $rootScope, ENV) => {
+    ($scope, $timeout, configService, profileService, go, correspondentListService, $state, $rootScope, lodash, ENV) => {
       const wallet = require('byteballcore/wallet.js');
       $scope.editCorrespondentList = false;
       $scope.selectedCorrespondentList = {};
@@ -41,10 +41,6 @@
         $scope.selectedCorrespondentList[addr] = !$scope.selectedCorrespondentList[addr];
       };
 
-      $scope.newMsgByAddressComparator = function (correspondent) {
-        return (-$scope.newMessagesCount[correspondent.device_address] || correspondent.name.toLowerCase());
-      };
-
       $scope.beginAddCorrespondent = function () {
         console.log('beginAddCorrespondent');
         listScrollTop = document.querySelector('[ui-view=chat]').scrollTop;
@@ -54,25 +50,26 @@
 
       $scope.readList = function () {
         $scope.error = null;
-        correspondentListService.list((err, ab) => {
-          if (err) {
-            $scope.error = err;
-            return;
-          }
+
+        correspondentListService.getCorrespondentsOrderedByMessageDate().then((correspondents) => {
           wallet.readDeviceAddressesUsedInSigningPaths((arrNotRemovableDeviceAddresses) => {
             // adding manually discovery service, because it doesn't exists in signing paths
             arrNotRemovableDeviceAddresses.push(ENV.discoveryDeviceAddress);
             // add a new property indicating whether the device can be removed or not
-            const length = ab.length;
-            for (let i = 0; i < length; i += 1) {
-              const corrDev = ab[i];
+            for (let i = 0, { length } = correspondents; i < length; i += 1) {
+              const corrDev = correspondents[i];
               const ix = arrNotRemovableDeviceAddresses.indexOf(corrDev.device_address);
               // device is removable when not in list
               corrDev.removable = (ix === -1);
             }
-            $scope.list = ab;
+
+            $scope.list = correspondents;
             $scope.$digest();
           });
+        }, (err) => {
+          if (err) {
+            $scope.error = err;
+          }
         });
       };
 

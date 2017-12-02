@@ -8,6 +8,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     const root = {};
     const device = require('byteballcore/device.js');
     const chatStorage = require('byteballcore/chat_storage.js');
+    const deviceManager = require('dagcoin-core/lib/deviceManager.js').getInstance();
     $rootScope.newMessagesCount = {};
     $rootScope.newMsgCounterEnabled = false;
 
@@ -464,7 +465,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     function sendMessageToCorrespondentChat(correspondent, fromAddress, body) {
-      const promise = new Promise(() => {
+      return new Promise(() => {
         if (!root.messageEventsByCorrespondent[correspondent.device_address]) {
           loadMoreHistory(correspondent);
         }
@@ -475,8 +476,6 @@ angular.module('copayApp.services').factory('correspondentListService',
           chatStorage.store(fromAddress, body, 1);
         }
       });
-
-      return promise;
     }
 
     /**
@@ -489,7 +488,7 @@ angular.module('copayApp.services').factory('correspondentListService',
      * @returns {Promise}
      */
     function processAsDagcoinMessage(correspondent, fromAddress, body) {
-      const promise = new Promise(() => {
+      return new Promise(() => {
         let message = null;
 
         try {
@@ -510,43 +509,29 @@ angular.module('copayApp.services').factory('correspondentListService',
 
         return sendMessageToCorrespondentChat(correspondent, fromAddress, body);
       });
-
-      return promise;
     }
 
     function readCorrespondentAndForwardMessage(fromAddress, body) {
-      const promise = new Promise((resolve) => {
-        device.readCorrespondent(fromAddress, (correspondent) => { resolve(correspondent); });
+      return new Promise((resolve) => {
+        device.readCorrespondent(fromAddress, (correspondent) => {
+          resolve(correspondent);
+        });
       }).then((correspondent) => {
-        if (correspondent == null) {
+        if (correspondent === null) {
           return Promise.reject(`CORRESPONDENT WITH ADDRESS ${fromAddress} NOT FOUND`);
         }
 
         return processAsDagcoinMessage(correspondent, fromAddress, body);
       });
+    }
 
-      return promise;
+    function getCorrespondentsOrderedByMessageDate() {
+      return deviceManager.getCorrespondentList();
     }
 
     eventBus.on('text', (fromAddress, body) => {
       console.log(`NEW TEXT MESSAGE FROM ${fromAddress}`);
-
-      /* if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
-        console.log(`DISCOVERY MESSAGE FROM ${fromAddress}`);
-
-        discoveryService.processMessage(body).then((isRelatedToFunding) => {
-          if (isRelatedToFunding) {
-            console.log('IT WAS RELATED TO FUNDING');
-            return;
-          }
-
-          console.log('IT WAS NOT RELATED TO FUNDING');
-          // It wasn't a request related to funding.
-          readCorrespondentAndForwardMessage(fromAddress, body);
-        });
-      } else { */
-        return readCorrespondentAndForwardMessage(fromAddress, body);
-      // }
+      return readCorrespondentAndForwardMessage(fromAddress, body);
     });
 
     eventBus.on('chat_recording_pref', (correspondentAddress, enabled) => {
@@ -656,13 +641,13 @@ angular.module('copayApp.services').factory('correspondentListService',
     root.loadMoreHistory = loadMoreHistory;
     root.checkAndInsertDate = checkAndInsertDate;
     root.parseMessage = parseMessage;
+    root.getCorrespondentsOrderedByMessageDate = getCorrespondentsOrderedByMessageDate;
 
     root.list = function (cb) {
       device.readCorrespondents((arrCorrespondents) => {
         cb(null, arrCorrespondents);
       });
     };
-
 
     root.startWaitingForPairing = function (cb) {
       device.startWaitingForPairing((pairingInfo) => {
@@ -701,31 +686,6 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     root.currentCorrespondent = null;
     root.messageEventsByCorrespondent = {};
-
-    /*
-    root.remove = function(addr, cb) {
-      var fc = profileService.focusedClient;
-      root.list(function(err, ab) {
-        if (err) return cb(err);
-        if (!ab) return;
-        if (!ab[addr]) return cb('Entry does not exist');
-        delete ab[addr];
-        storageService.setCorrespondentList(fc.credentials.network, JSON.stringify(ab), function(err) {
-          if (err) return cb('Error deleting entry');
-          root.list(function(err, ab) {
-            return cb(err, ab);
-          });
-        });
-      });
-    };
-
-    root.removeAll = function() {
-      var fc = profileService.focusedClient;
-      storageService.removeCorrespondentList(fc.credentials.network, function(err) {
-        if (err) return cb('Error deleting correspondentList');
-        return cb();
-      });
-    }; */
 
     return root;
   });
