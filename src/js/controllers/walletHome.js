@@ -451,6 +451,7 @@
             $scope.unitDecimals = self.unitDecimals;
             $scope.dagUnitValue = walletSettings.dagUnitValue;
             $scope.dagUnitName = walletSettings.dagUnitName;
+            $scope.dagAsset = ENV.DAGCOIN_ASSET;
             $scope.isCordova = isCordova;
             $scope.buttonLabel = 'Generate QR Code';
             $scope.protocol = conf.program;
@@ -467,26 +468,25 @@
               configurable: true,
             });
 
+            $scope.$watch('_customAmount', (newValue, oldValue) => {
+              if (typeof newValue !== 'undefined') {
+                if (newValue.length > 12) {
+                  $scope._customAmount.alias = oldValue;
+                }
+              }
+            });
+
             $scope.submitForm = function (form) {
               if ($scope.index.arrBalances.length === 0) {
                 return console.log('openCustomizedAmountModal: no balances yet');
               }
               const amount = form.amount.$modelValue;
               const asset = ENV.DAGCOIN_ASSET;
-              let amountInSmallestUnits;
               if (!asset) {
                 throw Error('no asset');
               }
-              switch (asset) {
-                case 'base':
-                  amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
-                  break;
-                case ENV.DAGCOIN_ASSET:
-                  amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
-                  break;
-                default:
-                  amountInSmallestUnits = amount;
-              }
+
+              const amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
 
               return $timeout(() => {
                 $scope.customizedAmountUnit = `${amount} ${(asset === 'base') ? $scope.unitName : (asset === ENV.DAGCOIN_ASSET ? $scope.dagUnitName : `of ${asset}`)}`;
@@ -494,7 +494,6 @@
                 $scope.asset_param = (asset === 'base') ? '' : `&asset=${encodeURIComponent(asset)}`;
               }, 1);
             };
-
 
             $scope.shareAddress = function (uri) {
               if (isCordova) {

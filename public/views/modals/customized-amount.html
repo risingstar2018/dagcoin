@@ -54,7 +54,8 @@
           </label>
           <div class="input input-wrap">
             <input type="number" id="amount" name="amount" ng-attr-placeholder="{{'Amount'|translate}}" 
-            ng-model="_customAmount" valid-amount="{{dagAsset}}" required autocomplete="off">
+            ng-model="_customAmount" valid-amount="{{dagAsset}}" required autocomplete="off"
+            min="0.000001" ng-minlength="1" ng-maxlength="12">
             <a class="postfix">{{dagUnitName}}</a>
           </div>
         </div>
