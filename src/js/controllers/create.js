@@ -68,6 +68,8 @@
       this.onCorrespondentSelected = function (deviceAddress) {
         console.log(deviceAddress);
         if (deviceAddress === 'new') {
+          $rootScope.goBackState = 'create';
+          self.multisigSelected = false;
           go.path('correspondentDevices.addCorrespondentDevice');
         }
       };
@@ -229,6 +231,12 @@
       $scope.$on('$destroy', () => {
         $rootScope.hideWalletNavigation = false;
       });
+
+      if ($rootScope.goBackState) {
+        $rootScope.goBackState = false;
+        self.setMultisig();
+        self.multisigSelected = true;
+      }
 
       updateSeedSourceSelect(1);
       self.setSeedSource('new');
