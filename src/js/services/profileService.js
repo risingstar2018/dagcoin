@@ -733,6 +733,25 @@
 
       storageService.storeProfile(root.profile, () => cb());
     };
+
+    root.getWalletByAddress = function (address) {
+      const db = require('byteballcore/db.js');
+
+      return new Promise((resolve) => {
+        db.query(
+          'SELECT wallet FROM my_addresses WHERE address = ?',
+          [address],
+          (rows) => {
+            if (!rows || rows.length === 0) {
+              resolve(null);
+            } else {
+              resolve(rows[0].wallet);
+            }
+          }
+        );
+      });
+    };
+
     return root;
   });
 }());

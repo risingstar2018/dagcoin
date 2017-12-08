@@ -140,7 +140,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       });
     };
 
-    $scope.showPayment = function (asset) {
+    $scope.showPayment = function (asset, walletId, address) {
       console.log(`will show payment in asset ${asset}`);
       if (!asset) {
         throw Error('no asset in showPayment');
@@ -154,6 +154,27 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         throw Error(`failed to find asset index of asset ${asset}`);
       }
       $scope.index.assetIndex = assetIndex;
+
+      if (walletId && walletId !== indexScope.walletId) {
+        return profileService.setAndStoreFocus(walletId, () => {
+          $timeout(() => {
+            go.history();
+          }, 500);
+        });
+      }
+
+      if (address) {
+        profileService.getWalletByAddress(address).then((wallet) => {
+          if (wallet) {
+            return profileService.setAndStoreFocus(wallet, () => {
+              $timeout(() => {
+                go.history();
+              }, 500);
+            });
+          }
+        });
+      }
+
       go.history();
     };
 
@@ -390,7 +411,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   return;
                 }
                 $rootScope.$emit('NewOutgoingTx');
-                eventBus.emit('sent_payment', correspondent.device_address, myAmount, contract.myAsset);
+                eventBus.emit('sent_payment', correspondent.device_address, myAmount, contract.myAsset, indexScope.walletId);
                 let paymentRequestCode;
                 if (contract.peer_pays_to === 'contract') {
                   const arrPayments = [{ address: sharedAddress, amount: peerAmount, asset: contract.peerAsset }];
@@ -642,7 +663,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                 $rootScope.$emit('NewOutgoingTx');
                 const assocPaymentsByAsset = correspondentListService.getPaymentsByAsset(objMultiPaymentRequest);
                 Object.keys(assocPaymentsByAsset).forEach((ass) => {
-                  eventBus.emit('sent_payment', recipientDeviceAddress, assocPaymentsByAsset[ass], ass);
+                  eventBus.emit('sent_payment', recipientDeviceAddress, assocPaymentsByAsset[ass], ass, indexScope.walletId);
                 });
               });
               $modalInstance.dismiss('cancel');
