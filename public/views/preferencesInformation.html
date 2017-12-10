@@ -65,7 +65,7 @@
   </ul>
 
   <div class="wallet-addresses" ng-show="addrs">
-    <h4 translate>All Wallet Addresses
+    <h4 >{{'All Wallet Addresses' | translate}}
       <button ng-click="info.setAddress()" ng-disabled="index.isOffline" ng-show="!info.isSingleAddressWallet()">{{'Generate new address' | translate}}</button>
     </h4>
     <ul>

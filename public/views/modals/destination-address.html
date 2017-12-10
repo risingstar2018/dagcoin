@@ -112,7 +112,7 @@
           </div>
           <div class="input-wrap">
             <input id="label" name="label" ng-model="addressbook.label"
-                   placeholder="Name of the contact" required>
+                   placeholder="{{'Label'| translate}}" required>
           </div>
 
           <div class="title clearfix modal-label">
@@ -121,7 +121,7 @@
 
           <div class="input-wrap">
             <input type="text" id="address" name="address"
-                   ng-model="addressbook.address" placeholder="Dagcoin address"
+                   ng-model="addressbook.address" placeholder="{{'DAG address' | translate}}"
 
                    valid-address required
                    ng-class="{'error': addressbookForm.address.$invalid && addressbook.address,

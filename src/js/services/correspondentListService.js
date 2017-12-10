@@ -1,6 +1,6 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
-   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService, ENV) => {
+   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService, ENV, gettextCatalog) => {
     const eventBus = require('byteballcore/event_bus.js');
     const ValidationUtils = require('byteballcore/validation_utils.js');
     const objectHash = require('byteballcore/object_hash.js');
@@ -108,7 +108,7 @@ angular.module('copayApp.services').factory('correspondentListService',
         return `<a ng-click="sendPayment('${address}', ${objPaymentRequest.amount}, '${objPaymentRequest.asset}',` +
         `'${objPaymentRequest.device_address}')">${objPaymentRequest.amountStr}</a>`;
       }).replace(/\[(.+?)\]\(command:(.+?)\)/g,
-        (str, description, command) => `<a ng-click="sendCommand('${escapeQuotes(command)}', 
+        (str, description, command) => `<a ng-click="sendCommand('${escapeQuotes(command)}',
         '${escapeQuotes(description)}')" class="command">${description}</a>`).replace(/\[(.+?)\]\(payment:(.+?)\)/g,
         (str, description, paymentJsonBase64) => {
           const arrMovements = getMovementsFromJsonBase64PaymentRequest(paymentJsonBase64, true);
@@ -187,13 +187,13 @@ angular.module('copayApp.services').factory('correspondentListService',
         if (!objPaymentRequest) {
           return str;
         }
-        return `<i>${objPaymentRequest.amountStr} to ${address}</i>`;
+        return `<i>${objPaymentRequest.amountStr} ${gettextCatalog.getString('to')} ${address}</i>`;
       }).replace(/\[(.+?)\]\(payment:(.+?)\)/g, (str, description, paymentJsonBase64) => {
         const arrMovements = getMovementsFromJsonBase64PaymentRequest(paymentJsonBase64);
         if (!arrMovements) {
           return '[invalid payment request]';
         }
-        return `<i>Payment request: ${arrMovements.join(', ')}</i>`;
+        return `<i>${gettextCatalog.getString('Payment request:')} ${arrMovements.join(', ')}</i>`;
       }).replace(/\bhttps?:\/\/\S+/g,
         str => `<a ng-click="openExternalLink('${escapeQuotes(str)}')" class="external-link">${str}</a>`);
     }
@@ -461,16 +461,12 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     function parseMessage(message) {
-      switch (message.type) {
-        case 'system':
-          message.message = JSON.parse(message.message);
-          message.message = `chat recording ${message.message.state ? '&nbsp;' : ''}` +
-            `<b dropdown-toggle="#recording-drop">${message.message.state ? 'ON' : 'OFF'}</b>` +
-            '<span class="padding"></span>';
-          message.chat_recording_status = true;
-          break;
-        default:
-          break;
+      if (message.type === 'system') {
+        message.message = JSON.parse(message.message);
+        message.message = `${gettextCatalog.getString('chat recording')}
+             <b dropdown-toggle="#recording-drop">${message.message.state ? 'ON' : 'OFF'}</b>
+             <span class="padding"></span>`;
+        message.chat_recording_status = true;
       }
       return message;
     }

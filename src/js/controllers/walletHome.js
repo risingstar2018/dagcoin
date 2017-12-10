@@ -453,7 +453,7 @@
             $scope.dagUnitName = walletSettings.dagUnitName;
             $scope.dagAsset = ENV.DAGCOIN_ASSET;
             $scope.isCordova = isCordova;
-            $scope.buttonLabel = 'Generate QR Code';
+            $scope.buttonLabel = gettextCatalog.getString('Generate QR Code');
             $scope.protocol = conf.program;
 
 

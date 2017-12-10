@@ -1,6 +1,6 @@
 <div class="topbar-container topbar-transparent"
      ng-include="'views/includes/topbar.html'"
-     ng-init="titleSection='My wallet';">
+     ng-init="titleSection='My wallet'">
 </div>
 
 <qr-scanner ng-if="tab === 'send'" ng-show="index.isComplete" on-scan="index.onQrCodeScanned(data)" before-scan="index.onBeforeScan()"></qr-scanner>
@@ -217,7 +217,7 @@
 			</div>
 			<div class="p-wrap text-center m20t" ng-show="!index.needsBackup">
 
-				<h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;" translate>Tap the <strong>QR-code</strong> to copy its address.<br/>Share it with the sender via email or text.</h2>
+				<h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">{{'Tap the' | translate}} <strong>QR-code</strong> {{'to copy its address.' | translate}}<br/>{{'Share it with the sender via email or text.' | translate}}</h2>
 
 
 				<!-- Address-->
@@ -323,7 +323,7 @@
                      style="font-size: 12px;"
                      type="text" id="address"
 									   name="address"
-									   ng-attr-placeholder="{{home.canSendExternalPayment() ? 'DAG address' : 'DAG address of your other wallet &#8594;'}}"
+									   ng-attr-placeholder="{{home.canSendExternalPayment() ? ('DAG address' | translate) : ('DAG address of your other wallet &#8594;' | translate)}}"
 									   ng-model="_address" valid-address required
 									   ng-blur="home.formFocus(false)">
 
