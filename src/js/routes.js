@@ -158,15 +158,6 @@
           controller: 'walletForPaymentController',
           needProfile: true,
         })
-        .state('import', {
-          url: '/import',
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/import.html',
-            },
-          },
-        })
         .state('importProfile', {
           url: '/importProfile',
           templateUrl: 'views/importProfile.html',
@@ -395,17 +386,6 @@
             },
           },
         })
-        .state('export', {
-          url: '/export',
-          templateUrl: 'views/export.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/export.html',
-            },
-          },
-        })
         .state('paperWallet', {
           url: '/paperWallet',
           templateUrl: 'views/paperWallet.html',
@@ -428,14 +408,14 @@
             },
           },
         })
-        .state('recoveryFromSeed', {
-          url: '/recoveryFromSeed',
-          templateUrl: 'views/recoveryFromSeed.html',
+        .state('recovery', {
+          url: '/recovery',
+          templateUrl: 'views/recovery.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/recoveryFromSeed.html',
+              templateUrl: 'views/recovery.html',
             },
           },
         })

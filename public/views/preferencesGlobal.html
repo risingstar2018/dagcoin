@@ -33,19 +33,11 @@
     </li>
   </ul>
 
-  <h4 translate>Spending Restrictions</h4>
-  <ul>
-    <li dag-right-icon="chevron-thin-right" class="cursor-default">
-      <div translate>Request Password</div>
-      <switch id="network-name" name="encrypt" ng-model="encrypt" class="green right"></switch>
-    </li>
-  </ul>
-
-  <h4 translate>BACKUP</h4>
+  <h4 translate>Security</h4>
 
   <ul>
-    <li ui-sref="backup" ng-hide="index.isPrivKeyExternalt">
-      <div translate>Backup wallet seed</div>
+    <li ui-sref="backup" ng-hide="index.isPrivKeyExternal">
+      <div translate>Backup wallet</div>
       <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
           <i class="fi-alert"></i><span translate>Still not done</span>
@@ -53,19 +45,13 @@
       </div>
       <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
-
-    <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal">
-      <div translate>Recovery from seed</div>
+    <li ui-sref="recovery" ng-hide="index.isPrivKeyExternal">
+      <div translate>Recover wallet</div>
       <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
-
-    <li ui-sref="export" ng-hide="index.isPrivKeyExternal">
-      <div translate>Full backup</div>
-      <i class="icon-arrow-right3 size-24 arrow-right"></i>
-    </li>
-    <li ui-sref="import" ng-hide="index.isPrivKeyExternal">
-      <div translate>Restore from full backup</div>
-      <i class="icon-arrow-right3 size-24 arrow-right"></i>
+    <li dag-right-icon="chevron-thin-right" class="cursor-default">
+      <div translate>Request Spending Restrictions</div>
+      <switch id="network-name" name="encrypt" ng-model="encrypt" class="green right"></switch>
     </li>
   </ul>
 

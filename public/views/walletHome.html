@@ -414,8 +414,19 @@
 								</table>
 							</div>
 						</div>
-            <div class="page-action">
-              <a href="#" ng-show="index.historyShowShowAll" ng-click="index.showAllHistory()" class="btn btn_red-full" translate>Show all</a>
+
+              <div class="row">
+                <div class="small-6 columns page-action">
+                  <a href="#" ng-show="index.historyShowShowAll" ng-click="index.showAllHistory()" class="btn btn_red-full" translate>Show all</a>
+                </div>
+                <div class="small-6 columns page-action" ng-show="index.txHistory[0] && !index.updatingTxHistory[index.walletId] && !index.isCordova" >
+                  <input id="export_file" type="file" nwsaveas="Dagcoin-{{index.alias || index.walletName}}.csv" accept=".csv" style="display:none">
+                  <a class="btn btn_red-full" ng-click="index.csvHistory();">
+                    <i class="fi-page-export-csv"></i>
+                    <span translate>Export CSV</span>
+                  </a>
+                </div>
+              </div>
             </div>
 					</div>
 				</div>
