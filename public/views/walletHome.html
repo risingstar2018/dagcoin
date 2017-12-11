@@ -4,9 +4,11 @@
 </div>
 
 <qr-scanner ng-if="tab === 'send'" ng-show="index.isComplete" on-scan="index.onQrCodeScanned(data)" before-scan="index.onBeforeScan()"></qr-scanner>
-
+<div class="backup" ng-if="index.needsBackup" ng-click="index.openBackupNeededModal()">
+  <span translate>Wallet seed not backed up</span>
+</div>
 <div ng-controller="walletHomeController as home">
-	<div class="onGoingProcess" ng-show="index.isOffline">
+  <div class="onGoingProcess" ng-show="index.isOffline">
 		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
 			<div class="spinner">
 				<div class="rect1"></div>
@@ -197,28 +199,9 @@
         -->
 		<div id="receive" class="receive p-share tab-view cordova-scrollable" style="padding-bottom: 0">
 			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
-			<div ng-show="index.needsBackup" class="p60t row text-center">
-				<div class="large-12 columns">
-					<div class="text-warning text-bold m15b">
-						<i class="fi-alert"></i>
-						<span translate>
-              WARNING: Backup needed
-            </span>
-					</div>
-					<div class="text-gray" translate>
-						Before receiving funds, it is highly recommended you backup your wallet keys.
-					</div>
-
-					<button class="m20t button black expand round"
-							ng-click="$root.go('backup')" ng-style="{'background-color':index.backgroundColor}" >
-						<span translate>Backup now</span>
-					</button>
-				</div>
-			</div>
-			<div class="p-wrap text-center m20t" ng-show="!index.needsBackup">
+			<div class="p-wrap text-center m20t">
 
 				<h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">{{'Tap the' | translate}} <strong>QR-code</strong> {{'to copy its address.' | translate}}<br/>{{'Share it with the sender via email or text.' | translate}}</h2>
-
 
 				<!-- Address-->
 				<div class="text-center">

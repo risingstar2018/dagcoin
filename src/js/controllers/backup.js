@@ -2,21 +2,21 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('wordsController',
-    function ($rootScope, $scope, $timeout, profileService, go, gettext, confirmDialog, notification, $log, isCordova) {
-      const msg = gettext('Are you sure you want to delete the backup words?');
-      const successMsg = gettext('Backup words deleted');
+    function ($rootScope, $scope, $timeout, profileService, go, confirmDialog, notification, $log, isCordova, gettextCatalog) {
+      const msg = gettextCatalog.getString('Are you sure you want to delete the backup words?');
+      const successMsg = gettextCatalog.getString('Backup words deleted');
       const self = this;
       self.show = false;
       const fc = profileService.focusedClient;
 
       if (isCordova) {
-        self.text = gettext(`To protect your funds, please use multisig wallets with redundancy, 
+        self.text = gettextCatalog.getString(`To protect your funds, please use multisig wallets with redundancy,
           e.g. 1-of-2 wallet with one key on this device and another key on your laptop computer. 
           Just the wallet seed is not enough.`);
       } else {
         const desktopApp = require('byteballcore/desktop_app.js');
         const appDataDir = desktopApp.getAppDataDir();
-        self.text = gettext(`To restore your wallets, you will need a full backup of Dagcoin data at ${appDataDir}.  
+        self.text = gettextCatalog.getString(`To restore your wallets, you will need a full backup of Dagcoin data at ${appDataDir}.
                      Better yet, use multisig wallets with redundancy, 
                      e.g. 1-of-2 wallet with one key on this device and another key on your smartphone.  
                      Just the wallet seed is not enough.`);
@@ -34,9 +34,6 @@
       self.toggle = function () {
         self.error = '';
         if (!self.credentialsEncrypted) {
-          if (!self.show) {
-            $rootScope.$emit('Local/BackupDone');
-          }
           self.show = !self.show;
         }
 
@@ -55,6 +52,7 @@
             fc.clearMnemonic();
             profileService.clearMnemonic(() => {
               self.deleted = true;
+              $rootScope.$emit('Local/BackupDone');
               notification.success(successMsg);
               go.walletHome();
             });
@@ -88,7 +86,7 @@
 
             profileService.unlockFC(null, (err) => {
               if (err) {
-                self.error = `${gettext('Could not decrypt')}: ${err.message}`;
+                self.error = `${gettextCatalog.getString('Could not decrypt')}: ${err.message}`;
                 $log.warn('Error decrypting credentials:', self.error); // TODO
                 return;
               }

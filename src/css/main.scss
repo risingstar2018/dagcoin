@@ -3021,3 +3021,14 @@ p.color_red {
   color: #fff;
   position: absolute;
 }
+
+.backup {
+  position: relative;
+  top: 0;
+  width: 100%;
+  cursor: pointer;
+  background-color: $warning;
+  color: #fff;
+  text-align: center;
+  z-index: 2;
+}
