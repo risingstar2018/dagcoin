@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers')
-  .controller('approveNewWitnesses', ($scope, $modalInstance, $document, autoUpdatingWitnessesList, gettext) => {
+  .controller('approveNewWitnesses', ($scope, $modalInstance, $document, autoUpdatingWitnessesList, gettextCatalog) => {
     $scope.addWitnesses = autoUpdatingWitnessesList.addWitnesses;
     $scope.delWitnesses = autoUpdatingWitnessesList.delWitnesses;
 
@@ -22,7 +22,7 @@
             i += 1;
             replaceWitness(i, oldW, newW);
           } else {
-            $modalInstance.close(gettext('closed result'));
+            $modalInstance.close(gettextCatalog.getString('closed result'));
           }
         });
       }

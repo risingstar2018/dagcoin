@@ -3,7 +3,7 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $log, $modal, configService, uxLanguage, pushNotificationsService, profileService,
-              fundingExchangeProviderService, animationService, changeWalletTypeService, gettext, gettextCatalog) {
+              fundingExchangeProviderService, animationService, changeWalletTypeService, gettextCatalog) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
@@ -70,7 +70,7 @@
           if (err) {
             $scope.encrypt = true;
 
-            if (err.message !== gettext('Password needed')) {
+            if (err.message !== gettextCatalog.getString('Password needed')) {
               return unlock(err.message);
             }
             return;

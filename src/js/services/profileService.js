@@ -210,14 +210,14 @@
           });
         } catch (ex) {
           $log.info(ex);
-          return cb(gettext('Could not create: Invalid wallet seed'));
+          return cb(gettextCatalog.getString('Could not create: Invalid wallet seed'));
         }
       } else if (options.extendedPrivateKey) {
         try {
           walletClient.seedFromExtendedPrivateKey(options.extendedPrivateKey, options.account || 0);
         } catch (ex) {
           $log.warn(ex);
-          return cb(gettext('Could not create using the specified extended private key'));
+          return cb(gettextCatalog.getString('Could not create using the specified extended private key'));
         }
       } else if (options.extendedPublicKey) {
         try {
@@ -227,7 +227,7 @@
           });
         } catch (ex) {
           $log.warn('Creating wallet from Extended Public Key Arg:', ex, options);
-          return cb(gettext('Could not create using the specified extended public key'));
+          return cb(gettextCatalog.getString('Could not create using the specified extended public key'));
         }
       } else {
         const lang = uxLanguage.getCurrentLanguage();
@@ -276,7 +276,7 @@
           network: 'livenet',
         }, (error) => {
           if (error) {
-            return cb(`${gettext('Error creating wallet')}: ${error}`);
+            return cb(`${gettextCatalog.getString('Error creating wallet')}: ${error}`);
           }
           console.log('created wallet, client:', walletClient);
           const xPrivKey = walletClient.credentials.xPrivKey;
@@ -331,7 +331,7 @@
             isSingleAddress: opts.isSingleAddress
           }, (error) => {
             if (error) {
-              return cb(`${gettext('Error creating wallet')}: ${error}`);
+              return cb(`${gettextCatalog.getString('Error creating wallet')}: ${error}`);
             }
             return root.addWalletClient(walletClient, opts, cb);
           });
@@ -425,7 +425,7 @@
         });
       } catch (err) {
         $log.warn(err);
-        return cb(gettext('Could not import. Check input file and password'));
+        return cb(gettextCatalog.getString('Could not import. Check input file and password'));
       }
 
       const inputStr = JSON.parse(str);
@@ -448,7 +448,7 @@
 
       walletClient.importFromExtendedPrivateKey(xPrivKey, (importFromExtendedPrivateKeyError) => {
         if (importFromExtendedPrivateKeyError) {
-          return cb(`${gettext('Could not import')}: ${importFromExtendedPrivateKeyError}`);
+          return cb(`${gettextCatalog.getString('Could not import')}: ${importFromExtendedPrivateKeyError}`);
         }
 
         return root.addWalletClient(walletClient, opts, cb);
@@ -475,7 +475,7 @@
         account: opts.account || 0,
       }, (err) => {
         if (err) {
-          return cb(`${gettext('Could not import')}: ${err}`);
+          return cb(`${gettextCatalog.getString('Could not import')}: ${err}`);
         }
         return root.addWalletClient(walletClient, opts, cb);
       });
@@ -496,7 +496,7 @@
             err.code = 'WALLET_DOES_NOT_EXIST';
           }
 
-          return cb(`${gettext('Could not import')}: ${err}`);
+          return cb(`${gettextCatalog.getString('Could not import')}: ${err}`);
         }
 
         return root.addWalletClient(walletClient, opts, cb);
@@ -621,7 +621,7 @@
       $rootScope.$emit('Local/NeedsPassword', false, error, (err2, password) => {
         if (err2 && !password) {
           return cb({
-            message: (gettext('Password needed')),
+            message: (gettextCatalog.getString('Password needed')),
           });
         }
 
@@ -632,7 +632,7 @@
           } catch (e) {
             $log.debug(e);
             return cb({
-              message: (gettext('Wrong password')),
+              message: (gettextCatalog.getString('Wrong password')),
             });
           }
         const autolock = () => {

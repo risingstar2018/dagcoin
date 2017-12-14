@@ -475,17 +475,18 @@ API.prototype.recreateWallet = function (cb) {
  * @returns {Callback} cb - Return error or the address
  */
 API.prototype.createAddress = function (isChange, cb) {
-  $.checkState(this.credentials && this.credentials.isComplete());
   $.shouldBeFunction(cb);
   $.shouldBeNumber(isChange);
 
-  const coin = (this.credentials.network === 'livenet' ? '0' : '1');
-  const self = this;
-  breadcrumbs.add(`createAddress wallet=${this.credentials.walletId}, is_change=${isChange}`);
-  walletDefinedByKeys.issueOrSelectNextAddress(this.credentials.walletId, isChange, (addressInfo) => {
-    const path = `m/44'/${coin}'/${self.credentials.account}'/0/${addressInfo.address_index}`;
-    cb(null, { address: addressInfo.address, path, createdOn: addressInfo.creation_ts });
-  });
+  if (this.credentials && this.credentials.isComplete()) {
+    const coin = (this.credentials.network === 'livenet' ? '0' : '1');
+    const self = this;
+    breadcrumbs.add(`createAddress wallet=${this.credentials.walletId}, is_change=${isChange}`);
+    walletDefinedByKeys.issueOrSelectNextAddress(this.credentials.walletId, isChange, (addressInfo) => {
+      const path = `m/44'/${coin}'/${self.credentials.account}'/0/${addressInfo.address_index}`;
+      cb(null, { address: addressInfo.address, path, createdOn: addressInfo.creation_ts });
+    });
+  }
 };
 
 /*

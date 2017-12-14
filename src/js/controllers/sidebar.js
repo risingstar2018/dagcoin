@@ -25,6 +25,11 @@
       };
 
       self.switchWallet = function (selectedWalletId, currentWalletId, state) {
+        if (profileService.focusedClient && !profileService.focusedClient.isComplete()) {
+          $state.go('copayers');
+          return;
+        }
+
         backButton.menuOpened = false;
         if (selectedWalletId === currentWalletId) {
           $state.go(state);

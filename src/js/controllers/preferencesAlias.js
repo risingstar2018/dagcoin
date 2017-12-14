@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesAliasController',
-    function ($scope, $timeout, configService, profileService, go, gettext, lodash) {
+    function ($scope, $timeout, configService, profileService, go, gettextCatalog, lodash) {
       const self = this;
       const config = configService.getSync();
       const fc = profileService.focusedClient;
@@ -11,7 +11,7 @@
       this.alias = config.aliasFor[walletId] || fc.credentials.walletName;
 
       function setError(error) {
-        self.error = gettext(error);
+        self.error = gettextCatalog.getString(error);
       }
 
       this.save = function () {
