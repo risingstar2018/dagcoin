@@ -721,6 +721,8 @@
           const address = form.address.$modelValue;
           const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
           let amount = form.amount.$modelValue;
+          const paymentId = form.paymentId ? form.paymentId.$modelValue : null;
+          // const paymentId = 1;
           let merkleProof = '';
           if (form.merkle_proof && form.merkle_proof.$modelValue) {
             merkleProof = form.merkle_proof.$modelValue.trim();
@@ -923,6 +925,17 @@
                 }
 
                 paymentPromise.then(() => new Promise((resolve, reject) => {
+                  if (paymentId != null) {
+                    const objectHash = require('byteballcore/object_hash');
+                    const payload = JSON.stringify({ paymentId });
+                    opts.messages = [{
+                      app: 'text',
+                      payload_location: 'inline',
+                      payload_hash: objectHash.getBase64Hash(payload),
+                      payload
+                    }];
+                  }
+
                   console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
                   useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
                     opts.change_address = addressInfo.address;
