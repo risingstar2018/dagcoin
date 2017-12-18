@@ -6,7 +6,6 @@
       const JSZip = require('jszip');
       const async = require('async');
       const crypto = require('crypto');
-      const conf = require('byteballcore/conf');
       const userAgent = navigator.userAgent;
       let zip;
       let unzip;
@@ -112,6 +111,7 @@
             function (callback) {
               const existsConfJson = fileSystemService.nwExistsSync(`${dbDirPath}temp/conf.json`);
               const existsLight = fileSystemService.nwExistsSync(`${dbDirPath}temp/light`);
+              const conf = require('byteballcore/conf');
               if (existsConfJson) {
                 fileSystemService.nwMoveFile(`${dbDirPath}temp/conf.json`, `${dbDirPath}conf.json`, callback);
               } else if (existsLight && !existsConfJson) {

@@ -419,6 +419,17 @@
             },
           },
         })
+        .state('initialRecovery', {
+          url: '/initialRecovery',
+          templateUrl: 'views/initialRecovery.html',
+          walletShouldBeComplete: false,
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'views/initialRecovery.html',
+            },
+          },
+        })
         .state('preferencesGlobal', {
           url: '/preferencesGlobal',
           needProfile: true,
