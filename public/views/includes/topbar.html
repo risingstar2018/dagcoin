@@ -16,5 +16,14 @@
     </span>
   </div>
 
-  <div class="navbar-container-title">{{titleSection|translate}}</div>
+  <div class="navbar-container-title">  
+    <span ng-if="(index.arrBalances[index.assetIndex].shared !== undefined)">
+			<a ng-click="index.openSubwalletModal()">
+				{{titleSection}} <span class="arrow-down"></span>
+			</a>
+		</span>
+    <span ng-if="(index.arrBalances[index.assetIndex].shared === undefined)">
+			{{titleSection}}
+		</span>
+  </div>
 </div>

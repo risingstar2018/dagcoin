@@ -52,19 +52,23 @@
         $scope.error = null;
 
         correspondentListService.getCorrespondentsOrderedByMessageDate().then((correspondents) => {
-          wallet.readDeviceAddressesUsedInSigningPaths((arrNotRemovableDeviceAddresses) => {
-            // adding manually discovery service, because it doesn't exists in signing paths
-            arrNotRemovableDeviceAddresses.push(ENV.discoveryDeviceAddress);
-            // add a new property indicating whether the device can be removed or not
-            for (let i = 0, { length } = correspondents; i < length; i += 1) {
-              const corrDev = correspondents[i];
-              const ix = arrNotRemovableDeviceAddresses.indexOf(corrDev.device_address);
-              // device is removable when not in list
-              corrDev.removable = (ix === -1);
-            }
+          correspondentListService.getPendingSharedAddresses().then((pendingAddresses) => {
+            wallet.readDeviceAddressesUsedInSigningPaths((arrNotRemovableDeviceAddresses) => {
+              // adding manually discovery service, because it doesn't exists in signing paths
+              arrNotRemovableDeviceAddresses.push(ENV.discoveryDeviceAddress);
+              // add a new property indicating whether the device can be removed or not
+              for (let i = 0, { length } = correspondents; i < length; i += 1) {
+                const corrDev = correspondents[i];
+                const ixNotRemovable = arrNotRemovableDeviceAddresses.indexOf(corrDev.device_address);
+                const ixPendingAddress = pendingAddresses.indexOf(corrDev.device_address);
+                // device is removable when not in list
+                corrDev.removable = (ixNotRemovable === -1);
+                corrDev.clickable = (corrDev.removable || ixPendingAddress !== -1);
+              }
 
-            $scope.list = correspondents;
-            $scope.$digest();
+              $scope.list = correspondents;
+              $scope.$digest();
+            });
           });
         }, (err) => {
           if (err) {

@@ -1,105 +1,105 @@
-<nav class="tab-bar">
-  <section class="left-small">
-    <a ng-click="cancel()" class="p10">
-      <span class="text-close" translate>Close</span>
-    </a>
-  </section>
-  <section class="middle tab-bar-section">
-    <h1 class="title ellipsis" ng-style="{'color':color}" translate>
-      Bind payment
-    </h1>
-  </section>
-</nav>
-
-
 <div class="modal-content fix-modals-touch">
-	<form name=bindForm>
-	<div ng-if="error" class="row columns">
-		<span class="has-error size-12">
-			{{error}}
-		</span>
-	</div>
-	<h4 class="title m0 row" translate>The peer receives this payment if:</h4>
-	<div class="row columns m10t">
-		<select ng-model="binding.type">
-			<option value="reverse_payment" ng-if="!isSingleAddress" selected translate>I receive another payment:</option>
-			<option value="data" translate>An event is posted by an oracle:</option>
-		</select>
-	</div>
-	
-	<div class="row" ng-if="binding.type == 'reverse_payment'">
-		<div class="large-6 medium-6 small-6 columns" style="padding-right: 0px">
-			<input type="number" min="0" ng-attr-placeholder="{{'Amount'|translate}}" ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="binding.reverseAmount" name="reverseAmount" valid-amount="{{binding.reverseAsset}}" required autocomplete="off" style="text-align: right">
-		</div>
-		<div class="large-6 medium-6 small-6 columns" style="padding-left: 0px">
-			<select ng-model="binding.reverseAsset" ng-options="info.asset as info.displayName for info in arrPublicAssetInfos" style="margin-top: -2px; font-size: 13px; color: #6A7D90" ></select>
-		</div>
-	</div>
-	
-	<div ng-if="binding.type == 'data'">
-		<div class="row large-12 large-centered columns">
-			<label for="oracle_address" class="left" >
-				<span translate>Oracle address:</span>
-			</label>
-			<span class="has-error right size-12" ng-show="bindForm.oracle_address.$invalid && binding.oracle_address">
-				<i class="icon-close-circle size-14"></i>
-				<span class="vm" translate>Not valid</span>
-			</span>
-			<small class="right text-primary" ng-show="!bindForm.oracle_address.$invalid">
-				<i class="icon-checkmark-circle size-14"></i>
-			</small>
-			<div class="input">
-				<input class="m0" type="text" id="oracle_address" name="oracle_address" placeholder="Byteball address of the oracle" ng-model="binding.oracle_address" valid-address required >
-			</div>
-		</div>
-		<div class="row large-12 large-centered columns">
-			<label for="feed_name" class="left" >
-				<span translate>Data feed name:</span>
-			</label>
-			<div class="input">
-				<input class="m0" type="text" id="feed_name" name="feed_name" placeholder="e.g. bitcoin_merkle" ng-model="binding.feed_name" maxlength="64" required >
-			</div>
-		</div>
-		<div class="row large-12 large-centered columns">
-			<label for="feed_value" class="left" >
-				<span translate>Expected value:</span>
-			</label>
-			<div class="input">
-				<input class="m0" type="text" id="feed_value" name="feed_value" placeholder="e.g. 1PC9aZC4hNX2rmmrt7uHTfYAS3hRbph4UN:0.1" ng-model="binding.feed_value" maxlength="64" required >
-			</div>
-		</div>
-		<div class="row large-12 large-centered columns">
-			<label for="feed_type" class="left" >
-				<span translate>The expected value will be posted:</span>
-			</label>
-			<select ng-model="binding.feed_type" name="feed_type" id="feed_type" style="font-size: 13px; color: #6A7D90" >
-				<option value="explicit" translate>explicitly</option>
-				<option value="merkle" translate>in merkle tree</option>
-				<option value="either" translate>either way</option>
-			</select>
-		</div>
-	</div>
-	
-	<h4 class="columns row title" translate>
-		If the condition is not met, I can take this money back after: 
-	</h4>
-	<div class="row">
-		<div class="large-6 medium-6 small-6 columns" style="padding-right: 0px">
-			<input type="number" min="0.1" required name="timeout" ng-model="binding.timeout" style="text-align: right">
-		</div>
-		<div class="large-6 medium-6 small-6 columns" style="padding-left: 0px; margin-top: 8px; font-size: 13px; color: #6A7D90" translate>
-			hours
-		</div>
-	</div>
-	
-	<div class="m20t large-12 large-centered row columns">
-		<div >
-		</div>
-		<div >
-		</div>
-		<button type="button" class="button black round expand" ng-disabled="!binding.timeout || (binding.type == 'reverse_payment' ? (!binding.reverseAmount || bindForm.reverseAmount.$invalid) : (!binding.oracle_address || bindForm.oracle_address.$invalid || !binding.feed_name || !binding.feed_value))" ng-style="{'background-color':color}" ng-click="bind()" translate>
-			Bind payment
-		</button>
-	</div>
-	</form>
-</div>
+  <a class="close_modal" ng-click="cancel()"><svg-icon title="close"></svg-icon></a>
+  <div class="modal-content-header">
+      <h3 translate>Bind payment</h3>
+  </div>
+  
+  <div class="m20t">
+    <form name=bindForm>
+      <div ng-if="error" class="row columns">
+        <span class="has-error size-12">
+          {{error}}
+        </span>
+      </div>
+
+      <label for="reverseAmount">
+        <span translate>The peer receives this payment if:</span>
+      </label>
+      <div>
+        <select ng-model="binding.type">
+          <option value="reverse_payment" ng-if="!isSingleAddress" selected translate>I receive another payment:</option>
+          <option value="data" translate>An event is posted by an oracle:</option>
+        </select>
+      </div>
+      
+      <div ng-if="binding.type === 'reverse_payment'">    
+        <div class="input-wrap input-icon">
+          <input ng-class="{'error': bindForm.reverseAmount.$invalid && !bindForm.reverseAmount.$error.required, 'success': !bindForm.reverseAmount.$invalid}"
+                 style="font-size: 12px;" type="number" id="amount"
+                 ng-disabled="home.blockUx || home.lockAmount"
+                 name="reverseAmount" ng-attr-placeholder="{{('Amount')|translate}}" min="0.000001"
+                 ng-minlength="1" ng-maxlength="16" ng-model="binding.reverseAmount"
+                 ng-required="!home.bSendAll"
+                 autocomplete="off" ng-focus="home.formFocus('reverseAmount')"
+                 ng-blur="home.formFocus(false)">
+
+
+          <svg class="icon icon-d">
+            <use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
+          </svg>
+        </div>
+      </div>
+      
+      <div ng-if="binding.type === 'data'">
+        <div>
+          <label for="oracle_address" class="left">
+            <span translate>Oracle address:</span>
+          </label>
+          <span class="has-error right size-12" ng-show="bindForm.oracle_address.$invalid && binding.oracle_address">
+            <i class="icon-close-circle size-14"></i>
+            <span class="vm" translate>Not valid</span>
+          </span>
+          <small class="right text-primary" ng-show="!bindForm.oracle_address.$invalid">
+            <i class="icon-checkmark-circle size-14"></i>
+          </small>
+          <div class="input">
+            <input class="m0" type="text" id="oracle_address" name="oracle_address" placeholder="Address of the oracle" ng-model="binding.oracle_address" valid-address required >
+          </div>
+        </div>
+        <div>
+          <label for="feed_name" class="left">
+            <span translate>Data feed name:</span>
+          </label>
+          <div class="input">
+            <input class="m0" type="text" id="feed_name" name="feed_name" placeholder="e.g. bitcoin_merkle" ng-model="binding.feed_name" maxlength="64" required >
+          </div>
+        </div>
+        <div>
+          <label for="feed_value" class="left">
+            <span translate>Expected value:</span>
+          </label>
+          <div class="input">
+            <input class="m0" type="text" id="feed_value" name="feed_value" placeholder="e.g. 1PC9aZC4hNX2rmmrt7uHTfYAS3hRbph4UN:0.1" ng-model="binding.feed_value" maxlength="64" required >
+          </div>
+        </div>
+        <div>
+          <label for="feed_type" class="left">
+            <span translate>The expected value will be posted:</span>
+          </label>
+          <select ng-model="binding.feed_type" name="feed_type" id="feed_type" style="font-size: 13px; color: #6A7D90" >
+            <option value="explicit" translate>explicitly</option>
+            <option value="merkle" translate>in merkle tree</option>
+            <option value="either" translate>either way</option>
+          </select>
+        </div>
+      </div>
+      
+      <label for="timeout">
+        <span translate>If the condition is not met, I can take this money back after: </span>
+      </label>
+
+      <div class="row">
+        <div class="input-wrap input-icon">
+          <input type="number" min="0.1" required name="timeout" ng-model="binding.timeout" 
+                 style="display: inline; text-align: right; width: 100px;"/>
+          <span translate>hours</span>
+        </div>
+      </div>
+      
+      <div>
+        <button type="button" class="btn btn_red-full" ng-disabled="!binding.timeout || (binding.type == 'reverse_payment' ? (!binding.reverseAmount || bindForm.reverseAmount.$invalid) : (!binding.oracle_address || bindForm.oracle_address.$invalid || !binding.feed_name || !binding.feed_value))" ng-click="bind()" translate>
+          Bind payment
+        </button>
+      </div>
+    </form>
+  </div>

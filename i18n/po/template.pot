@@ -94,8 +94,8 @@ msgstr ""
 
 #: public/views/disclaimer.html:86
 msgid ""
-"<label>\n"
-"          <input type=\"checkbox\" ng-model=\"isAgree\">\n"
+"<label>\r\n"
+"          <input type=\"checkbox\" ng-model=\"isAgree\">\r\n"
 "          I confirm that I have read, understood, and agree to these terms.</label>"
 msgstr ""
 
@@ -158,7 +158,13 @@ msgid "Advanced"
 msgstr ""
 
 #: public/views/preferencesInformation.html:68
+<<<<<<< HEAD
+msgid ""
+"All Wallet Addresses\r\n"
+"      <button ng-click=\"info.setAddress()\" ng-disabled=\"index.isOffline\" ng-show=\"!info.isSingleAddressWallet()\">{{'Generate new address' | translate}}</button>"
+=======
 msgid "All Wallet Addresses"
+>>>>>>> testnet
 msgstr ""
 
 #: public/views/splash.html:52
@@ -170,7 +176,10 @@ msgid "Also in the Settings menu, you will find security options such as setting
 msgstr ""
 
 #: public/views/includes/output.html:8
+<<<<<<< HEAD
+=======
 #: public/views/modals/bind.html:32
+>>>>>>> testnet
 #: public/views/modals/customized-amount.html:32
 #: public/views/modals/customized-amount.html:53
 #: public/views/modals/customized-amount.html:56
@@ -182,7 +191,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: public/views/modals/bind.html:26
+#: public/views/modals/bind.html:21
 msgid "An event is posted by an oracle:"
 msgstr ""
 
@@ -247,8 +256,13 @@ msgid "Before receiving funds, it is highly recommended you backup your wallet k
 msgstr ""
 
 #: public/views/modals/bind.html:100
-#: public/views/modals/bind.html:8
+#: public/views/modals/bind.html:4
 msgid "Bind payment"
+msgstr ""
+
+#: public/views/walletHome.html:338
+#: public/views/walletHome.html:347
+msgid "Bind the payment to a condition"
 msgstr ""
 
 #: public/views/paymentUri.html:10
@@ -302,7 +316,7 @@ msgstr ""
 
 #: public/views/preferencesAlias.html:24
 msgid ""
-"Changing wallet alias only affects the local wallet\n"
+"Changing wallet alias only affects the local wallet\r\n"
 "        name."
 msgstr ""
 
@@ -321,7 +335,10 @@ msgstr ""
 #: public/views/modals/address-definition.html:30
 #: public/views/modals/address-definition.html:4
 #: public/views/modals/approveNewWitnesses.html:4
+<<<<<<< HEAD
+=======
 #: public/views/modals/bind.html:4
+>>>>>>> testnet
 #: public/views/modals/destination-address.html:7
 #: public/views/modals/multi-payment.html:4
 #: public/views/modals/offer-contract.html:4
@@ -388,7 +405,11 @@ msgid "Could not decrypt"
 msgstr ""
 
 #: public/views/walletHome.html:125
+<<<<<<< HEAD
+#: public/views/walletHome.html:397
+=======
 #: public/views/walletHome.html:382
+>>>>>>> testnet
 msgid "Could not fetch transaction history"
 msgstr ""
 
@@ -429,8 +450,8 @@ msgstr ""
 
 #: public/views/splash.html:34
 msgid ""
-"Creates light wallet which will contain minimum information relevant to you. The wallet vendor will be\n"
-"              able to know some of your balances and will be able to see which transactions are yours, but you can start\n"
+"Creates light wallet which will contain minimum information relevant to you. The wallet vendor will be\r\n"
+"              able to know some of your balances and will be able to see which transactions are yours, but you can start\r\n"
 "              using the wallet immediately."
 msgstr ""
 
@@ -468,7 +489,7 @@ msgid ""
 " Be careful, this could contain sensitive private data"
 msgstr ""
 
-#: public/views/modals/bind.html:57
+#: public/views/modals/bind.html:61
 #: public/views/modals/offer-contract.html:102
 msgid "Data feed name:"
 msgstr ""
@@ -483,7 +504,7 @@ msgstr ""
 
 #: public/views/paperWallet.html:50
 msgid ""
-"Decrypting a paper wallet could take around 5 minutes on this device. please be patient and\n"
+"Decrypting a paper wallet could take around 5 minutes on this device. please be patient and\r\n"
 "\t\t\t\t\t\t\tkeep the app open."
 msgstr ""
 
@@ -501,7 +522,7 @@ msgstr ""
 
 #: public/views/preferencesAdvanced.html:14
 msgid ""
-"Delete\n"
+"Delete\r\n"
 "            Wallet"
 msgstr ""
 
@@ -535,7 +556,7 @@ msgstr ""
 
 #: public/views/preferencesDeviceName.html:24
 msgid ""
-"Device name is visible to other devices you communicate\n"
+"Device name is visible to other devices you communicate\r\n"
 "\t\t\t\twith."
 msgstr ""
 
@@ -573,7 +594,7 @@ msgstr ""
 msgid "Error creating wallet"
 msgstr ""
 
-#: public/views/modals/bind.html:65
+#: public/views/modals/bind.html:69
 msgid "Expected value:"
 msgstr ""
 
@@ -642,10 +663,13 @@ msgstr ""
 msgid "GET STARTED"
 msgstr ""
 
+<<<<<<< HEAD
+=======
 #: src/js/controllers/walletHome.js:456
 msgid "Generate QR Code"
 msgstr ""
 
+>>>>>>> testnet
 #: public/views/preferencesInformation.html:69
 msgid "Generate new address"
 msgstr ""
@@ -686,11 +710,11 @@ msgstr ""
 msgid "I pay:"
 msgstr ""
 
-#: public/views/modals/bind.html:25
+#: public/views/modals/bind.html:20
 msgid "I receive another payment:"
 msgstr ""
 
-#: public/views/modals/bind.html:83
+#: public/views/modals/bind.html:88
 msgid "If the condition is not met, I can take this money back after:"
 msgstr ""
 
@@ -715,9 +739,13 @@ msgstr ""
 msgid "Importing wallet..."
 msgstr ""
 
+<<<<<<< HEAD
+#: public/views/walletHome.html:380
+=======
 #: public/views/walletHome.html:365
+>>>>>>> testnet
 msgid ""
-"Initial transaction history synchronization can take some minutes for wallets with many transactions.<br>\n"
+"Initial transaction history synchronization can take some minutes for wallets with many transactions.<br>\r\n"
 "\t\t\t\t\tPlease stand by."
 msgstr ""
 
@@ -725,7 +753,11 @@ msgstr ""
 msgid "Insert my address"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/js/controllers/index.js:1591
+=======
 #: src/js/controllers/index.js:1592
+>>>>>>> testnet
 msgid "Invalid Touch ID"
 msgstr ""
 
@@ -746,7 +778,10 @@ msgid "KEEP ONLY DATA RELEVANT TO YOU"
 msgstr ""
 
 #: public/views/modals/destination-address.html:111
+<<<<<<< HEAD
+=======
 #: public/views/modals/destination-address.html:115
+>>>>>>> testnet
 msgid "Label"
 msgstr ""
 
@@ -803,7 +838,11 @@ msgid "Multidevice Wallet"
 msgstr ""
 
 #: public/views/walletHome.html:153
+<<<<<<< HEAD
+#: public/views/walletHome.html:413
+=======
 #: public/views/walletHome.html:398
+>>>>>>> testnet
 msgid "My Account"
 msgstr ""
 
@@ -853,7 +892,11 @@ msgstr ""
 msgid "No recent transactions yet"
 msgstr ""
 
+<<<<<<< HEAD
+#: public/views/walletHome.html:400
+=======
 #: public/views/walletHome.html:385
+>>>>>>> testnet
 msgid "No transactions yet"
 msgstr ""
 
@@ -865,7 +908,11 @@ msgstr ""
 msgid "Not enough dagcoins"
 msgstr ""
 
+<<<<<<< HEAD
+#: public/views/modals/bind.html:50
+=======
 #: public/views/modals/bind.html:46
+>>>>>>> testnet
 #: public/views/modals/customized-amount.html:45
 #: public/views/modals/offer-contract.html:91
 msgid "Not valid"
@@ -892,7 +939,7 @@ msgstr ""
 msgid "Only single-sig wallets can be recovered."
 msgstr ""
 
-#: public/views/modals/bind.html:42
+#: public/views/modals/bind.html:46
 #: public/views/modals/offer-contract.html:87
 msgid "Oracle address:"
 msgstr ""
@@ -1023,7 +1070,11 @@ msgstr ""
 msgid "Press again to exit"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/js/controllers/walletHome.js:1434
+=======
 #: src/js/controllers/walletHome.js:1433
+>>>>>>> testnet
 msgid "Private payloads sent"
 msgstr ""
 
@@ -1122,12 +1173,23 @@ msgid "Request a specific amount"
 msgstr ""
 
 #: public/views/correspondentDevice.html:297
+<<<<<<< HEAD
+#: src/js/controllers/correspondentDevice.js:845
+=======
 #: src/js/controllers/correspondentDevice.js:866
+>>>>>>> testnet
 msgid "Request payment"
 msgstr ""
 
 #: public/views/modals/customized-amount.html:6
 msgid "Request specific amount"
+<<<<<<< HEAD
+msgstr ""
+
+#: public/views/create.html:91
+msgid "Required number of signatures"
+=======
+>>>>>>> testnet
 msgstr ""
 
 #: public/views/create.html:92
@@ -1174,7 +1236,11 @@ msgstr ""
 msgid "Scan the above QR code using the other device, or send this pairing code to the other device:"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/js/controllers/index.js:1582
+=======
 #: src/js/controllers/index.js:1583
+>>>>>>> testnet
 msgid "Scan your fingerprint please"
 msgstr ""
 
@@ -1211,7 +1277,11 @@ msgid "Select your identity"
 msgstr ""
 
 #: public/views/includes/transaction.html:10
+<<<<<<< HEAD
+#: public/views/walletHome.html:354
+=======
 #: public/views/walletHome.html:339
+>>>>>>> testnet
 #: src/js/controllers/index.js:629
 msgid "Send"
 msgstr ""
@@ -1280,7 +1350,11 @@ msgstr ""
 msgid "Share wallet link"
 msgstr ""
 
+<<<<<<< HEAD
+#: public/views/walletHome.html:433
+=======
 #: public/views/walletHome.html:420
+>>>>>>> testnet
 msgid "Show all"
 msgstr ""
 
@@ -1338,7 +1412,11 @@ msgstr ""
 #: src/js/controllers/index.js:250
 #: src/js/controllers/index.js:283
 #: src/js/controllers/preferencesDelete.js:31
+<<<<<<< HEAD
+#: src/js/controllers/walletHome.js:1434
+=======
 #: src/js/controllers/walletHome.js:1433
+>>>>>>> testnet
 msgid "Success"
 msgstr ""
 
@@ -1363,7 +1441,11 @@ msgid "Tap the"
 msgstr ""
 
 #: public/views/walletHome.html:126
+<<<<<<< HEAD
+#: public/views/walletHome.html:398
+=======
 #: public/views/walletHome.html:383
+>>>>>>> testnet
 #: public/views/walletHome.html:75
 #: public/views/walletHome.html:81
 msgid "Tap to retry"
@@ -1384,7 +1466,7 @@ msgid ""
 "              Please either change the amounts slightly or fund the entire contract yourself and require the peer to pay his half to you."
 msgstr ""
 
-#: public/views/modals/bind.html:73
+#: public/views/modals/bind.html:77
 msgid "The expected value will be posted:"
 msgstr ""
 
@@ -1396,7 +1478,7 @@ msgstr ""
 msgid "The hub suggests replacing the following witnesses:"
 msgstr ""
 
-#: public/views/modals/bind.html:22
+#: public/views/modals/bind.html:16
 msgid "The peer receives this payment if:"
 msgstr ""
 
@@ -1412,8 +1494,8 @@ msgstr ""
 
 #: public/views/splash.html:97
 msgid ""
-"The wallet will contain minimum information relevant to you.  The wallet vendor will be able to know\n"
-"              some of your balances and will be able to see which transactions are yours, but you can start using the\n"
+"The wallet will contain minimum information relevant to you.  The wallet vendor will be able to know\r\n"
+"              some of your balances and will be able to see which transactions are yours, but you can start using the\r\n"
 "              wallet immediately and the wallet is fully functional."
 msgstr ""
 
@@ -1426,8 +1508,8 @@ msgstr ""
 
 #: public/views/splash.html:79
 msgid ""
-"The wallet will contain the most current state of the entire Dagcoin database.  This option is better\n"
-"              for privacy but will take  several gigabytes of storage and the initial sync will take several days.\n"
+"The wallet will contain the most current state of the entire Dagcoin database.  This option is better\r\n"
+"              for privacy but will take  several gigabytes of storage and the initial sync will take several days.\r\n"
 "              CPU load will be high during sync."
 msgstr ""
 
@@ -1451,6 +1533,10 @@ msgstr ""
 msgid "This payment is already under way"
 msgstr ""
 
+#: public/views/walletHome.html:339
+msgid "This payment is bound to a condition"
+msgstr ""
+
 #: public/views/modals/tx-details.html:65
 msgid "This transaction has become invalid; possibly due to a double spend attempt."
 msgstr ""
@@ -1463,6 +1549,10 @@ msgstr ""
 #: public/views/includes/transaction.html:19
 #: public/views/modals/tx-details.html:16
 msgid "To"
+msgstr ""
+
+#: public/views/walletHome.html:342
+msgid "To bind the payment to a condition, please click the peer's address in chat"
 msgstr ""
 
 #: src/js/controllers/backup.js:13
@@ -1496,7 +1586,11 @@ msgstr ""
 msgid "Transaction detail"
 msgstr ""
 
+<<<<<<< HEAD
+#: public/views/walletHome.html:386
+=======
 #: public/views/walletHome.html:371
+>>>>>>> testnet
 msgid "Transactions<br> Downloaded"
 msgstr ""
 
@@ -1649,7 +1743,11 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/js/controllers/walletHome.js:1272
+=======
 #: src/js/controllers/walletHome.js:1271
+>>>>>>> testnet
 msgid "You are sending all your stable amount. Transaction fee will be automatically excluded!"
 msgstr ""
 
@@ -1666,7 +1764,11 @@ msgstr ""
 msgid "Your password"
 msgstr ""
 
+<<<<<<< HEAD
+#: public/views/walletHome.html:393
+=======
 #: public/views/walletHome.html:378
+>>>>>>> testnet
 msgid "Your transaction history"
 msgstr ""
 
@@ -1714,11 +1816,11 @@ msgstr ""
 msgid "days"
 msgstr ""
 
-#: public/views/modals/bind.html:78
+#: public/views/modals/bind.html:82
 msgid "either way"
 msgstr ""
 
-#: public/views/modals/bind.html:76
+#: public/views/modals/bind.html:80
 msgid "explicitly"
 msgstr ""
 
@@ -1726,7 +1828,11 @@ msgstr ""
 msgid "failed to create shared address :"
 msgstr ""
 
+<<<<<<< HEAD
+#: src/js/controllers/walletHome.js:1209
+=======
 #: src/js/controllers/walletHome.js:1208
+>>>>>>> testnet
 msgid "failed to find asset index of asset"
 msgstr ""
 
@@ -1735,7 +1841,7 @@ msgstr ""
 msgid "full wallet"
 msgstr ""
 
-#: public/views/modals/bind.html:90
+#: public/views/modals/bind.html:95
 #: public/views/modals/offer-contract.html:66
 msgid "hours"
 msgstr ""
@@ -1744,7 +1850,7 @@ msgstr ""
 msgid "if an event is posted by an oracle:"
 msgstr ""
 
-#: public/views/modals/bind.html:77
+#: public/views/modals/bind.html:81
 msgid "in merkle tree"
 msgstr ""
 

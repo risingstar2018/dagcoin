@@ -536,6 +536,20 @@ angular.module('copayApp.services').factory('correspondentListService',
       return deviceManager.getCorrespondentList();
     }
 
+    function getPendingSharedAddresses() {
+      const db = require('byteballcore/db.js');
+
+      return new Promise((resolve) => {
+        db.query(
+          'SELECT DISTINCT device_address FROM shared_address_signing_paths',
+          (rows) => {
+            const addresses = rows.map(r => r.device_address);
+            resolve(addresses);
+          }
+        );
+      });
+    }
+
     eventBus.on('text', (fromAddress, body) => {
       console.log(`NEW TEXT MESSAGE FROM ${fromAddress}`);
       return readCorrespondentAndForwardMessage(fromAddress, body);
@@ -655,6 +669,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     root.checkAndInsertDate = checkAndInsertDate;
     root.parseMessage = parseMessage;
     root.getCorrespondentsOrderedByMessageDate = getCorrespondentsOrderedByMessageDate;
+    root.getPendingSharedAddresses = getPendingSharedAddresses;
 
     root.list = function (cb) {
       device.readCorrespondents((arrCorrespondents) => {

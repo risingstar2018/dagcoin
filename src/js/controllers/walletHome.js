@@ -760,7 +760,7 @@
 
 
                 // never reuse addresses as the required output could be already present
-                useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
+                walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
                   myAddress = addressInfo.address;
                   let arrDefinition;
                   let assocSignersByPath;
@@ -768,7 +768,7 @@
                     const arrSeenCondition = ['seen', {
                       what: 'output',
                       address: myAddress,
-                      asset: self.binding.reverseAsset,
+                      asset: ENV.DAGCOIN_ASSET,
                       amount: self.binding.reverseAmount,
                     }];
                     arrDefinition = ['or', [
@@ -779,7 +779,7 @@
                       ['and', [
                         ['address', myAddress],
                         ['not', arrSeenCondition],
-                        ['in data feed', [[configService.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]],
+                        ['in data feed', [[ENV.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]],
                       ]],
                     ]];
                     assocSignersByPath = {
@@ -810,7 +810,7 @@
                     arrDefinition = ['or', [
                       ['and', [['address', address], arrEventCondition]],
                       ['and', [
-                        ['address', myAddress], ['in data feed', [[configService.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]]
+                        ['address', myAddress], ['in data feed', [[ENV.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]]
                       ]]
                     ]];
                     assocSignersByPath = {
@@ -968,7 +968,8 @@
                           device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
                           correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
                             bIncoming: false,
-                            message: correspondentListService.formatOutgoingMessage(paymentRequestText)
+                            message: correspondentListService.formatOutgoingMessage(paymentRequestText),
+                            timestamp: Math.floor(Date.now() / 1000)
                           });
                           // issue next address to avoid reusing the reverse payment address
                           if (!fc.isSingleAddress) {
@@ -1073,8 +1074,9 @@
             $scope.binding = { // defaults
               type: 'reverse_payment',
               timeout: 4,
-              reverseAsset: 'base',
+              reverseAsset: ENV.DAGCOIN_ASSET,
               feed_type: 'either',
+              oracle_address: ''
             };
             if (self.binding) {
               $scope.binding.type = self.binding.type;

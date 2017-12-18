@@ -556,21 +556,21 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           $scope.color = fc.backgroundColor;
           $scope.indexCtl = self;
           const arrSharedWallets = [];
-          $scope.mainWalletBalanceInfo = self.arrMainWalletBalances[self.assetIndex];
-          $scope.asset = $scope.mainWalletBalanceInfo.asset;
-          const assocSharedByAddress = self.arrBalances[self.assetIndex].assocSharedByAddress;
-          Object.keys(assocSharedByAddress).forEach((sa) => {
-            const objSharedWallet = {};
-            objSharedWallet.shared_address = sa;
-            objSharedWallet.total = assocSharedByAddress[sa];
-            if ($scope.asset === 'base') {
-              objSharedWallet.totalStr = `${profileService.formatAmount(assocSharedByAddress[sa], 'base')} ${self.unitName}`;
-            } else if ($scope.asset === ENV.DAGCOIN_ASSET) {
-              objSharedWallet.totalStr = `${profileService.formatAmount(assocSharedByAddress[sa], 'DAG')} ${self.dagUnitName}`;
-            }
-            arrSharedWallets.push(objSharedWallet);
-          });
-          $scope.arrSharedWallets = arrSharedWallets;
+          $scope.mainWalletBalanceInfo = _.find(self.arrMainWalletBalances, { asset: ENV.DAGCOIN_ASSET });
+          $scope.asset = ENV.DAGCOIN_ASSET;
+          const assocSharedByAddress = $scope.mainWalletBalanceInfo.assocSharedByAddress;
+
+          if (assocSharedByAddress) {
+            Object.keys(assocSharedByAddress).forEach((sa) => {
+              const objSharedWallet = {};
+              objSharedWallet.shared_address = sa;
+              objSharedWallet.total = assocSharedByAddress[sa];
+              objSharedWallet.totalStr = `${profileService.formatAmount(assocSharedByAddress[sa], 'dag')}`;
+
+              arrSharedWallets.push(objSharedWallet);
+            });
+            $scope.arrSharedWallets = arrSharedWallets;
+          }
 
           $scope.cancel = function () {
             breadcrumbs.add('openSubwalletModal cancel');

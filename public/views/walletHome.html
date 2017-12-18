@@ -104,6 +104,21 @@
 
 							<span ng-if="index.dagBalance.pending" class="ballance" translate>Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
 							<span ng-if="!index.dagBalance.pending" class="ballance" translate>Wallet balance</span>
+              
+              <div class="size-10 m10t" ng-if="index.dagBalance.shared !== undefined">
+                <a ng-click="index.openSubwalletModal()">
+                  <span translate>Also</span>
+                  <span>{{index.dagBalance.sharedStr}}</span>
+                  <span translate>in smart wallets</span>
+                </a>
+              </div>
+              
+              <div class="m10t">
+                <a ng-click="openSharedAddressDefinitionModal(index.shared_address)" class="button outline round light-gray tiny preferences-icon m0" ng-if="index.shared_address">
+                  <i class="fi-eye size-24 vm wallet-settings"></i>
+                  <span class="show-for-medium-up" translate>Definition</span>
+                </a>
+              </div>
 
 						</div>
 
@@ -310,12 +325,27 @@
 									   ng-model="_address" valid-address required
 									   ng-blur="home.formFocus(false)">
 
-
                <a ng-click="openDestinationAddressModal(index.otherWallets, _address)">
                  <i class="icon icon-d icon-wallet"></i>
                </a>
 							</div>
-
+              
+              <div class="title clearfix" style="margin-left: 0;" ng-if="index.baseBalance.stable > 0">
+                <div ng-if="home.deviceAddressIsKnown()">
+                  <a ng-click="home.openBindModal()">
+                    <span ng-if="!home.binding" translate>Bind the payment to a condition</span>
+                    <span ng-if="home.binding" translate>This payment is bound to a condition</span>
+                  </a>
+                </div>
+                <div id="binding-drop" class="f-dropdown title clearfix" style="padding: 10px; margin:15px;" data-dropdown-content translate>
+                  To bind the payment to a condition, please click the peer's address in chat
+                </div>  
+                <div ng-if="!home.deviceAddressIsKnown()">
+                  <a dropdown-toggle="#binding-drop" data-options="align:top">
+                    <span translate class="name">Bind the payment to a condition</span>
+                  </a>
+                </div>
+							</div>
 
 						</div>
             <div class="page-action">

@@ -515,7 +515,7 @@ API.prototype.sendMultiPayment = function (opts, cb) {
   };
 
   if (opts.shared_address) {
-    opts.paying_addresses = opts.from_address.concat(opts.shared_address);
+    opts.paying_addresses = lodash.isUndefined(opts.from_address) ? [opts.shared_address] : opts.from_address.concat(opts.shared_address);
     if (opts.externallyFundedPayment) {
       opts.change_address = opts.main_address;
     } else {
