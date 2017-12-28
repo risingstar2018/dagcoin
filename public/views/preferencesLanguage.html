@@ -1,20 +1,17 @@
-<div
-  class="topbar-container"
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Language'; goBackToState = 'preferencesGlobal'; noColor = true">
-</div>
-
-
+<dag-nav-bar title="{{ 'Language' | translate}}" go-back="system" invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesLanguageController as prefLang">
-  <h4></h4>
-  <ul class="no-bullet m0 ">
-  <li
-    ng-repeat="lang in prefLang.availableLanguages"
-    ng-click="prefLang.save(lang.isoCode)" class="line-b p20 size-14">
+  <ul>
+  <li ng-repeat="lang in prefLang.availableLanguages" ng-click="prefLang.save(lang.isoCode)">
     <span>{{lang.name}}</span>
-    <i class="fi-check size-16 right" ng-show="index.defaultLanguageIsoCode == lang.isoCode"></i>
+    <svg-icon name="check" class="right" ng-if="index.defaultLanguageIsoCode == lang.isoCode"></svg-icon>
   </li>
   </ul>
+
+  <div class="dag_tip no_icon">
+    <h4 translate>Translations</h4>
+    <p translate>We’re always looking for translation contributions!</p>
+    <p translate>You can make corrections or help to make this app available in your native language by joining <a ng-click="openExternalLink('https://crowdin.com/project/dagcoin')" class="inline">our community</a> on Crowdin.</p>
+  </div>
 </div>
-<div class="extra-margin-bottom"></div>
+

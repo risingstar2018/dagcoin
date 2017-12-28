@@ -28,7 +28,9 @@
                 isMobile,
                 fundingExchangeClientService,
                 ENV,
-                migrationService) {
+                migrationService,
+                moment,
+                exportTransactions) {
         migrationService.migrate();
         const constants = require('byteballcore/constants.js');
         const eventBus = require('byteballcore/event_bus.js');
@@ -148,6 +150,43 @@
         // const cancel_msg = gettextCatalog.getString('Cancel');
         // const confirm_msg = gettextCatalog.getString('Confirm');
 
+        $scope.formatSum = (sum) => {
+          const string = sum.toString().split('.');
+
+          if (!string[1]) {
+            return `${sum}.00`;
+          }
+
+          if (string[1] && string[1].length === 1) {
+            return `${sum}0`;
+          }
+          return sum;
+        };
+
+        const today = moment().format('DD/MM/YYYY');
+        const yesterday = moment().subtract(1, 'day').format('DD/MM/YYYY');
+
+        $scope.formatDate = (value) => {
+          if (value === today) {
+            return 'Today';
+          } else if (value === yesterday) {
+            return 'Yesterday';
+          }
+          return value;
+        };
+
+        $scope.transactionStatus = (transaction) => {
+          if (!transaction.confirmations) {
+            return { icon: 'autorenew', title: gettextCatalog.getString('Pending') };
+          }
+
+          if (transaction.action === 'received') {
+            return { icon: 'call_received', title: gettextCatalog.getString('Received') };
+          } else if (transaction.action === 'moved') {
+            return { icon: 'code', title: gettextCatalog.getString('Moved') };
+          }
+          return { icon: 'call_made', title: gettextCatalog.getString('Sent') };
+        };
 
         $scope.openDestinationAddressModal = function (wallets, address) {
           $rootScope.modalOpened = true;
@@ -167,13 +206,13 @@
             $scope.color = fc.backgroundColor;
             $scope.bAllowAddressbook = self.canSendExternalPayment();
 
-            $scope.beforeQrCodeScann = function () {
+            $scope.beforeQrCodeScann = () => {
               $scope.error = null;
               $scope.addAddressbookEntry = true;
               $scope.editAddressbook = false;
             };
 
-            $scope.onQrCodeScanned = function (data, addressbookForm) {
+            $scope.onQrCodeScanned = (data, addressbookForm) => {
               $timeout(() => {
                 const form = addressbookForm;
                 if (data && form) {
@@ -221,9 +260,9 @@
             };
 
             $scope.$watch('addressbook.label', (value) => {
-                if (value && value.length > 16) {
-                 $scope.addressbook.label = value.substr(0, 16);
-                }
+              if (value && value.length > 16) {
+                $scope.addressbook.label = value.substr(0, 16);
+              }
             });
 
             $scope.add = function (addressbook) {
@@ -310,7 +349,6 @@
           });
         };
 
-
         $scope.openSharedAddressDefinitionModal = function (address) {
           $rootScope.modalOpened = true;
           const fc = profileService.focusedClient;
@@ -371,6 +409,9 @@
           });
         };
 
+        this.exportTransactions = () => {
+          exportTransactions.toCSV();
+        };
 
         this.openTxpModal = function () {
           // deleted, maybe restore from copay sometime later
@@ -456,7 +497,6 @@
             $scope.buttonLabel = gettextCatalog.getString('Generate QR Code');
             $scope.protocol = conf.program;
 
-
             Object.defineProperty($scope, '_customAmount', {
               get() {
                 return $scope.customAmount;
@@ -541,7 +581,6 @@
           unwatchSpendUnconfirmed();
         });
 
-
         this.resetError = function () {
           this.error = null;
           this.success = null;
@@ -584,7 +623,6 @@
           }
           $rootScope.$digest();
         }, 100);
-
 
         this.formFocus = function (what) {
           if (isCordova && !this.isWindowsPhoneApp) {
@@ -658,7 +696,6 @@
           }, 1);
         };
 
-
         this.setOngoingProcess = function (name) {
           const self = this;
           self.blockUx = !!name;
@@ -730,11 +767,11 @@
           amount *= dagUnitValue;
           amount = Math.round(amount);
 
-        const currentPaymentKey = `${asset}${address}${amount}`;
-        if (currentPaymentKey === self.current_payment_key) {
-          return $rootScope.$emit('Local/ShowErrorAlert', 'This payment is being processed');
-        }
-        self.current_payment_key = currentPaymentKey;
+          const currentPaymentKey = `${asset}${address}${amount}`;
+          if (currentPaymentKey === self.current_payment_key) {
+            return $rootScope.$emit('Local/ShowErrorAlert', 'This payment is being processed');
+          }
+          self.current_payment_key = currentPaymentKey;
 
           indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
           $timeout(() => {
@@ -757,7 +794,6 @@
                   throw Error(gettextCatalog.getString('recipient device address not known'));
                 }
                 const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
-
 
                 // never reuse addresses as the required output could be already present
                 walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
@@ -973,16 +1009,16 @@
                           });
                           // issue next address to avoid reusing the reverse payment address
                           if (!fc.isSingleAddress) {
-                             walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {});
+                            walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
+                            });
                           }
                         }
                       } else {
-                        $rootScope.$emit('Local/SetTab', 'history');
-
+                        indexScope.updateTxHistory();
+                        $rootScope.$emit('Local/SetTab', 'walletHome');
                         $timeout(() => {
-                          indexScope.updateTxHistory();
                           self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
-                        }, 1000);
+                        }, 2000);
                       }
                       resolve();
                     });
@@ -1008,7 +1044,6 @@
             });
           }, 100);
         };
-
 
         let assocDeviceAddressesByPaymentAddress = {};
 
@@ -1046,7 +1081,6 @@
           return !!recipientDeviceAddress;
         };
 
-
         this.openBindModal = function () {
           $rootScope.modalOpened = true;
           const fc = profileService.focusedClient;
@@ -1056,7 +1090,6 @@
             return;
           }
           const address = form.address;
-
 
           const ModalInstanceCtrl = function ($scope, $modalInstance) {
             $scope.color = fc.backgroundColor;
@@ -1245,7 +1278,6 @@
 
           const form = $scope.sendForm;
 
-
           if (form && form.amount) {
             form.amount.$pristine = true;
             form.amount.$setViewValue('');
@@ -1295,7 +1327,6 @@
             form.amount.$render();
           }
         };
-
 
         this.setFromUri = function (uri) {
           let objRequest;
@@ -1414,6 +1445,10 @@
             const m = angular.element(document.getElementsByClassName('reveal-modal'));
             m.addClass(animationService.modalAnimated.slideOutRight);
           });
+        };
+
+        $rootScope.openTxModal = (transaction, rows) => {
+          this.openTxModal(transaction, rows);
         };
 
         this.showCorrespondentListToReSendPrivPayloads = function (btx) {

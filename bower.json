@@ -9,8 +9,6 @@
     "angular": "1.4.6",
     "angular-foundation": "byteball/angular-foundation",
     "angular-gettext": "2.1.0",
-    "angular-touch": "1.4.6",
-    "angular-carousel": "*",
     "angular-moment": "0.10.1",
     "angular-qrcode": "monospaced/angular-qrcode#~6.0.3",
     "angular-ui-router": "0.2.15",
@@ -31,9 +29,9 @@
     "gsap": "^1.20.2",
     "angular-swipe": "^0.2.1",
     "angular-swiper": "^0.4.0",
-    "angular-ui-swiper": "^2.3.6",
     "es6-shim": "^0.35.3",
-    "es5-shim": "^4.5.9"
+    "es5-shim": "^4.5.9",
+    "ng-scrollbars": "^0.0.11"
   },
   "resolutions": {
     "angular": "1.4.6"

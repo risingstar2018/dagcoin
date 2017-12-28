@@ -1,7 +1,5 @@
 <div ng-controller="disclaimerController" ng-init="init()">
-  <div ng-if="agreed && index.hasProfile" ng-include="'views/includes/topbar.html'"
-    ng-init="titleSection='Terms of Use';  goBackToState = 'about';">
-  </div>
+  <dag-nav-bar ng-if="agreed && index.hasProfile" title="{{'Terms of Use' | translate}}" go-back="about"></dag-nav-bar>
   <div class="onGoingProcess" ng-show="loading">
     <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
       <div class="spinner">

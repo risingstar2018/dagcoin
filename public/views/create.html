@@ -1,7 +1,6 @@
-<div
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Create new wallet';  closeToHome = true;">
-</div>
+<dag-nav-bar title="{{ 'Create new wallet' | translate}}"></dag-nav-bar>
+
+
 <div class="content p20v" ng-controller="createController as create" ng-init="create.setTotalCosigners(1)">
 
   <div class="onGoingProcess" ng-show="create.loading">

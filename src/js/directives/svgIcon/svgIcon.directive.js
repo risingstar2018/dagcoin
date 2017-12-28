@@ -6,8 +6,8 @@
    * @example <svg-icon name="name"></svg-icon>
    */
   angular
-      .module('copayApp.directives')
-      .directive('svgIcon', svgIcon);
+    .module('copayApp.directives')
+    .directive('svgIcon', svgIcon);
 
   svgIcon.$inject = ['$sce', '$templateRequest', '$templateCache', 'isCordova'];
 
@@ -18,13 +18,13 @@
         name: '@',
         title: '@'
       },
-      link: ($scope, element) => {
+      link: ($scope, element, attr) => {
         /* istanbul ignore next */
         if (!$scope.name && !$scope.title) {
           return false;
         }
 
-        const svgFile = `${$scope.name || $scope.title}.svg`;
+        let svgFile = `${$scope.name || $scope.title}.svg`;
 
         function loadTemplate() {
           const svgPath = isCordova ? `css/svg/${svgFile}` : `/public/css/svg/${svgFile}`;
@@ -43,6 +43,13 @@
             loadTemplate();
           }
         }
+
+        $scope.$watch(() => attr.name, (newValue) => {
+          if (newValue) {
+            svgFile = `${newValue}.svg`;
+            renderSVG();
+          }
+        });
 
         return renderSVG();
       }

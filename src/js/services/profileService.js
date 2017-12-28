@@ -677,16 +677,13 @@
       const config = configService.getSync();
       config.colorFor = config.colorFor || {};
       config.aliasFor = config.aliasFor || {};
-      let ret = lodash.map(root.profile.credentials, c => ({
+      const ret = lodash.map(root.profile.credentials, c => ({
         m: c.m,
         n: c.n,
-        is_complete: (c.publicKeyRing && c.publicKeyRing.length === c.n),
         name: config.aliasFor[c.walletId] || c.walletName,
         id: c.walletId,
-        network: c.network,
-        color: config.colorFor[c.walletId] || '#2C3E50',
+        color: config.colorFor[c.walletId] || '#d51f26',
       }));
-      ret = lodash.filter(ret, w => (w.network === network && w.is_complete));
       return lodash.sortBy(ret, 'name');
     };
 

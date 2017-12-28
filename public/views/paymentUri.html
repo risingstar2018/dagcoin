@@ -1,8 +1,4 @@
-<div
-  class="topbar-container"
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Choose wallet'; closeToHome = true;">
-</div>
+<dag-nav-bar title="{{ 'Choose wallet' | translate}}"></dag-nav-bar>
 
 <div class="content p20v row payment-uri" ng-controller="paymentUriController as payment">
   <div class="large-12 columns" ng-init="payment.checkBitcoinUri()">

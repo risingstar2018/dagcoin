@@ -1,6 +1,4 @@
-<div ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Accept invitation'; goBackToState = 'correspondentDevices.addCorrespondentDevice';">
-</div>
+<dag-nav-bar title="{{ 'Accept invitation' | translate}}" go-back="correspondentDevices.addCorrespondentDevice"></dag-nav-bar>
 <div ng-controller="acceptCorrespondentInvitationController">
   <qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
 

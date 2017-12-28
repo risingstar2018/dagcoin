@@ -1,6 +1,6 @@
-<div ng-include="'views/includes/topbar.html'"
-     ng-init="titleSection='Backup'; goBackToState = 'preferencesGlobal';"></div>
-<div class="content p20v">
+<dag-nav-bar title="{{'Backup' | translate}}" invert></dag-nav-bar>
+
+<div class="content">
   <dag-tabset>
     <dag-tab heading="{{'Backup seed' | translate}}">
       <div ng-controller="wordsController as wordsC">
@@ -42,7 +42,7 @@
 
           <div ng-show="wordsC.show">
             <div class="columns">
-              <div class="m10t columns size-14 text-gray" style="background:white;-webkit-user-select: text;"
+              <div class="m10t columns size-14 text-gray" style="background:white;-webkit-user-select: text;background: #efefef;padding: 15px;border-radius: 10px;border: 1px dashed #ddd;"
                    ng-class="{'enable_text_select': index.network == 'testnet'}">
       <span><span>{{wordsC.mnemonicWordsJoined}}</span><span
         ng-show="wordsC.useIdeograms">&#x3000;</span> </span>
@@ -101,53 +101,49 @@
             <span translate> Failed to export </span>
           </div>
 
-          <div class="p-share js-introduction">
-            <div class="p-wrap">
-              <form class="page-form">
-                <div class="form-group">
-                  <div class="box-notification" ng-show="export.passError">
+          <form class="page-form">
+            <div class="form-group">
+              <div class="box-notification" ng-show="export.passError">
 							<span class="text-warning">
 								{{export.passError|translate}}
 							</span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="title clearfix">
-                    <span class="name" translate>Set up a Password </span>
-                  </div>
-                  <div class="input-wrap">
-                    <input type="password" placeholder="{{'Your export password'|translate}}"
-                           name="password" ng-model="export.password">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="title clearfix">
-                    <span class="name" translate>Repeat the password</span>
-                  </div>
-                  <div class="input-wrap">
-                    <input type="password" placeholder="{{'Repeat password'|translate}}"
-                           name="password2" ng-model="export.repeatpassword">
-                  </div>
-                </div>
-                <div class="size-14 m20b text-gray" ng-show="!export.isCordova">
-                  <switch name="bCompression" ng-model="export.bCompression" class="green right"></switch>
-                  <div translate>Compress the file? (Slower)</div>
-                </div>
-                <div class="form-group">
-                  <div class="input-wrap">
-                    <input type="file" id="nwExportInputFile" nwsaveas="" style="display: none"/>
-                  </div>
-                </div>
-                <div class="page-action">
-                  <a class="btn btn_red-full" href="#" ng-click="export.walletExport()"
-                     ng-disabled="(export.exporting || !export.password || export.password != export.repeatpassword)"
-                     translate>
-                    Export
-                  </a>
-                </div>
-              </form>
+              </div>
             </div>
-          </div>
+            <div class="form-group">
+              <div class="title clearfix">
+                <span class="name" translate>Set up a Password </span>
+              </div>
+              <div class="input-wrap">
+                <input type="password" placeholder="{{'Your export password'|translate}}"
+                       name="password" ng-model="export.password">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="title clearfix">
+                <span class="name" translate>Repeat the password</span>
+              </div>
+              <div class="input-wrap">
+                <input type="password" placeholder="{{'Repeat password'|translate}}"
+                       name="password2" ng-model="export.repeatpassword">
+              </div>
+            </div>
+            <div class="size-14 m20b text-gray" ng-show="!export.isCordova">
+              <switch name="bCompression" ng-model="export.bCompression" class="green right"></switch>
+              <div translate>Compress the file? (Slower)</div>
+            </div>
+            <div class="form-group">
+              <div class="input-wrap">
+                <input type="file" id="nwExportInputFile" nwsaveas="" style="display: none"/>
+              </div>
+            </div>
+            <div class="page-action">
+              <a class="btn btn_red-full" href="#" ng-click="export.walletExport()"
+                 ng-disabled="(export.exporting || !export.password || export.password != export.repeatpassword)"
+                 translate>
+                Export
+              </a>
+            </div>
+          </form>
 
         </div>
       </div>

@@ -1,0 +1,10 @@
+<dag-nav-bar title="{{ 'About Device' | translate}}" go-back="preferencesGlobal" invert></dag-nav-bar>
+
+<div class="content preferences" ng-controller="preferencesAboutDeviceController as about">
+    <ul>
+        <li>
+            <div translate>Device address</div>
+            <div class="value">{{about.myDeviceAddress}}</div>
+        </li>
+    </ul>
+</div>

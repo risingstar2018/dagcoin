@@ -1,33 +1,24 @@
-<div ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='About'; goBackToState = 'preferencesGlobal';">
-</div>
+<dag-nav-bar title="{{ 'About Dagcoin' | translate }}" go-back="preferencesGlobal" invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesAbout as about">
   <h4 translate>Release Information</h4>
   <div ng-controller="versionController as v">
     <ul>
-      <li dag-right-icon="chevron-thin-right" ng-conf>
+      <li>
         <div translate>Version</div>
         <div class="value">v{{v.version}} Beta</div>
       </li>
-      <!--<li  ng-conf ng-click="$root.openExternalLink('https://github.com/byteball/byteball/tree/'+v.commitHash)">-->
-      <!--<span translate>Commit hash</span>-->
-      <!--<span class="right text-gray">-->
-      <!--#{{v.commitHash}}-->
-      <!--</span>      -->
-      <!--</li>-->
     </ul>
   </div>
 
   <h4></h4>
+
   <ul>
-    <li ui-sref="disclaimer">
+    <li ui-sref="disclaimer" dag-right-icon="chevron-thin-right">
       <div translate>Terms of Use</div>
-      <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
-    <li ui-sref="logs">
+    <li ui-sref="logs" dag-right-icon="chevron-thin-right">
       <div translate>Session log</div>
-      <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
   </ul>
 

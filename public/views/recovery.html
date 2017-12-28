@@ -1,7 +1,6 @@
-<div ng-include="'views/includes/topbar.html'"
-     ng-init="titleSection='Recovery'; goBackToState = 'preferencesGlobal';">
-</div>
-<div class="content p20v">
+<dag-nav-bar title="{{ 'Recovery' | translate}}" go-back="security" invert></dag-nav-bar>
+
+<div class="content">
   <dag-tabset>
     <dag-tab heading="{{'Recover from seed'| translate}}">
       <div ng-controller="recoveryFromSeed as recFromSeed">
@@ -70,35 +69,31 @@
 		{{import.error}}
 	</span>
         </div>
-        <div class="p-share js-introduction">
-          <div class="p-wrap">
-            <form class="page-form" ng-submit="import.walletImport()">
-              <div class="form-group">
-                <div class="title clearfix">
-                  <span class="name" translate>Your wallet file:</span>
-                </div>
-                <div class="input-wrap">
-                  <input type="file" ng-file-select>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="title clearfix">
-                  <span class="name" translate>Password</span>
-                </div>
-                <div class="input-wrap">
-                  <input type="password" placeholder="Password" ng-model="import.password" autocomplete="new-password">
-                </div>
-              </div>
-              <div class="page-action">
-                <button ng-disabled="import.imported || import.password == '' || !file" type="submit"
-                        class="btn btn_red-full">{{'Import'|translate}}
-                </button>
-              </div>
-            </form>
+        <form class="page-form" ng-submit="import.walletImport()">
+          <div class="form-group">
+            <div class="title clearfix">
+              <span class="name" translate>Your wallet file:</span>
+            </div>
+            <div class="input-wrap">
+              <input type="file" ng-file-select>
+            </div>
           </div>
-        </div>
+          <div class="form-group">
+            <div class="title clearfix">
+              <span class="name" translate>Password</span>
+            </div>
+            <div class="input-wrap">
+              <input type="password" placeholder="Password" ng-model="import.password" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="page-action">
+            <button ng-disabled="import.imported || import.password == '' || !file" type="submit"
+                    class="btn btn_red-full">{{'Import'|translate}}
+            </button>
+          </div>
+        </form>
 
-        <div ng-show="import.iOs && import.arrBackupFiles.length > 0" style="background-color: #fff">
+        <div ng-show="import.iOs && import.arrBackupFiles.length > 0">
           <div class="center">OR</div>
           <div>
             <ul class="no-bullet m0" ng-repeat="backupFile in import.arrBackupFiles | orderBy:backupFile.time:true">
@@ -109,7 +104,7 @@
             </ul>
           </div>
         </div>
-        <div class="text-alert size-12 columns" translate>
+        <div class="text-alert size-12 columns m20t" translate>
           WARNING: This will permanently delete all your existing wallets!
         </div>
       </div>

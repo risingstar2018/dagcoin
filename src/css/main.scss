@@ -48,8 +48,6 @@ svg {
   pointer-events: none;
 }
 
-
-
 .color_red {
   color: $red;
 }
@@ -89,8 +87,7 @@ svg {
 }
 
 ul {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
 
   &.pagination {
     li {
@@ -414,6 +411,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill, inpu
 .cursor-pointer {
   cursor: pointer;
 }
+
 .last-transactions-content {
   padding: 1.5rem 1rem;
   cursor: pointer;
@@ -1686,16 +1684,19 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 }
 
 .onGoingProcess-content {
-  background: #213140;
   text-align: center;
-  max-width: 16.5rem;
-  max-height: 3.5rem;
-  margin: auto;
+  max-width: 260px;
+  margin: 0 auto;
   color: #fff;
-  padding: 0.5rem;
+  padding: 10px;
   font-size: 13px;
   opacity: 0.8;
   border-radius: 3px;
+  background-color: #222;
+
+  .loader {
+    margin-right: 5px;
+  }
 }
 
 /*/////////////////// SPINNER ////////////////////*/
@@ -1989,11 +1990,11 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     width: 100px;
   }
 
-  &.error{
+  &.error {
     border-color: $red;
   }
 
-  &.success{
+  &.success {
     border-color: $green;
   }
 }
@@ -2264,84 +2265,13 @@ a.a_none {
       border-bottom: 4px solid transparent;
 
       &.active {
-        border-bottom: 4px solid #d52026;
+        border-bottom: 4px solid $red;
       }
 
       a {
         padding: 10px 20px;
       }
     }
-  }
-}
-
-.navbar-container {
-  position: relative;
-  z-index: 2;
-  height: 50px;
-  background: #d51f26;
-  color: #fff;
-
-  .navbar-container-triggers {
-    position: absolute;
-    z-index: 1;
-    height: 50px;
-    line-height: 50px;
-    left: 0;
-    top: 0;
-    width: 50px;
-    text-align: center;
-
-    &.navbar-container-triggers-right {
-      left: auto;
-      right: 0
-    }
-  }
-
-  .navbar-container-title {
-    width: 100%;
-    padding: 0 50px;
-    text-align: center;
-    line-height: 50px;
-    font-weight: 600;
-    font-size: 16px;
-    text-transform: uppercase;
-
-    @media only screen and (max-width: 350px) {
-      font-size: 14px;
-    }
-  }
-
-  .navbar-container-back-trigger svg {
-    width: 16px;
-    height: 16px;
-    margin-top: -8px
-  }
-
-  svg-icon {
-    svg {
-      width: 22px;
-      height: 22px
-    }
-
-    &.svg-icon-add {
-      svg {
-        width: 16px;
-        height: 16px
-      }
-    }
-  }
-
-  a {
-    color: currentColor
-  }
-
-  &.invert {
-    background: transparent;
-    color: #d51f26
-  }
-
-  &:not(.invert) {
-    text-shadow: 1px 1px 1px #a8191e
   }
 }
 
@@ -2509,7 +2439,7 @@ canvas {
 .p-wallet {
   position: relative;
   width: 100%;
-  padding-top: 60px;
+  padding-top: 0;
 
   .price {
     position: relative;
@@ -2614,7 +2544,8 @@ canvas {
   z-index: 2;
   text-align: center;
   color: #fff;
-  padding: 30px 0 0;
+  padding: 30px 0;
+  margin: 30px 0;
 
   .price-wrapper {
     color: #d52026;
@@ -2747,6 +2678,31 @@ canvas {
   z-index: 2;
   text-align: center;
   padding-bottom: 70px;
+}
+
+.tab-view {
+  display: none;
+  transform: translate3d(-100%, 0, 0);
+  width: 100%;
+  position: absolute;
+  padding-top: 45px;
+  top: 0;
+  bottom: 50px;
+  overflow: auto;
+
+  .svg-container.wallet:nth-child(2) {
+    position: fixed;
+    bottom: -150px;
+  }
+}
+
+.tab-in {
+  display: block;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.tab-out {
+  transform: translate3d(-100%, 0, 0) !important;
 }
 
 .send.tab-in .p-wrap {
@@ -2909,21 +2865,6 @@ input {
   }
 }
 
-.tab-view {
-  transform: translate3d(-100%, 0, 0);
-  width: 100%;
-  position: absolute;
-  padding-top: 0;
-  top: 45px;
-  bottom: 37px;
-  overflow: hidden;
-  padding-bottom: 40px;
-
-  &.tab-in {
-    transform: translate3d(0, 0, 0) !important;
-  }
-}
-
 .wrappable-menu-item {
   width: 70%;
   text-align: right;
@@ -2980,12 +2921,20 @@ input {
 }
 
 section {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1 !important;
+  background-color: #fafafa;
+
   &.right-small {
     left: initial;
   }
 }
 
-.preferences ul.warnings{
+.preferences ul.warnings {
   margin: 20px 0;
   background-color: transparent;
   text-align: center;
@@ -3031,4 +2980,9 @@ p.color_red {
   color: #fff;
   text-align: center;
   z-index: 2;
+  padding: 3px 0;
+}
+
+.mCSB_inside > .mCSB_container {
+  margin-right: 0;
 }

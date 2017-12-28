@@ -2,9 +2,12 @@
 
 .dag_tabs {
   position: relative;
-
   .dag_tabs_list {
     position: relative;
+
+    .dag_tab{
+      display: block;
+    }
 
     > .dag_tabs_slider {
       position: absolute;
@@ -26,7 +29,6 @@
 
     .dag_tabs_list_link {
       flex: 1;
-      background: #fff;
 
       a {
         text-align: center;
@@ -48,6 +50,7 @@
 
   .dag_tabs_tabpanel{
     padding: 15px;
+    position: relative;
   }
 }
 

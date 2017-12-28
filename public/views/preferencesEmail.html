@@ -1,10 +1,4 @@
-<div
-  class="topbar-container"
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Email Notifications'; goBackToState = 'preferences'">
-</div>
-
-
+<dag-nav-bar title="{{ 'Email Notifications' | translate}}" go-back="preferences"></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesEmailController as prefEmail">
 

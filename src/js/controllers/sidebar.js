@@ -35,6 +35,7 @@
           $state.go(state);
           return;
         }
+
         self.walletSelection = false;
         return profileService.setAndStoreFocus(selectedWalletId, () => {
           $state.go(state);
@@ -71,4 +72,3 @@
       self.setWallets();
     });
 }());
-

@@ -1,0 +1,67 @@
+@import "../../../css/variables";
+
+.dag_tip{
+  background: #f4f5f6;
+  color: #091528;
+  margin: 15px;
+  z-index: 12;
+  border-radius: 5px;
+  position: relative;
+  padding: 20px;
+
+  &:not(.no_icon){
+    padding-left: 80px;
+  }
+
+  h4{
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 5px 0;
+    padding: 0;
+    color: #444;
+    font-size: 14px;
+  }
+
+  p{
+    color: #979b9f;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 10px 0;
+    font-weight: 400;
+  }
+
+  a{
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &:not(.inline){
+      text-transform: uppercase;
+      background: #f1c40f;
+      color: currentColor;
+      padding: 5px 10px;
+    }
+
+    &.inline{
+      color: $red;
+      padding: 2px 4px;
+    }
+  }
+
+  svg-icon{
+    position: absolute;
+    left: 40px;
+    top: 30%;
+    width: 40px;
+    height: 40px;
+    margin-left: -20px;
+    margin-top: -20px;
+    color: #3d3d3c;
+
+    svg{
+      width: 40px;
+      height: 40px;
+    }
+  }
+}

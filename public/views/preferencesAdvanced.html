@@ -1,18 +1,12 @@
-<div ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Advanced'; goBackToState = 'preferences';">
-</div>
+<dag-nav-bar title="{{ 'Advanced' | translate}}" go-back="preferences" invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesAdvancedController as prefAdvanced">
     <ul>
         <li dag-right-icon="chevron-thin-right" ui-sref="information">
             <div translate>Wallet Information</div>
-            <i class="icon-arrow-right3 size-24 arrow-right"></i>
         </li>
     </ul>
 
-    <div class="m20t">
-        <a ui-sref="preferencesDeleteWallet" style="font-size: 12px;text-align: center;" class="btn btn-red color_red" translate>Delete
-            Wallet</a>
-    </div>
+    <a ui-sref="preferencesDeleteWallet" style="font-size: 12px;" class="btn btn-red color_red" translate>Delete Wallet</a>
 </div>
 <div class="extra-margin-bottom"></div>

@@ -1,4 +1,4 @@
-<div ng-include="'views/includes/topbar.html'" ng-init="titleSection='Delete Wallet'; goBackToState = 'preferencesAdvanced'; invert = true"></div>
+<dag-nav-bar title="{{ 'Delete Wallet' | translate }}" go-back="preferencesAdvanced" invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesDeleteWalletController as preferences">
   <div class="text-center text-gray">

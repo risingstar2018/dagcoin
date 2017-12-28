@@ -18,6 +18,9 @@
     }, {
       name: 'Bahasa Indonesia',
       isoCode: 'id_ID',
+    }, {
+      name: 'Eesti keel',
+      isoCode: 'et_EE',
     }];
 
     root.currentLanguage = null;

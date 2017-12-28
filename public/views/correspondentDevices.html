@@ -1,11 +1,5 @@
 <div ng-controller="correspondentDevicesController">
-
-  <div
-       ng-include="'views/includes/topbar.html'"
-       ng-init="titleSection='Paired devices'; closeToHome = true"
-       ng-show="state.is('correspondentDevices')">
-  </div>
-
+  <dag-nav-bar title="{{ 'Paired devices' | translate}}" ng-show="state.is('correspondentDevices')"></dag-nav-bar>
 	<div ui-view="dialog"></div>
     <div class="m20b tab-view tab-in" ng-show="state.is('correspondentDevices')" id="chat">
       <ul class="no-bullet m0 correspondentList" ng-init="readList()">

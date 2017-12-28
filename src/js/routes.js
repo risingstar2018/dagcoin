@@ -19,7 +19,21 @@
 // Setting up route
   angular
     .module('copayApp')
-    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider) => {
+    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider) => {
+      ScrollBarsProvider.defaults = {
+        autoHideScrollbar: true,
+        scrollButtons: {
+          scrollAmount: 'auto',
+          enable: true
+        },
+        scrollInertia: 400,
+        theme: 'dark',
+        advanced: {
+          updateOnContentResize: true
+        },
+        axis: 'y'
+      };
+
       $urlRouterProvider.otherwise('/');
 
       $logProvider.debugEnabled(true);
@@ -363,15 +377,44 @@
             },
           },
         })
+        .state('system', {
+          url: '/system',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'views/preferencesSystem.html',
+            },
+          },
+        })
+        .state('security', {
+          url: '/security',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'views/preferencesSecurity.html',
+            },
+          },
+        })
 
         .state('about', {
           url: '/about',
-          templateUrl: 'views/preferencesAbout.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
               templateUrl: 'views/preferencesAbout.html',
+            },
+          },
+        })
+        .state('aboutDevice', {
+          url: '/aboutDevice',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'views/preferencesAboutDevice.html',
             },
           },
         })
@@ -399,6 +442,9 @@
         })
         .state('backup', {
           url: '/backup',
+          params: {
+            backTo: 'security'
+          },
           templateUrl: 'views/backup.html',
           walletShouldBeComplete: true,
           needProfile: true,
@@ -410,6 +456,9 @@
         })
         .state('recovery', {
           url: '/recovery',
+          params: {
+            backTo: 'security'
+          },
           templateUrl: 'views/recovery.html',
           walletShouldBeComplete: true,
           needProfile: true,
@@ -438,12 +487,6 @@
               templateUrl: 'views/preferencesGlobal.html',
             },
           },
-        })
-        .state('settings', {
-          url: '/settings',
-          controller: 'settingsController',
-          templateUrl: 'views/settings.html',
-          needProfile: false,
         })
         .state('warning', {
           url: '/warning',
@@ -529,7 +572,6 @@
 
       $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState) => {
         $rootScope.params = toParams;
-
         backButton.menuOpened = false;
         go.swipe();
         if (!profileService.profile && toState.needProfile) {

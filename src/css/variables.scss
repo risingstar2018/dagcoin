@@ -19,18 +19,21 @@ $nav_bar_height: 50px;
   transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1) !important;
 }
 
-section{
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 1 !important;
-  background-color: #fafafa;
+.animation_rotate{
+  animation-name: ckw;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  display: inline-block;
 }
 
-ul {
-  margin-left: 0;
+@keyframes ckw {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @font-face {
