@@ -1,0 +1,1857 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: dagcoin\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: dagcoin\n"
+"X-Crowdin-Language: et\n"
+"X-Crowdin-File: /i18n/po/template.pot\n"
+"Last-Translator: Dagcoin <tech@dagcoin.org>\n"
+"Language-Team: Estonian\n"
+"Language: et_EE\n"
+"PO-Revision-Date: 2017-12-19 09:42-0500\n"
+
+#: public/views/authConfirmation.html:10
+msgid "(The site won't see your balance and no money will be spent)"
+msgstr "(Leht ei näe Sinu konto seisu ega kellele raha kulub)"
+
+#: public/views/create.html:104
+msgid "-- Select co-signer --"
+msgstr "--Vali kaaskinnitaja--"
+
+#: public/views/modals/offer-contract.html:18
+msgid "1. Payment to the contract:"
+msgstr "1. Tasumine kokkuleppel:"
+
+#: public/views/modals/offer-contract.html:73
+msgid "2. Who can unlock the contract:"
+msgstr "2. Kes saab avada kokkuleppe:"
+
+#: public/views/disclaimer.html:84
+msgid "<label>\n"
+"          <input type=\"checkbox\" ng-model=\"isAgree\">\n"
+"          I confirm that I have read, understood, and agree to these terms.</label>"
+msgstr "<label><input type=\"checkbox\" ng-model=\"isAgree\"> Kinnitan, et olen lugenud, aru saanud, ja nõustun tingimustega.</label>"
+
+#: public/views/walletHome.html:180
+msgid "<svg-icon name=\"done\"></svg-icon>\n"
+"                            Copied!"
+msgstr "<svg-icon name=\"done\"> Kopeeritud!"
+
+#: public/views/splash.html:131
+msgid "A wallet for decentralized value"
+msgstr "Detsentraliseeritud väärtusega rahakott"
+
+#: public/views/preferencesAbout.html:1
+#: public/views/preferencesGlobal.html:26
+msgid "About Dagcoin"
+msgstr "Dagcoinist"
+
+#: public/views/preferencesAboutDevice.html:1
+#: public/views/preferencesGlobal.html:22
+msgid "About Device"
+msgstr ""
+
+#: src/js/controllers/copayers.js:10
+#: src/js/controllers/preferencesDelete.js:13
+#: src/js/services/confirmDialog.js:8
+msgid "Accept"
+msgstr "Kinnita"
+
+#: public/views/acceptCorrespondentInvitation.html:1
+msgid "Accept invitation"
+msgstr "Kinnita kutse"
+
+#: public/views/addCorrespondentDevice.html:20
+msgid "Accept invitation from the other device"
+msgstr "Kinnita teise seadme kutse"
+
+#: public/views/preferencesInformation.html:37
+msgid "Account ({{derivationStrategy}})"
+msgstr "Konto ({{derivationStrategy}})"
+
+#: public/views/correspondentDevices.html:27
+msgid "Add a new device"
+msgstr "Lisa uus seade"
+
+#: public/views/modals/destination-address.html:106
+#: public/views/modals/destination-address.html:99
+msgid "Add a new entry"
+msgstr "Lisa uus kirje"
+
+#: public/views/includes/sidebar.html:34
+msgid "Add new wallet"
+msgstr "Lisa uus rahakott"
+
+#: public/views/add.html:1
+msgid "Add wallet"
+msgstr "Lisa rahakott"
+
+#: public/views/modals/customized-amount.html:26
+#: public/views/modals/destination-address.html:119
+#: public/views/paymentUri.html:11
+msgid "Address"
+msgstr "Aadress"
+
+#: public/views/modals/destination-address.html:21
+#: public/views/modals/destination-address.html:25
+msgid "Addressbook"
+msgstr "Aadressiraamat"
+
+#: public/views/preferences.html:29
+#: public/views/preferencesAdvanced.html:1
+msgid "Advanced"
+msgstr "Täpsemalt"
+
+#: public/views/preferencesInformation.html:64
+msgid "All Wallet Addresses"
+msgstr "Kõik Rahakoti Aadressid"
+
+#: public/views/splash.html:68
+msgid "Allows to choose wallet type."
+msgstr "Võimaldab valida rahakoti tüüpi."
+
+#: public/views/splash.html:52
+msgid "Allows to restore existing wallet from a backup."
+msgstr ""
+
+#: public/views/splash.html:171
+msgid "Also in the Settings menu, you will find security options such as setting a password."
+msgstr "Seadistuste menüüst leiad ka turvavalikud, näiteks parooli seadistamine."
+
+#: public/views/includes/output.html:8
+#: public/views/modals/customized-amount.html:32
+#: public/views/modals/customized-amount.html:53
+#: public/views/modals/customized-amount.html:56
+#: public/views/modals/offer-contract.html:27
+#: public/views/modals/offer-contract.html:41
+#: public/views/modals/tx-details.html:119
+#: public/views/paymentUri.html:12
+#: public/views/walletHome.html:229
+msgid "Amount"
+msgstr "Summa"
+
+#: public/views/modals/bind.html:21
+msgid "An event is posted by an oracle:"
+msgstr "Sündmus on lisatud oraakli poolt:"
+
+#: public/views/correspondentDevice.html:289
+msgid "Application in Offline mode"
+msgstr "Rahakott on Ühenduseta režiimis"
+
+#: src/js/services/changeWalletTypeService.js:175
+msgid "Application successfully updated, please restart the application."
+msgstr "Värskendus edukalt teostatud, palun taaskäivita rahakott."
+
+#: public/views/copayers.html:11
+msgid "Approve wallet creation on other devices"
+msgstr "Kinnita rahakoti loomise võimalus teistes seadmetes"
+
+#: src/js/controllers/backup.js:6
+msgid "Are you sure you want to delete the backup words?"
+msgstr "Kas soovid kindlasti kustutada varukoopia sõnad?"
+
+#: src/js/controllers/copayers.js:9
+#: src/js/controllers/preferencesDelete.js:10
+msgid "Are you sure you want to delete this wallet?"
+msgstr "Kas soovid kindlasti kustutada selle rahakoti?"
+
+#: public/views/walletHome.html:230
+msgid "Available <span>{{index.dagBalance.stable / 1e6}}</span>"
+msgstr "Vabad vahendid <span>{{index.dagBalance.stable / 1e6}}</span>"
+
+#: public/views/includes/available-balance.html:7
+msgid "Available Balance"
+msgstr "Konto Jääk"
+
+#: public/views/correspondentDevice.html:7
+#: public/views/editCorrespondentDevice.html:15
+#: public/views/modals/correspondentListToReSendPrivPayloads.html:6
+#: public/views/modals/destination-address.html:11
+msgid "Back"
+msgstr "Tagasi"
+
+#: public/views/backup.html:1
+msgid "Backup"
+msgstr "Varukoopia"
+
+#: src/js/controllers/index.js:1400
+msgid "Backup needed"
+msgstr "Vajalik varukoopia"
+
+#: src/js/controllers/index.js:1405
+msgid "Backup now"
+msgstr "Varunda kohe"
+
+#: public/views/backup.html:5
+msgid "Backup seed"
+msgstr ""
+
+#: public/views/preferencesSecurity.html:6
+msgid "Backup wallet"
+msgstr ""
+
+#: src/js/controllers/backup.js:7
+msgid "Backup words deleted"
+msgstr "Varukoopia sõnad on kustutatud"
+
+#: public/views/preferencesGlobal.html:14
+msgid "Backup your wallets and configure restrictions."
+msgstr ""
+
+#: public/views/preferencesInformation.html:91
+msgid "Balance By Address"
+msgstr "Jääk Aadressi Järgi"
+
+#: public/views/modals/bind.html:100
+#: public/views/modals/bind.html:4
+msgid "Bind payment"
+msgstr "Seo makse"
+
+#: public/views/walletHome.html:276
+#: public/views/walletHome.html:285
+msgid "Bind the payment to a condition"
+msgstr ""
+
+#: public/views/paymentUri.html:6
+msgid "Bitcoin URI is NOT valid!"
+msgstr "Bitcoini aadress ei sobi!"
+
+#: public/views/correspondentDevice.html:258
+msgid "Both you and {{correspondent.name}} enabled local chat history recording."
+msgstr "Sina ja {{correspondent.name}} olete lubanud oma vestluse salvestust."
+
+#: public/views/unsupported.html:6
+msgid "Browser unsupported"
+msgstr "Brauseri tugi puudub"
+
+#: public/views/includes/password.html:27
+msgid "CANCEL"
+msgstr "LOOBU"
+
+#: public/views/splash.html:120
+#: public/views/splash.html:164
+#: public/views/splash.html:73
+msgid "CONTINUE"
+msgstr "JÄTKA"
+
+#: src/js/controllers/preferencesDelete.js:73
+msgid "Can't delete the last remaining wallet"
+msgstr "Ei saa kustutada viimast järelejäänud rahakotti"
+
+#: public/views/modals/destination-address.html:136
+#: src/js/controllers/copayers.js:11
+#: src/js/controllers/preferencesDelete.js:14
+#: src/js/services/confirmDialog.js:9
+msgid "Cancel"
+msgstr "Loobu"
+
+#: public/views/preferencesSystem.html:11
+msgid "Change Wallet type"
+msgstr "Muuda Rahakoti tüüpi"
+
+#: public/views/editCorrespondentDevice.html:41
+msgid "Change hub:"
+msgstr "Muuda teenustasu jaotusmeetodit:"
+
+#: src/js/controllers/preferencesGlobal.js:156
+#: src/js/controllers/preferencesSecurity.js:156
+#: src/js/controllers/preferencesSystem.js:156
+msgid "Change it"
+msgstr "Muuda see"
+
+#: src/js/controllers/preferencesGlobal.js:151
+#: src/js/controllers/preferencesSecurity.js:151
+#: src/js/controllers/preferencesSystem.js:151
+msgid "Change wallet type!"
+msgstr "Muuda rahakoti tüüp!"
+
+#: public/views/preferencesAlias.html:20
+msgid "Changing wallet alias only affects the local wallet\n"
+"        name."
+msgstr "Rahakoti hüüdnime muutmine mõjutab ainult kohaliku rahakoti nime."
+
+#: src/js/controllers/index.js:632
+msgid "Chat"
+msgstr "Vestlus"
+
+#: public/views/modals/correspondentListToReSendPrivPayloads.html:10
+msgid "Choose the device to send to"
+msgstr "Vali seade kuhu saata"
+
+#: public/views/paymentUri.html:1
+msgid "Choose wallet"
+msgstr "Vali rahakott"
+
+#: src/js/controllers/editCorrespondentDevice.js:25
+msgid "Clear chat history"
+msgstr "Kustuta vestluse ajalugu"
+
+#: public/views/modals/address-definition.html:21
+#: public/views/modals/approveNewWitnesses.html:4
+#: public/views/modals/destination-address.html:7
+#: public/views/modals/multi-payment.html:4
+#: public/views/modals/offer-contract.html:4
+#: public/views/modals/pending-modal.html:6
+msgid "Close"
+msgstr "Sulge"
+
+#: public/views/create.html:100
+msgid "Co-signer {{$index+1}}:"
+msgstr "Kaasallkirjastaja {{$index + 1}}:"
+
+#: public/views/preferencesInformation.html:41
+msgid "Co-signers"
+msgstr "Kaasallkirjastajad"
+
+#: public/views/preferencesColor.html:1
+msgid "Color"
+msgstr "Värv"
+
+#: public/views/backup.html:132
+msgid "Compress the file? (Slower)"
+msgstr "Paki fail kokku? (Aeglasem)"
+
+#: public/views/disclaimer.html:87
+#: src/js/controllers/copayers.js:12
+#: src/js/controllers/index.js:289
+#: src/js/controllers/preferencesDelete.js:15
+#: src/js/services/confirmDialog.js:10
+msgid "Confirm"
+msgstr "Kinnita"
+
+#: public/views/modals/multi-payment.html:8
+msgid "Confirm payment"
+msgstr "Kinnita makse"
+
+#: public/views/modals/tx-details.html:109
+msgid "Confirmed"
+msgstr "Kinnitatud"
+
+#: src/js/controllers/inviteCorrespondentDevice.js:29
+#: src/js/controllers/walletHome.js:418
+msgid "Copied to clipboard"
+msgstr "Kopeeritud lõikelauale"
+
+#: public/views/recovery.html:45
+msgid "Correspondents are not restored."
+msgstr "Korrespondente ei taastatud."
+
+#: src/js/controllers/walletHome.js:645
+msgid "Could not create payment proposal"
+msgstr "Maksekorraldust ei saa luua"
+
+#: src/js/services/profileService.js:220
+msgid "Could not create using the specified extended private key"
+msgstr "Ei õnnestu luua laiendatud privaatvõtme abil"
+
+#: src/js/services/profileService.js:230
+msgid "Could not create using the specified extended public key"
+msgstr "Ei õnnestu luua laiendatud avaliku võtme abil"
+
+#: src/js/services/profileService.js:213
+msgid "Could not create: Invalid wallet seed"
+msgstr "Ei saa luua: sobimatu rahakotti seemnefraas"
+
+#: src/js/controllers/backup.js:89
+msgid "Could not decrypt"
+msgstr "Ei saa dekrüptida"
+
+#: src/js/services/profileService.js:451
+#: src/js/services/profileService.js:478
+#: src/js/services/profileService.js:499
+msgid "Could not import"
+msgstr "Ei saa importida"
+
+#: src/js/services/profileService.js:428
+msgid "Could not import. Check input file and password"
+msgstr "Ei saa importida. Kontrolli sisendfaili ja parooli"
+
+#: src/js/controllers/walletHome.js:71
+msgid "Could not recognize a valid Dagcoin QR Code"
+msgstr "Ei tuvastanud sobivat Dagcoini QR koodi"
+
+#: src/js/controllers/walletHome.js:645
+msgid "Could not send payment"
+msgstr "Ei saanud makset saata"
+
+#: public/views/add.html:9
+#: public/views/create.html:1
+#: public/views/create.html:51
+msgid "Create new wallet"
+msgstr "Loo uus rahakott"
+
+#: src/js/controllers/index.js:349
+msgid "Create new wallet  together with  ?"
+msgstr "Loo uus rahakott koos?"
+
+#: public/views/create.html:118
+msgid "Create {{requiredCosigners}}-of-{{totalCosigners}} wallet"
+msgstr "Loo rahakott {{requiredCosigners}} le {{totalCosigners}}-st"
+
+#: public/views/modals/address-definition.html:14
+msgid "Created:"
+msgstr "Loodud:"
+
+#: public/views/splash.html:34
+msgid "Creates light wallet which will contain minimum information relevant to you. The wallet vendor will be\n"
+"              able to know some of your balances and will be able to see which transactions are yours, but you can start\n"
+"              using the wallet immediately."
+msgstr "Luuakse lihtne rahakott, mis sisaldab minimaalset ja oluliseimat teavet. Rahakoti tarnija võib näha konto saldot, tehtud tehingud. Võid alustada kohe rahakoti kasutamist."
+
+#: public/views/splash.html:152
+msgid "Creating Profile..."
+msgstr "Profiili Loomine..."
+
+#: public/views/create.html:15
+msgid "Creating Wallet..."
+msgstr "Rahakoti Loomine..."
+
+#: public/views/splash.html:64
+msgid "Custom settings"
+msgstr "Kohandatud seaded"
+
+#: public/views/modals/destination-address.html:124
+msgid "DAG address"
+msgstr "DAG aadress"
+
+#: public/views/backup.html:73
+msgid "DELETE WORDS"
+msgstr "SÕNADE KUSTUTAMINE"
+
+#: public/views/splash.html:91
+msgid "DOWNLOAD THE ENTIRE DAGCOIN DATABASE"
+msgstr "LAE KOGU DAGCOINI ANDMEBAAS"
+
+#: src/js/controllers/preferencesLogs.js:15
+msgid "Dagcoin Logs"
+msgstr "Dagcoini Logi"
+
+#: src/js/controllers/preferencesLogs.js:9
+msgid "Dagcoin Session Logs\n"
+" Be careful, this could contain sensitive private data"
+msgstr "Dagcoini sessiooni logi\n"
+"Ole ettevaatlik, see võib sisaldada tundlikele andmeid"
+
+#: public/views/modals/bind.html:61
+#: public/views/modals/offer-contract.html:102
+msgid "Data feed name:"
+msgstr "Andmevoo nimi:"
+
+#: public/views/modals/tx-details.html:72
+msgid "Date:"
+msgstr "Kuupäev:"
+
+#: src/js/controllers/index.js:262
+msgid "Declined"
+msgstr "Tühistatud"
+
+#: public/views/paperWallet.html:50
+msgid "Decrypting a paper wallet could take around 5 minutes on this device. please be patient and\n"
+"\t\t\t\t\t\t\tkeep the app open."
+msgstr "Paberrahakott dekrüptimisel, mis võtab aega umbes 5 minutit. Ole kannatlik ja hoia rakendus avatuna."
+
+#: public/views/splash.html:30
+msgid "Default settings (recommended)"
+msgstr "Vaike seaded (soovitatav)"
+
+#: public/views/modals/address-definition.html:5
+msgid "Definition of smart address"
+msgstr "Aruka aadressi mõiste"
+
+#: public/views/modals/multi-payment.html:25
+msgid "Definitions of addresses"
+msgstr "Aadresside mõisted"
+
+#: public/views/preferencesAdvanced.html:10
+#: public/views/preferencesDeleteWallet.html:1
+msgid "Delete Wallet"
+msgstr "Kustuta Rahakott"
+
+#: src/js/controllers/editCorrespondentDevice.js:26
+msgid "Delete the whole chat history with  ?"
+msgstr "Kustutada kogu vestluse ajalugu?"
+
+#: public/views/preferencesDeleteWallet.html:12
+#: src/js/controllers/copayers.js:49
+#: src/js/controllers/preferencesDelete.js:40
+msgid "Delete wallet"
+msgstr "Kustuta rahakott"
+
+#: public/views/preferencesInformation.html:23
+msgid "Derivation Strategy"
+msgstr "Lahenduse Strateegia"
+
+#: public/views/modals/customized-amount.html:23
+#: public/views/modals/multi-payment.html:17
+msgid "Details"
+msgstr "Üksikasjad"
+
+#: public/views/preferencesAboutDevice.html:6
+msgid "Device address"
+msgstr "Seadme aadress"
+
+#: public/views/preferencesDeviceName.html:1
+#: public/views/preferencesDeviceName.html:10
+#: public/views/preferencesSystem.html:6
+msgid "Device name"
+msgstr "Seadme nimi"
+
+#: public/views/preferencesDeviceName.html:21
+msgid "Device name is visible to other devices you communicate\n"
+"                with."
+msgstr ""
+
+#: public/views/recovery.html:46
+msgid "Do not clone wallets, stop using the original wallet with this seed."
+msgstr "Ära kopeeri rahakotte, lõpeta algse rahakoti kasutamine selle seemnefraasiga."
+
+#: public/views/modals/destination-address.html:43
+msgid "Done"
+msgstr "Tehtud"
+
+#: public/views/correspondentDevice.html:19
+#: public/views/modals/destination-address.html:40
+msgid "Edit"
+msgstr "Muuda"
+
+#: public/views/correspondentDevice.html:261
+msgid "Either you or {{correspondent.name}} have chat history recording disabled. History is not saved for anyone now."
+msgstr "Kas Sinul või kasutajal {{correspondent.name}} on keelatud vestluse salvestus. Kellegi vestluste ajalugu ei salvestata nüüd enam."
+
+#: public/views/preferencesEmail.html:1
+msgid "Email Notifications"
+msgstr "E-maili Teated"
+
+#: public/views/preferencesEmail.html:27
+msgid "Email for wallet notifications"
+msgstr "E-mail, kuhu saadetakse rahakoti teated"
+
+#: public/views/acceptCorrespondentInvitation.html:21
+msgid "Enter the pairing code received from the other device, or use your camera (icon at the upper right corner) to scan the QR code displayed on the other device."
+msgstr "Sisesta teisest seadmest saadud sidumiskood või skanneeri oma seadme kaameraga (ikoon paremas ülanurgas) teise seadme ekraanil kuvatav QR-kood."
+
+#: public/views/includes/password.html:13
+msgid "Enter your password"
+msgstr "Sisesta oma parool"
+
+#: src/js/services/profileService.js:279
+#: src/js/services/profileService.js:334
+msgid "Error creating wallet"
+msgstr "Rahakoti loomisel tõrge"
+
+#: public/views/modals/bind.html:69
+msgid "Expected value:"
+msgstr "Eeldatav väärtus:"
+
+#: public/views/backup.html:140
+msgid "Export"
+msgstr "Eksport"
+
+#: src/js/controllers/export.js:145
+#: src/js/controllers/export.js:177
+msgid "Export completed successfully"
+msgstr "Eksport edukalt teostatud"
+
+#: public/views/backup.html:95
+msgid "Exporting..."
+msgstr "Ekspordib..."
+
+#: public/views/preferencesInformation.html:53
+msgid "Extended Public Keys"
+msgstr "Laiendatud Avalikud Võtmed"
+
+#: public/views/backup.html:101
+msgid "Failed to export"
+msgstr "Eksportimine nurjus"
+
+#: public/views/modals/tx-details.html:114
+msgid "Fee"
+msgstr "Teenustasu"
+
+#: public/views/modals/tx-details.html:44
+msgid "From:"
+msgstr "Saatja:"
+
+#: public/views/editCorrespondentDevice.html:28
+msgid "Full address:"
+msgstr "Täielik aadress:"
+
+#: public/views/backup.html:84
+msgid "Full backup"
+msgstr "Täielik varukoopia"
+
+#: public/views/modals/fundingNodeNotification.html:4
+msgid "Funding hub"
+msgstr "Teenustasu jaotus"
+
+#: src/js/controllers/walletHome.js:885
+msgid "Funding hub is fueling your wallet, it may take several minutes. Please try again a bit later."
+msgstr "Teenustasu jaotus Sinu rahakotti alles käib, selleks võib kuluda mitu minutit. Proovi mõne ajapärast uuesti."
+
+#: public/views/paperWallet.html:69
+msgid "Funds found"
+msgstr "Vahendid saadaval"
+
+#: public/views/paperWallet.html:85
+msgid "Funds will be transferred to"
+msgstr "Vahendid kantakse üle"
+
+#: public/views/preferencesGlobal.html:5
+msgid "GENERAL"
+msgstr "ÜLDINE"
+
+#: public/views/splash.html:172
+msgid "GET STARTED"
+msgstr "ALUSTAMINE"
+
+#: src/js/controllers/walletHome.js:453
+msgid "Generate QR Code"
+msgstr ""
+
+#: public/views/preferencesInformation.html:67
+msgid "Generate new address"
+msgstr "Loo uus aadress"
+
+#: public/views/walletHome.html:43
+msgid "Generating .csv file..."
+msgstr "CSV-faili genereerimine..."
+
+#: public/views/modals/destination-address.html:61
+msgid "Getting address for wallet {{selectedWalletName}} ..."
+msgstr "Hangi aadress rahakotile {{selectedWalletName}}..."
+
+#: public/views/preferencesGlobal.html:1
+msgid "Global preferences"
+msgstr "Üldised seaded"
+
+#: public/views/disclaimer.html:91
+msgid "Go back"
+msgstr "Tagasi"
+
+#: public/views/preferencesInformation.html:28
+msgid "Hardware Wallet"
+msgstr "Riistvaraline Rahakott"
+
+#: public/views/preferences.html:26
+msgid "Hardware wallet"
+msgstr "Riistvaraline rahakott"
+
+#: public/views/backup.html:28
+msgid "Hide the Wallet Seed"
+msgstr "Peida rahakoti Seemnefraas"
+
+#: src/js/controllers/index.js:620
+msgid "Home"
+msgstr "Kodu"
+
+#: public/views/modals/offer-contract.html:22
+msgid "I pay:"
+msgstr "Maksan:"
+
+#: public/views/modals/bind.html:20
+msgid "I receive another payment:"
+msgstr "Võtan vastu teise makse:"
+
+#: public/views/modals/bind.html:88
+msgid "If the condition is not met, I can take this money back after:"
+msgstr "Kui tingimused pole täidetud, saan selle raha hiljem tagasi:"
+
+#: public/views/modals/offer-contract.html:59
+msgid "If the peer doesn't pay, I can take my money back after:"
+msgstr "Kui kaasosaline ei maksa, võin ma oma raha hiljem tagasi võtta:"
+
+#: public/views/initialRecovery.html:42
+#: public/views/recovery.html:91
+msgid "Import"
+msgstr "Import"
+
+#: src/js/controllers/import.js:183
+#: src/js/controllers/import.js:204
+msgid "Import successfully completed, please restart the application."
+msgstr "Importimine on edukalt lõpule viidud, taaskäivita rakendus."
+
+#: public/views/add.html:16
+msgid "Import wallet"
+msgstr "Impordi rahakott"
+
+#: public/views/initialRecovery.html:13
+#: public/views/recovery.html:63
+msgid "Importing wallet..."
+msgstr "Rahakoti import..."
+
+#: public/views/preferencesGlobal.html:27
+msgid "Information about changes and app in general."
+msgstr ""
+
+#: public/views/preferencesGlobal.html:23
+msgid "Information about device in use."
+msgstr ""
+
+#: public/views/correspondentDevice.html:296
+msgid "Insert my address"
+msgstr "Sisesta oma aadress"
+
+#: src/js/controllers/index.js:1619
+msgid "Invalid Touch ID"
+msgstr "Sobimatu sõrmejälg."
+
+#: src/js/controllers/acceptCorrespondentInvitation.js:28
+msgid "Invalid pairing code"
+msgstr "Sidumiskood vale"
+
+#: src/js/controllers/acceptCorrespondentInvitation.js:34
+msgid "Invalid pubkey length"
+msgstr "Vale avaliku võtme pikkus"
+
+#: public/views/inviteCorrespondentDevice.html:1
+msgid "Invite new device"
+msgstr "Kutsu uus seade"
+
+#: public/views/addCorrespondentDevice.html:13
+msgid "Invite the other device"
+msgstr "Kutsu teine seade"
+
+#: public/views/splash.html:109
+msgid "KEEP ONLY DATA RELEVANT TO YOU"
+msgstr "HOIA AINULT ANDMEID, MIS ON SEOTUD SINUGA"
+
+#: public/views/modals/destination-address.html:111
+#: public/views/modals/destination-address.html:115
+msgid "Label"
+msgstr "Silt"
+
+#: public/views/preferencesLanguage.html:1
+#: public/views/preferencesSystem.html:16
+msgid "Language"
+msgstr "Keel"
+
+#: public/views/create.html:69
+msgid "Laptop + phone + tablet"
+msgstr "Sülearvuti + telefon + tahvelarvuti"
+
+#: public/views/modals/newVersionIsAvailable.html:16
+msgid "Later"
+msgstr "Hiljem"
+
+#: public/views/disclaimer.html:12
+#: src/js/controllers/disclaimer.js:14
+msgid "Loading..."
+msgstr "Laeb..."
+
+#: public/views/modals/newVersionIsAvailable.html:5
+msgid "Looks that there is a new version available.<br>Would you like to update now?"
+msgstr "Uus versioon saadaval. <br>Kas soovid kohe värskendada?"
+
+#: public/views/paymentUri.html:9
+msgid "Make a payment to"
+msgstr "Soorita makse "
+
+#: public/views/modals/approveNewWitnesses.html:29
+msgid "Maybe later"
+msgstr "Võibolla hiljem"
+
+#: public/views/includes/copayers.html:4
+#: public/views/modals/multi-payment.html:40
+#: public/views/modals/offer-contract.html:149
+#: public/views/preferencesInformation.html:45
+msgid "Me"
+msgstr "Mulle"
+
+#: public/views/modals/tx-details.html:90
+msgid "Merchant message"
+msgstr "Kaupmehe sõnum"
+
+#: public/views/paymentUri.html:13
+msgid "Message"
+msgstr "Sõnum"
+
+#: src/js/controllers/import.js:173
+msgid "Mobile version supports only light wallets."
+msgstr "Mobiilne versioon toetab ainult lihtsat rahakotti."
+
+#: public/views/create.html:57
+msgid "Multidevice Wallet"
+msgstr "Mitme seadme Rahakott"
+
+#: public/views/walletHome.html:1
+msgid "My Wallet"
+msgstr "Minu rahakott"
+
+#: public/views/correspondentDevice.html:267
+msgid "My recording preference"
+msgstr "Salvestamise eelistus"
+
+#: public/views/paymentUri.html:14
+msgid "Network"
+msgstr "Võrk"
+
+#: src/js/controllers/preferencesAdvanced.js:28
+#: src/js/controllers/preferencesInformation.js:40
+msgid "New Address successfully generated."
+msgstr "Uus aadress on edukalt loodud."
+
+#: src/js/controllers/create.js:42
+msgid "New Random Seed"
+msgstr "Uus Juhuslik Seemnefraas"
+
+#: public/views/modals/newVersionIsAvailable.html:4
+msgid "New version is available!"
+msgstr "Uus versioon on saadaval!"
+
+#: public/views/create.html:33
+msgid "New wallet"
+msgstr "Uus rahakott"
+
+#: public/views/modals/approveNewWitnesses.html:9
+msgid "New witnesses"
+msgstr "Uued kinnitajad"
+
+#: public/views/authConfirmation.html:22
+#: src/js/controllers/index.js:288
+msgid "No"
+msgstr "Ei"
+
+#: src/js/controllers/recoveryFromSeed.js:276
+msgid "No active addresses found."
+msgstr "Aktiivseid aadresse ei leitud."
+
+#: public/views/preferencesInformation.html:33
+msgid "No private key"
+msgstr "Privaatne võti puudub"
+
+#: src/js/controllers/correspondentDevice.js:406
+msgid "Not enough confirmed funds"
+msgstr "Pole piisavalt kinnitatud vahendeid"
+
+#: src/js/controllers/walletHome.js:943
+msgid "Not enough dagcoins"
+msgstr "Pole piisavalt dagcoine"
+
+#: public/views/modals/bind.html:50
+#: public/views/modals/customized-amount.html:45
+#: public/views/modals/offer-contract.html:91
+msgid "Not valid"
+msgstr "Kehtetu"
+
+#: public/views/includes/output.html:15
+#: public/views/modals/tx-details.html:86
+msgid "Note"
+msgstr "Märkus"
+
+#: public/views/modals/tx-details.html:60
+msgid "Note:"
+msgstr "Märkus:"
+
+#: src/js/controllers/index.js:1401
+msgid "Now is a good time to backup your wallet seed.\n"
+"          Write it down and keep it somewhere safe. Once you have written your wallet seed down, you must delete it from\n"
+"          this device. If this device is lost, it will be impossible to access your funds without a backup."
+msgstr ""
+
+#: public/views/modals/offer-contract.html:8
+msgid "Offer a contract"
+msgstr "Paku lepingut"
+
+#: public/views/backup.html:67
+msgid "Once you have written your wallet seed down, it is recommended to delete it from this device."
+msgstr "Kui oled üles kirjutanud oma rahakoti seemnefraasi, on soovitatav see siit seadmest kustutada."
+
+#: public/views/recovery.html:44
+msgid "Only single-sig wallets can be recovered."
+msgstr "Ainult ühe-alkirjaõiguslikud rahakotid on võimalik taastada."
+
+#: public/views/modals/bind.html:46
+#: public/views/modals/offer-contract.html:87
+msgid "Oracle address:"
+msgstr "Oraakli aadress:"
+
+#: public/views/preferencesGlobal.html:19
+msgid "Other"
+msgstr ""
+
+#: public/views/acceptCorrespondentInvitation.html:31
+msgid "Pair"
+msgstr "Seo seadmed"
+
+#: public/views/correspondentDevices.html:2
+#: public/views/includes/sidebar.html:41
+msgid "Paired devices"
+msgstr "Seotud seadmed"
+
+#: public/views/paperWallet.html:32
+msgid "Paper Wallet Private Key"
+msgstr "Paberrahakoti Privaatvõti"
+
+#: public/views/paperWallet.html:44
+#: public/views/paperWallet.html:49
+msgid "Passphrase"
+msgstr "Salasõna"
+
+#: public/views/initialRecovery.html:34
+#: public/views/recovery.html:83
+msgid "Password"
+msgstr "Parool"
+
+#: src/js/controllers/password.js:45
+msgid "Password must be at least 8 characters long"
+msgstr "Parool peab olema vähemalt 8 tähemärki"
+
+#: src/js/controllers/password.js:51
+msgid "Password must contain at least one digit"
+msgstr "Parool peab sisaldama vähemalt ühte numbrit"
+
+#: src/js/controllers/password.js:48
+msgid "Password must contain at least one letter"
+msgstr "Parool peab sisaldama vähemalt ühte tähte"
+
+#: src/js/controllers/password.js:54
+msgid "Password must contain at least one special character"
+msgstr "Parool peab sisaldama vähemalt ühte erimärki"
+
+#: src/js/controllers/preferencesGlobal.js:73
+#: src/js/controllers/preferencesSecurity.js:73
+#: src/js/controllers/preferencesSystem.js:73
+#: src/js/services/profileService.js:624
+msgid "Password needed"
+msgstr "Parool on vajalik"
+
+#: src/js/controllers/password.js:34
+msgid "Passwords do not match"
+msgstr "Paroolid ei kattu"
+
+#: public/views/paperWallet.html:35
+msgid "Paste your paper wallet private key here"
+msgstr "Kleebi paberrahakoti privaatvõti siia"
+
+#: public/views/modals/offer-contract.html:170
+msgid "Pay and offer"
+msgstr "Maksa ja paku"
+
+#: public/views/modals/tx-status.html:28
+msgid "Payment Accepted"
+msgstr "Makse vastu võetud"
+
+#: public/views/modals/tx-status.html:16
+msgid "Payment Proposal Created"
+msgstr "Maksekorraldus loodud"
+
+#: public/views/walletHome.html:128
+msgid "Payment Proposals"
+msgstr "Maksekorraldused"
+
+#: public/views/modals/tx-status.html:38
+msgid "Payment Rejected"
+msgstr "Makse tagasi lükatud"
+
+#: public/views/modals/tx-status.html:5
+msgid "Payment Sent"
+msgstr "Makse saadetud"
+
+#: src/js/services/correspondentListService.js:196
+msgid "Payment request:"
+msgstr ""
+
+#: public/views/modals/offer-contract.html:50
+msgid "Peer pays to:"
+msgstr "Kaasosaline maksab:"
+
+#: public/views/modals/offer-contract.html:36
+msgid "Peer pays:"
+msgstr "Kaasosaline maksab:"
+
+#: public/views/modals/address-definition.html:10
+msgid "Peer:"
+msgstr "Kaasosaline:"
+
+#: public/views/walletHome.html:110
+msgid "Pending wallet balance: {{index.dagBalance.pendingStr}}"
+msgstr "Ootel tehingute saldo: {{index.dagBalance.pendingStr}}"
+
+#: public/views/preferencesDeleteWallet.html:10
+msgid "Permanently delete this wallet."
+msgstr "Kustuta see rahakott jäädavalt."
+
+#: public/views/create.html:21
+msgid "Plain Wallet"
+msgstr "Tavaline Rahakott"
+
+#: public/views/splash.html:22
+msgid "Please choose registration type"
+msgstr "Palun vali registreerimise tüüp"
+
+#: public/views/splash.html:83
+msgid "Please choose the type of this wallet"
+msgstr "Palun vali selle rahakoti tüüp"
+
+#: src/js/controllers/create.js:140
+msgid "Please enter the required fields"
+msgstr "Palun täida nõutud väljad"
+
+#: public/views/splash.html:159
+msgid "Please name this device"
+msgstr "Anna sellele seadmele nimi"
+
+#: public/views/modals/offer-contract.html:110
+msgid "Posted value:"
+msgstr "Edastatud väärtus:"
+
+#: src/js/services/backButtonService.js:61
+msgid "Press again to exit"
+msgstr "Väljumiseks kliki uuesti"
+
+#: src/js/controllers/walletHome.js:1440
+msgid "Private payloads sent"
+msgstr "Privaatsed makseandmed saadetud"
+
+#: src/js/controllers/walletHome.js:945
+msgid "Problems with connecting to the hub. Please try again later"
+msgstr "Probleemid teenustasu jaotusüksusega. Proovi hiljem uuesti"
+
+#: public/views/modals/customized-amount.html:10
+msgid "QR Code"
+msgstr "QR-kood"
+
+#: public/views/modals/tx-details.html:98
+msgid "Re-send private payloads"
+msgstr "Saada uuesti privaatsed makseandmed"
+
+#: src/js/controllers/index.js:624
+msgid "Receive"
+msgstr "Võta vastu"
+
+#: public/views/walletHome.html:256
+msgid "Receiver"
+msgstr "Vastuvõtja"
+
+#: public/views/includes/transaction.html:15
+#: public/views/modals/tx-details.html:30
+msgid "Recipients"
+msgstr "Saajad"
+
+#: public/views/walletHome.html:22
+msgid "Reconnecting to Wallet Service..."
+msgstr "Rahakoti teenusega taasühendamine..."
+
+#: public/views/recovery.html:35
+msgid "Recover"
+msgstr "Taastamine"
+
+#: public/views/recovery.html:51
+msgid "Recover from backup"
+msgstr ""
+
+#: public/views/recovery.html:5
+msgid "Recover from seed"
+msgstr ""
+
+#: public/views/preferencesSecurity.html:14
+msgid "Recover wallet"
+msgstr ""
+
+#: public/views/initialRecovery.html:1
+#: public/views/recovery.html:1
+msgid "Recovery"
+msgstr "Taastamine"
+
+#: public/views/walletHome.html:42
+msgid "Recreating Wallet..."
+msgstr "Rahakoti taasloomine..."
+
+#: src/js/controllers/index.js:203
+msgid "Refused"
+msgstr "Tagasi lükatud"
+
+#: public/views/preferencesAbout.html:4
+msgid "Release Information"
+msgstr "Versiooni info"
+
+#: public/views/modals/destination-address.html:84
+msgid "Remove"
+msgstr "Eemalda"
+
+#: public/views/correspondentDevices.html:33
+msgid "Remove a device"
+msgstr "Seadme eemaldamine"
+
+#: public/views/editCorrespondentDevice.html:36
+msgid "Rename:"
+msgstr "Nimeta ümber:"
+
+#: public/views/backup.html:126
+#: public/views/includes/password.html:10
+msgid "Repeat password"
+msgstr "Parooli kordus"
+
+#: public/views/backup.html:123
+msgid "Repeat the password"
+msgstr "Parool uuesti"
+
+#: public/views/modals/approveNewWitnesses.html:23
+msgid "Replace"
+msgstr "Asenda"
+
+#: public/views/preferencesSecurity.html:17
+msgid "Request Spending Restrictions"
+msgstr ""
+
+#: public/views/walletHome.html:201
+msgid "Request a specific amount"
+msgstr "Määratud summa taotlus"
+
+#: public/views/correspondentDevice.html:297
+#: src/js/controllers/correspondentDevice.js:866
+msgid "Request payment"
+msgstr "Makse päring"
+
+#: public/views/modals/customized-amount.html:6
+msgid "Request specific amount"
+msgstr "Määratud summa taotlus"
+
+#: public/views/create.html:91
+msgid "Required number of signatures"
+msgstr "Nõutud allkirjade arv"
+
+#: public/views/splash.html:48
+msgid "Restore from backup"
+msgstr ""
+
+#: public/views/splash.html:141
+msgid "Retrying..."
+msgstr "Proovitakse uuesti..."
+
+#: public/views/includes/password.html:35
+msgid "SET"
+msgstr "MÄÄRA"
+
+#: public/views/editCorrespondentDevice.html:51
+#: public/views/modals/destination-address.html:141
+#: public/views/preferencesAlias.html:18
+#: public/views/preferencesDeviceName.html:18
+#: public/views/preferencesEmail.html:29
+msgid "Save"
+msgstr "Salvesta"
+
+#: public/views/preferencesEmail.html:15
+msgid "Saving preferences..."
+msgstr "Eelistuste salvestamine..."
+
+#: public/views/preferences.html:39
+msgid "Scan Fingerprint"
+msgstr "Sõrmejälje Skanneering"
+
+#: public/views/modals/scanner.html:7
+msgid "Scan QR Code"
+msgstr "QR-koodi Skanneering"
+
+#: public/views/paperWallet.html:59
+msgid "Scan Wallet Funds"
+msgstr "Rahakoti Vahendite Skanneering"
+
+#: public/views/walletHome.html:84
+msgid "Scan status finished with error"
+msgstr "Skanneerimine lõppes tõrkega"
+
+#: public/views/inviteCorrespondentDevice.html:15
+msgid "Scan the above QR code using the other device, or send this pairing code to the other device:"
+msgstr "Skanneeri ülaltoodud QR-kood teise seadme abil või saada see sidumiskood teisele seadmele:"
+
+#: src/js/controllers/index.js:1610
+msgid "Scan your fingerprint please"
+msgstr "Palun skanneeri sõrmejälg"
+
+#: public/views/walletHome.html:41
+msgid "Scanning Wallet funds..."
+msgstr "Rahakoti Seisu Skanneering..."
+
+#: public/views/recovery.html:17
+msgid "Scanning for addresses..."
+msgstr "Aadresside skanneering..."
+
+#: public/views/paperWallet.html:18
+msgid "Scanning wallet funds..."
+msgstr "Rahakoti balansi skanneering..."
+
+#: public/views/preferencesGlobal.html:13
+#: public/views/preferencesSecurity.html:1
+msgid "Security"
+msgstr ""
+
+#: src/js/controllers/recoveryFromSeed.js:297
+msgid "Seed is not valid"
+msgstr "Seemnefraas on kehtetu"
+
+#: public/views/paymentUri.html:26
+msgid "Select a wallet"
+msgstr "Vali rahakott"
+
+#: public/views/modals/select-subwallet.html:5
+msgid "Select subwallet"
+msgstr "Vali alamrahakott"
+
+#: public/views/authConfirmation.html:10
+msgid "Select your identity"
+msgstr "Vali oma identiteet"
+
+#: public/views/includes/transaction.html:10
+#: public/views/walletHome.html:292
+#: src/js/controllers/index.js:628
+msgid "Send"
+msgstr "Saada"
+
+#: public/views/walletHome.html:214
+msgid "Send <span>dags</span>"
+msgstr "Saada <span>dage</span>"
+
+#: public/views/modals/multi-payment.html:62
+msgid "Send Payment"
+msgstr "Saada makse"
+
+#: public/views/preferencesInformation.html:85
+msgid "Send addresses by email"
+msgstr "Saada aadressid e-mailiga"
+
+#: public/views/walletHome.html:231
+msgid "Send all"
+msgstr "Saada kõik"
+
+#: public/views/preferencesLogs.html:9
+msgid "Send by email"
+msgstr "Saada e-mailiga"
+
+#: public/views/paperWallet.html:19
+msgid "Sending funds..."
+msgstr "Raha saadetakse..."
+
+#: public/views/walletHome.html:45
+msgid "Sending..."
+msgstr "Saadetakse..."
+
+#: public/views/preferencesAbout.html:21
+#: public/views/preferencesLogs.html:1
+msgid "Session log"
+msgstr "Sessiooni logi"
+
+#: public/views/backup.html:114
+msgid "Set up a Password"
+msgstr "Parooli Seaded"
+
+#: public/views/includes/password.html:9
+msgid "Set up a password"
+msgstr "Seadista parool"
+
+#: public/views/preferencesEmail.html:32
+msgid "Setting up email notifications could weaken your privacy, if the wallet service provider is compromised. Information available to an attacker would include your wallet addresses and its balance, but no more."
+msgstr "E-posti teatiste seadistamine võib ohustada Sinu privaatsust, juhul kui rahakoti teenusepakkuja satub rünnaku ohvriks. Võimaliku kurikaela jaoks võib saadaolev teave sisaldada vaid Sinu rahakoti aadresse ja selle seisu, kuid mitte rohkem."
+
+#: public/views/includes/sidebar.html:48
+msgid "Settings"
+msgstr "Seaded"
+
+#: public/views/preferencesGlobal.html:9
+msgid "Setup your wallets."
+msgstr ""
+
+#: public/views/modals/customized-amount.html:18
+msgid "Share address"
+msgstr "Aadressi jagamine"
+
+#: public/views/walletHome.html:197
+msgid "Share the link above to receive payments."
+msgstr "Maksete vastuvõtuks jagage ülalolevat linki."
+
+#: public/views/walletHome.html:194
+msgid "Share wallet link"
+msgstr "Jaga rahakoti linki"
+
+#: public/views/backup.html:27
+msgid "Show the Wallet Seed Anyway"
+msgstr "Näita rahakoti seemnefraasi igaljuhul"
+
+#: src/js/controllers/index.js:510
+msgid "Sign transaction spending  from wallet ?"
+msgstr "Kinnitada ülekande kulud rahakotist?"
+
+#: public/views/create.html:45
+#: public/views/create.html:77
+#: public/views/preferences.html:12
+msgid "Single address wallet"
+msgstr "Ühe aadressiga rahakott"
+
+#: public/views/create.html:42
+#: public/views/create.html:74
+#: public/views/preferences.html:17
+msgid "Single address wallets will not spawn new addresses for every transaction, change will always go to the one and only address the wallet contains."
+msgstr "Ühe aadressiga rahakotid ei tekita uute tehingute jaoks uusi aadresse, sellised rahakotid sisaldavad alati vaid ühte aadressi."
+
+#: src/js/services/profileService.js:274
+msgid "Small Expenses Wallet"
+msgstr "Rahakott väikeseks kulutusteks"
+
+#: public/views/unsupported.html:7
+msgid "Sorry, Copay is not supported by your browser.\n"
+"    Please use a current version of Google Chrome, Mozilla Firefox, Internet Explorer, Safari, or Opera.\n"
+"    <br>\n"
+"    Note that localStorage should also be enabled (enabled by default in most cases)."
+msgstr "Vabandame, Sinu brauser ei toeta Copay´d.\n"
+"    Palun kasuta viimase versiooni Google Chrome, Mozilla Firefox, Internet Explorer, Safari või Opera brauserit.\n"
+"    <br>\n"
+"    NB! Jälgi, et kohalik salvestamine oleks lubatud (enamikul juhtudel vaikimisi lubatud)."
+
+#: src/js/controllers/create.js:45
+msgid "Specify Seed..."
+msgstr "Seemnefraasi täpsustus..."
+
+#: public/views/preferences.html:33
+msgid "Spending Restrictions"
+msgstr "Kulutuste piirangud"
+
+#: public/views/modals/tx-details.html:106
+msgid "Status"
+msgstr "Olek"
+
+#: public/views/preferencesSecurity.html:9
+msgid "Still not done"
+msgstr "Veel tegemata"
+
+#: src/js/controllers/copayers.js:40
+#: src/js/controllers/export.js:145
+#: src/js/controllers/export.js:177
+#: src/js/controllers/index.js:249
+#: src/js/controllers/index.js:282
+#: src/js/controllers/preferencesDelete.js:31
+#: src/js/controllers/walletHome.js:1440
+msgid "Success"
+msgstr "Tehtud"
+
+#: public/views/modals/pending-modal.html:3
+msgid "Successfully changed"
+msgstr "Edukalt muudetud"
+
+#: public/views/paperWallet.html:75
+msgid "Sweep Wallet"
+msgstr "Puhasta rahakott"
+
+#: public/views/walletHome.html:44
+msgid "Syncing... {{index.syncProgress}}"
+msgstr "Sünkroonib... {{index.syncProgress}}"
+
+#: public/views/preferencesGlobal.html:8
+#: public/views/preferencesSystem.html:1
+msgid "System"
+msgstr ""
+
+#: public/views/preferencesDeleteWallet.html:11
+msgid "THIS ACTION CANNOT BE REVERSED"
+msgstr "SEDA TOIMINGUT EI SAA TAGASI PÖÖRATA"
+
+#: public/views/walletHome.html:153
+msgid "Tap the"
+msgstr "Kliki sellel"
+
+#: public/views/walletHome.html:79
+#: public/views/walletHome.html:85
+msgid "Tap to retry"
+msgstr "Kliki uuesti"
+
+#: public/views/disclaimer.html:19
+#: public/views/disclaimer.html:2
+#: public/views/preferencesAbout.html:18
+msgid "Terms of Use"
+msgstr "Kasutaja tingimused"
+
+#: src/js/controllers/walletHome.js:873
+msgid "The Funding Client is not ready"
+msgstr "Maksja pole valmis"
+
+#: src/js/controllers/correspondentDevice.js:291
+msgid "The amounts are equal, you cannot require the peer to pay to the contract.\n"
+"              Please either change the amounts slightly or fund the entire contract yourself and require the peer to pay his half to you."
+msgstr ""
+
+#: public/views/modals/bind.html:77
+msgid "The expected value will be posted:"
+msgstr "Oodatav väärtus edastatakse:"
+
+#: src/js/controllers/walletHome.js:878
+msgid "The funding service is currently not supported on secondary wallets. Load some bytes on it"
+msgstr "Teenustasu jaotusmehhanism ei toeta lisa rahakotte. Võimalik kasutada vaid baitide käsitsi pealelaadimise järgselt"
+
+#: public/views/modals/approveNewWitnesses.html:11
+msgid "The hub suggests replacing the following witnesses:"
+msgstr "Jaotuskeskus soovitab asendada järgmised kinnitajad:"
+
+#: public/views/modals/bind.html:16
+msgid "The peer receives this payment if:"
+msgstr "Kaasosaline saab selle makse kui:"
+
+#: src/js/controllers/copayers.js:40
+#: src/js/controllers/preferencesDelete.js:31
+msgid "The wallet \"{{walletName}}\" was deleted"
+msgstr "Rahakott \"{{walletName}}\" on kustutatud"
+
+#: src/js/controllers/correspondentDevice.js:118
+#: src/js/controllers/correspondentDevice.js:125
+msgid "The wallet is not approved yet"
+msgstr "Rahakott ei ole veel kinnitatud"
+
+#: public/views/splash.html:113
+msgid "The wallet will contain minimum information relevant to you.  The wallet vendor will be able to know\n"
+"              some of your balances and will be able to see which transactions are yours, but you can start using the\n"
+"              wallet immediately and the wallet is fully functional."
+msgstr "Rahakott sisaldab Sinu kohta miinimumteavet. Rahakoti hankija võib omada informatsiooni Sinu konto saldode ja tehingute kohta, kuid rahakott on koheseks kasutamiseks täiesti töökorras."
+
+#: src/js/controllers/preferencesGlobal.js:152
+#: src/js/controllers/preferencesSecurity.js:152
+#: src/js/controllers/preferencesSystem.js:152
+msgid "The wallet will contain the most current state of the entire Dagcoin database. \n"
+"            This option is better for privacy but will take several gigabytes of storage and the initial sync will take several days. \n"
+"            CPU load will be high during sync. After changing to full wallet your money won't be visible until database will synchronize your transactions."
+msgstr "Rahakott sisaldab kogu Dagcoini andmebaasi hetkeseisu.\n"
+"             See valik on privaatsuse jaoks parem, kuid võtab Sinu seadmes mitu gigabaiti talletusruumi ja algne sünkroonimine võib võtta aega mitu päeva.\n"
+"             Seadme protsessor on sünkroonimise ajal kõrge koormuse all. Pärast täieliku rahakoti vahetamist pole Sinu raha nähtav, kuni andmebaas sünkroonib Sinu tehinguid."
+
+#: public/views/splash.html:95
+msgid "The wallet will contain the most current state of the entire Dagcoin database.  This option is better\n"
+"              for privacy but will take  several gigabytes of storage and the initial sync will take several days.\n"
+"              CPU load will be high during sync."
+msgstr "Rahakott sisaldab kogu Dagcoini andmebaasi hetkeseisu.\n"
+"             See valik on privaatsuse jaoks parem, kuid võtab Sinu seadmes mitu gigabaiti talletusruumi ja algne sünkroonimine võib võtta aega mitu päeva.\n"
+"             Seadme protsessor on sünkroonimise ajal kõrge koormuse all."
+
+#: public/views/correspondentDevice.html:272
+msgid "Their recording preference"
+msgstr "Nende salvestuste eelistus"
+
+#: public/views/paymentUri.html:19
+msgid "There are no wallets to make this payment"
+msgstr "Ei ole rahakotte antud maksete sooritamiseks"
+
+#: src/js/controllers/preferencesDelete.js:11
+msgid "This Wallet has positive balance."
+msgstr "Sellel rahakotil on positiivne saldo."
+
+#: src/js/controllers/correspondentDevice.js:403
+msgid "This is a private asset, please send it only by clicking links from chat"
+msgstr "Need on privaatsed vahendid, palun edastage vaid vestluses olevaid linke"
+
+#: src/js/controllers/correspondentDevice.js:642
+msgid "This payment is already under way"
+msgstr "See makse on juba tegemisel"
+
+#: public/views/walletHome.html:277
+msgid "This payment is bound to a condition"
+msgstr ""
+
+#: public/views/modals/tx-details.html:65
+msgid "This transaction has become invalid; possibly due to a double spend attempt."
+msgstr "See kanne on muutunud kehtetuks; võimaliku topelt ülekande tõttu."
+
+#: public/views/recovery.html:43
+msgid "This will permanently delete all your existing wallets!"
+msgstr "See kustutab jäädavalt kõik olemasolevad rahakotid!"
+
+#: public/views/includes/output.html:3
+#: public/views/includes/transaction.html:19
+#: public/views/modals/tx-details.html:16
+msgid "To"
+msgstr "Saajale"
+
+#: public/views/walletHome.html:280
+msgid "To bind the payment to a condition, please click the peer's address in chat"
+msgstr ""
+
+#: src/js/controllers/backup.js:13
+msgid "To protect your funds, please use multisig wallets with redundancy, \n"
+"          e.g. 1-of-2 wallet with one key on this device and another key on your laptop computer. \n"
+"          Just the wallet seed is not enough."
+msgstr "Oma rahaliste vahendite kaitseks kasutage mitmikallkirjaga rahakotte,\n"
+"           nt sellel seadmel ühte võtit ja oma sülearvutil teist võtit.\n"
+"           Ainult rahakoti seemnefraasist ei piisa."
+
+#: src/js/controllers/backup.js:19
+msgid "To restore your wallets, you will need a full backup of Dagcoin data at .  \n"
+"                     Better yet, use multisig wallets with redundancy, \n"
+"                     e.g. 1-of-2 wallet with one key on this device and another key on your smartphone.  \n"
+"                     Just the wallet seed is not enough."
+msgstr "Oma rahakottide taastamiseks pead omama täielikku varukoopiat.\n"
+"                      Veelgi parem, kasutage mitmikallkirjaga rahakotte,\n"
+"                      nt selles seadmes ühte võtit ja teises, oma nutitelefonis teist võtit.\n"
+"                      Ainult rahakoti seemnefraasist ei piisa."
+
+#: public/views/modals/tx-details.html:52
+msgid "To:"
+msgstr "Saaja:"
+
+#: public/views/walletHome.html:136
+msgid "Total Locked Balance"
+msgstr "Kokku lukustatud saldo"
+
+#: public/views/create.html:83
+msgid "Total number of co-signers"
+msgstr "Kokku kaaskinnitajaid"
+
+#: public/views/modals/tx-details.html:7
+msgid "Transaction detail"
+msgstr "Tehingu üksikasjad"
+
+#: public/views/preferencesLanguage.html:12
+msgid "Translations"
+msgstr ""
+
+#: src/js/controllers/walletHome.js:691
+msgid "Unable to send transaction proposal"
+msgstr "Ei saa saata tehingu korraldust"
+
+#: public/views/modals/tx-details.html:108
+msgid "Unconfirmed"
+msgstr "Kinnitamata"
+
+#: public/views/modals/tx-details.html:80
+msgid "Unit"
+msgstr "Üksus"
+
+#: public/views/walletHome.html:129
+msgid "Unsent transactions"
+msgstr "Saatmata tehingud"
+
+#: public/views/modals/newVersionIsAvailable.html:11
+msgid "Update to {{version}}"
+msgstr "Uuenda versioonile {{version}}"
+
+#: public/views/walletHome.html:35
+msgid "Updating Wallet..."
+msgstr "Rahakoti versiooni uuendamine..."
+
+#: public/views/preferencesAbout.html:8
+msgid "Version"
+msgstr "Versioon"
+
+#: public/views/backup.html:57
+msgid "WARNING: This seed was created with a passphrase. To recover this wallet both the mnemonic and passphrase are needed."
+msgstr "Hoiatus: Seemnefraas on kaitstud parooliga. Selle rahakoti taastamiseks on vaja nii mnemoonilist parooli kui ka salasõna."
+
+#: public/views/recovery.html:107
+msgid "WARNING: This will permanently delete all your existing wallets!"
+msgstr "HOIATUS: See kustutab jäädavalt kõik olemasolevaid rahakotid!"
+
+#: public/views/recovery.html:42
+msgid "WARNINGS:"
+msgstr "HOIATUSED:"
+
+#: public/views/splash.html:130
+msgid "WELCOME TO DAGCOIN"
+msgstr "TERE TULEMAST DAGCOINI"
+
+#: public/views/copayers.html:16
+msgid "Waiting for co-signers"
+msgstr "Ootab kinnitust kaasallkirjastajatelt"
+
+#: public/views/copayers.html:25
+msgid "Waiting..."
+msgstr "Ootel..."
+
+#: public/views/preferencesDeleteWallet.html:5
+msgid "Wallet"
+msgstr "Rahakott"
+
+#: src/js/controllers/index.js:249
+msgid "Wallet  approved by"
+msgstr "Rahakott on kinnitatud isikul"
+
+#: src/js/controllers/index.js:262
+msgid "Wallet  declined by"
+msgstr "Rahakott on tagasi lükatud isikul"
+
+#: src/js/controllers/index.js:282
+msgid "Wallet  is ready"
+msgstr "Rahakott on valmis"
+
+#: public/views/preferences.html:8
+#: public/views/preferencesAlias.html:1
+msgid "Wallet Alias"
+msgstr "Rahakoti Nimi"
+
+#: public/views/preferencesInformation.html:18
+msgid "Wallet Configuration (m-n)"
+msgstr "Rahakoti konfiguratsioon (m-n)"
+
+#: public/views/preferencesInformation.html:13
+msgid "Wallet Id"
+msgstr "Rahakoti ID"
+
+#: public/views/preferencesAdvanced.html:6
+#: public/views/preferencesInformation.html:1
+#: public/views/preferencesInformation.html:5
+msgid "Wallet Information"
+msgstr "Rahakoti andmed"
+
+#: public/views/preferencesInformation.html:8
+msgid "Wallet Name"
+msgstr "Rahakoti Nimi"
+
+#: public/views/preferences.html:1
+msgid "Wallet Preferences"
+msgstr "Rahakoti Valikud"
+
+#: public/views/preferencesAlias.html:12
+msgid "Wallet alias"
+msgstr "Rahakoti hüüdnimi"
+
+#: public/views/walletHome.html:111
+msgid "Wallet balance"
+msgstr "Rahakoti saldo"
+
+#: public/views/preferences.html:18
+msgid "Wallet cannot be converted to single address wallet as it consists of multiple addresses or is multidevice"
+msgstr "Rahakotti ei saa teisendada ühe aadressi rahakotiks, sest see on seotud mitme aadressiga või on tegemist multiseadmega"
+
+#: public/views/create.html:30
+#: public/views/create.html:67
+msgid "Wallet name"
+msgstr "Rahakoti nimi"
+
+#: public/views/backup.html:18
+msgid "Wallet seed not available."
+msgstr "Rahakoti seemnefraas pole saadaval."
+
+#: public/views/walletHome.html:10
+msgid "Wallet seed not backed up"
+msgstr ""
+
+#: src/js/services/changeWalletTypeService.js:62
+msgid "Wallet type successfully changed, please restart the application."
+msgstr "Rahakoti tüüp on muudetud, palun taaskäivita rakendus."
+
+#: public/views/modals/destination-address.html:17
+#: public/views/modals/destination-address.html:31
+msgid "Wallets"
+msgstr "Rahakotid"
+
+#: public/views/preferencesDeleteWallet.html:9
+msgid "Warning!"
+msgstr "Hoiatus!"
+
+#: public/views/preferencesLanguage.html:13
+msgid "We’re always looking for translation contributions!"
+msgstr ""
+
+#: src/js/controllers/recoveryFromSeed.js:212
+msgid "When scanning an error occurred, please try again later."
+msgstr "Kui veateate skanneering on lõppenud, proovi hiljem uuesti."
+
+#: public/views/modals/multi-payment.html:35
+#: public/views/modals/offer-contract.html:144
+msgid "Who signs:"
+msgstr "Kinnitajad:"
+
+#: public/views/backup.html:37
+msgid "Write it down and keep it somewhere safe."
+msgstr "Pane see kirja ja hoia ohutus kohas."
+
+#: src/js/services/profileService.js:635
+msgid "Wrong password"
+msgstr "Vale parool"
+
+#: public/views/authConfirmation.html:17
+#: src/js/controllers/index.js:287
+msgid "Yes"
+msgstr "Jah"
+
+#: src/js/controllers/walletHome.js:1275
+msgid "You are sending all your stable amount. Transaction fee will be automatically excluded!"
+msgstr "Saadad kogu summa. Tehingutasu võetakse automaatselt maha!"
+
+#: public/views/preferencesLanguage.html:14
+msgid "You can make corrections or help to make this app available in your native language by joining <a ng-click=\"openExternalLink('https://crowdin.com/project/dagcoin')\" class=\"inline\">our community</a> on Crowdin."
+msgstr ""
+
+#: public/views/backup.html:36
+#: public/views/recovery.html:29
+msgid "Your Wallet Seed:"
+msgstr "Rahakoti Seemnefraas:"
+
+#: public/views/backup.html:117
+msgid "Your export password"
+msgstr "Ekspordi parool"
+
+#: public/views/includes/password.html:18
+msgid "Your password"
+msgstr "Parool"
+
+#: public/views/initialRecovery.html:26
+#: public/views/recovery.html:75
+msgid "Your wallet file:"
+msgstr "Rahakoti fail:"
+
+#: public/views/includes/password.html:43
+msgid "Your wallet key will be encrypted. Password cannot be recovered. Be sure to write it down"
+msgstr "Sinu rahakoti võti krüpteeritakse. Parooli ei saa enam taastada. Pane see kindlasti kirja"
+
+#: public/views/splash.html:170
+msgid "Your wallet will be created on this device, keep it safe.  See your backup options in the Settings menu."
+msgstr "Rahakott luuakse sellele seadmele, hoia seda turvaliselt. Vaata varundamisvalikuid Seadistuste menüüst."
+
+#: public/views/create.html:110
+msgid "[ Add new co-signer device ]"
+msgstr "[Lisa uus kaasallkirjastaja seade]"
+
+#: src/js/controllers/correspondentDevice.js:430
+msgid "[your share of payment to the contract]()"
+msgstr "[kokkuleppe osamakse] ()"
+
+#: public/views/modals/offer-contract.html:127
+msgid "after the contract expires in:"
+msgstr "pärast lepingu lõppemist:"
+
+#: public/views/copayers.html:30
+msgid "cancel wallet creation"
+msgstr "loobu rahakoti loomisest"
+
+#: src/js/services/correspondentListService.js:466
+msgid "chat recording"
+msgstr ""
+
+#: public/views/editCorrespondentDevice.html:56
+msgid "clear chat history"
+msgstr "kustuta vestluse ajalugu"
+
+#: src/js/controllers/approveNewWitnesses.js:25
+msgid "closed result"
+msgstr "suletud tulemus"
+
+#: public/views/modals/offer-contract.html:137
+msgid "days"
+msgstr "päevi"
+
+#: public/views/modals/bind.html:82
+msgid "either way"
+msgstr "mõlemal juhul"
+
+#: public/views/modals/bind.html:80
+msgid "explicitly"
+msgstr "selgesõnaliselt"
+
+#: src/js/controllers/correspondentDevice.js:568
+msgid "failed to create shared address :"
+msgstr "ei saanud luua ühisaadressi:"
+
+#: src/js/controllers/walletHome.js:1213
+msgid "failed to find asset index of asset"
+msgstr "vahendite indeksit ei leitud"
+
+#: src/js/controllers/preferencesGlobal.js:25
+#: src/js/controllers/preferencesSecurity.js:25
+#: src/js/controllers/preferencesSystem.js:25
+#: src/js/controllers/versionAndWalletType.js:7
+msgid "full wallet"
+msgstr "täiuslik rahakott"
+
+#: public/views/modals/bind.html:95
+#: public/views/modals/offer-contract.html:66
+msgid "hours"
+msgstr "tundi"
+
+#: public/views/modals/offer-contract.html:79
+msgid "if an event is posted by an oracle:"
+msgstr "kui sündmus on lisatud oraakli poolt:"
+
+#: public/views/modals/bind.html:81
+msgid "in merkle tree"
+msgstr "merkli puus"
+
+#: src/js/controllers/preferencesGlobal.js:25
+#: src/js/controllers/preferencesSecurity.js:25
+#: src/js/controllers/preferencesSystem.js:25
+#: src/js/controllers/versionAndWalletType.js:7
+msgid "light wallet"
+msgstr "lihtne rahakott"
+
+#: public/views/includes/available-balance.html:12
+msgid "locked by pending payments"
+msgstr "lukustatud ootel maksete pärast"
+
+#: src/js/controllers/correspondentDevice.js:623
+msgid "more than 1 non-base asset not supported"
+msgstr "rohkem kui 1 baseerumata vhendit pole toetatud"
+
+#: src/js/controllers/walletHome.js:956
+msgid "my address not known"
+msgstr "minu aadress tuvastamata"
+
+#: src/js/controllers/correspondentDevice.js:514
+msgid "no member addresses in"
+msgstr "liikme aadresse pole"
+
+#: src/js/controllers/acceptCorrespondentInvitation.js:39
+msgid "pairing"
+msgstr "sidumine"
+
+#: src/js/controllers/walletHome.js:750
+msgid "recipient device address not known"
+msgstr "vastuvõtva seadme aadress tuvastamata"
+
+#: src/js/controllers/index.js:203
+msgid "refused to sign the transaction"
+msgstr "keeldus tehingu kinnitusest"
+
+#: src/js/controllers/walletHome.js:732
+#: src/js/controllers/walletHome.js:737
+#: src/js/controllers/walletHome.js:831
+#: src/js/controllers/walletHome.js:937
+#: src/js/controllers/walletHome.js:986
+msgid "sending"
+msgstr "saatmine"
+
+#: public/views/modals/approveNewWitnesses.html:17
+#: src/js/services/correspondentListService.js:190
+msgid "to"
+msgstr "saaja"
+
+#: public/views/walletHome.html:154
+msgid "to copy its address."
+msgstr "tema aadressi kopeerimiseks."
+
+#: src/js/controllers/recoveryFromSeed.js:264
+msgid "wallets recovered, please restart the application to finish."
+msgstr "rahakotid tastatud, palun lõpetuseks taaskäivita rakendus."
+
+#: public/views/modals/address-definition.html:7
+msgid "{{address}} can be spent if:"
+msgstr "{{address}} saab kulutada, kui:"
+
+#: public/views/modals/customized-amount.html:62
+msgid "{{buttonLabel}}"
+msgstr "{{buttonLabel}}"
+
+#: public/views/modals/confirmation.html:17
+msgid "{{cancel_label || 'Cancel'}}"
+msgstr "{{cancel_label || 'Cancel'}}"
+
+#: public/views/modals/multi-payment.html:28
+msgid "{{hrd.destinationAddress}} can be spent if:"
+msgstr "{{hrd.destinationAddress}} saab kulutada, kui:"
+
+#: public/views/copayers.html:18
+#: public/views/includes/walletInfo.html:2
+msgid "{{index.m}}-of-{{index.n}}"
+msgstr "{{index.m}}/{{index.n}}-st"
+
+#: public/views/includes/sidebar.html:21
+msgid "{{item.m}}-of-{{item.n}}"
+msgstr "{{item.m}}/{{item.n}}-st"
+
+#: public/views/backup.html:14
+msgid "{{wordsC.text}}"
+msgstr "{{wordsC.text}}"
+
+#: public/views/modals/fundingNodeNotification.html:12
+msgid "{{yes_label || 'OK'}}"
+msgstr "{{yes_label || 'OK'}}"
+
+#: public/views/modals/confirmation.html:12
+msgid "{{yes_label || 'Yes'}}"
+msgstr "{{yes_label || 'Yes'}}"
+

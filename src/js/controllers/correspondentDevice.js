@@ -1,6 +1,6 @@
 angular.module('copayApp.controllers').controller('correspondentDeviceController',
   ($scope, $rootScope, $timeout, $sce, $modal, configService, profileService, animationService, isCordova, go,
-    correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettext) => {
+    correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) => {
     const chatStorage = require('byteballcore/chat_storage.js');
     const constants = require('byteballcore/constants.js');
     console.log('correspondentDeviceController');
@@ -115,14 +115,14 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 
     $scope.insertMyAddress = function () {
       if (!profileService.focusedClient.credentials.isComplete()) {
-        return $rootScope.$emit('Local/ShowErrorAlert', gettext('The wallet is not approved yet'));
+        return $rootScope.$emit('Local/ShowErrorAlert', gettextCatalog.getString('The wallet is not approved yet'));
       }
       return readMyPaymentAddress(appendMyPaymentAddress);
     };
 
     $scope.requestPayment = function () {
       if (!profileService.focusedClient.credentials.isComplete()) {
-        return $rootScope.$emit('Local/ShowErrorAlert', gettext('The wallet is not approved yet'));
+        return $rootScope.$emit('Local/ShowErrorAlert', gettextCatalog.getString('The wallet is not approved yet'));
       }
       return readMyPaymentAddress(showRequestPaymentModal);
     };
@@ -140,7 +140,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       });
     };
 
-    $scope.showPayment = function (asset) {
+    $scope.showPayment = function (asset, walletId, address) {
       console.log(`will show payment in asset ${asset}`);
       if (!asset) {
         throw Error('no asset in showPayment');
@@ -154,6 +154,27 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         throw Error(`failed to find asset index of asset ${asset}`);
       }
       $scope.index.assetIndex = assetIndex;
+
+      if (walletId && walletId !== indexScope.walletId) {
+        return profileService.setAndStoreFocus(walletId, () => {
+          $timeout(() => {
+            go.history();
+          }, 500);
+        });
+      }
+
+      if (address) {
+        profileService.getWalletByAddress(address).then((wallet) => {
+          if (wallet) {
+            return profileService.setAndStoreFocus(wallet, () => {
+              $timeout(() => {
+                go.history();
+              }, 500);
+            });
+          }
+        });
+      }
+
       go.history();
     };
 
@@ -267,7 +288,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             peerAmount = Math.round(peerAmount);
 
             if (myAmount === peerAmount && contract.myAsset === contract.peerAsset && contract.peer_pays_to === 'contract') {
-              $scopeModal.error = gettext(`The amounts are equal, you cannot require the peer to pay to the contract.  
+              $scopeModal.error = gettextCatalog.getString(`The amounts are equal, you cannot require the peer to pay to the contract.
               Please either change the amounts slightly or fund the entire contract yourself and require the peer to pay his half to you.`);
               $timeout(() => {
                 $scopeModal.$digest();
@@ -379,10 +400,10 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                 profileService.bKeepUnlocked = false;
                 if (errorMsg) {
                   if (errorMsg.match(/device address/)) {
-                    errorMsg = gettext('This is a private asset, please send it only by clicking links from chat');
+                    errorMsg = gettextCatalog.getString('This is a private asset, please send it only by clicking links from chat');
                   }
                   if (errorMsg.match(/no funded/)) {
-                    errorMsg = gettext('Not enough confirmed funds');
+                    errorMsg = gettextCatalog.getString('Not enough confirmed funds');
                   }
                   if ($scopeModal) {
                     $scopeModal.error = errorMsg;
@@ -390,7 +411,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   return;
                 }
                 $rootScope.$emit('NewOutgoingTx');
-                eventBus.emit('sent_payment', correspondent.device_address, myAmount, contract.myAsset);
+                eventBus.emit('sent_payment', correspondent.device_address, myAmount, contract.myAsset, indexScope.walletId);
                 let paymentRequestCode;
                 if (contract.peer_pays_to === 'contract') {
                   const arrPayments = [{ address: sharedAddress, amount: peerAmount, asset: contract.peerAsset }];
@@ -404,9 +425,9 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   const paymentJsonBase64 = Buffer(paymentJson).toString('base64');
                   paymentRequestCode = `payment:${paymentJsonBase64}`;
                 } else {
-                  paymentRequestCode = `byteball:${myAddress}?amount=${peerAmount}&asset=${encodeURIComponent(contract.peerAsset)}`;
+                  paymentRequestCode = `dagcoin:${myAddress}?amount=${peerAmount}&asset=${encodeURIComponent(contract.peerAsset)}`;
                 }
-                const paymentRequestText = gettext(`[your share of payment to the contract](${paymentRequestCode})`);
+                const paymentRequestText = gettextCatalog.getString(`[your share of payment to the contract](${paymentRequestCode})`);
                 device.sendMessageToDevice(correspondent.device_address, 'text', paymentRequestText);
                 correspondentListService.messageEventsByCorrespondent[correspondent.device_address].push({
                   bIncoming: false,
@@ -490,7 +511,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           });
           arrAllMemberAddresses = lodash.uniq(arrAllMemberAddresses);
           if (arrAllMemberAddresses.length === 0) {
-            throw Error(gettext(`no member addresses in ${paymentJson}`));
+            throw Error(gettextCatalog.getString(`no member addresses in ${paymentJson}`));
           }
           const findMyAddresses = function (cb) {
             db.query(
@@ -544,7 +565,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             }, {
               ifOk: cb,
               ifError(err) {
-                throw Error(gettext(`failed to create shared address ${sharedAddress}: ${err}`));
+                throw Error(gettextCatalog.getString(`failed to create shared address ${sharedAddress}: ${err}`));
               },
             });
           });
@@ -599,7 +620,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
               });
               const arrNonBaseAssets = Object.keys(assocOutputsByAsset).filter(asset => (asset !== 'base'));
               if (arrNonBaseAssets.length > 1) {
-                $scopeModal.error = gettext('more than 1 non-base asset not supported');
+                $scopeModal.error = gettextCatalog.getString('more than 1 non-base asset not supported');
                 $scopeModal.$apply();
                 return;
               }
@@ -618,7 +639,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
               }
               const currentMultiPaymentKey = require('crypto').createHash('sha256').update(paymentJson).digest('base64');
               if (currentMultiPaymentKey === indexScope.current_multi_payment_key) {
-                $rootScope.$emit('Local/ShowErrorAlert', gettext('This payment is already under way'));
+                $rootScope.$emit('Local/ShowErrorAlert', gettextCatalog.getString('This payment is already under way'));
                 $modalInstance.dismiss('cancel');
                 return;
               }
@@ -642,7 +663,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                 $rootScope.$emit('NewOutgoingTx');
                 const assocPaymentsByAsset = correspondentListService.getPaymentsByAsset(objMultiPaymentRequest);
                 Object.keys(assocPaymentsByAsset).forEach((ass) => {
-                  eventBus.emit('sent_payment', recipientDeviceAddress, assocPaymentsByAsset[ass], ass);
+                  eventBus.emit('sent_payment', recipientDeviceAddress, assocPaymentsByAsset[ass], ass, indexScope.walletId);
                 });
               });
               $modalInstance.dismiss('cancel');
@@ -841,7 +862,8 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         $scopeModal.dagUnitValue = walletSettings.dagUnitValue;
         $scopeModal.color = fc.backgroundColor;
         $scopeModal.isCordova = isCordova;
-        $scopeModal.buttonLabel = gettext('Request payment');
+        $scopeModal.dagAsset = ENV.DAGCOIN_ASSET;
+        $scopeModal.buttonLabel = gettextCatalog.getString('Request payment');
         // $scopeModal.selectedAsset = $scopeModal.index.arrBalances[$scopeModal.index.assetIndex];
         // console.log($scopeModal.index.arrBalances.length+" assets, current: "+$scopeModal.asset);
 
@@ -862,36 +884,21 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             return console.log('showRequestPaymentModal: no balances yet');
           }
           const amount = form.amount.$modelValue;
-          // var asset = form.asset.$modelValue;
-          const asset = $scopeModal.index.arrBalances[$scopeModal.index.assetIndex].asset;
+          const asset = ENV.DAGCOIN_ASSET;
+
           if (!asset) {
             throw Error('no asset');
           }
-          let amountInSmallestUnits;
-          if (asset === 'base') {
-            amountInSmallestUnits = parseInt((amount * $scopeModal.unitValue).toFixed(0), 10);
-          } else if (asset === constants.BLACKBYTES_ASSET) {
-            amountInSmallestUnits = parseInt((amount * $scopeModal.bbUnitValue).toFixed(0), 10);
-          } else if (asset === ENV.DAGCOIN_ASSET) {
-            amountInSmallestUnits = amount * $scopeModal.dagUnitValue;
-          } else {
-            amountInSmallestUnits = amount;
-          }
+          const amountInSmallestUnits = amount * $scopeModal.dagUnitValue;
           let params = `amount=${amountInSmallestUnits}`;
+
           if (asset !== 'base') {
             params += `&asset=${encodeURIComponent(asset)}`;
           }
-          let units;
-          if (asset === 'base') {
-            units = $scopeModal.unitName;
-          } else if (asset === constants.BLACKBYTES_ASSET) {
-            units = $scopeModal.bbUnitName;
-          } else if (asset === ENV.DAGCOIN_ASSET) {
-            units = $scopeModal.dagUnitName;
-          } else {
-            units = `of ${asset}`;
-          }
-          appendText(`[${amount} ${units}](byteball:${myPaymentAddress}?${params})`);
+          const units = $scopeModal.dagUnitName;
+
+          appendText(`[${amount} ${units}](dagcoin:${myPaymentAddress}?${params})`);
+
           return $modalInstance.dismiss('cancel');
         };
 
@@ -936,7 +943,11 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
     }
 
     $scope.goToCorrespondentDevices = function () {
-      $deepStateRedirect.reset('correspondentDevices');
-      go.path('correspondentDevices');
+      if ($rootScope.goBackState) {
+        go.path($rootScope.goBackState);
+      } else {
+        $deepStateRedirect.reset('correspondentDevices');
+        go.path('correspondentDevices');
+      }
     };
   });

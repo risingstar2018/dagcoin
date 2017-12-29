@@ -25,7 +25,9 @@
       <div class="inner-wrap">
         <div ng-include="'views/includes/sidebar.html'" ng-if="index.hasProfile"></div>
 
-        <!--<dag-left-side-bar ng-if="index.hasProfile"></dag-left-side-bar>-->
+<!--        <dag-side-bar ng-if="index.hasProfile">
+          <dag-side-menu></dag-side-menu>
+        </dag-side-bar>-->
 
         <div notifications="right top"></div>
         <div ng-include="'views/includes/password.html'" ng-if="index.askPassword"></div>

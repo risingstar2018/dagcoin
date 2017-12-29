@@ -395,7 +395,7 @@
         self.dbManager = require('dagcoin-core/lib/databaseManager').getInstance();
 
         self.dbManager.query('SELECT account FROM wallets WHERE wallet = ?', [walletId]).then((rows) => {
-          if (rows === null || rows.length === 0) {
+          if (rows == null || rows.length === 0) {
             return Promise.reject(new Error(`NO ROWS FOR WALLET ${walletId}`));
           }
 

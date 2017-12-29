@@ -9,7 +9,6 @@ rules:
   unit-no-unknown: true
   shorthand-property-no-redundant-values: true
   property-no-unknown: true
-  declaration-block-no-duplicate-properties: true
   declaration-block-no-redundant-longhand-properties: true
   declaration-block-no-shorthand-property-overrides: true
   block-no-empty: true
@@ -22,8 +21,6 @@ rules:
   no-extra-semicolons: true
   no-invalid-double-slash-comments: true
   color-named: never
-  value-no-vendor-prefix: true
-  property-no-vendor-prefix: true
   selector-max-empty-lines: 0
   selector-max-id: 2
   color-hex-case: lower

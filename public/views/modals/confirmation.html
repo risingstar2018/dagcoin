@@ -1,19 +1,19 @@
-<div class="modal-content">
+<div class="modal-content" style="padding: 30px;">
 
   <div class="modal-content-header">
-    <h3 ng-bind-html="header | translate"></h3>
-    <p class="m20t" ng-bind-html="title | translate"></p>
+    <h3 ng-bind-html="header | translate" style="text-transform: uppercase;"></h3>
+    <p class="m20t" style="line-height: 20px;font-size: 14px;text-align: left;color: #444;" ng-bind-html="title | translate"></p>
   </div>
 
-  <div class="modal-content-body p20h text-center">
+  <div class="modal-content-body text-center">
     <div id="buttons" class="row">
       <div class="columns">
-        <button class="btn btn_red-full round" ng-disabled="loading" ng-class="yes_button_class" ng-click="ok()">
+        <button class="btn btn_red-full" ng-disabled="loading" ng-class="yes_button_class" ng-click="ok()">
           <i ng-class="yes_icon"></i> <span translate>{{yes_label || 'Yes'}}</span>
         </button>
       </div>
       <div class="columns">
-        <button class="btn btn_red round" ng-disabled="loading" ng-class="cancel_button_class" ng-click="cancel()">
+        <button class="btn btn_red" ng-disabled="loading" ng-class="cancel_button_class" ng-click="cancel()">
           <i class="fi-x"></i> <span class="tu" translate>{{cancel_label || 'Cancel'}}</span>
         </button>
       </div>

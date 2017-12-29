@@ -28,7 +28,9 @@
                 isMobile,
                 fundingExchangeClientService,
                 ENV,
-                migrationService) {
+                migrationService,
+                moment,
+                exportTransactions) {
         migrationService.migrate();
         const constants = require('byteballcore/constants.js');
         const eventBus = require('byteballcore/event_bus.js');
@@ -148,6 +150,43 @@
         // const cancel_msg = gettextCatalog.getString('Cancel');
         // const confirm_msg = gettextCatalog.getString('Confirm');
 
+        $scope.formatSum = (sum) => {
+          const string = sum.toString().split('.');
+
+          if (!string[1]) {
+            return `${sum}.00`;
+          }
+
+          if (string[1] && string[1].length === 1) {
+            return `${sum}0`;
+          }
+          return sum;
+        };
+
+        const today = moment().format('DD/MM/YYYY');
+        const yesterday = moment().subtract(1, 'day').format('DD/MM/YYYY');
+
+        $scope.formatDate = (value) => {
+          if (value === today) {
+            return 'Today';
+          } else if (value === yesterday) {
+            return 'Yesterday';
+          }
+          return value;
+        };
+
+        $scope.transactionStatus = (transaction) => {
+          if (!transaction.confirmations) {
+            return { icon: 'autorenew', title: gettextCatalog.getString('Pending') };
+          }
+
+          if (transaction.action === 'received') {
+            return { icon: 'call_received', title: gettextCatalog.getString('Received') };
+          } else if (transaction.action === 'moved') {
+            return { icon: 'code', title: gettextCatalog.getString('Moved') };
+          }
+          return { icon: 'call_made', title: gettextCatalog.getString('Sent') };
+        };
 
         $scope.openDestinationAddressModal = function (wallets, address) {
           $rootScope.modalOpened = true;
@@ -167,13 +206,13 @@
             $scope.color = fc.backgroundColor;
             $scope.bAllowAddressbook = self.canSendExternalPayment();
 
-            $scope.beforeQrCodeScann = function () {
+            $scope.beforeQrCodeScann = () => {
               $scope.error = null;
               $scope.addAddressbookEntry = true;
               $scope.editAddressbook = false;
             };
 
-            $scope.onQrCodeScanned = function (data, addressbookForm) {
+            $scope.onQrCodeScanned = (data, addressbookForm) => {
               $timeout(() => {
                 const form = addressbookForm;
                 if (data && form) {
@@ -219,6 +258,12 @@
                 $scope.list = ab;
               });
             };
+
+            $scope.$watch('addressbook.label', (value) => {
+              if (value && value.length > 16) {
+                $scope.addressbook.label = value.substr(0, 16);
+              }
+            });
 
             $scope.add = function (addressbook) {
               $scope.error = null;
@@ -304,7 +349,6 @@
           });
         };
 
-
         $scope.openSharedAddressDefinitionModal = function (address) {
           $rootScope.modalOpened = true;
           const fc = profileService.focusedClient;
@@ -365,6 +409,9 @@
           });
         };
 
+        this.exportTransactions = () => {
+          exportTransactions.toCSV();
+        };
 
         this.openTxpModal = function () {
           // deleted, maybe restore from copay sometime later
@@ -445,10 +492,10 @@
             $scope.unitDecimals = self.unitDecimals;
             $scope.dagUnitValue = walletSettings.dagUnitValue;
             $scope.dagUnitName = walletSettings.dagUnitName;
+            $scope.dagAsset = ENV.DAGCOIN_ASSET;
             $scope.isCordova = isCordova;
-            $scope.buttonLabel = 'Generate QR Code';
+            $scope.buttonLabel = gettextCatalog.getString('Generate QR Code');
             $scope.protocol = conf.program;
-
 
             Object.defineProperty($scope, '_customAmount', {
               get() {
@@ -461,26 +508,25 @@
               configurable: true,
             });
 
+            $scope.$watch('_customAmount', (newValue, oldValue) => {
+              if (typeof newValue !== 'undefined') {
+                if (newValue.length > 12) {
+                  $scope._customAmount.alias = oldValue;
+                }
+              }
+            });
+
             $scope.submitForm = function (form) {
               if ($scope.index.arrBalances.length === 0) {
                 return console.log('openCustomizedAmountModal: no balances yet');
               }
               const amount = form.amount.$modelValue;
               const asset = ENV.DAGCOIN_ASSET;
-              let amountInSmallestUnits;
               if (!asset) {
                 throw Error('no asset');
               }
-              switch (asset) {
-                case 'base':
-                  amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
-                  break;
-                case ENV.DAGCOIN_ASSET:
-                  amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
-                  break;
-                default:
-                  amountInSmallestUnits = amount;
-              }
+
+              const amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
 
               return $timeout(() => {
                 $scope.customizedAmountUnit = `${amount} ${(asset === 'base') ? $scope.unitName : (asset === ENV.DAGCOIN_ASSET ? $scope.dagUnitName : `of ${asset}`)}`;
@@ -488,7 +534,6 @@
                 $scope.asset_param = (asset === 'base') ? '' : `&asset=${encodeURIComponent(asset)}`;
               }, 1);
             };
-
 
             $scope.shareAddress = function (uri) {
               if (isCordova) {
@@ -536,7 +581,6 @@
           unwatchSpendUnconfirmed();
         });
 
-
         this.resetError = function () {
           this.error = null;
           this.success = null;
@@ -579,7 +623,6 @@
           }
           $rootScope.$digest();
         }, 100);
-
 
         this.formFocus = function (what) {
           if (isCordova && !this.isWindowsPhoneApp) {
@@ -653,7 +696,6 @@
           }, 1);
         };
 
-
         this.setOngoingProcess = function (name) {
           const self = this;
           self.blockUx = !!name;
@@ -716,6 +758,8 @@
           const address = form.address.$modelValue;
           const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
           let amount = form.amount.$modelValue;
+          const paymentId = form.paymentId ? form.paymentId.$modelValue : null;
+          // const paymentId = 1;
           let merkleProof = '';
           if (form.merkle_proof && form.merkle_proof.$modelValue) {
             merkleProof = form.merkle_proof.$modelValue.trim();
@@ -723,11 +767,11 @@
           amount *= dagUnitValue;
           amount = Math.round(amount);
 
-        const currentPaymentKey = `${asset}${address}${amount}`;
-        if (currentPaymentKey === self.current_payment_key) {
-          return $rootScope.$emit('Local/ShowErrorAlert', 'This payment is being processed');
-        }
-        self.current_payment_key = currentPaymentKey;
+          const currentPaymentKey = `${asset}${address}${amount}`;
+          if (currentPaymentKey === self.current_payment_key) {
+            return $rootScope.$emit('Local/ShowErrorAlert', 'This payment is being processed');
+          }
+          self.current_payment_key = currentPaymentKey;
 
           indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
           $timeout(() => {
@@ -751,9 +795,8 @@
                 }
                 const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
 
-
                 // never reuse addresses as the required output could be already present
-                useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
+                walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
                   myAddress = addressInfo.address;
                   let arrDefinition;
                   let assocSignersByPath;
@@ -761,7 +804,7 @@
                     const arrSeenCondition = ['seen', {
                       what: 'output',
                       address: myAddress,
-                      asset: self.binding.reverseAsset,
+                      asset: ENV.DAGCOIN_ASSET,
                       amount: self.binding.reverseAmount,
                     }];
                     arrDefinition = ['or', [
@@ -772,7 +815,7 @@
                       ['and', [
                         ['address', myAddress],
                         ['not', arrSeenCondition],
-                        ['in data feed', [[configService.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]],
+                        ['in data feed', [[ENV.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]],
                       ]],
                     ]];
                     assocSignersByPath = {
@@ -803,7 +846,7 @@
                     arrDefinition = ['or', [
                       ['and', [['address', address], arrEventCondition]],
                       ['and', [
-                        ['address', myAddress], ['in data feed', [[configService.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]]
+                        ['address', myAddress], ['in data feed', [[ENV.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(self.binding.timeout * 3600 * 1000)]]
                       ]]
                     ]];
                     assocSignersByPath = {
@@ -918,6 +961,17 @@
                 }
 
                 paymentPromise.then(() => new Promise((resolve, reject) => {
+                  if (paymentId != null) {
+                    const objectHash = require('byteballcore/object_hash');
+                    const payload = JSON.stringify({ paymentId });
+                    opts.messages = [{
+                      app: 'text',
+                      payload_location: 'inline',
+                      payload_hash: objectHash.getBase64Hash(payload),
+                      payload
+                    }];
+                  }
+
                   console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
                   useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
                     opts.change_address = addressInfo.address;
@@ -940,30 +994,31 @@
                       self.resetForm();
                       $rootScope.$emit('NewOutgoingTx');
                       if (recipientDeviceAddress) { // show payment in chat window
-                        eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
+                        eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset, indexScope.walletId, true, toAddress);
                         if (binding && binding.reverseAmount) { // create a request for reverse payment
                           if (!myAddress) {
                             throw Error(gettextCatalog.getString('my address not known'));
                           }
-                          const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                          const paymentRequestCode = `dagcoin:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
                           const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
                           device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
                           correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
                             bIncoming: false,
-                            message: correspondentListService.formatOutgoingMessage(paymentRequestText)
+                            message: correspondentListService.formatOutgoingMessage(paymentRequestText),
+                            timestamp: Math.floor(Date.now() / 1000)
                           });
                           // issue next address to avoid reusing the reverse payment address
                           if (!fc.isSingleAddress) {
-                             walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {});
+                            walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
+                            });
                           }
                         }
                       } else {
-                        $rootScope.$emit('Local/SetTab', 'history');
-
+                        indexScope.updateTxHistory();
+                        $rootScope.$emit('Local/SetTab', 'walletHome');
                         $timeout(() => {
-                          indexScope.updateTxHistory();
                           self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
-                        }, 1000);
+                        }, 2000);
                       }
                       resolve();
                     });
@@ -989,7 +1044,6 @@
             });
           }, 100);
         };
-
 
         let assocDeviceAddressesByPaymentAddress = {};
 
@@ -1027,7 +1081,6 @@
           return !!recipientDeviceAddress;
         };
 
-
         this.openBindModal = function () {
           $rootScope.modalOpened = true;
           const fc = profileService.focusedClient;
@@ -1037,7 +1090,6 @@
             return;
           }
           const address = form.address;
-
 
           const ModalInstanceCtrl = function ($scope, $modalInstance) {
             $scope.color = fc.backgroundColor;
@@ -1055,8 +1107,9 @@
             $scope.binding = { // defaults
               type: 'reverse_payment',
               timeout: 4,
-              reverseAsset: 'base',
+              reverseAsset: ENV.DAGCOIN_ASSET,
               feed_type: 'either',
+              oracle_address: ''
             };
             if (self.binding) {
               $scope.binding.type = self.binding.type;
@@ -1225,7 +1278,6 @@
 
           const form = $scope.sendForm;
 
-
           if (form && form.amount) {
             form.amount.$pristine = true;
             form.amount.$setViewValue('');
@@ -1275,7 +1327,6 @@
             form.amount.$render();
           }
         };
-
 
         this.setFromUri = function (uri) {
           let objRequest;
@@ -1394,6 +1445,10 @@
             const m = angular.element(document.getElementsByClassName('reveal-modal'));
             m.addClass(animationService.modalAnimated.slideOutRight);
           });
+        };
+
+        $rootScope.openTxModal = (transaction, rows) => {
+          this.openTxModal(transaction, rows);
         };
 
         this.showCorrespondentListToReSendPrivPayloads = function (btx) {

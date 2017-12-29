@@ -3,7 +3,6 @@ const modules = [
   'config',
   'ui.router',
   'angularMoment',
-  'angular-carousel',
   'mm.foundation',
   'monospaced.qrcode',
   'monospaced.elastic',
@@ -21,7 +20,8 @@ const modules = [
   'ngDialog',
   'ngAnimate',
   'swipe',
-  'ksSwiper'
+  'ksSwiper',
+  'ngScrollbars'
 ];
 
 const copayApp = angular.module('copayApp', modules);

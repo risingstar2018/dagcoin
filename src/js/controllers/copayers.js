@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('copayersController',
-    function ($scope, $rootScope, $timeout, $log, $modal, profileService, go, notification, isCordova, gettext, gettextCatalog, animationService) {
+    function ($scope, $rootScope, $timeout, $log, $modal, profileService, go, notification, isCordova, gettextCatalog, animationService) {
       const self = this;
 
       const deleteMessage = gettextCatalog.getString('Are you sure you want to delete this wallet?');
@@ -46,7 +46,7 @@
 
       const modalDeleteWallet = function () {
         const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
-          $scope.header = $sce.trustAsHtml(gettext('Delete wallet'));
+          $scope.header = $sce.trustAsHtml(gettextCatalog.getString('Delete wallet'));
           $scope.title = $sce.trustAsHtml(deleteMessage);
           $scope.yes_icon = 'fi-trash';
           $scope.yes_button_class = 'warning';

@@ -6,6 +6,7 @@
     .factory('menuLinks', menuLinks);
 
   menuLinks.$inject = [];
+
   function menuLinks() {
     return [{
       category: 'Account',
@@ -24,6 +25,11 @@
           title: 'Receive',
           icon: 'banknote',
           state: 'receive',
+          menuBar: true
+        }, {
+          title: 'Chat',
+          icon: 'chat',
+          state: 'correspondentDevices',
           menuBar: true
         }
       ]

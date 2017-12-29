@@ -75,6 +75,8 @@
           self.activeTab = index;
 
           selectedTab.active = true;
+
+          return true;
         };
       }
     };
@@ -90,7 +92,8 @@
       require: '^dagTabset',
       scope: {
         heading: '@',
-        tabClick: '&'
+        tabClick: '&',
+        selected: '='
       },
       link: ($scope, element, attr, dagtabsetCtrl) => {
         $scope.active = false;

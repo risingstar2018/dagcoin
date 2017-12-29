@@ -1,7 +1,6 @@
-<div
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Create new wallet';  closeToHome = true;">
-</div>
+<dag-nav-bar title="{{ 'Create new wallet' | translate}}"></dag-nav-bar>
+
+
 <div class="content p20v" ng-controller="createController as create" ng-init="create.setTotalCosigners(1)">
 
   <div class="onGoingProcess" ng-show="create.loading">
@@ -19,7 +18,7 @@
 
 
   <dag-tabset ng-show="!create.loading">
-    <dag-tab heading="Plain Wallet" tab-click="create.setTotalCosigners(1)">
+    <dag-tab heading="{{'Plain Wallet' | translate}}" tab-click="create.setTotalCosigners(1)">
 
       <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
         <div class="box-notification" ng-show="create.error">
@@ -54,7 +53,8 @@
       </form>
     </dag-tab>
 
-    <dag-tab heading="Multidevice Wallet" tab-click="create.setMultisig()">
+
+    <dag-tab heading="{{'Multidevice Wallet' | translate}}" tab-click="create.setMultisig()" selected="create.multisigSelected">
 
       <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
 

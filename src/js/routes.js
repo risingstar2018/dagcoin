@@ -19,7 +19,21 @@
 // Setting up route
   angular
     .module('copayApp')
-    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider) => {
+    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider) => {
+      ScrollBarsProvider.defaults = {
+        autoHideScrollbar: true,
+        scrollButtons: {
+          scrollAmount: 'auto',
+          enable: true
+        },
+        scrollInertia: 400,
+        theme: 'dark',
+        advanced: {
+          updateOnContentResize: true
+        },
+        axis: 'y'
+      };
+
       $urlRouterProvider.otherwise('/');
 
       $logProvider.debugEnabled(true);
@@ -157,15 +171,6 @@
           url: '/selectWalletForPayment',
           controller: 'walletForPaymentController',
           needProfile: true,
-        })
-        .state('import', {
-          url: '/import',
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/import.html',
-            },
-          },
         })
         .state('importProfile', {
           url: '/importProfile',
@@ -372,15 +377,44 @@
             },
           },
         })
+        .state('system', {
+          url: '/system',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'views/preferencesSystem.html',
+            },
+          },
+        })
+        .state('security', {
+          url: '/security',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'views/preferencesSecurity.html',
+            },
+          },
+        })
 
         .state('about', {
           url: '/about',
-          templateUrl: 'views/preferencesAbout.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
               templateUrl: 'views/preferencesAbout.html',
+            },
+          },
+        })
+        .state('aboutDevice', {
+          url: '/aboutDevice',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'views/preferencesAboutDevice.html',
             },
           },
         })
@@ -392,17 +426,6 @@
           views: {
             main: {
               templateUrl: 'views/preferencesLogs.html',
-            },
-          },
-        })
-        .state('export', {
-          url: '/export',
-          templateUrl: 'views/export.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/export.html',
             },
           },
         })
@@ -419,6 +442,9 @@
         })
         .state('backup', {
           url: '/backup',
+          params: {
+            backTo: 'security'
+          },
           templateUrl: 'views/backup.html',
           walletShouldBeComplete: true,
           needProfile: true,
@@ -428,14 +454,28 @@
             },
           },
         })
-        .state('recoveryFromSeed', {
-          url: '/recoveryFromSeed',
-          templateUrl: 'views/recoveryFromSeed.html',
+        .state('recovery', {
+          url: '/recovery',
+          params: {
+            backTo: 'security'
+          },
+          templateUrl: 'views/recovery.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/recoveryFromSeed.html',
+              templateUrl: 'views/recovery.html',
+            },
+          },
+        })
+        .state('initialRecovery', {
+          url: '/initialRecovery',
+          templateUrl: 'views/initialRecovery.html',
+          walletShouldBeComplete: false,
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'views/initialRecovery.html',
             },
           },
         })
@@ -447,12 +487,6 @@
               templateUrl: 'views/preferencesGlobal.html',
             },
           },
-        })
-        .state('settings', {
-          url: '/settings',
-          controller: 'settingsController',
-          templateUrl: 'views/settings.html',
-          needProfile: false,
         })
         .state('warning', {
           url: '/warning',
@@ -538,7 +572,6 @@
 
       $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState) => {
         $rootScope.params = toParams;
-
         backButton.menuOpened = false;
         go.swipe();
         if (!profileService.profile && toState.needProfile) {

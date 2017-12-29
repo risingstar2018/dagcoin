@@ -2,7 +2,21 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('createController',
-    function ($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService, configService, isCordova, gettext, isMobile, derivationPathHelper, correspondentListService) {
+    function ($scope,
+              $rootScope,
+              $location,
+              $anchorScroll,
+              $timeout,
+              $log,
+              lodash,
+              go,
+              profileService,
+              configService,
+              isCordova,
+              gettextCatalog,
+              isMobile,
+              derivationPathHelper,
+              correspondentListService) {
       const self = this;
       const defaults = configService.getDefaults();
       this.isWindowsPhoneApp = isMobile.Windows() && isCordova;
@@ -25,10 +39,10 @@
       const updateSeedSourceSelect = function () {
         self.seedOptions = [{
           id: 'new',
-          label: gettext('New Random Seed'),
+          label: gettextCatalog.getString('New Random Seed'),
         }, {
           id: 'set',
-          label: gettext('Specify Seed...'),
+          label: gettextCatalog.getString('Specify Seed...'),
         }];
         $scope.seedSource = self.seedOptions[0];
       };
@@ -68,6 +82,8 @@
       this.onCorrespondentSelected = function (deviceAddress) {
         console.log(deviceAddress);
         if (deviceAddress === 'new') {
+          $rootScope.goBackState = 'create';
+          self.multisigSelected = false;
           go.path('correspondentDevices.addCorrespondentDevice');
         }
       };
@@ -82,7 +98,7 @@
       };
 
       function setError(error) {
-        self.error = gettext(error);
+        self.error = gettextCatalog.getString(error);
 
         $location.hash('error-area');
         $anchorScroll();
@@ -121,7 +137,7 @@
 
       this.create = function (form) {
         if (form && form.$invalid) {
-          this.error = gettext('Please enter the required fields');
+          this.error = gettextCatalog.getString('Please enter the required fields');
           return;
         }
         if (self.cosigners.length !== $scope.totalCosigners - 1) {
@@ -229,6 +245,12 @@
       $scope.$on('$destroy', () => {
         $rootScope.hideWalletNavigation = false;
       });
+
+      if ($rootScope.goBackState) {
+        $rootScope.goBackState = false;
+        self.setMultisig();
+        self.multisigSelected = true;
+      }
 
       updateSeedSourceSelect(1);
       self.setSeedSource('new');

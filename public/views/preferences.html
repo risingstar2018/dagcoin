@@ -1,6 +1,4 @@
-<div ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Wallet Preferences'; closeToHome = true;">
-</div>
+<dag-nav-bar title="{{'Wallet Preferences' | translate}}"></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesController as preferences" ng-init="preferences.init()">
 
@@ -8,8 +6,7 @@
   <ul ng-show="!index.noFocusedWallet">
     <li dag-right-icon="chevron-thin-right" ui-sref="preferencesAlias">
       <div translate>Wallet Alias</div>
-      <div class="value wrapped">{{index.alias||index.walletName}}</div>
-      <i class="icon-arrow-right3 size-24 arrow-right"></i>
+      <div class="value">{{index.alias||index.walletName}}</div>
     </li>
     <li style="padding: 13px 30px 5px; display: flex; flex-direction: column;">
       <div translate>Single address wallet</div>
@@ -30,7 +27,6 @@
     </li>
     <li dag-right-icon="chevron-thin-right" ui-sref="preferencesAdvanced">
       <div translate>Advanced</div>
-      <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
   </ul>
   <div ng-show="!index.noFocusedWallet && index.canSign && preferences.touchidAvailable">

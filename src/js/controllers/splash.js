@@ -32,6 +32,8 @@
       this.setRegistrationType = function () {
         if (this.registration_type === 'default') {
           this.setWalletType();
+        } else if (this.registration_type === 'backup') {
+          go.path('initialRecovery');
         } else {
           this.step = 'wallet_type';
         }
