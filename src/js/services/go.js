@@ -134,13 +134,6 @@
         require('byteballcore/uri.js').parseUri(uri, {
           ifError(err) {
             console.log(err);
-
-            /**
-             * The err comes from byteballcore as a string like this 'no program_name prefix'
-             * Err is tested with noPrefixRegex and if matchs converted to 'Incorrect Dagcoin Address'
-             * // TODO 'Incorrect Dagcoin Address' must be added into languages
-             * // TODO should be moved to a class such as exception or error translator etc.
-             */
             const conf = require('byteballcore/conf.js');
             const noPrefixRegex = new RegExp(`.*no.*${conf.program}.*prefix.*`, 'i');
             if (noPrefixRegex.test(err.toString())) {
