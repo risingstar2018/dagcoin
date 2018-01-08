@@ -4,6 +4,7 @@
   angular.module('copayApp.services')
   .factory('uxLanguage', ($log, lodash, gettextCatalog, amMoment, configService) => {
     const root = {};
+    const ENGLISH = 'en';
 
     root.availableLanguages = [{
       name: 'English',
@@ -25,31 +26,10 @@
 
     root.currentLanguage = null;
 
-    root.detect = function () {
-      // Auto-detect browser language
-      let userLang;
-      const androidLang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i);
-
-      if (navigator && navigator.userAgent && androidLang) {
-        userLang = androidLang[1];
-      } else {
-        // works for iOS and Android 4.x
-        userLang = navigator.userLanguage || navigator.language;
-      }
-      userLang = userLang ? (userLang.split('-', 1)[0] || 'en') : 'en';
-
-      for (let i = 0; i < root.availableLanguages.length; i += 1) {
-        const isoCode = root.availableLanguages[i].isoCode;
-        if (userLang === isoCode.substr(0, 2)) { return isoCode; }
-      }
-
-      return 'en';
-    };
-
     root.set = function (lang) {
       $log.debug(`Setting default language: ${lang}`);
       gettextCatalog.setCurrentLanguage(lang);
-      if (lang !== 'en') { gettextCatalog.loadRemote(`languages/${lang}.json`); }
+      if (lang !== ENGLISH) { gettextCatalog.loadRemote(`languages/${lang}.json`); }
       amMoment.changeLocale(lang);
       root.currentLanguage = lang;
     };
@@ -73,14 +53,14 @@
     };
 
     root.init = function () {
-      root.set(root.detect());
+      root.set(ENGLISH);
     };
 
     root.update = function () {
       let userLang = configService.getSync().wallet.settings.defaultLanguage;
 
       if (!userLang) {
-        userLang = root.detect();
+        userLang = ENGLISH;
       }
 
       if (userLang !== gettextCatalog.getCurrentLanguage()) {
