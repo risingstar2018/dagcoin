@@ -91,15 +91,14 @@
           'AND wallet = ?',
           [walletId],
           (rows) => {
-            if (!rows || rows.length === 0) {
+            const checkedRows = rows || [];
+            if (checkedRows.length === 0) {
               reject(`MASTER ADDRESS NOT FOUND FOR WALLET ${walletId}`);
-            }
-
-            if (rows.length > 1) {
+            } else if (checkedRows.length > 1) {
               reject(`TOO MANY MASTER ADDRESSES FOR WALLET ${walletId}: ${rows.length}`);
+            } else {
+              resolve(checkedRows[0].address);
             }
-
-            resolve(rows[0].address);
           }
         );
       }).then((masterAddress) => {
@@ -111,15 +110,14 @@
             'WHERE address=? AND signing_path=?',
             [masterAddress, signingPath],
             (rows) => {
-              if (!rows || rows.length === 0) {
+              const checkedRows = rows || [];
+              if (checkedRows.length === 0) {
                 reject(`MASTER ADDRESS DEFINITION NOT FOUND FOR WALLET ${walletId} AND ADDRESS ${masterAddress}`);
-              }
-
-              if (rows.length > 1) {
+              } else if (checkedRows.length > 1) {
                 reject(`TOO MANY MASTER ADDRESS DEFINITIONS FOUND FOR WALLET ${walletId} AND ADDRESS ${masterAddress}: ${rows.length}`);
+              } else {
+                resolve(checkedRows[0]);
               }
-
-              resolve(rows[0]);
             });
         });
       });
