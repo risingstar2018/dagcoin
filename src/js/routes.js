@@ -19,7 +19,7 @@
 // Setting up route
   angular
     .module('copayApp')
-    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider) => {
+    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider, ngDialogProvider) => {
       ScrollBarsProvider.defaults = {
         autoHideScrollbar: true,
         scrollButtons: {
@@ -33,6 +33,13 @@
         },
         axis: 'y'
       };
+
+      ngDialogProvider.setDefaults({
+        showClose: false,
+        closeByDocument: true,
+        closeByEscape: true,
+        closeByNavigation: true
+      });
 
       $urlRouterProvider.otherwise('/');
 
@@ -487,6 +494,73 @@
               templateUrl: 'views/preferencesGlobal.html',
             },
           },
+        })
+        .state('transactions', {
+          url: '/transactions',
+          params: {
+            backTo: 'walletHome',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/transactions/transactions.template.html'
+            },
+          }
+        })
+        .state('contacts', {
+          url: '/contacts',
+          params: {
+            backTo: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contacts.template.html',
+              controller: 'ContactsController as contacts'
+            },
+          }
+        })
+        .state('contact', {
+          url: '/contact',
+          params: {
+            backTo: 'contacts',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contact/contact.template.html',
+              controller: 'ContactController as contact',
+            }
+          }
+        })
+        .state('new_contact', {
+          url: '/contact/new',
+          params: {
+            backTo: 'contacts'
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contact/new_contact/new_contact.template.html',
+              controller: 'NewContactController as contact'
+            }
+          }
+        })
+        .state('edit_contact', {
+          url: '/contact/edit',
+          params: {
+            backTo: 'contact',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contact/edit_contact/edit_contact.template.html',
+              controller: 'EditContactController as contact'
+            },
+          }
         })
         .state('warning', {
           url: '/warning',

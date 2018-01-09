@@ -1,0 +1,30 @@
+<dag-nav-bar title="{{ 'Edit Contact' | translate }}" go-back-params="{{contact.backParams}}" invert></dag-nav-bar>
+
+<div class="content" ng-scrollbars>
+  <div class="contact_form">
+    <form name="new_contact" ng-submit="contact.update()">
+
+      <div class="input-wrap">
+        <label for="first_name">{{ 'First name' | translate}}</label>
+        <input id="first_name" type="text" ng-model="contact.first_name" name="first_name">
+      </div>
+
+      <div class="input-wrap">
+        <label for="last_name">{{ 'Last name' | translate}}</label>
+        <input id="last_name" type="text" ng-model="contact.last_name" name="last_name">
+      </div>
+
+      <div class="input-wrap">
+        <label for="email">{{ 'E-mail' | translate}}</label>
+        <input id="email" type="text" ng-model="contact.email" name="email">
+      </div>
+
+      <div class="input-wrap">
+        <label for="description">{{ 'Description' | translate}}</label>
+        <textarea name="description" id="description" ng-model="contact.description" cols="30" rows="10"></textarea>
+      </div>
+
+      <button class="btn btn_red btn_red-full" type="submit">{{ 'Save' | translate }}</button>
+    </form>
+  </div>
+</div>
