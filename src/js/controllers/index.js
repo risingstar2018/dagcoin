@@ -1515,6 +1515,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           go.walletHome();
         });
 
+      $rootScope.$on('Local/InitialRecoveryInProgress', () => {
+        self.setOngoingProcess('recoveringFromSeed', true);
+      });
+
 //  self.debouncedUpdate = lodash.throttle(function() {
 //    self.updateAll({
 //      quiet: true

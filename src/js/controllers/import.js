@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('importController',
-    function ($scope, $rootScope, $location, $timeout, $log, storageService, fileSystemService, isCordova, isMobile, gettextCatalog) {
+    function ($scope, $rootScope, $state, $location, $timeout, $log, storageService, fileSystemService, isCordova, isMobile, gettextCatalog) {
       const JSZip = require('jszip');
       const async = require('async');
       const crypto = require('crypto');
@@ -25,6 +25,7 @@
       self.androidVersion = isMobile.Android() ? parseFloat(userAgent.slice(userAgent.indexOf('Android') + 8)) : null;
       self.oldAndroidFilePath = null;
       self.oldAndroidFileName = '';
+      self.isInitial = $state.includes('initialRecovery');
 
       function generateListFilesForIos() {
         const backupDirPath = `${window.cordova.file.documentsDirectory}/Byteball/`;
