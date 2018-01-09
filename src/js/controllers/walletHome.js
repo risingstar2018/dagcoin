@@ -572,12 +572,10 @@
             };
 
             $scope.shareAddress = function (uri) {
-              if (isCordova) {
-                if (isMobile.Android() || isMobile.Windows()) {
-                  window.ignoreMobilePause = true;
-                }
-                window.plugins.socialsharing.share(uri, null, null, null);
+              if (isMobile.Android()) {
+                window.ignoreMobilePause = true;
               }
+              window.plugins.socialsharing.share(uri, null, null, null);
             };
 
             $scope.cancel = function () {
