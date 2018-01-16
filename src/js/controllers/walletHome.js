@@ -104,15 +104,24 @@
               // just to be sure we have an address
               self.setAddress();
               break;
-            case 'history':
-              $rootScope.$emit('Local/NeedFreshHistory');
+            case 'walletHome':
+              $scope.sendForm.$setPristine();
+              self.resetForm();
               break;
             case 'send':
+              $scope.sendForm.$setPristine();
+              self.resetForm(() => {
+                if ($rootScope.sendParams) {
+                  if ($rootScope.sendParams.amount) {
+                    $scope._amount = $rootScope.sendParams.amount;
+                  }
+                  if ($rootScope.sendParams.address) {
+                    $scope._address = $rootScope.sendParams.address;
+                  }
+                  delete $rootScope.sendParams;
+                }
+              });
 
-              $scope.sendForm.$setPristine(); // Reset form on tabs' change.
-
-              self.resetForm();
-              self.resetError();
               break;
             default:
             // do nothing
@@ -173,6 +182,33 @@
             return 'Yesterday';
           }
           return value;
+        };
+
+        addressbookService.favorites((err, favorites) => {
+          $scope.favorite_contacts = favorites;
+        });
+
+        $scope.transferToFavorite = (contact) => {
+          $rootScope.sendParams = $rootScope.sendParams || {};
+          $rootScope.sendParams.address = contact.address;
+          $rootScope.$emit('Local/SetTab', 'send');
+        };
+
+        $scope.transactionAddress = (address) => {
+          if (!address) {
+            return { fullName: gettextCatalog.getString('Incoming transaction') };
+          }
+
+          let fullName = address;
+
+          addressbookService.getContact(address, (err, contact) => {
+            if (!err && contact) {
+              fullName = `${contact.first_name} ${contact.last_name || ''}`;
+            }
+          });
+
+          return { fullName, address };
+          // return { fullName };
         };
 
         $scope.transactionStatus = (transaction) => {
@@ -536,12 +572,10 @@
             };
 
             $scope.shareAddress = function (uri) {
-              if (isCordova) {
-                if (isMobile.Android() || isMobile.Windows()) {
-                  window.ignoreMobilePause = true;
-                }
-                window.plugins.socialsharing.share(uri, null, null, null);
+              if (isMobile.Android()) {
+                window.ignoreMobilePause = true;
               }
+              window.plugins.socialsharing.share(uri, null, null, null);
             };
 
             $scope.cancel = function () {
@@ -1014,11 +1048,15 @@
                           }
                         }
                       } else {
-                        indexScope.updateTxHistory();
-                        $rootScope.$emit('Local/SetTab', 'walletHome');
-                        $timeout(() => {
-                          self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
-                        }, 2000);
+                        indexScope.updateHistory((success) => {
+                          if (success) {
+                            $rootScope.$emit('Local/SetTab', 'walletHome');
+                            console.error('opening tx modal from history');
+                            self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
+                          } else {
+                            console.error('updateTxHistory not executed');
+                          }
+                        });
                       }
                       resolve();
                     });
@@ -1262,7 +1300,7 @@
           }
         };
 
-        this.resetForm = function () {
+        this.resetForm = function (cb) {
           this.resetError();
           delete this.binding;
 
@@ -1302,6 +1340,9 @@
             }
           }
           $timeout(() => {
+            if (cb) {
+              cb();
+            }
             $rootScope.$digest();
           }, 1);
         };

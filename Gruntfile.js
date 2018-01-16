@@ -3,7 +3,7 @@ module.exports = function (grunt) {
   function getPlatform() {
     switch (process.platform) {
       case 'win32':
-        return 'win64'; // change to 'win' for both 32 and 64
+        return 'win'; // change to 'win' for both 32 and 64
       case 'linux':
         return 'linux64';
       case 'darwin':
@@ -242,7 +242,6 @@ module.exports = function (grunt) {
           'bower_components/angular-ui-switch/angular-ui-switch.css',
           'bower_components/angular-carousel/dist/angular-carousel.css',
           'bower_components/ng-dialog/css/ngDialog.min.css',
-          'bower_components/ng-dialog/css/ngDialog-theme-default.min.css',
           'bower_components/swiper/dist/css/swiper.min.css'
         ],
         dest: 'public/css/vendors.css'

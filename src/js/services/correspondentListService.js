@@ -541,7 +541,7 @@ angular.module('copayApp.services').factory('correspondentListService',
 
       return new Promise((resolve) => {
         db.query(
-          'SELECT DISTINCT device_address FROM wallet_signing_paths ',
+          'SELECT DISTINCT device_address FROM shared_address_signing_paths',
           (rows) => {
             const addresses = rows.map(r => r.device_address);
             resolve(addresses);

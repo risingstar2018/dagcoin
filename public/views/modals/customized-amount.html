@@ -13,7 +13,7 @@
       <dag-qr-code url="{{protocol}}:{{addr + '?amount=' + amountInSmallestUnits + asset_param}}"></dag-qr-code>
       <div class="m10t text-center" ng-show="isCordova">
         <span class="button outline dark-gray tiny round"
-          ng-click="shareAddress('{{protocol}}:' + addr + '?amount=' + amountInSmallestUnits + asset_param)">
+          ng-click="shareAddress('Payment request: ' + amountInSmallestUnits / dagUnitValue + ' DAG to ' + addr)">
           <i class="fi-share"></i>
           <span translate>Share address</span>
         </span>
