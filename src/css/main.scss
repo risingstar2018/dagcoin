@@ -1007,6 +1007,17 @@ label {
       font-size: 11px;
     }
   }
+
+  &.required{
+    &:after{
+      content: "*";
+      position: relative;
+      font-size: 10px;
+      color: #f00;
+      top: -2px;
+      margin-left: 3px;
+    }
+  }
 }
 
 button, .button {
@@ -1975,36 +1986,75 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   visibility: visible;
 }
 
-.input-wrap input[type="text"],
-.input-wrap input[type="number"],
-.input-wrap input[type="email"],
-.input-wrap input[type="password"],
-.input-wrap textarea,
-.input-wrap select {
-  border: 2px solid #eee;
-  border-radius: 5px;
-  padding: 14px 22px;
-  height: auto;
-  font-size: 14px;
-  font-weight: 400;
-  color: #666;
-  max-width: 100%;
-  width: 100%;
-  outline: none;
-  box-shadow: none;
-  background: #fff;
-
-  &.min {
-    padding: 4px 10px;
-    width: 100px;
+@-webkit-keyframes shake{
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
   }
 
-  &.error {
-    border-color: $red;
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
   }
 
-  &.success {
-    border-color: $green;
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.input-wrap {
+  position: relative;
+
+  input, textarea, select {
+    border: 2px solid #eee;
+    border-radius: 5px;
+    padding: 14px 22px;
+    height: auto;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+    max-width: 100%;
+    width: 100%;
+    outline: none;
+    box-shadow: none;
+    background: #fff;
+    animation-duration: 0.6s;
+    -webkit-animation-timing-function: cubic-bezier(0.36,0.07,0.19,0.97);
+    animation-timing-function: cubic-bezier(0.36,0.07,0.19,0.97);
+
+    &.min {
+      padding: 4px 10px;
+      width: 100px;
+    }
+
+    &.error {
+      border-color: $red;
+      box-shadow: 0 0 5px 1px rgba($red, 0.5);
+    }
+
+    &.success {
+      border-color: $green;
+    }
   }
 }
 
@@ -2817,10 +2867,6 @@ input {
   > span {
     font-weight: 700;
   }
-}
-
-.input-wrap {
-  position: relative;
 }
 
 .input-icon input {

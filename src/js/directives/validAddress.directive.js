@@ -6,7 +6,7 @@
 
   /**
    * @desc validating DAG address
-   * @example <input valid-address></div>
+   * @example <input type="text" valid-address>
    */
   angular
     .module('copayApp.directives')
@@ -21,12 +21,12 @@
       link(scope, elem, attrs, ctrl) {
         const validator = (value) => {
           if (!profileService.focusedClient) {
-            return false;
+            return '';
           }
 
           if (typeof value === 'undefined') {
             ctrl.$pristine = true;
-            return false;
+            return '';
           }
 
           // Regular Address
