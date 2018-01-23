@@ -176,5 +176,7 @@
       this.isSingleAddressWallet = function () {
         return fc.isSingleAddress;
       };
+
+      this.init();
     });
 }());

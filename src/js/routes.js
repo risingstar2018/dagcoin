@@ -383,6 +383,7 @@
           views: {
             main: {
               templateUrl: 'views/preferencesInformation.html',
+              controller: 'preferencesInformation as info'
             },
           },
         })
