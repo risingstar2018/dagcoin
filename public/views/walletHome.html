@@ -147,16 +147,15 @@
             <div ng-repeat="(date, data) in index.completeHistory">
               <h4 class="transactions_date">{{formatDate(date)}}</h4>
               <div class="dag_transactions_table">
-                <table>
-                  <tbody>
-                  <tr ng-repeat="transaction in data.rows track by $index"
-                      class="transaction_status_{{transaction.action}}">
-                    <td class="transaction_status">
+                <ul>
+                  <li ng-repeat="transaction in data.rows track by $index"
+                      class="transaction_status_{{transaction.action}}" ng-click="home.openTxModal(transaction, index.txHistory)">
+                    <div class="transaction_status">
                       <svg-icon class="transaction_status_icon"
                                 ng-class="{'animation_rotate' : !transaction.confirmations}"
                                 name="{{transactionStatus(transaction).icon}}"></svg-icon>
-                    </td>
-                    <td>
+                    </div>
+                    <div class="transaction_meta">
                       <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
                       <div ng-if="transaction.action === 'received'">
                         <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
@@ -168,19 +167,18 @@
                         <span ng-if="transactionAddress(transaction.addressTo).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
                         <span ng-if="!transactionAddress(transaction.addressTo).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
                       </div>
-                    </td>
-                    <td class="transaction_sum">
+                    </div>
+                    <div class="transaction_sum">
                       <div class="transaction_sum">{{transaction.action === 'received' ? '+' :
                         '-'}}{{formatSum(transaction.amountStr)}}
                       </div>
                       <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
-                    </td>
-                    <td class="transaction_expand" ng-click="home.openTxModal(transaction, index.txHistory)">
+                    </div>
+                    <div class="transaction_expand">
                       <svg-icon name="chevron-thin-right"></svg-icon>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
             <div class="page-action">
