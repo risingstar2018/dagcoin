@@ -4,7 +4,7 @@
   const eventBus = require('byteballcore/event_bus.js');
 
   angular.module('copayApp.controllers').controller('inviteCorrespondentDeviceController',
-    ($scope, $timeout, profileService, go, isCordova, correspondentListService, gettextCatalog) => {
+    ($scope, $timeout, profileService, go, isCordova, correspondentListService, gettextCatalog, nodeWebkit) => {
       function onPaired(peerAddress) {
         correspondentListService.setCurrentCorrespondent(peerAddress, () => {
           go.path('correspondentDevices.correspondentDevice');
@@ -23,17 +23,26 @@
       });
 
       $scope.copyCode = function () {
+        let result = false;
         console.log('copyCode');
         if (isCordova) {
           window.cordova.plugins.clipboard.copy($scope.code);
           window.plugins.toast.showShortCenter(gettextCatalog.getString('Copied to clipboard'));
+          result = true;
+        } else if (nodeWebkit.isDefined()) {
+          nodeWebkit.writeToClipboard($scope.code);
+          result = true;
+        } else {
+          console.warn('env is neither cordova nor nodeWebkit. code could not be copied.');
         }
 
-        $scope.tooltipCopiedShown = true;
+        if (result) {
+          $scope.tooltipCopiedShown = true;
 
-        $timeout(() => {
-          $scope.tooltipCopiedShown = false;
-        }, 1000);
+          $timeout(() => {
+            $scope.tooltipCopiedShown = false;
+          }, 1000);
+        }
       };
 
       $scope.onTextClick = function ($event) {
