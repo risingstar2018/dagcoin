@@ -511,6 +511,19 @@
             },
           }
         })
+        .state('transaction', {
+          url: '/transactions/:address',
+          params: {
+            backTo: 'walletHome',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/transactions/transactions.template.html'
+            },
+          }
+        })
         .state('contacts', {
           url: '/contacts',
           params: {

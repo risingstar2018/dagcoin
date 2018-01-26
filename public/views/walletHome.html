@@ -67,7 +67,7 @@
                   <div class="price_digits">
                     <div class="price_digits_wrapper">
                                             <span class="price-number"
-                                                  ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span>
+                                                  ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span><span class="price-separator">.</span>
                       <span class="price-sup"
                             ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr, 'sup')">{{index.dagBalance.totalStr.split('.')[1]}}</span>
                     </div>
@@ -159,13 +159,13 @@
                       <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
                       <div ng-if="transaction.action === 'received'">
                         <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
-                          <span ng-if="transactionAddress(address).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
-                          <span ng-if="!transactionAddress(address).address">{{transactionAddress(address).fullName}}</span>
+                          <span ng-if="home.transactionAddress(address).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                          <span ng-if="!home.transactionAddress(address).address">{{home.transactionAddress(address).fullName}}</span>
                         </div>
                       </div>
                       <div class="transaction_address" ng-if="transaction.action === 'sent'">
-                        <span ng-if="transactionAddress(transaction.addressTo).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
-                        <span ng-if="!transactionAddress(transaction.addressTo).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
+                        <span ng-if="home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                        <span ng-if="!home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
                       </div>
                     </div>
                     <div class="transaction_sum">

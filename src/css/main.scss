@@ -1810,6 +1810,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 .reveal-modal {
   overflow-y: auto;
   position: fixed;
+  height: 100%;
   padding: 20px;
   background: rgba(0, 0, 0, 0.5);
   color: #3e4042;
@@ -1832,6 +1833,49 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     padding: 20px;
     position: relative;
     top: auto;
+
+    &.transactions_details{
+      background: #efefef;
+
+      .modal-content-header{
+        padding: 0;
+
+        svg{
+          width: 46px;
+          height: 46px;
+        }
+      }
+
+      h4{
+        background: #f9f9f9;
+        padding: 10px 10px 30px 15px;
+        border-radius: 10px;
+        margin-bottom: -25px;
+        border: 1px solid darken(#f9f9f9, 5);
+      }
+
+      .modal-content-body{
+        >ul{
+          background: #fff;
+          padding: 10px;
+          border: 1px solid #eee;
+          border-radius: 5px;
+
+          li{
+            padding: 5px 10px 5px 40px;
+
+            svg{
+              left: 5px;
+            }
+
+            strong{
+              font-size: 12px;
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+    }
 
     .modal-content-header {
       text-align: center;
@@ -1868,33 +1912,45 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
           color: lighten(#3e4042, 10);
           font-size: 12px;
           border-bottom: 1px solid #efeef3;
-          padding: 10px;
+          padding: 10px 10px 10px 40px;
+          position: relative;
 
           &:last-child {
             border-bottom: none;
           }
 
-          svg {
-            width: 18px;
-            height: 18px;
-            line-height: 14px;
-            margin-right: 5px;
+          svg-icon{
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 40px;
+
+            svg {
+              width: 22px;
+              height: 22px;
+              position: absolute;
+              left:0;
+              top: 50%;
+              margin-top: -11px;
+            }
           }
+
+
 
           div {
             &.value {
               color: #3e4042;
-              font-size: 14px;
+              font-size: 12px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
 
               a {
                 color: $main_color;
                 padding: 0;
                 font-weight: 400;
                 border-bottom: 1px dotted $main_color;
-              }
-
-              &:not(.right) {
-                margin-top: 5px;
               }
 
               &.value_big {
@@ -2519,6 +2575,11 @@ canvas {
       position: relative;
       display: table-cell;
       vertical-align: middle;
+    }
+
+    .price-separator{
+      position: absolute;
+      text-indent: -9999px;
     }
   }
 }

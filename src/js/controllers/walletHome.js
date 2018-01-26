@@ -194,7 +194,7 @@
           $rootScope.$emit('Local/SetTab', 'send');
         };
 
-        $scope.transactionAddress = (address) => {
+        self.transactionAddress = (address) => {
           if (!address) {
             return { fullName: gettextCatalog.getString('Incoming transaction') };
           }
@@ -1418,6 +1418,7 @@
         };
 
         this.openTxModal = function (btx, txHistory) {
+          console.log(btx);
           $rootScope.modalOpened = true;
           const self = this;
           const fc = profileService.focusedClient;
@@ -1440,6 +1441,8 @@
             $scope.getUnitName = function () {
               return self.getUnitName();
             };
+
+            $scope.transactionAddress = self.transactionAddress;
 
             $scope.openInExplorer = function () {
               const url = `https://${ENV.explorerPrefix}explorer.dagcoin.org/#${btx.unit}`;
