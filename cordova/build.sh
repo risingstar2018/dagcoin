@@ -112,7 +112,7 @@ if [ ! -d $PROJECT ]; then
 	#cordova plugin add https://github.com/VersoSolutions/CordovaClipboard
 	#checkOK
 
-	phonegap local plugin add https://github.com/VersoSolutions/CordovaClipboard
+	phonegap local plugin add https://github.com/ibnclaudius/CordovaClipboard
 	checkOK
 
 	cordova plugin add https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git && cordova prepare
@@ -151,11 +151,13 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-device-name
 	checkOK
 
-	#cordova plugin add https://github.com/phonegap-build/PushPlugin.git
-	#checkOK
-
-	phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
+	cordova plugin add https://github.com/phonegap/phonegap-plugin-push
 	checkOK
+
+
+
+	#phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
+	#checkOK
 
 	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
 	checkOK
