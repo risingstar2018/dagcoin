@@ -1847,3 +1847,8 @@ msgstr ""
 #: public/views/modals/confirmation.html:12
 msgid "{{yes_label || 'Yes'}}"
 msgstr ""
+
+#: new_contact.template.html:28
+#: edit_contact.template.html:20
+msgid "E-mail not valid"
+msgstr ""
