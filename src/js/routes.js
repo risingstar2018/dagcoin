@@ -120,9 +120,20 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/intro/intro.template.html'
-            },
-          },
+              templateUrl: 'controllers/intro/intro.template.html',
+              controller: 'IntroController'
+            }
+          }
+        })
+        .state('intro_confirm', {
+          url: '/intro_confirm',
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'controllers/intro_confirm/intro_confirm.template.html',
+              controller: 'IntroConfirmController'
+            }
+          }
         })
         .state('translators', {
           url: '/translators',
