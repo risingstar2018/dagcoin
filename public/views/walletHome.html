@@ -6,6 +6,10 @@
   <qr-scanner ng-if="tab === 'send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)">
   </qr-scanner>
+  <a id="address-share" ng-if="index.isCordova && tab === 'receive' && index.isComplete"
+     ng-click="home.shareAddress(home.addr[index.walletId])">
+    <svg-icon name="share-icon"></svg-icon>
+  </a>
 </dag-nav-bar>
 
 
@@ -253,12 +257,6 @@
 
             </h4>
           </div>
-        </div>
-        <div class="page-action">
-          <a ng-show="index.isCordova" href="#" ng-click="home.shareAddress(home.addr[index.walletId])"
-             class="btn btn_red-full" translate>Share wallet link</a>
-          <div ng-show="index.isCordova" class="page-action__info">
-            <span translate>Share the link above to receive payments.</span></div>
         </div>
         <a class="size-14"
            ng-click="home.openCustomizedAmountModal(index.shared_address || home.addr[index.walletId])">
