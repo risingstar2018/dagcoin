@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesAliasController',
-    function ($scope, $timeout, configService, profileService, go, gettextCatalog, lodash) {
+    function ($scope, $timeout, configService, profileService, go, gettextCatalog, lodash, utilityService) {
       const self = this;
       const config = configService.getSync();
       const fc = profileService.focusedClient;
@@ -50,7 +50,7 @@
           name: config.aliasFor[c.walletId] || c.walletName,
         }));
 
-        self.wallets = lodash.sortBy(ret, 'name');
+        self.wallets = utilityService.sortWalletsByName(ret);
         self.wallets = lodash.filter(self.wallets, c => (c.name !== self.alias));
       };
 

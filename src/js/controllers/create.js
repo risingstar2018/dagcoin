@@ -16,7 +16,8 @@
               gettextCatalog,
               isMobile,
               derivationPathHelper,
-              correspondentListService) {
+              correspondentListService,
+              utilityService) {
       const self = this;
       const defaults = configService.getDefaults();
       this.isWindowsPhoneApp = isMobile.Windows() && isCordova;
@@ -239,7 +240,7 @@
           name: config.aliasFor[c.walletId] || c.walletName,
         }));
 
-        self.wallets = lodash.sortBy(ret, 'name');
+        self.wallets = utilityService.sortWalletsByName(ret);
       };
 
       $scope.$on('$destroy', () => {
