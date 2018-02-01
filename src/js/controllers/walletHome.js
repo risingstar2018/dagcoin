@@ -290,7 +290,15 @@
                   $scope.error = err;
                   return;
                 }
-                $scope.list = ab;
+                const sortedContactArray = lodash.sortBy(ab, (contact) => {
+                  const favoriteCharacter = contact.favorite === true ? '!' : '';
+                  const fullName = `${contact.first_name}${contact.last_name}`.toUpperCase();
+                  return `${favoriteCharacter}${fullName}`;
+                });
+                $scope.list = {};
+                lodash.forEach(sortedContactArray, (contact) => {
+                  $scope.list[contact.address] = contact;
+                });
               });
             };
 
