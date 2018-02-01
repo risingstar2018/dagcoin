@@ -2,7 +2,7 @@
   <span translate>Wallet seed not backed up</span>
 </div>
 
-<dag-nav-bar title="{{ 'My Wallet' | translate}}">
+<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}">
   <qr-scanner ng-if="tab === 'send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)">
   </qr-scanner>

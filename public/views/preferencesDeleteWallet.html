@@ -1,9 +1,8 @@
 <dag-nav-bar title="{{ 'Delete Wallet' | translate }}" go-back="preferencesAdvanced" invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesDeleteWalletController as preferences">
-  <div class="text-center text-gray">
-    <span translate>Wallet</span>: {{index.walletName}}
-    <span ng-show="index.alias">({{index.alias}})</span>
+  <div class="columns text-center text-black text-bold">
+    {{index.alias ? index.alias : index.walletName}}
   </div>
   <div class="columns text-center">
     <p><strong class="text-warning text-center m0" translate>Warning!</strong></p>
