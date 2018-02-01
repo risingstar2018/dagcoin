@@ -208,7 +208,6 @@
           });
 
           return { fullName, address };
-          // return { fullName };
         };
 
         $scope.transactionStatus = (transaction) => {

@@ -163,18 +163,15 @@
                       <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
                       <div ng-if="transaction.action === 'received'">
                         <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
-                          <span ng-if="home.transactionAddress(address).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
-                          <span ng-if="!home.transactionAddress(address).address">{{home.transactionAddress(address).fullName}}</span>
+                          <span>{{home.transactionAddress(address).fullName}}</span>
                         </div>
                       </div>
                       <div class="transaction_address" ng-if="transaction.action === 'sent'">
-                        <span ng-if="home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
-                        <span ng-if="!home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                        <span>{{home.transactionAddress(transaction.addressTo).fullName}}</span>
                       </div>
                     </div>
                     <div class="transaction_sum">
-                      <div class="transaction_sum">{{transaction.action === 'received' ? '+' :
-                        '-'}}{{formatSum(transaction.amountStr)}}
+                      <div class="transaction_sum">{{transaction.action === 'received' ? '+' : '-'}}{{formatSum(transaction.amountStr)}}
                       </div>
                       <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
                     </div>
