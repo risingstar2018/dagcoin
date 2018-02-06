@@ -25,8 +25,8 @@
     root.walletClients = {};
 
     root.Utils = bwcService.getUtils();
-    root.formatAmount = function (amount, asset, opts) {
-      const options = opts || { dontRound: true, needToLocale: asset !== 'DAG' };
+    root.formatAmount = function (amount, asset) {
+      const options = { dontRound: true };
       const config = configService.getSync().wallet.settings;
       // if (config.unitCode == 'byte') return amount;
 

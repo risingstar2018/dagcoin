@@ -75,7 +75,7 @@
                 alert(err);
               } else {
                 const src = canvas.toDataURL();
-                element.html(`<img width="260" src="${src}">`);
+                element.html(`<img width="220" src="${src}">`);
               }
             });
           }

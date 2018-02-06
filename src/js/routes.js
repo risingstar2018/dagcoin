@@ -19,7 +19,7 @@
 // Setting up route
   angular
     .module('copayApp')
-    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider) => {
+    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider, ngDialogProvider) => {
       ScrollBarsProvider.defaults = {
         autoHideScrollbar: true,
         scrollButtons: {
@@ -33,6 +33,13 @@
         },
         axis: 'y'
       };
+
+      ngDialogProvider.setDefaults({
+        showClose: false,
+        closeByDocument: true,
+        closeByEscape: true,
+        closeByNavigation: true
+      });
 
       $urlRouterProvider.otherwise('/');
 
@@ -113,9 +120,20 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/intro/intro.template.html'
-            },
-          },
+              templateUrl: 'controllers/intro/intro.template.html',
+              controller: 'IntroController'
+            }
+          }
+        })
+        .state('intro_confirm', {
+          url: '/intro_confirm',
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'controllers/intro_confirm/intro_confirm.template.html',
+              controller: 'IntroConfirmController'
+            }
+          }
         })
         .state('translators', {
           url: '/translators',
@@ -145,6 +163,7 @@
           views: {
             main: {
               templateUrl: 'views/walletHome.html',
+              controller: 'walletHomeController as home'
             },
           },
         })
@@ -226,6 +245,7 @@
           views: {
             chat: {
               templateUrl: 'views/correspondentDevices.html',
+              controller: 'correspondentDevicesController'
             },
           },
         })
@@ -374,6 +394,7 @@
           views: {
             main: {
               templateUrl: 'views/preferencesInformation.html',
+              controller: 'preferencesInformation as info'
             },
           },
         })
@@ -470,12 +491,12 @@
         })
         .state('initialRecovery', {
           url: '/initialRecovery',
-          templateUrl: 'views/initialRecovery.html',
+          templateUrl: 'views/recovery.html',
           walletShouldBeComplete: false,
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/initialRecovery.html',
+              templateUrl: 'views/recovery.html',
             },
           },
         })
@@ -487,6 +508,86 @@
               templateUrl: 'views/preferencesGlobal.html',
             },
           },
+        })
+        .state('transactions', {
+          url: '/transactions',
+          params: {
+            backTo: 'walletHome',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/transactions/transactions.template.html'
+            },
+          }
+        })
+        .state('transaction', {
+          url: '/transactions/:address',
+          params: {
+            backTo: 'walletHome',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/transactions/transactions.template.html'
+            },
+          }
+        })
+        .state('contacts', {
+          url: '/contacts',
+          params: {
+            backTo: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contacts.template.html',
+              controller: 'ContactsController as contacts'
+            },
+          }
+        })
+        .state('contact', {
+          url: '/contact',
+          params: {
+            backTo: 'contacts',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contact/contact.template.html',
+              controller: 'ContactController as contact',
+            }
+          }
+        })
+        .state('new_contact', {
+          url: '/contact/new',
+          params: {
+            backTo: 'contacts'
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contact/new_contact/new_contact.template.html',
+              controller: 'NewContactController as contact'
+            }
+          }
+        })
+        .state('edit_contact', {
+          url: '/contact/edit',
+          params: {
+            backTo: 'contact',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contact/edit_contact/edit_contact.template.html',
+              controller: 'EditContactController as contact'
+            },
+          }
         })
         .state('warning', {
           url: '/warning',

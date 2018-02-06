@@ -5,26 +5,31 @@
     .module('copayApp.controllers')
     .controller('IntroController', IntroController);
 
-  IntroController.$inject = ['$scope'];
-  function IntroController($scope) {
+  IntroController.$inject = ['$scope', '$timeout'];
+
+  function IntroController($scope, $timeout) {
     $scope.swiper = {};
+    $scope.currentStep = 'intro';
     $scope.active_index = 0;
 
-    $scope.isLastSlide = () => ($scope.active_index === 2);
-
-    $scope.next = () => {
+    $scope.nextSlide = () => {
       $scope.swiper.slideNext();
     };
+
+    $scope.changeCurrentStep = (step) => {
+      $scope.currentStep = step;
+    };
+
     activate();
 
     function activate() {
       $scope.onReadySwiper = (swiper) => {
         $scope.swiper = swiper;
 
-        swiper.on('transitionEnd', () => {
-          $scope.$apply(() => {
-            $scope.active_index = swiper.activeIndex;
-          });
+        swiper.on('slideChangeStart', (e) => {
+          $timeout(() => {
+            $scope.active_index = e.activeIndex;
+          }, 0);
         });
       };
     }

@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('recoveryFromSeed',
-    function ($rootScope, $scope, $log, $timeout, profileService, gettextCatalog) {
+    function ($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService, configService) {
       const async = require('async');
       const conf = require('byteballcore/conf.js');
       const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
@@ -28,6 +28,7 @@
       self.inputMnemonic = '';
       self.xPrivKey = '';
       self.assocIndexesToWallets = {};
+      self.isInitial = $state.includes('initialRecovery');
 
       function determineIfAddressUsed(address, cb) {
         db.query('SELECT 1 FROM outputs WHERE address = ? LIMIT 1', [address], (outputsRows) => {
@@ -288,11 +289,22 @@
 
           if ((self.inputMnemonic.split(' ').length % 3 === 0) && Mnemonic.isValid(self.inputMnemonic)) {
             self.scanning = true;
-            if (self.bLight) {
-              scanForAddressesAndWalletsInLightClient(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
-            } else {
-              scanForAddressesAndWallets(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
-            }
+
+            if (self.isInitial) {
+              const device = require('byteballcore/device.js');
+              const opts = { deviceName: 'RECOVER_FROM_SEED' };
+              device.setDeviceName(opts.deviceName);
+              configService.set(opts, () => {
+                profileService.create({ noWallet: false }, () => $timeout(() => {
+                    $rootScope.$emit('Local/InitialRecoveryInProgress');
+                    scanForAddressesAndWalletsInLightClient(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
+                  }, 1000));
+              });
+            } else if (self.bLight) {
+                scanForAddressesAndWalletsInLightClient(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
+              } else {
+                scanForAddressesAndWallets(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
+              }
           } else {
             self.error = gettextCatalog.getString('Seed is not valid');
           }

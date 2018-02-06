@@ -1,42 +1,38 @@
-<dag-nav-bar title="{{ 'My Wallet' | translate}}">
-  <qr-scanner ng-if="tab === 'send' && index.isComplete"
-              on-scan="index.onQrCodeScanned(data)"
-              before-scan="index.onBeforeScan()">
-  </qr-scanner>
-</dag-nav-bar>
-
-
 <div class="backup" ng-if="index.needsBackup" ng-click="index.openBackupNeededModal()">
   <span translate>Wallet seed not backed up</span>
 </div>
-<div ng-controller="walletHomeController as home">
-  <div class="onGoingProcess" ng-show="index.isOffline">
-    <div class="onGoingProcess-content">
-      <dag-spinner></dag-spinner>
-      <span translate>Reconnecting to Wallet Service...</span>
-    </div>
-  </div>
 
-  <div class="onGoingProcess" ng-show="index.anyOnGoingProcess && !index.isOffline">
+<dag-nav-bar title="{{ 'My Wallet' | translate}}">
+  <qr-scanner ng-if="tab === 'send' && index.isComplete"
+              on-scan="index.onQrCodeScanned(data)">
+  </qr-scanner>
+  <a id="address-share" ng-if="index.isCordova && tab === 'receive' && index.isComplete"
+     ng-click="home.shareAddress(home.addr[index.walletId])">
+    <svg-icon name="share-icon"></svg-icon>
+  </a>
+</dag-nav-bar>
+
+
+<div class="content" ng-scrollbars>
+  <div class="onGoingProcess" ng-show="index.isOffline || (index.anyOnGoingProcess && !index.isOffline) || (home.onGoingProcess && !index.anyOnGoingProces && !index.isOffline)">
     <div class="onGoingProcess-content">
       <dag-spinner></dag-spinner>
+      <!-- 1 -->
+      <span translate ng-show="index.isOffline">Reconnecting to Wallet Service...</span>
+      <!-- 2 -->
+      <span ng-show="home.onGoingProcess && !index.anyOnGoingProces && !index.isOffline">{{home.onGoingProcess|translate}}...</span>
+      <!-- 3 -->
       <span translate ng-show="['openingWallet', 'updatingStatus', 'updatingBalance', 'updatingPendingTxps', 'updatingHistory'].indexOf(index.onGoingProcessName) >= 0">Updating Wallet...</span>
       <span translate ng-show="index.onGoingProcessName == 'scanning'">Scanning Wallet funds...</span>
       <span translate ng-show="index.onGoingProcessName == 'recreating'">Recreating Wallet...</span>
       <span translate ng-show="index.onGoingProcessName == 'generatingCSV'">Generating .csv file...</span>
       <span translate ng-show="index.onGoingProcessName == 'Syncing'">Syncing... {{index.syncProgress}}</span>
       <span translate ng-show="index.onGoingProcessName == 'sending'">Sending...</span>
+      <span translate ng-show="index.onGoingProcessName == 'recoveringFromSeed'">Recovering from seed...</span>
     </div>
   </div>
 
-  <div class="onGoingProcess" ng-show="home.onGoingProcess && !index.anyOnGoingProces && !index.isOffline">
-    <div class="onGoingProcess-content">
-      <dag-spinner></dag-spinner>
-      <span>{{home.onGoingProcess|translate}}...</span>
-    </div>
-  </div>
-
-  <div class="oh" ng-show="!index.noFocusedWallet">
+  <div ng-show="!index.noFocusedWallet">
 
 
     <!--
@@ -45,7 +41,7 @@
 
     -->
 
-    <div id="walletHome" class="walletHome tab-view tab-in" ng-scrollbars>
+    <div id="walletHome" class="walletHome tab-view tab-in">
       <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
       <div class="p-wallet js-introduction">
         <div class="p-wallet__price-block">
@@ -65,6 +61,7 @@
             <div ng-show="!index.updateError && index.walletScanStatus != 'error'"
                  ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
 
+
               <div class="price-wrapper">
 
                 <div class="price">
@@ -74,7 +71,7 @@
                   <div class="price_digits">
                     <div class="price_digits_wrapper">
                                             <span class="price-number"
-                                                  ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span>
+                                                  ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span><span class="price-separator">.</span>
                       <span class="price-sup"
                             ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr, 'sup')">{{index.dagBalance.totalStr.split('.')[1]}}</span>
                     </div>
@@ -82,7 +79,6 @@
                 </div>
 
               </div>
-
 
               <span ng-if="index.dagBalance.pending" class="ballance" translate>Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
               <span ng-if="!index.dagBalance.pending" class="ballance" translate>Wallet balance</span>
@@ -130,11 +126,9 @@
             </span>
         </div>
 
-        <div class="oh text-center p20 text-gray"
-             ng-show="!index.updatingTxHistory">
-          <span ng-if="!index.txHistory[0] && !index.txHistoryError" translate>No transactions yet</span>
+        <div class="oh text-center p20 text-gray" ng-if="!index.updatingTxHistory && !index.txHistory[0] && !index.txHistoryError">
+          <span translate>No transactions yet</span>
         </div>
-
 
         <div class="dag_transactions" ng-show="index.txHistory[0] && !index.updatingTxHistory">
           <div class="dag_transactions_list">
@@ -142,8 +136,10 @@
               <h4 translate>Transactions History</h4>
               <!-- EXPORT TO CVS: START -->
               <div ng-if="!index.isCordova">
-                <input id="export_file" type="file" nwsaveas="Dagcoin-{{index.alias || index.walletName}}.csv" accept=".csv" style="display:none">
-                <button ng-disabled="exporting" class="transactions_export_button btn btn_red" ng-click="index.csvHistory();">
+                <input id="export_file" type="file" nwsaveas="Dagcoin-{{index.alias || index.walletName}}.csv"
+                       accept=".csv" style="display:none">
+                <button ng-disabled="exporting" class="transactions_export_button btn btn_red"
+                        ng-click="index.csvHistory();">
                   <svg-icon name="content_copy"></svg-icon>
                   <span translate>Export To CSV</span>
                 </button>
@@ -155,40 +151,38 @@
             <div ng-repeat="(date, data) in index.completeHistory">
               <h4 class="transactions_date">{{formatDate(date)}}</h4>
               <div class="dag_transactions_table">
-                <table>
-                  <tbody>
-                  <tr ng-repeat="transaction in data.rows track by $index"
-                      class="transaction_status_{{transaction.action}}"
-                      ng-click="home.openTxModal(transaction, index.txHistory)">
-                    <td class="transaction_status">
+                <ul>
+                  <li ng-repeat="transaction in data.rows track by $index"
+                      class="transaction_status_{{transaction.action}}" ng-click="home.openTxModal(transaction, index.txHistory)">
+                    <div class="transaction_status">
                       <svg-icon class="transaction_status_icon"
                                 ng-class="{'animation_rotate' : !transaction.confirmations}"
                                 name="{{transactionStatus(transaction).icon}}"></svg-icon>
-                    </td>
-                    <td>
+                    </div>
+                    <div class="transaction_meta">
                       <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
                       <div ng-if="transaction.action === 'received'">
-                        <div class="transaction_address"
-                             ng-repeat="address in transaction.arrPayerAddresses">{{address ? address :
-                          ('Incoming transaction' | translate)}}
+                        <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
+                          <span ng-if="home.transactionAddress(address).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                          <span ng-if="!home.transactionAddress(address).address">{{home.transactionAddress(address).fullName}}</span>
                         </div>
                       </div>
                       <div class="transaction_address" ng-if="transaction.action === 'sent'">
-                        {{transaction.addressTo}}
+                        <span ng-if="home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                        <span ng-if="!home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
                       </div>
-                    </td>
-                    <td class="transaction_sum">
+                    </div>
+                    <div class="transaction_sum">
                       <div class="transaction_sum">{{transaction.action === 'received' ? '+' :
                         '-'}}{{formatSum(transaction.amountStr)}}
                       </div>
                       <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
-                    </td>
-                    <td class="transaction_expand">
+                    </div>
+                    <div class="transaction_expand">
                       <svg-icon name="chevron-thin-right"></svg-icon>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
             <div class="page-action">
@@ -220,13 +214,13 @@
     receive
 
     -->
-    <div id="receive" class="receive p-share tab-view cordova-scrollable" ng-scrollbars style="padding-bottom: 0">
+    <div id="receive" class="receive p-share tab-view cordova-scrollable">
       <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
       <div class="p-wrap text-center m20t">
 
-        <h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">{{'Tap the' |
-          translate}} <strong>QR-code</strong> {{'to copy its address.' | translate}}<br/>{{'Share it with the
-          sender via email or text.' | translate}}</h2>
+        <h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">{{'Tap the' | translate}}
+          <strong>QR-code</strong> {{'to copy its address.' | translate}}<br/>{{'Share it with the sender via email or
+          text.' | translate}}</h2>
 
         <!-- Address-->
         <div class="text-center">
@@ -264,12 +258,6 @@
             </h4>
           </div>
         </div>
-        <div class="page-action">
-          <a ng-show="index.isCordova" href="#" ng-click="home.shareAddress(home.addr[index.walletId])"
-             class="btn btn_red-full" translate>Share wallet link</a>
-          <div ng-show="index.isCordova" class="page-action__info">
-            <span translate>Share the link above to receive payments.</span></div>
-        </div>
         <a class="size-14"
            ng-click="home.openCustomizedAmountModal(index.shared_address || home.addr[index.walletId])">
           <span translate>Request a specific amount</span>
@@ -281,11 +269,10 @@
     <!--
     send
     -->
-    <div id="send" class="send tab-view cordova-scrollable" ng-scrollbars>
+    <div id="send" class="send tab-view cordova-scrollable">
       <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
       <div class="p-share js-introduction">
         <div class="p-wrap" style="width: 300px;margin: 0 auto;">
-          <div class="page-heading"><span translate>Send <span>dags</span></span></div>
           <form class="page-form" name="sendForm" novalidate>
             <div class="box-notification" ng-show="home.error" ng-click="home.resetError()">
 					  <span class="text-warning">
@@ -376,15 +363,10 @@
         </div>
       </div>
     </div>
-
-
   </div>
 
   <div id="{{view.id}}" class="{{view.class}} tab-view" ng-repeat="view in index.addonViews"
        ng-include="view.template">
   </div>
-
 </div>
-</div>
-<div class="extra-margin-bottom"></div>
 <div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>

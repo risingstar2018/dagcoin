@@ -38,7 +38,7 @@
             </button>
           </div>
 
-          <div class="text-alert size-14 text-center m15t">
+          <div class="text-alert size-14 text-center m15t" ng-if="!recFromSeed.isInitial">
             <span translate>WARNINGS:</span> <br/>
             <span translate>This will permanently delete all your existing wallets!</span> <br/>
             <span translate>Only single-sig wallets can be recovered.</span> <br/>
@@ -64,10 +64,10 @@
           </div>
         </div>
 
-        <div class="box-notification" ng-show="import.error">
-	<span class="text-warning">
-		{{import.error}}
-	</span>
+        <div class="box-notification text-center" ng-show="import.error">
+          <span class="text-warning">
+            {{import.error}}
+          </span>
         </div>
         <form class="page-form" ng-submit="import.walletImport()">
           <div class="form-group">
@@ -104,7 +104,7 @@
             </ul>
           </div>
         </div>
-        <div class="text-alert size-12 columns m20t" translate>
+        <div class="text-alert size-12 columns" ng-if="!import.isInitial" translate>
           WARNING: This will permanently delete all your existing wallets!
         </div>
       </div>

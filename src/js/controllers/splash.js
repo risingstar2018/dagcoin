@@ -33,13 +33,15 @@
         if (this.registration_type === 'default') {
           this.setWalletType();
         } else if (this.registration_type === 'backup') {
-          go.path('initialRecovery');
+          this.setWalletType(() => {
+            go.path('initialRecovery');
+          });
         } else {
           this.step = 'wallet_type';
         }
       };
 
-      this.setWalletType = function () {
+      this.setWalletType = function (cb) {
         const bLight = (self.wallet_type === 'light');
         if (!bLight) {
           self.step = 'device_name';
@@ -59,8 +61,12 @@
           if (!conf.bLight) {
             throw Error('Failed to switch to light, please restart the app');
           }
-          self.step = 'device_name';
-          $scope.$apply();
+          if (cb) {
+            cb();
+          } else {
+            self.step = 'device_name';
+            $scope.$apply();
+          }
         });
       };
 
