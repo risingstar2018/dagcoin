@@ -57,8 +57,7 @@
           status: true
         };
 
-        const device = require('byteballcore/device.js');
-        device.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
+        discoveryService.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
       });
 
       // One device can send such message to check whether another device can exchange messages
@@ -68,9 +67,7 @@
           protocol: 'dagcoin',
           title: 'connected'
         };
-
-        const device = require('byteballcore/device.js');
-        device.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
+        discoveryService.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
       });
 
       function init() {
