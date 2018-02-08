@@ -40,6 +40,30 @@
       contacts.favoriteListTotal = 0;
 
       addressbookService.list((err, list) => {
+        function hashSort(src) {
+          const keys = Object.keys(src);
+          const target = {};
+          keys.sort();
+          keys.forEach((key) => {
+            target[key] = src[key];
+          });
+          return target;
+        }
+
+        function compareFn(propertyProjection) {
+          return (a, b) => {
+            const nameA = propertyProjection(a);
+            const nameB = propertyProjection(b);
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          };
+        }
+
         Object.keys(list).map((address) => {
           const contact = list[address];
           const firstLetter = contact.first_name.charAt(0).toUpperCase();
@@ -62,19 +86,12 @@
         });
 
         Object.keys(contacts.list).map((letter) => {
-          contacts.list[letter] = contacts.list[letter].sort((a, b) => {
-            const nameA = a.first_name.toUpperCase();
-            const nameB = b.first_name.toUpperCase();
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-            return 0;
-          });
+          contacts.list[letter] = contacts.list[letter].sort(compareFn(item => item.first_name.toUpperCase()));
           return true;
         });
+
+        contacts.list = hashSort(contacts.list);
+        contacts.favoriteList = hashSort(contacts.favoriteList);
       });
     }
 

@@ -1,15 +1,14 @@
-<div class="modal-content fix-modals-touch">
+<div class="modal-content fix-modals-touch animated fasten slideInDown transactions_details">
 
     <a class="close_modal" ng-click="cancel()"><svg-icon title="close"></svg-icon></a>
 
     <div class="modal-content-header">
         <svg-icon title="credit-card"></svg-icon>
-        <h3 translate>Transaction detail</h3>
     </div>
 
     <div class="modal-content-body">
+        <h4 translate>Transaction details</h4>
         <ul>
-
             <li ng-if="!btx.hasMultiplesOutputs && btx.addressTo && btx.addressTo != 'N/A'"
                 ng-click="copyAddress(btx.addressTo)">
                 <svg-icon title="vertical_align_bottom"></svg-icon>
@@ -21,7 +20,7 @@
                       </span>
                       <span ng-if="!btx.merchant">
                         <span ng-show="btx.labelTo">{{btx.labelTo}}</span>
-                        <div ng-show="!btx.labelTo" class="enable_text_select">{{btx.addressTo}}</div>
+                        <div ng-show="!btx.labelTo" class="enable_text_select">{{transactionAddress(btx.addressTo).fullName}}</div>
                       </span>
                  </div>
             </li>
@@ -100,6 +99,7 @@
             </li>
         </ul>
 
+        <h4 translate>Transaction status</h4>
         <ul>
             <li ng-if="btx.time">
                 <svg-icon title="hourglass_empty"></svg-icon>

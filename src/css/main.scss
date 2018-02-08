@@ -1007,6 +1007,17 @@ label {
       font-size: 11px;
     }
   }
+
+  &.required{
+    &:after{
+      content: "*";
+      position: relative;
+      font-size: 10px;
+      color: #f00;
+      top: -2px;
+      margin-left: 3px;
+    }
+  }
 }
 
 button, .button {
@@ -1799,6 +1810,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 .reveal-modal {
   overflow-y: auto;
   position: fixed;
+  height: 100%;
   padding: 20px;
   background: rgba(0, 0, 0, 0.5);
   color: #3e4042;
@@ -1821,6 +1833,49 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     padding: 20px;
     position: relative;
     top: auto;
+
+    &.transactions_details{
+      background: #efefef;
+
+      .modal-content-header{
+        padding: 0;
+
+        svg{
+          width: 46px;
+          height: 46px;
+        }
+      }
+
+      h4{
+        background: #f9f9f9;
+        padding: 10px 10px 30px 15px;
+        border-radius: 10px;
+        margin-bottom: -25px;
+        border: 1px solid darken(#f9f9f9, 5);
+      }
+
+      .modal-content-body{
+        >ul{
+          background: #fff;
+          padding: 10px;
+          border: 1px solid #eee;
+          border-radius: 5px;
+
+          li{
+            padding: 5px 10px 5px 40px;
+
+            svg{
+              left: 5px;
+            }
+
+            strong{
+              font-size: 12px;
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+    }
 
     .modal-content-header {
       text-align: center;
@@ -1857,33 +1912,45 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
           color: lighten(#3e4042, 10);
           font-size: 12px;
           border-bottom: 1px solid #efeef3;
-          padding: 10px;
+          padding: 10px 10px 10px 40px;
+          position: relative;
 
           &:last-child {
             border-bottom: none;
           }
 
-          svg {
-            width: 18px;
-            height: 18px;
-            line-height: 14px;
-            margin-right: 5px;
+          svg-icon{
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 40px;
+
+            svg {
+              width: 22px;
+              height: 22px;
+              position: absolute;
+              left:0;
+              top: 50%;
+              margin-top: -11px;
+            }
           }
+
+
 
           div {
             &.value {
               color: #3e4042;
-              font-size: 14px;
+              font-size: 12px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
 
               a {
                 color: $main_color;
                 padding: 0;
                 font-weight: 400;
                 border-bottom: 1px dotted $main_color;
-              }
-
-              &:not(.right) {
-                margin-top: 5px;
               }
 
               &.value_big {
@@ -1975,36 +2042,75 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   visibility: visible;
 }
 
-.input-wrap input[type="text"],
-.input-wrap input[type="number"],
-.input-wrap input[type="email"],
-.input-wrap input[type="password"],
-.input-wrap textarea,
-.input-wrap select {
-  border: 2px solid #eee;
-  border-radius: 5px;
-  padding: 14px 22px;
-  height: auto;
-  font-size: 14px;
-  font-weight: 400;
-  color: #666;
-  max-width: 100%;
-  width: 100%;
-  outline: none;
-  box-shadow: none;
-  background: #fff;
-
-  &.min {
-    padding: 4px 10px;
-    width: 100px;
+@-webkit-keyframes shake{
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
   }
 
-  &.error {
-    border-color: $red;
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
   }
 
-  &.success {
-    border-color: $green;
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.input-wrap {
+  position: relative;
+
+  input, textarea, select {
+    border: 2px solid #eee;
+    border-radius: 5px;
+    padding: 14px 22px;
+    height: auto;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+    max-width: 100%;
+    width: 100%;
+    outline: none;
+    box-shadow: none;
+    background: #fff;
+    animation-duration: 0.6s;
+    -webkit-animation-timing-function: cubic-bezier(0.36,0.07,0.19,0.97);
+    animation-timing-function: cubic-bezier(0.36,0.07,0.19,0.97);
+
+    &.min {
+      padding: 4px 10px;
+      width: 100px;
+    }
+
+    &.error {
+      border-color: $red;
+      box-shadow: 0 0 5px 1px rgba($red, 0.5);
+    }
+
+    &.success {
+      border-color: $green;
+    }
   }
 }
 
@@ -2284,7 +2390,7 @@ a.a_none {
   }
 }
 
-#qr-scanner {
+#qr-scanner, #address-share {
   position: absolute;
   right: 0;
   top: 0;
@@ -2469,6 +2575,11 @@ canvas {
       position: relative;
       display: table-cell;
       vertical-align: middle;
+    }
+
+    .price-separator{
+      position: absolute;
+      text-indent: -9999px;
     }
   }
 }
@@ -2779,11 +2890,6 @@ input {
   width: 100%;
   outline: none;
   box-shadow: none;
-
-  &[type="checkbox"] {
-    width: auto;
-    margin: 0;
-  }
 }
 
 .form-group {
@@ -2817,10 +2923,6 @@ input {
   > span {
     font-weight: 700;
   }
-}
-
-.input-wrap {
-  position: relative;
 }
 
 .input-icon input {

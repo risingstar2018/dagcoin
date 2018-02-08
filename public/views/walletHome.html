@@ -6,6 +6,10 @@
   <qr-scanner ng-if="tab === 'send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)">
   </qr-scanner>
+  <a id="address-share" ng-if="index.isCordova && tab === 'receive' && index.isComplete"
+     ng-click="home.shareAddress(home.addr[index.walletId])">
+    <svg-icon name="share-icon"></svg-icon>
+  </a>
 </dag-nav-bar>
 
 
@@ -67,7 +71,7 @@
                   <div class="price_digits">
                     <div class="price_digits_wrapper">
                                             <span class="price-number"
-                                                  ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span>
+                                                  ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span><span class="price-separator">.</span>
                       <span class="price-sup"
                             ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr, 'sup')">{{index.dagBalance.totalStr.split('.')[1]}}</span>
                     </div>
@@ -147,40 +151,38 @@
             <div ng-repeat="(date, data) in index.completeHistory">
               <h4 class="transactions_date">{{formatDate(date)}}</h4>
               <div class="dag_transactions_table">
-                <table>
-                  <tbody>
-                  <tr ng-repeat="transaction in data.rows track by $index"
-                      class="transaction_status_{{transaction.action}}">
-                    <td class="transaction_status">
+                <ul>
+                  <li ng-repeat="transaction in data.rows track by $index"
+                      class="transaction_status_{{transaction.action}}" ng-click="home.openTxModal(transaction, index.txHistory)">
+                    <div class="transaction_status">
                       <svg-icon class="transaction_status_icon"
                                 ng-class="{'animation_rotate' : !transaction.confirmations}"
                                 name="{{transactionStatus(transaction).icon}}"></svg-icon>
-                    </td>
-                    <td>
+                    </div>
+                    <div class="transaction_meta">
                       <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
                       <div ng-if="transaction.action === 'received'">
                         <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
-                          <span ng-if="transactionAddress(address).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
-                          <span ng-if="!transactionAddress(address).address">{{transactionAddress(address).fullName}}</span>
+                          <span ng-if="home.transactionAddress(address).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                          <span ng-if="!home.transactionAddress(address).address">{{home.transactionAddress(address).fullName}}</span>
                         </div>
                       </div>
                       <div class="transaction_address" ng-if="transaction.action === 'sent'">
-                        <span ng-if="transactionAddress(transaction.addressTo).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
-                        <span ng-if="!transactionAddress(transaction.addressTo).address">{{transactionAddress(transaction.addressTo).fullName}}</span>
+                        <span ng-if="home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                        <span ng-if="!home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
                       </div>
-                    </td>
-                    <td class="transaction_sum">
+                    </div>
+                    <div class="transaction_sum">
                       <div class="transaction_sum">{{transaction.action === 'received' ? '+' :
                         '-'}}{{formatSum(transaction.amountStr)}}
                       </div>
                       <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
-                    </td>
-                    <td class="transaction_expand" ng-click="home.openTxModal(transaction, index.txHistory)">
+                    </div>
+                    <div class="transaction_expand">
                       <svg-icon name="chevron-thin-right"></svg-icon>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
             <div class="page-action">
@@ -255,12 +257,6 @@
 
             </h4>
           </div>
-        </div>
-        <div class="page-action">
-          <a ng-show="index.isCordova" href="#" ng-click="home.shareAddress(home.addr[index.walletId])"
-             class="btn btn_red-full" translate>Share wallet link</a>
-          <div ng-show="index.isCordova" class="page-action__info">
-            <span translate>Share the link above to receive payments.</span></div>
         </div>
         <a class="size-14"
            ng-click="home.openCustomizedAmountModal(index.shared_address || home.addr[index.walletId])">

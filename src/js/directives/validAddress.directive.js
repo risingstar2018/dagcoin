@@ -6,7 +6,7 @@
 
   /**
    * @desc validating DAG address
-   * @example <input valid-address></div>
+   * @example <input type="text" valid-address>
    */
   angular
     .module('copayApp.directives')
@@ -21,12 +21,27 @@
       link(scope, elem, attrs, ctrl) {
         const validator = (value) => {
           if (!profileService.focusedClient) {
-            return false;
+            return '';
           }
 
           if (typeof value === 'undefined') {
             ctrl.$pristine = true;
-            return false;
+            return '';
+          }
+
+          // Regular url
+          if (/^https?:\/\//.test(value)) {
+            ctrl.$setValidity('validAddress', true);
+            return '';
+          }
+
+          // byteball uri
+          const conf = require('byteballcore/conf.js');
+          const re = new RegExp(`^${conf.program}:([A-Z2-7]{32})\b`, 'i');
+          const arrMatches = value.match(re);
+          if (arrMatches) {
+            ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(arrMatches[1]));
+            return '';
           }
 
           // Regular Address

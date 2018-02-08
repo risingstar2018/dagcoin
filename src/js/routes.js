@@ -120,9 +120,20 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/intro/intro.template.html'
-            },
-          },
+              templateUrl: 'controllers/intro/intro.template.html',
+              controller: 'IntroController'
+            }
+          }
+        })
+        .state('intro_confirm', {
+          url: '/intro_confirm',
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'controllers/intro_confirm/intro_confirm.template.html',
+              controller: 'IntroConfirmController'
+            }
+          }
         })
         .state('translators', {
           url: '/translators',
@@ -383,6 +394,7 @@
           views: {
             main: {
               templateUrl: 'views/preferencesInformation.html',
+              controller: 'preferencesInformation as info'
             },
           },
         })
@@ -499,6 +511,19 @@
         })
         .state('transactions', {
           url: '/transactions',
+          params: {
+            backTo: 'walletHome',
+            address: null
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/transactions/transactions.template.html'
+            },
+          }
+        })
+        .state('transaction', {
+          url: '/transactions/:address',
           params: {
             backTo: 'walletHome',
             address: null

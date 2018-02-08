@@ -59,7 +59,7 @@
                   first_name: json[address].split(' ')[0],
                   last_name: json[address].split(' ')[1]
                 };
-              } else {
+              } else if (json[address].first_name) {
                 contacts[address] = json[address];
               }
               return true;

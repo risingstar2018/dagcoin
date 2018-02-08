@@ -1,4 +1,5 @@
-<div class="intro_content content" ng-controller="IntroController">
+<div class="intro_content content">
+    <button ng-show="active_index !== 2" ui-sref="intro_confirm" class="btn btn_red skip_button">Skip</button>
 
     <div class="intro_content_body">
         <div class="icons_states_swiper">
@@ -9,21 +10,27 @@
                 <ks-swiper-slide class="swiper-slide">
                     <dag-state-icon icon="safe"></dag-state-icon>
                     <div class="icons_states_swiper_info">
-                        <h3><svg-icon title="Dagcoin_logo"></svg-icon> is secure.</h3>
-                        <p>This app stores your <strong>dagcoin</strong>s<br/> with cutting-edge security.</p>
+                        <h3>
+                            <svg-icon title="Dagcoin_logo"></svg-icon><span>is secure.</span>
+                        </h3>
+                        <p>This app stores your <strong>dagcoins</strong><br/> with cutting-edge state of the art security.</p>
                     </div>
                 </ks-swiper-slide>
                 <ks-swiper-slide class="swiper-slide">
                     <dag-state-icon icon="transfer"></dag-state-icon>
                     <div class="icons_states_swiper_info">
-                        <h3><svg-icon title="Dagcoin_logo"></svg-icon> is darn fast.</h3>
+                        <h3>
+                            <svg-icon title="Dagcoin_logo"></svg-icon><span>is darn fast.</span>
+                        </h3>
                         <p>Up to <strong>300x faster</strong><br/> than most alternative solutions!</p>
                     </div>
                 </ks-swiper-slide>
                 <ks-swiper-slide class="swiper-slide">
                     <dag-state-icon icon="business"></dag-state-icon>
                     <div class="icons_states_swiper_info">
-                        <h3><svg-icon title="Dagcoin_logo"></svg-icon> is right for you.</h3>
+                        <h3>
+                            <svg-icon title="Dagcoin_logo"></svg-icon><span>is right for you.</span>
+                        </h3>
                         <p>We listen to our <strong>community</strong><br/> to deliver the best product on the market!</p>
                     </div>
                 </ks-swiper-slide>
@@ -31,10 +38,9 @@
         </div>
 
         <div class="intro_content_trigger">
-            <button ui-sref="disclaimer" class="btn btn_red-full">GET STARTED</button>
+            <button ng-show="active_index === 0" ng-click="nextSlide()" class="btn btn_red">GOT IT</button>
+            <button ng-show="active_index === 1" ng-click="nextSlide()" class="btn btn_red">AWESOME</button>
+            <button ng-show="active_index === 2" ui-sref="intro_confirm" class="btn btn_red-full">CREATE WALLET</button>
         </div>
     </div>
-
-
-
 </div>

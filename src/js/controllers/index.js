@@ -1007,11 +1007,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           const CSV_CONTENT_ID = '__csv_content';
           function setCvsContent(data) {
             const csvElement = document.getElementById(CSV_CONTENT_ID);
-            if (lodash.isEmpty(csvElement)) {
+            if (csvElement != null) {
+              csvElement.value = data;
+            } else {
               $log.error(`Textarea element with id=${CSV_CONTENT_ID} not exits in DOM`);
-              return;
             }
-            csvElement.value = data;
           }
 
           function saveFile(name, data) {

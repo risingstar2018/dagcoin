@@ -226,7 +226,7 @@
 
           console.log(`SENDING TO ${device.getMyDeviceAddress()}: ${JSON.stringify(proof)}`);
 
-          device.sendMessageToDevice(
+          discoveryService.sendMessageToDevice(
             self.bytesProviderDeviceAddress,
             'text',
             JSON.stringify(proof)
@@ -257,7 +257,7 @@
             const objectHash = require('byteballcore/object_hash');
             const addressTemplateCHash = objectHash.getChash160(template);
 
-            device.sendMessageToDevice(self.bytesProviderDeviceAddress, 'approve_new_shared_address', {
+            discoveryService.sendMessageToDevice(self.bytesProviderDeviceAddress, 'approve_new_shared_address', {
               address_definition_template_chash: addressTemplateCHash,
               address: self.dagcoinOrigin,
               device_addresses_by_relative_signing_paths: localSigners

@@ -27,6 +27,7 @@
       self.setFundingAddressPair = setFundingAddressPair;
       self.getUserConfig = getUserConfig;
       self.messageCounter = 0;
+      self.sendMessageToDevice = sendMessageToDevice;
 
       function getPairingCode() {
         console.log('GETTING THE PAIRING CODE');
@@ -34,6 +35,21 @@
         return new Promise((resolve) => {
           resolve(ENV.discoveryServicePairingCode);
         });
+      }
+
+      function sendMessageToDevice(address, type, message) {
+        const device = require('byteballcore/device.js');
+        let devicePubKey;
+
+        try {
+          devicePubKey = device.getMyDevicePubKey();
+        } catch (e) {
+          // continue regardless of error
+        }
+
+        if (devicePubKey) {
+          device.sendMessageToDevice(address, type, message);
+        }
       }
 
       function isDiscoveryServiceAddress(deviceAddress) {
@@ -77,8 +93,7 @@
             title: 'is-connected'
           };
 
-          const device = require('byteballcore/device.js');
-          device.sendMessageToDevice(discoveryServiceDeviceAddress, 'text', JSON.stringify(keepAlive));
+          sendMessageToDevice(discoveryServiceDeviceAddress, 'text', JSON.stringify(keepAlive));
 
           const attempts = 12;
 
@@ -190,9 +205,7 @@
 
       function sendMessage(messageType, messageBody) {
         return makeSureDiscoveryServiceIsConnected().then(
-          (correspondent) => {
-            const device = require('byteballcore/device.js');
-            return new Promise((resolve, reject) => {
+          correspondent => new Promise((resolve, reject) => {
               const message = {
                 protocol: 'dagcoin',
                 title: `request.${messageType}`,
@@ -201,7 +214,7 @@
                 messageBody
               };
 
-              device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
+              sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
                 ifOk() {
                   resolve();
                 },
@@ -209,8 +222,7 @@
                   reject(error);
                 }
               });
-            });
-          },
+            }),
           (error) => {
             console.log(`COULD NOT DELIVER ${messageType} TO DISCOVERY SERVICE: ${error}`);
           }

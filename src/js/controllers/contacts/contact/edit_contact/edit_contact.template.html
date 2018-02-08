@@ -2,11 +2,13 @@
 
 <div class="content" ng-scrollbars>
   <div class="contact_form">
-    <form name="new_contact" ng-submit="contact.update()">
+    <form name="editContact" ng-submit="contact.update()" novalidate>
 
       <div class="input-wrap">
-        <label for="first_name">{{ 'First name' | translate}}</label>
-        <input id="first_name" type="text" ng-model="contact.first_name" name="first_name">
+        <label class="required" for="first_name">{{ 'First name' | translate}}</label>
+        <input id="first_name" class="animated"
+               ng-class="{'shake error' : editContact.first_name.$touched && editContact.first_name.$invalid}"
+               ng-maxlength="20" type="text" ng-model="contact.first_name" name="first_name" required>
       </div>
 
       <div class="input-wrap">
@@ -16,7 +18,12 @@
 
       <div class="input-wrap">
         <label for="email">{{ 'E-mail' | translate}}</label>
-        <input id="email" type="text" ng-model="contact.email" name="email">
+        <input id="email" type="email"
+               ng-blur="visitedEmail = true"
+               ng-focus="visitedEmail = false"
+               ng-class="{'shake error' : editContact.email.$touched && editContact.email.$invalid && visitedEmail}"
+               ng-model="contact.email" name="email">
+        <div class="has-error" ng-show="editContact.email.$touched && editContact.email.$invalid" translate>E-mail not valid</div>
       </div>
 
       <div class="input-wrap">
@@ -24,7 +31,7 @@
         <textarea name="description" id="description" ng-model="contact.description" cols="30" rows="10"></textarea>
       </div>
 
-      <button class="btn btn_red btn_red-full" type="submit">{{ 'Save' | translate }}</button>
+      <button class="btn btn_red btn_red-full" ng-disabled="editContact.$invalid" type="submit">{{ 'Save' | translate }}</button>
     </form>
   </div>
 </div>

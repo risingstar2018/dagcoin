@@ -12,7 +12,11 @@
         </a>
       </section>
 
-      <section class="middle tab-bar-section" ng-show="bAllowAddressbook">
+      <section class=" text-center tab-bar-section" ng-show="bAllowAddressbook"
+               ng-class="{
+                 'right': selectedWalletsOpt || (!editAddressbook && !addAddressbookEntry),
+                 'middle': !selectedWalletsOpt && (editAddressbook || addAddressbookEntry)
+               }">
         <ul class="button-group round even-2" ng-show="!editAddressbook && wallets[0] && !addAddressbookEntry">
           <li class="ellipsis" ng-class="{'selected':selectedWalletsOpt}" ng-click="selectedWalletsOpt = true"
               translate>
@@ -36,7 +40,7 @@
         </ul>
       </section>
 
-      <section class="right-small" ng-show="!selectedWalletsOpt" ng-click="toggleEditAddressbook()">
+      <section class="right-small" ng-show="!selectedWalletsOpt && (editAddressbook || addAddressbookEntry)" ng-click="toggleEditAddressbook()">
         <a ng-show="editAddressbook && !addAddressbookEntry" href class="p10">
           <span class="text-close" translate>Done</span>
         </a>
