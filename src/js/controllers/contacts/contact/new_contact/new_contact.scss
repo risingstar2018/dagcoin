@@ -1,5 +1,5 @@
 .contact_form{
-  padding: 0 20px 40px;
+  padding: 0 20px;
 
   input{
     max-width: 100%;
@@ -9,4 +9,8 @@
   label{
     margin-top: 15px;
   }
+}
+
+.contact_form_button_div {
+  padding: 0 20px 10px;
 }
