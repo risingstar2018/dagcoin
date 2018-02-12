@@ -873,6 +873,10 @@ ul.manage li {
   color: #7a8c9e;
 }
 
+.rotate-180::before {
+  transform: rotate(180deg);
+}
+
 .hidden {
   visibility: hidden;
 }
@@ -3222,5 +3226,3 @@ p.color_red {
     }
   }
 }
-
-

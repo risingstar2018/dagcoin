@@ -14,8 +14,8 @@
       <div class="m10t text-center" ng-show="isCordova">
         <span class="button outline dark-gray tiny round"
           ng-click="shareAddress('Payment request: ' + amountInSmallestUnits / dagUnitValue + ' DAG to ' + addr)">
-          <i class="fi-share"></i>
           <span translate>Share address</span>
+          <i class="fi-share rotate-180"></i>
         </span>
       </div>
     </li>
@@ -53,7 +53,7 @@
             <span translate>Amount</span>
           </label>
           <div class="input input-wrap">
-            <input type="number" id="amount" name="amount" ng-attr-placeholder="{{'Amount'|translate}}" 
+            <input type="number" id="amount" name="amount" ng-attr-placeholder="{{'Amount'|translate}}"
             ng-model="_customAmount" valid-amount="{{dagAsset}}" required autocomplete="off"
             min="0.000001" ng-minlength="1" ng-maxlength="12">
             <a class="postfix">{{dagUnitName}}</a>
