@@ -2,7 +2,8 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('sidebarController',
-    function ($rootScope, $timeout, lodash, profileService, configService, go, isMobile, isCordova, backButton, $state) {
+    function ($rootScope, $timeout, lodash, profileService, configService, go, isMobile, isCordova, backButton, $state,
+              utilityService) {
       const self = this;
       self.isWindowsPhoneApp = isMobile.Windows() && isCordova;
       self.walletSelection = false;
@@ -66,7 +67,7 @@
           id: c.walletId,
           color: config.colorFor[c.walletId] || '#d51f26',
         }));
-        self.wallets = lodash.sortBy(ret, 'name');
+        self.wallets = utilityService.sortWalletsByName(ret);
       };
 
       self.setWallets();

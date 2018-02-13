@@ -8,9 +8,11 @@
   EditContactController.$inject = ['$stateParams', 'addressbookService', '$state'];
 
   function EditContactController($stateParams, addressbookService, $state) {
+    const MAX_LENGTH_OF_DESCRIPTION = 500;
     const contact = this;
     contact.backParams = { address: $stateParams.address };
     let contactData = {};
+    contact.maxLengthOfContact = MAX_LENGTH_OF_DESCRIPTION;
 
     contact.update = () => {
       contactData.first_name = contact.first_name;
@@ -30,6 +32,9 @@
         contact[key] = data[key] || '';
         return true;
       });
+      contact.description = contact.description || '';
+      const descriptionLength = contact.description.length;
+      contact.maxLengthOfContact = MAX_LENGTH_OF_DESCRIPTION < descriptionLength ? descriptionLength : MAX_LENGTH_OF_DESCRIPTION;
     });
   }
 })();

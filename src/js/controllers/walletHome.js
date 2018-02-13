@@ -208,7 +208,6 @@
           });
 
           return { fullName, address };
-          // return { fullName };
         };
 
         $scope.transactionStatus = (transaction) => {
@@ -291,7 +290,15 @@
                   $scope.error = err;
                   return;
                 }
-                $scope.list = ab;
+                const sortedContactArray = lodash.sortBy(ab, (contact) => {
+                  const favoriteCharacter = contact.favorite === true ? '!' : '';
+                  const fullName = `${contact.first_name}${contact.last_name}`.toUpperCase();
+                  return `${favoriteCharacter}${fullName}`;
+                });
+                $scope.list = {};
+                lodash.forEach(sortedContactArray, (contact) => {
+                  $scope.list[contact.address] = contact;
+                });
               });
             };
 
@@ -542,14 +549,6 @@
               },
               enumerable: true,
               configurable: true,
-            });
-
-            $scope.$watch('_customAmount', (newValue, oldValue) => {
-              if (typeof newValue !== 'undefined') {
-                if (newValue.length > 12) {
-                  $scope._customAmount.alias = oldValue;
-                }
-              }
             });
 
             $scope.submitForm = function (form) {
@@ -809,7 +808,7 @@
 
           indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
           $timeout(() => {
-            profileService.requestTouchid((err) => {
+            profileService.requestTouchid(null, (err) => {
               if (err) {
                 profileService.lockFC();
                 indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
