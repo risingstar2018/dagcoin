@@ -3,8 +3,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers')
-    .controller('indexController',
+  angular.module('copayApp.controllers').controller('indexController',
       function ($rootScope,
                 $scope,
                 $log,
@@ -13,6 +12,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 $interval,
                 lodash,
                 go,
+                fingerprintService,
                 profileService,
                 configService,
                 isCordova,
@@ -1631,19 +1631,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.setTab(tab, reset);
         });
 
-        $rootScope.$on('Local/RequestTouchid', (event, cb) => {
-          window.plugins.touchid.verifyFingerprint(
-            gettextCatalog.getString('Scan your fingerprint please'),
-            (msg) => {
-              $log.debug('Scan Finished. Ok', msg);
-              // OK
-              cb();
-            },
-            (msg) => {
-              // ERROR
-              $log.debug('Invalid Touch ID', msg);
-              cb(gettextCatalog.getString('Invalid Touch ID'));
-            });
+        $rootScope.$on('Local/RequestTouchid', (event, client, cb) => {
+          fingerprintService.check(client, cb);
         });
 
         $rootScope.$on('Local/ShowAlert', (event, msg, msgIcon, cb) => {

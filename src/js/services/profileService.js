@@ -2,8 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
-  .factory('profileService', ($rootScope,
+  angular.module('copayApp.services').factory('profileService', ($rootScope,
                               $location,
                               $timeout,
                               $filter,
@@ -12,6 +11,7 @@
                               storageService,
                               bwcService,
                               configService,
+                              fingerprintService,
                               pushNotificationsService,
                               isCordova,
                               gettext,
@@ -129,6 +129,22 @@
       });
     }
 
+    function unlockWalletWithFingerprintAndInitDevice() {
+      breadcrumbs.add('unlockWalletWithFingerprintAndInitDevice');
+      const removeListener = $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
+        removeListener();
+        breadcrumbs.add('unlockWalletWithFingerprintAndInitDevice BalanceUpdated');
+        root.insistUnlockWithFingerprintFC(() => {
+          breadcrumbs.add('unlockWalletWithFingerprintAndInitDevice unlocked');
+          console.log(`unlocked: ${root.focusedClient.credentials.walletId}`);
+          const config = configService.getSync();
+          root.focusedClient.initDeviceProperties(
+            root.focusedClient.credentials.xPrivKey, root.profile.my_device_address, config.hub, config.deviceName);
+          $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', ab);
+        });
+      });
+    }
+
     root.bindProfile = function (profile, cb) {
       breadcrumbs.add('bindProfile');
       root.profile = profile;
@@ -147,17 +163,22 @@
             require('byteballcore/wallet.js');
             const device = require('byteballcore/device.js');
             const config = configService.getSync();
+            config.touchIdFor = config.touchIdFor || {};
             const firstWc = root.walletClients[lodash.keys(root.walletClients)[0]];
             if (root.profile.xPrivKeyEncrypted) {
               console.log('priv key is encrypted, will wait for UI and request password');
               // assuming bindProfile is called on encrypted keys only at program startup
               unlockWalletAndInitDevice();
               device.setDeviceAddress(root.profile.my_device_address);
+            } else if (config.touchIdFor[root.focusedClient.credentials.walletId]) {
+              unlockWalletWithFingerprintAndInitDevice();
+              device.setDeviceAddress(root.profile.my_device_address);
             } else if (root.profile.xPrivKey) {
               root.focusedClient.initDeviceProperties(profile.xPrivKey, root.profile.my_device_address, config.hub, config.deviceName);
             } else {
               throw Error('neither xPrivKey nor xPrivKeyEncrypted');
             }
+
             // var tempDeviceKey = device.genPrivKey();
             // saveTempKeys(tempDeviceKey, null, function(){});
             const tempDeviceKey = Buffer.from(profile.tempDeviceKey, 'base64');
@@ -659,6 +680,17 @@
       });
     };
 
+    root.insistUnlockWithFingerprintFC = function (cb) {
+      root.requestTouchid(null, (err) => {
+        if (!err) {
+          return cb();
+        }
+        return $timeout(() => {
+          root.insistUnlockWithFingerprintFC(cb);
+        }, 200);
+      });
+    };
+
     // continue to request password until the correct password is entered
     root.insistUnlockFC = function (insistUnlockFCError, cb) {
       root.unlockFC(insistUnlockFCError, (err) => {
@@ -688,14 +720,9 @@
     };
 
 
-    root.requestTouchid = function (cb) {
-      const fc = root.focusedClient;
-      const config = configService.getSync();
-      config.touchIdFor = config.touchIdFor || {};
-      if (window.touchidAvailable && config.touchIdFor[fc.credentials.walletId]) {
-        return $rootScope.$emit('Local/RequestTouchid', cb);
-      }
-      return cb();
+    root.requestTouchid = function (client, cb) {
+      const fc = client || root.focusedClient;
+      return fingerprintService.check(fc, cb);
     };
 
     root.setSingleAddressFlag = function (newValue) {

@@ -1852,3 +1852,8 @@ msgstr ""
 #: edit_contact.template.html:20
 msgid "E-mail not valid"
 msgstr ""
+
+#: new_contact.template.html:45
+#: edit_contact.template.html:36
+msgid "Field is too long"
+msgstr ""

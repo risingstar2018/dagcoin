@@ -139,6 +139,9 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-touch-id && cordova prepare
 	checkOK
 
+	cordova plugin add cordova-plugin-android-fingerprint-auth
+	checkOK
+
 	cordova plugin add cordova-plugin-transport-security
 	checkOK
 
@@ -259,5 +262,3 @@ if [ $CURRENT_OS == "WP8" ]; then
 		checkOK
 	fi
 fi
-
-

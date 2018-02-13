@@ -252,7 +252,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             return;
           }
 
-          profileService.requestTouchid((err) => {
+          profileService.requestTouchid(null, (err) => {
             if (err) {
               profileService.lockFC();
               $scopeModal.error = err;
@@ -587,7 +587,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             return;
           }
 
-          profileService.requestTouchid((err) => {
+          profileService.requestTouchid(null, (err) => {
             if (err) {
               profileService.lockFC();
               $scopeModal.error = err;

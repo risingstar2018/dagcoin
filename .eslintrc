@@ -11,6 +11,7 @@ globals:
   Profile: true
   LocalFileSystem: true
   FastClick: true
+  FingerprintAuth: true
 extends:
   - airbnb-base
 rules:
