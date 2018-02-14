@@ -234,16 +234,11 @@
     return {
       require: 'ngModel',
       link: (scope, element, attrs, ctrl) => {
-        element.bind("input", function (a, b, c) {
-          // ,+-eE characters are disallowed
-          debugger;
-          alert(a);
-          /*
-          alert(`${event.keyCode} ${event.which}`);
+        element.bind("keypress", function (event) {
+          // ,+-eE characters are disallowed, (not working in android, always returning 229, maybe another code must be get from event!)
           if(event.which === 43 || event.which === 44 || event.which === 45 || event.which === 69 || event.which === 101) {
             event.preventDefault();
           }
-          */
         });
         const normalizeAmount = function (inputValue) {
           if (inputValue === undefined || inputValue === null) {
