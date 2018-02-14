@@ -94,6 +94,7 @@ angular.module('copayApp.services').factory('fingerprintService', ($log, gettext
       if (_isAvailable === 'IOS') { return requestTouchId(cb); }
       return requestFinger(cb);
     }
+    return cb();
   };
 
   return root;

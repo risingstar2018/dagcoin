@@ -962,7 +962,6 @@
                         indexScope.updateHistory((success) => {
                           if (success) {
                             $rootScope.$emit('Local/SetTab', 'walletHome');
-                            console.error('opening tx modal from history');
                             self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
                           } else {
                             console.error('updateTxHistory not executed');
