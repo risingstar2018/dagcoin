@@ -5,33 +5,37 @@
     .module('copayApp.controllers')
     .controller('ContactsController', ContactsController);
 
-  ContactsController.$inject = ['addressbookService'];
+  ContactsController.$inject = ['addressbookService', '$timeout'];
 
-  function ContactsController(addressbookService) {
+  function ContactsController(addressbookService, $timeout) {
     const contacts = this;
-
-    contacts.clearFilter = () => {
-      contacts.search = '';
-    };
 
     contacts.toggleFavorite = (contact) => {
       contact.favorite = !contact.favorite;
-
-      addressbookService.update(contact, (err) => {
-        if (err) {
-          contact.favorite = !contact.favorite;
-          console.error(err);
-        }
-
-        if (contact.favorite) {
+      addressbookService.update(contact, (error, record) => {
+        if (record.favorite) {
           contacts.favoriteListTotal += 1;
         } else {
           contacts.favoriteListTotal -= 1;
         }
-
         loadList();
       });
     };
+
+    contacts.activeTabIndex = 0;
+    contacts.swiper = {};
+
+    contacts.onReadySwiper = (swiper) => {
+      contacts.swiper = swiper;
+
+      swiper.on('slideChangeStart', () => {
+        $timeout(() => {
+          contacts.activeTabIndex = swiper.activeIndex;
+        }, 0);
+      });
+    };
+
+    contacts.activeTab = index => contacts.activeTabIndex === index;
 
     function loadList() {
       contacts.list = {};
@@ -39,7 +43,9 @@
       contacts.favoriteList = {};
       contacts.favoriteListTotal = 0;
 
-      addressbookService.list((err, list) => {
+      addressbookService.list((list) => {
+        console.log(list);
+
         function hashSort(src) {
           const keys = Object.keys(src);
           const target = {};

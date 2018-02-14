@@ -4,13 +4,13 @@
 </dag-nav-bar>
 
 <div class="content" ng-scrollbars>
+  <div class="contact_form">
     <form name="newContact" ng-submit="contact.create()" novalidate>
-      <div class="contact_form">
         <div class="input-wrap">
           <label class="required" for="address">{{ 'Wallet address' | translate}}</label>
           <input id="address" class="animated"
                  ng-class="{'shake error' : (newContact.address.$touched && newContact.address.$invalid || contact.address_error)}"
-                 valid-address type="text" ng-model="contact.address" name="address" required>
+                 valid-address type="text" ng-model="contact.data.address" name="address" required>
           <div class="has-error" ng-if="contact.address_error">{{contact.address_error}}</div>
         </div>
 
@@ -18,12 +18,12 @@
           <label class="required" for="first_name">{{ 'First name' | translate}}</label>
           <input id="first_name" class="animated"
                  ng-class="{'shake error' : newContact.first_name.$touched && newContact.first_name.$invalid}"
-                 ng-maxlength="20" type="text" ng-model="contact.first_name" name="first_name" required>
+                 ng-maxlength="20" type="text" ng-model="contact.data.first_name" name="first_name" required>
         </div>
 
         <div class="input-wrap">
           <label for="last_name">{{ 'Last name' | translate}}</label>
-          <input id="last_name" type="text" ng-model="contact.last_name" name="last_name">
+          <input id="last_name" type="text" ng-model="contact.data.last_name" name="last_name">
         </div>
 
         <div class="input-wrap">
@@ -37,7 +37,7 @@
         </div>
         <div class="input-wrap">
           <label for="description">{{ 'Description' | translate}}</label>
-          <textarea name="description" id="description" ng-model="contact.description"
+          <textarea name="description" id="description" ng-model="contact.data.description"
                     cols="30" rows="3" ng-maxlength="500"
                     ng-class="{'shake error' : newContact.description.$touched && newContact.description.$invalid}">
           </textarea>
@@ -45,7 +45,6 @@
             Field is too long
           </div>
         </div>
-      </div>
 
       <div class="contact_form_button_div">
         <button class="btn btn_red btn_red-full" ng-disabled="newContact.$invalid" type="submit">

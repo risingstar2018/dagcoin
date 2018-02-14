@@ -1005,6 +1005,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         this.csvHistory = function () {
           const CSV_CONTENT_ID = '__csv_content';
+
           function setCvsContent(data) {
             const csvElement = document.getElementById(CSV_CONTENT_ID);
             if (csvElement != null) {
@@ -1017,7 +1018,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           function saveFile(name, data) {
             const chooser = document.querySelector(name);
             setCvsContent(data);
-            chooser.removeEventListener('change', () => { });
+            chooser.removeEventListener('change', () => {
+            });
             chooser.addEventListener('change', function (evt) {
               const fs = require('fs');
               const csvElement = document.getElementById(CSV_CONTENT_ID);
@@ -1210,7 +1212,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             if (lodash.isFunction(cb)) {
               try {
                 cb(false);
-              } catch (e) { console.error(e); }
+              } catch (e) {
+                console.error(e);
+              }
             }
             return;
           }
@@ -1230,12 +1234,14 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 self.txHistoryError = true;
               }
 
-               $rootScope.$emit('Local/UpdateHistoryEnd');
+              $rootScope.$emit('Local/UpdateHistoryEnd');
               $rootScope.$apply();
               if (lodash.isFunction(cb)) {
                 try {
                   cb(lodash.isEmpty(err));
-                } catch (e) { console.error(e); }
+                } catch (e) {
+                  console.error(e);
+                }
               }
             });
           });
@@ -1266,6 +1272,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         self.showPopup = function (msg, msgIcon, cb) {
           $log.warn(`Showing ${msgIcon} popup:${msg}`);
+
+          if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
+            return false;
+          }
+
           self.showAlert = {
             msg: msg.toString(),
             msg_icon: msgIcon,
@@ -1386,11 +1397,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             return;
           }
 
-          addressbookService.list((err, ab) => {
-            if (err) {
-              $log.error('Error getting the addressbook');
-              return;
-            }
+          addressbookService.list((ab) => {
             self.addressbook = ab;
           });
         };
@@ -1515,9 +1522,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           go.walletHome();
         });
 
-      $rootScope.$on('Local/InitialRecoveryInProgress', () => {
-        self.setOngoingProcess('recoveringFromSeed', true);
-      });
+        $rootScope.$on('Local/InitialRecoveryInProgress', () => {
+          self.setOngoingProcess('recoveringFromSeed', true);
+        });
 
 //  self.debouncedUpdate = lodash.throttle(function() {
 //    self.updateAll({

@@ -184,17 +184,20 @@
         storage.remove('pushToken', cb);
       };
 
+      root.accessor = (key, value) => (value ? root.set(key, value) : root.get(key));
+
+      root.set = (key, value, cb) => storage.set(key, value, () => !!root.get(key, cb));
+
       root.get = (key, cb) => {
-        storage.get(key, cb);
+        storage.get(key, (err, value) => {
+          if (err) {
+            return cb(err);
+          }
+          return cb(null, value);
+        });
       };
 
-      root.set = (key, value, cb) => {
-        storage.set(key, value, cb);
-      };
-
-      root.remove = (key, cb) => {
-        storage.remove(key, cb);
-      };
+      root.remove = key => storage.remove(key, () => !root.get(key));
 
       return root;
     });

@@ -3,7 +3,7 @@
 <div class="content preferences" ng-controller="preferencesAbout as about">
   <h4 translate>Release Information</h4>
   <div ng-controller="versionController as v">
-    <ul>
+    <ul class="preferences_links">
       <li>
         <div translate>Version</div>
         <div class="value">v{{v.version}} Beta</div>
@@ -13,11 +13,11 @@
 
   <h4></h4>
 
-  <ul>
-    <li ui-sref="disclaimer" dag-right-icon="chevron-thin-right">
+  <ul class="preferences_links">
+    <li dag-state-transition="slide-left" ui-sref="disclaimer" dag-right-icon="chevron-thin-right">
       <div translate>Terms of Use</div>
     </li>
-    <li ui-sref="logs" dag-right-icon="chevron-thin-right">
+    <li dag-state-transition="slide-left" ui-sref="logs" dag-right-icon="chevron-thin-right">
       <div translate>Session log</div>
     </li>
   </ul>

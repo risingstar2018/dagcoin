@@ -16,7 +16,7 @@
         correspondent.hub = $scope.hub;
         const device = require('byteballcore/device.js');
         device.updateCorrespondentProps(correspondent, () => {
-          go.path('correspondentDevices.correspondentDevice');
+          go.path('correspondentDevice');
         });
       };
 
@@ -27,11 +27,11 @@
 
           $scopeModal.ok = function () {
             $modalInstance.close(true);
-            go.path('correspondentDevices.correspondentDevice');
+            go.path('correspondentDevice');
           };
           $scopeModal.cancel = function () {
             $modalInstance.dismiss('cancel');
-            go.path('correspondentDevices.editCorrespondentDevice');
+            go.path('editCorrespondentDevice');
           };
         };
 

@@ -85,7 +85,7 @@
         if (deviceAddress === 'new') {
           $rootScope.goBackState = 'create';
           self.multisigSelected = false;
-          go.path('correspondentDevices.addCorrespondentDevice');
+          go.path('addCorrespondentDevice');
         }
       };
 

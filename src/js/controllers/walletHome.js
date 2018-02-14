@@ -153,8 +153,6 @@
           eventBus.removeListener('new_wallet_address', onNewWalletAddress);
         });
 
-        // $rootScope.$digest();
-
         // const accept_msg = gettextCatalog.getString('Accept');
         // const cancel_msg = gettextCatalog.getString('Cancel');
         // const confirm_msg = gettextCatalog.getString('Confirm');
@@ -184,28 +182,17 @@
           return value;
         };
 
-        addressbookService.favorites((err, favorites) => {
-          $scope.favorite_contacts = favorites;
-        });
-
-        $scope.transferToFavorite = (contact) => {
-          $rootScope.sendParams = $rootScope.sendParams || {};
-          $rootScope.sendParams.address = contact.address;
-          $rootScope.$emit('Local/SetTab', 'send');
-        };
-
         self.transactionAddress = (address) => {
           if (!address) {
             return { fullName: gettextCatalog.getString('Incoming transaction') };
           }
 
           let fullName = address;
+          const contact = addressbookService.getContact(address);
 
-          addressbookService.getContact(address, (err, contact) => {
-            if (!err && contact) {
-              fullName = `${contact.first_name} ${contact.last_name || ''}`;
-            }
-          });
+          if (contact) {
+            fullName = `${contact.first_name} ${contact.last_name || ''}`;
+          }
 
           return { fullName, address };
         };
@@ -230,8 +217,7 @@
 
           const ModalInstanceCtrl = function ($scope, $modalInstance) {
             $scope.wallets = wallets;
-            $scope.editAddressbook = false;
-            $scope.addAddressbookEntry = false;
+            $scope.isMultiWallet = wallets.length > 0;
             $scope.selectedAddressbook = {};
             $scope.newAddress = address;
             $scope.addressbook = {
@@ -240,56 +226,19 @@
             };
             $scope.color = fc.backgroundColor;
             $scope.bAllowAddressbook = self.canSendExternalPayment();
-
-            $scope.beforeQrCodeScann = () => {
-              $scope.error = null;
-              $scope.addAddressbookEntry = true;
-              $scope.editAddressbook = false;
-            };
-
-            $scope.onQrCodeScanned = (data, addressbookForm) => {
-              $timeout(() => {
-                const form = addressbookForm;
-                if (data && form) {
-                  const scannedCode = data.replace(`${self.protocol}:`, '');
-                  form.address.$setViewValue(scannedCode);
-                  form.address.$isValid = true;
-                  form.address.$render();
-                }
-                $scope.$digest();
-              }, 100);
-            };
+            $scope.selectedWalletsOpt = !!(wallets[0] || !$scope.bAllowAddressbook);
 
             $scope.selectAddressbook = function (addr) {
               $modalInstance.close(addr);
             };
 
-            $scope.toggleEditAddressbook = function () {
-              $scope.editAddressbook = !$scope.editAddressbook;
-              $scope.selectedAddressbook = {};
-              $scope.addAddressbookEntry = false;
-            };
-
-            $scope.toggleSelectAddressbook = function (addr) {
-              $scope.selectedAddressbook[addr] = !$scope.selectedAddressbook[addr];
-            };
-
-            $scope.toggleAddAddressbookEntry = function () {
-              $scope.error = null;
-              $scope.addressbook = {
-                address: ($scope.newAddress || ''),
-                label: '',
-              };
-              $scope.addAddressbookEntry = !$scope.addAddressbookEntry;
+            $scope.setWalletsOpt = function () {
+              $scope.selectedWalletsOpt = !$scope.selectedWalletsOpt;
             };
 
             $scope.listEntries = function () {
               $scope.error = null;
-              addressbookService.list((err, ab) => {
-                if (err) {
-                  $scope.error = err;
-                  return;
-                }
+              addressbookService.list((ab) => {
                 const sortedContactArray = lodash.sortBy(ab, (contact) => {
                   const favoriteCharacter = contact.favorite === true ? '!' : '';
                   const fullName = `${contact.first_name}${contact.last_name}`.toUpperCase();
@@ -308,50 +257,13 @@
               }
             });
 
-            $scope.add = function (addressbook) {
-              $scope.error = null;
-              $timeout(() => {
-                addressbookService.add(addressbook, (err, ab) => {
-                  if (err) {
-                    $scope.error = err;
-                    return;
-                  }
-                  $rootScope.$emit('Local/AddressbookUpdated', ab);
-                  $scope.list = ab;
-                  $scope.editAddressbook = true;
-                  $scope.toggleEditAddressbook();
-                  $scope.$digest();
-                });
-              }, 100);
-            };
-
-            $scope.remove = function (addr) {
-              $scope.error = null;
-              $timeout(() => {
-                addressbookService.remove(addr, (err, ab) => {
-                  if (err) {
-                    $scope.error = err;
-                    return;
-                  }
-                  $rootScope.$emit('Local/AddressbookUpdated', ab);
-                  $scope.list = ab;
-                  $scope.$digest();
-                });
-              }, 100);
-            };
-
             $scope.cancel = function () {
               breadcrumbs.add('openDestinationAddressModal cancel');
               $modalInstance.dismiss('cancel');
             };
 
             $scope.selectWallet = function (walletId, walletName) {
-              // $scope.gettingAddress = true; // this caused a weird hang under
-              // cordova if used after pulling "..." drop-up menu in chat
               $scope.selectedWalletName = walletName;
-              // $timeout(function() { // seems useless
-              //  $scope.$apply();
-              // });
               addressService.getAddress(walletId, false, (err, addr) => {
                 $scope.gettingAddress = false;
 

@@ -1,4 +1,4 @@
-<div ng-controller="disclaimerController" ng-init="init()" style="height:100%;">
+<div ng-init="init()" style="height:100%;" ng-scrollbars>
   <dag-nav-bar ng-if="agreed && index.hasProfile" title="{{'Terms of Use' | translate}}" go-back="about" invert></dag-nav-bar>
   <div class="onGoingProcess" ng-show="loading">
     <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">

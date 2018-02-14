@@ -18,20 +18,20 @@
      */
     .directive('dagTab', dagTab);
 
-  dagTabset.$inject = ['$rootScope'];
+  dagTabset.$inject = [];
 
-  function dagTabset($rootScope) {
+  function dagTabset() {
     return {
       restrict: 'E',
       transclude: true,
+      replace: true,
       scope: {},
       templateUrl: 'directives/dagTabs/dagTabs.template.html',
       controllerAs: 'tabset',
-      controller($scope, $element) {
+      controller() {
         const self = this;
         self.tabs = [];
         self.activeTab = 0;
-        self.slider_width = 50;
 
         self.addTab = (tab) => {
           self.tabs.push(tab);
@@ -39,25 +39,6 @@
           if (self.tabs.length === 1) {
             tab.active = true;
           }
-
-          self.slider_width = ($element[0].getElementsByClassName('dag_tabs')[0].clientWidth / self.tabs.length);
-        };
-
-        function moveSlide(index) {
-          if (!$rootScope.no_animation) {
-            TweenMax.to($element[0].getElementsByClassName('dag_tabs_slider')[0], 0.3, {
-              ease: Expo.easeOut,
-              x: (self.slider_width * index)
-            });
-          }
-        }
-
-        self.restoreSlide = () => {
-          moveSlide(self.activeTab);
-        };
-
-        self.moveSlide = (index) => {
-          moveSlide(index);
         };
 
         self.select = (selectedTab, index) => {
@@ -65,17 +46,13 @@
             return false;
           }
 
-          self.tabs = self.tabs.map((tab) => {
-            tab.active = false;
+          self.tabs = self.tabs.map((tab, i) => {
+            tab.active = (i === index);
             return tab;
           });
 
-          moveSlide(index);
-
           self.activeTab = index;
-
           selectedTab.active = true;
-
           return true;
         };
       }
@@ -88,6 +65,7 @@
     return {
       restrict: 'E',
       transclude: true,
+      replace: true,
       template: '<div class="dag_tabs_tabpanel" ng-show="active" ng-transclude></div>',
       require: '^dagTabset',
       scope: {

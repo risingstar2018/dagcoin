@@ -9,12 +9,7 @@
 
   function ContactController(addressbookService, $stateParams, ngDialog) {
     const contact = this;
-    addressbookService.getContact($stateParams.address, (err, data) => {
-      Object.keys(data).map((key) => {
-        contact[key] = data[key];
-        return true;
-      });
-    });
+    contact.data = addressbookService.getContact($stateParams.address) || {};
 
     contact.editContact = () => {
       ngDialog.open({

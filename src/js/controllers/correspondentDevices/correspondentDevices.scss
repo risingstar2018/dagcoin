@@ -1,0 +1,16 @@
+.chats{
+  padding: 30px;
+
+  .correspondentList{
+    margin-bottom: 20px;
+
+    li{
+      margin-bottom: 30px;
+      position: relative;
+
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+  }
+}

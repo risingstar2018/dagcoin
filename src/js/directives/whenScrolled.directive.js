@@ -12,15 +12,13 @@
 
       ScrollPosition.prototype.restore = function () {
         if (this.readyFor === 'up') {
-          this.node.scrollTop = this.node.scrollHeight
-            - this.previousScrollHeightMinusTop;
+          this.node.scrollTop = this.node.scrollHeight - this.previousScrollHeightMinusTop;
         }
       };
 
       ScrollPosition.prototype.prepareFor = function (direction) {
         this.readyFor = direction || 'up';
-        this.previousScrollHeightMinusTop = this.node.scrollHeight
-          - this.node.scrollTop;
+        this.previousScrollHeightMinusTop = this.node.scrollHeight - this.node.scrollTop;
       };
 
       return function (scope, elm, attr) {

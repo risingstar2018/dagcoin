@@ -151,8 +151,9 @@
           views: {
             main: {
               templateUrl: 'views/disclaimer.html',
-            },
-          },
+              controller: 'disclaimerController'
+            }
+          }
         })
         .state('walletHome', {
           url: '/',
@@ -233,6 +234,7 @@
           views: {
             main: {
               templateUrl: 'views/preferences.html',
+              controller: 'preferencesController as preferences'
             },
           },
         })
@@ -243,58 +245,62 @@
           deepStateRedirect: true,
           sticky: true,
           views: {
-            chat: {
+            main: {
               templateUrl: 'views/correspondentDevices.html',
               controller: 'correspondentDevicesController'
             },
           },
         })
-        .state('correspondentDevices.correspondentDevice', {
+        .state('correspondentDevice', {
           url: '/correspondentDevice',
           walletShouldBeComplete: false,
           needProfile: true,
           views: {
-            dialog: {
+            main: {
               templateUrl: 'views/correspondentDevice.html',
+              controller: 'correspondentDeviceController'
             },
           },
         })
-        .state('correspondentDevices.editCorrespondentDevice', {
+        .state('editCorrespondentDevice', {
           url: '/editCorrespondentDevice',
           walletShouldBeComplete: false,
           needProfile: true,
           views: {
-            dialog: {
+            main: {
               templateUrl: 'views/editCorrespondentDevice.html',
+              controller: 'editCorrespondentDeviceController'
             },
           },
         })
-        .state('correspondentDevices.addCorrespondentDevice', {
+        .state('addCorrespondentDevice', {
           url: '/addCorrespondentDevice',
           needProfile: true,
           views: {
-            dialog: {
+            main: {
               templateUrl: 'views/addCorrespondentDevice.html',
             },
           },
         })
-        .state('correspondentDevices.inviteCorrespondentDevice', {
+        .state('inviteCorrespondentDevice', {
           url: '/inviteCorrespondentDevice',
           walletShouldBeComplete: false,
           needProfile: true,
           views: {
-            dialog: {
+            main: {
               templateUrl: 'views/inviteCorrespondentDevice.html',
+              controller: 'inviteCorrespondentDeviceController'
             },
           },
         })
-        .state('correspondentDevices.acceptCorrespondentInvitation', {
+        .state('acceptCorrespondentInvitation', {
           url: '/acceptCorrespondentInvitation',
           walletShouldBeComplete: false,
           needProfile: true,
           views: {
-            dialog: {
+            main: {
               templateUrl: 'views/acceptCorrespondentInvitation.html',
+              controller: 'acceptCorrespondentInvitationController'
             },
           },
         })
@@ -325,6 +331,7 @@
           views: {
             main: {
               templateUrl: 'views/preferencesLanguage.html',
+              controller: 'preferencesLanguageController as prefLang'
             },
           },
         })
@@ -447,6 +454,7 @@
           views: {
             main: {
               templateUrl: 'views/preferencesLogs.html',
+              controller: 'preferencesLogs as logs'
             },
           },
         })
@@ -506,6 +514,7 @@
           views: {
             main: {
               templateUrl: 'views/preferencesGlobal.html',
+              controller: 'preferencesGlobalController as prefGlobal'
             },
           },
         })
@@ -537,9 +546,6 @@
         })
         .state('contacts', {
           url: '/contacts',
-          params: {
-            backTo: null
-          },
           needProfile: true,
           views: {
             main: {
@@ -548,22 +554,8 @@
             },
           }
         })
-        .state('contact', {
-          url: '/contact',
-          params: {
-            backTo: 'contacts',
-            address: null
-          },
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'controllers/contacts/contact/contact.template.html',
-              controller: 'ContactController as contact',
-            }
-          }
-        })
         .state('new_contact', {
-          url: '/contact/new',
+          url: '/contacts/new',
           params: {
             backTo: 'contacts'
           },
@@ -575,11 +567,24 @@
             }
           }
         })
-        .state('edit_contact', {
-          url: '/contact/edit',
+        .state('contact', {
+          url: '/contacts/:address',
           params: {
-            backTo: 'contact',
-            address: null
+            backTo: 'contacts'
+          },
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/contacts/contact/contact.template.html',
+              controller: 'ContactController as contact',
+            }
+          }
+        })
+
+        .state('edit_contact', {
+          url: '/contact/:address/edit',
+          params: {
+            backTo: 'contact'
           },
           needProfile: true,
           views: {
@@ -639,10 +644,11 @@
         });
     })
     .run(($rootScope, $state, $stateParams, $log, uriHandler, isCordova, profileService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
-      $rootScope.$state = $state;
-      $rootScope.$stateParams = $stateParams;
-
-      FastClick.attach(document.body);
+      if ('addEventListener' in document) {
+        document.addEventListener('DOMContentLoaded', () => {
+          FastClick.attach(document.body);
+        }, false);
+      }
 
       uxLanguage.init();
 
@@ -672,7 +678,6 @@
       }
 
       $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState) => {
-        $rootScope.params = toParams;
         backButton.menuOpened = false;
         go.swipe();
         if (!profileService.profile && toState.needProfile) {
@@ -710,7 +715,7 @@
           event.preventDefault();
           // Time for the backpane to render
           setTimeout(() => {
-            $state.transitionTo(toState);
+            $state.go(toState);
           }, 50);
         }
       });
