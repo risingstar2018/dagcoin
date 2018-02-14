@@ -1,29 +1,36 @@
 <dag-nav-bar title="{{ 'Address Book' | translate }}">
-  <div class="navbar-container-triggers navbar-container-triggers-right">
-    <a ui-sref="new_contact">
-      <svg-icon name="add"></svg-icon>
-    </a>
-  </div>
+  <a dag-state-transition="slide-left" ui-sref="new_contact">
+    <svg-icon name="add"></svg-icon>
+  </a>
 </dag-nav-bar>
 
 <div class="content contacts" ng-class="{'no_contacts' : !contacts.listTotal}">
   <div ng-if="!contacts.listTotal" class="no_contacts_message">
     <svg-icon name="agenda"></svg-icon>
-    <p>Currently you don't have any contacts in your address book.</p>
-    <p>Press "+" in the right upper corner to add your first contact.</p>
+    <p translate>Currently you don't have any contacts in your address book.</p>
+    <p translate>Press "+" in the right upper corner to add your first contact.</p>
   </div>
-  <dag-tabset ng-if="contacts.listTotal">
-    <dag-tab heading="{{ 'contacts' | translate }}" tab-click="contacts.clearFilter()">
-      <!--<div class="contacts_search_bar">
-        <svg-icon name="search2"></svg-icon>
-        <svg-icon name="cancel" class="clear_icon" ng-click="contacts.clearFilter()"></svg-icon>
-        <input class="contacts_search_bar_input" type="text" name="search" ng-change="contacts.filterList()"
-               ng-model="contacts.search"
-               placeholder="{{ 'Search' | translate}}">
-      </div>-->
 
-      <div class="contacts_list">
-        <div ng-repeat="(letter, list) in contacts.list">
+  <div class="swiper_tabs_menu" ng-if="contacts.listTotal">
+    <ul>
+      <li ng-class="{'active': contacts.activeTab(0)}" ng-click="contacts.swiper.slideTo(0)">
+        <span>{{ 'contacts' | translate }}</span>
+      </li>
+      <li ng-class="{'active': contacts.activeTab(1)}" ng-click="contacts.swiper.slideTo(1)">
+        <span>{{ 'favorites' | translate }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <ks-swiper-container ng-if="contacts.listTotal" pagination-is-active="false"
+                       swiper="swiper"
+                       on-ready="contacts.onReadySwiper(swiper)"
+                       override-parameters="{'slidesPerView': 1, 'spaceBetween': 0, 'centeredSlides': true}">
+
+    <ks-swiper-slide class="swiper-slide">
+
+      <div class="contacts_list" ng-scrollbars>
+        <div class="contacts_list_group" ng-repeat="(letter, list) in contacts.list">
           <h4 class="contacts_list_letter">{{letter}}</h4>
           <table>
             <tbody>
@@ -32,7 +39,6 @@
                 <div class="avatar"></div>
                 <a class="contacts_list_contact_info_full_name" ui-sref="contact({address: '{{contact.address}}'})">{{contact.first_name}}
                   {{contact.last_name}}</a>
-                <div class="contacts_list_contact_info_email">{{contact.email}}</div>
               </td>
               <td class="contacts_list_contact_favorite" ng-click="contacts.toggleFavorite(contact)">
                 <div class="contacts_list_contact_favorite_trigger" ng-class="{'selected' : contact.favorite}">
@@ -45,18 +51,12 @@
           </table>
         </div>
       </div>
-    </dag-tab>
-    <dag-tab heading="{{ 'favorites' | translate }}" tab-click="contacts.clearFilter()">
-      <!--<div class="contacts_search_bar">
-        <svg-icon name="search2"></svg-icon>
-        <svg-icon name="cancel" class="clear_icon" ng-click="contacts.clearFilter()"></svg-icon>
-        <input class="contacts_search_bar_input" type="text" name="search" ng-change="contacts.filterList()"
-               ng-model="contacts.search"
-               placeholder="{{ 'Search' | translate}}">
-      </div>-->
 
-      <div class="contacts_list" ng-if="contacts.favoriteListTotal">
-        <div ng-repeat="(letter, list) in contacts.favoriteList">
+    </ks-swiper-slide>
+    <ks-swiper-slide class="swiper-slide">
+
+      <div class="contacts_list" ng-if="contacts.favoriteListTotal" ng-scrollbars>
+        <div class="contacts_list_group" ng-repeat="(letter, list) in contacts.favoriteList">
           <h4 class="contacts_list_letter">{{letter}}</h4>
           <table>
             <tbody>
@@ -65,7 +65,6 @@
                 <div class="avatar"></div>
                 <a class="contacts_list_contact_info_full_name" ui-sref="contact({address: '{{contact.address}}'})">{{contact.first_name}}
                   {{contact.last_name}}</a>
-                <div class="contacts_list_contact_info_email">{{contact.email}}</div>
               </td>
               <td class="contacts_list_contact_favorite" ng-click="contacts.toggleFavorite(contact)">
                 <div class="contacts_list_contact_favorite_trigger" ng-class="{'selected' : contact.favorite}">
@@ -83,7 +82,8 @@
         <p>You don't have any favorite contacts selected.</p>
         <p>To select a favorite contact press <svg-icon name="star_border"></svg-icon> next to contact's name.</p>
       </div>
-    </dag-tab>
-  </dag-tabset>
+
+    </ks-swiper-slide>
+  </ks-swiper-container>
 
 </div>

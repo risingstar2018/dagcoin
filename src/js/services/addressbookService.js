@@ -16,8 +16,7 @@
       favorites,
       add,
       update,
-      remove,
-      removeAll
+      remove
     };
 
     function addressBookKey() {
@@ -28,28 +27,24 @@
 
     /**
      * Get contact by wallet address
-     * @param addr address of the wallet
-     * @param cb callback
+     * @param address address of the wallet
      * @returns {*}
      */
 
-    function getContact(addr, cb) {
-      list(() => {
-        if (!contacts[addr]) {
-          return cb(false, false);
-        }
-        return cb(false, contacts[addr]);
-      });
+    function getContact(address) {
+      return list(() => (contacts[address] || false));
     }
 
+    /**
+     * Collect object of all existing contacts from the storage service
+     * @param cb Callback function
+     * @returns {*}
+     */
     function list(cb) {
       if (!contacts) {
-        storageService.get(addressBookKey(), (err, ab) => {
-          if (err) {
-            return cb('Could not access storage.', {});
-          }
-          if (ab) {
-            const json = JSON.parse(ab);
+        storageService.get(addressBookKey(), (error, contactList) => {
+          if (contactList) {
+            const json = JSON.parse(contactList);
             contacts = {};
 
             Object.keys(json).map((address) => {
@@ -67,95 +62,56 @@
           } else {
             contacts = {};
           }
-          list(cb);
         });
-      } else {
-        return cb(false, contacts);
       }
+      return cb(contacts);
     }
 
-    function favorites(cb) {
-      list((listError, ab) => {
-        if (!listError) {
-          const favoritesList = [];
+    /**
+     * Filter all existing contacts by their param "favorite = true"
+     * @returns {*}
+     */
+    function favorites() {
+      return list(() => {
+        const favoritesList = [];
 
-          Object.keys(ab).map((address) => {
-            const contact = ab[address];
-            if (contact.favorite) {
-              favoritesList.push(contact);
-            }
-            return true;
-          });
+        Object.keys(contacts).map((address) => {
+          const contact = contacts[address];
+          if (contact.favorite) {
+            favoritesList.push(contact);
+          }
+          return true;
+        });
 
-          return cb(false, favoritesList);
-        }
-
-        return cb(listError, {});
+        return favoritesList;
       });
     }
 
+    /**
+     * Add a new entry to existing contacts
+     * @returns boolean
+     */
     function add(entry, cb) {
-      list((listError, ab) => {
-        if (listError) {
-          return cb(listError);
-        }
-        const addressBook = ab;
-
-        if (addressBook[entry.address]) {
-          return cb('Address already exists');
-        }
-
-        addressBook[entry.address] = entry;
-        return storageService.set(addressBookKey(), JSON.stringify(addressBook), (setAddressbookError) => {
-          if (setAddressbookError) {
-            return cb('Error adding new entry');
-          }
-          return list((err, addressList) => cb(err, addressList));
-        });
+      return list(() => {
+        contacts[entry.address] = entry;
+        storageService.set(addressBookKey(), JSON.stringify(contacts), cb);
       });
     }
 
     function update(entry, cb) {
-      list((listError) => {
-        if (listError) {
-          return cb(listError);
-        }
-
-        contacts[entry.address] = entry;
-        return storageService.set(addressBookKey(), JSON.stringify(contacts), (setAddressbookError) => {
-          if (setAddressbookError) {
-            return cb(`Error updating entry: ${entry.address}`);
-          }
-          return cb(false);
+      return list(() => {
+        Object.keys(entry).map((key) => {
+          contacts[entry.address][key] = entry[key];
+          return true;
         });
+        storageService.set(addressBookKey(), JSON.stringify(contacts), cb);
       });
     }
 
     function remove(addr, cb) {
-      list((err, ab) => {
-        if (err) {
-          return cb(err);
-        }
-        if (!contacts[addr]) {
-          return cb('Entry does not exist');
-        }
+      return list(() => {
         delete contacts[addr];
-        return storageService.set(addressBookKey(), JSON.stringify(ab), (error) => {
-          if (error) {
-            return cb('Error deleting entry');
-          }
-          return list((listError, addressBook) => cb(listError, addressBook));
-        });
-      });
-    }
-
-    function removeAll(cb) {
-      contacts = {};
-      storageService.remove(addressBookKey(), (err) => {
-        if (err) {
-          return cb('Error deleting addressbook');
-        }
-        return cb();
+        storageService.set(addressBookKey(), JSON.stringify(contacts), cb);
       });
     }
   }

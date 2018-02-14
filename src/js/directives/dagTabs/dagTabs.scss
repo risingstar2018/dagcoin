@@ -5,7 +5,7 @@
   .dag_tabs_list {
     position: relative;
 
-    .dag_tab{
+    .dag_tab {
       display: block;
     }
 
@@ -22,9 +22,9 @@
     > ul {
       display: flex;
       list-style-type: none;
-      border-bottom: 1px solid #ddd;
       margin: 0;
-      padding: 0;
+      padding: 0 15px;
+      border-bottom: 1px solid #eee;
     }
 
     .dag_tabs_list_link {
@@ -44,21 +44,35 @@
       &.active {
         a {
           opacity: 1;
+          border-bottom: 2px solid $main_color;
         }
       }
     }
   }
 
-  .dag_tabs_tabpanel{
+  .dag_tabs_tabpanel {
     padding: 15px;
     position: relative;
   }
-}
 
-body.no_animation {
-  .dag_tabs_list_link {
-    &.active {
-      border-bottom: 2px solid $main_color;
+  &.invert {
+    .dag_tabs_list {
+      > ul {
+        border-bottom: none;
+        @include gradientBackground($main_color, darken($main_color, 5), top, bottom);
+      }
+    }
+
+    .dag_tabs_list_link {
+      a {
+        color: #fff;
+      }
+
+      &.active {
+        a {
+          border-bottom-color: #fff;
+        }
+      }
     }
   }
 }

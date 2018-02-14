@@ -59,22 +59,22 @@
     .contact_info {
       margin-top: 15px;
 
+      .contact_info_key {
+        color: #a8adb3;
+        font-size: 12px;
+        text-transform: capitalize;
+      }
+
+      .contact_info_value {
+        color: #575f69;
+        font-size: 14px;
+      }
+
       > ul {
         > li {
           border-top: 1px solid #eee;
           padding: 10px 0;
           margin: 0 10px;
-
-          > .key {
-            color: #a8adb3;
-            font-size: 12px;
-            text-transform: capitalize;
-          }
-
-          > .value {
-            color: #575f69;
-            font-size: 14px;
-          }
         }
       }
     }

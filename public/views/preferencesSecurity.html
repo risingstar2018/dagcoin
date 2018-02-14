@@ -1,8 +1,8 @@
 <dag-nav-bar title="{{ 'Security' | translate}}" go-back="preferencesGlobal" invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesSecurityController as prefGlobal" ng-init="prefGlobal.init()">
-  <ul ng-hide="index.isPrivKeyExternal">
-    <li ui-sref="backup">
+  <ul class="preferences_links" ng-hide="index.isPrivKeyExternal">
+    <li dag-state-transition="slide-left" ui-sref="backup">
       <div translate>Backup wallet</div>
       <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
@@ -10,7 +10,7 @@
         </span>
       </div>
     </li>
-    <li ui-sref="recovery">
+    <li dag-state-transition="slide-left" ui-sref="recovery">
       <div translate>Recover wallet</div>
     </li>
     <div ng-show="!index.noFocusedWallet && index.canSign">

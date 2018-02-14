@@ -9,6 +9,7 @@
 
   function NewContactController(addressbookService, $state, gettextCatalog) {
     const contact = this;
+    contact.data = {};
 
     contact.onQrCodeScanned = (uri) => {
       contact.address_error = '';
@@ -24,9 +25,8 @@
           }
         },
         ifOk(objRequest) {
-          console.log(`request: ${JSON.stringify(objRequest)}`);
           contact.address_error = '';
-          contact.address = objRequest.address;
+          contact.data.address = objRequest.address;
         },
       });
     };
@@ -34,18 +34,15 @@
     contact.create = () => {
       contact.address_error = '';
 
-      addressbookService.add({
-        first_name: contact.first_name,
-        last_name: contact.last_name,
-        address: contact.address,
-        email: contact.email,
-        description: contact.description
-      }, (err) => {
-        if (!err) {
-          return $state.go('contacts');
+      if (addressbookService.getContact(contact.data.address)) {
+        contact.address_error = gettextCatalog.getString('Wallet address is already assigned to another contact.');
+        return false;
+      }
+      addressbookService.add(contact.data, (error, value) => {
+        const exists = !!value;
+        if (exists) {
+          $state.go('contacts');
         }
-        contact.address_error = err;
-        console.warn(err);
       });
     };
   }
