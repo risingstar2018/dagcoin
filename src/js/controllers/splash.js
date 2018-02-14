@@ -57,10 +57,6 @@
           if (err) {
             throw Error(`failed to write conf.json: ${err}`);
           }
-          const conf = require('byteballcore/conf.js');
-          if (!conf.bLight) {
-            throw Error('Failed to switch to light, please restart the app');
-          }
           if (cb) {
             cb();
           } else {
