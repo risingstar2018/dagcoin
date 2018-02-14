@@ -81,7 +81,6 @@ angular.module('copayApp.services').factory('fingerprintService', ($log, gettext
 
     const config = configService.getSync();
     config.touchIdFor = config.touchIdFor || {};
-
     return config.touchIdFor[client.credentials.walletId];
   };
 
