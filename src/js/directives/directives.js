@@ -234,14 +234,24 @@
     return {
       require: 'ngModel',
       link: (scope, element, attrs, ctrl) => {
+        element.bind("input", function (a, b, c) {
+          // ,+-eE characters are disallowed
+          debugger;
+          alert(a);
+          /*
+          alert(`${event.keyCode} ${event.which}`);
+          if(event.which === 43 || event.which === 44 || event.which === 45 || event.which === 69 || event.which === 101) {
+            event.preventDefault();
+          }
+          */
+        });
         const normalizeAmount = function (inputValue) {
-          let normalized;
           if (inputValue === undefined || inputValue === null) {
             return '';
           }
           const attrMaxLength = attrs['ng-maxlength'];
           const maxLength = attrMaxLength ? parseInt(attrMaxLength, 10) : 16;
-          normalized = utilityService.normalizeAmount(element.val()).substring(0, maxLength);
+          let normalized = utilityService.normalizeAmount(element.val()).substring(0, maxLength);
           if (normalized !== inputValue) {
             if (normalized.indexOf('.') >= 0) {
               normalized = normalized.substring(0, normalized.indexOf('.') + 7);
