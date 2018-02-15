@@ -1179,7 +1179,11 @@
               form.amount.$setViewValue(`${moneyAmount}`);
               form.amount.$isValid = true;
               form.amount.$render();
-            });
+
+              form.address.$setViewValue(to);
+              form.address.$isValid = true;
+              form.address.$render();
+            }, 300);
           } else {
             this.lockAmount = false;
             form.amount.$pristine = true;
