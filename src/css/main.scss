@@ -1,6 +1,5 @@
 @import "variables";
 @import "mobile";
-@import "dagNavBar";
 @import "settings";
 /* Components */
 @import "components/buttons";
@@ -347,12 +346,23 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill, inpu
 .content {
   width: 100%;
   position: relative;
-  overflow: auto;
   flex: 1;
+  z-index: 1;
 
   &.disclaimer {
     top: 0;
     height: 100%;
+  }
+
+  &:before {
+    content: "";
+    position: fixed;
+    background: transparent;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
   }
 }
 
@@ -873,6 +883,10 @@ ul.manage li {
   color: #7a8c9e;
 }
 
+.rotate-180::before {
+  transform: rotate(180deg);
+}
+
 .hidden {
   visibility: hidden;
 }
@@ -1008,8 +1022,8 @@ label {
     }
   }
 
-  &.required{
-    &:after{
+  &.required {
+    &:after {
       content: "*";
       position: relative;
       font-size: 10px;
@@ -1834,19 +1848,19 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     position: relative;
     top: auto;
 
-    &.transactions_details{
+    &.transactions_details {
       background: #efefef;
 
-      .modal-content-header{
+      .modal-content-header {
         padding: 0;
 
-        svg{
+        svg {
           width: 46px;
           height: 46px;
         }
       }
 
-      h4{
+      h4 {
         background: #f9f9f9;
         padding: 10px 10px 30px 15px;
         border-radius: 10px;
@@ -1854,21 +1868,21 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
         border: 1px solid darken(#f9f9f9, 5);
       }
 
-      .modal-content-body{
-        >ul{
+      .modal-content-body {
+        > ul {
           background: #fff;
           padding: 10px;
           border: 1px solid #eee;
           border-radius: 5px;
 
-          li{
+          li {
             padding: 5px 10px 5px 40px;
 
-            svg{
+            svg {
               left: 5px;
             }
 
-            strong{
+            strong {
               font-size: 12px;
               text-transform: uppercase;
             }
@@ -1919,7 +1933,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
             border-bottom: none;
           }
 
-          svg-icon{
+          svg-icon {
             position: absolute;
             left: 0;
             top: 0;
@@ -1930,13 +1944,11 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
               width: 22px;
               height: 22px;
               position: absolute;
-              left:0;
+              left: 0;
               top: 50%;
               margin-top: -11px;
             }
           }
-
-
 
           div {
             &.value {
@@ -2042,7 +2054,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   visibility: visible;
 }
 
-@-webkit-keyframes shake{
+@-webkit-keyframes shake {
   10%, 90% {
     transform: translate3d(-1px, 0, 0);
   }
@@ -2095,8 +2107,8 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     box-shadow: none;
     background: #fff;
     animation-duration: 0.6s;
-    -webkit-animation-timing-function: cubic-bezier(0.36,0.07,0.19,0.97);
-    animation-timing-function: cubic-bezier(0.36,0.07,0.19,0.97);
+    -webkit-animation-timing-function: cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    animation-timing-function: cubic-bezier(0.36, 0.07, 0.19, 0.97);
 
     &.min {
       padding: 4px 10px;
@@ -2211,6 +2223,11 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
+}
+
+.clear {
+  clear: both;
+  display: block;
 }
 
 .clearfix:after {
@@ -2391,13 +2408,6 @@ a.a_none {
 }
 
 #qr-scanner, #address-share {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 50px;
-  width: 50px;
-  z-index: 12;
-
   svg-icon {
     position: absolute;
     top: 50%;
@@ -2577,7 +2587,7 @@ canvas {
       vertical-align: middle;
     }
 
-    .price-separator{
+    .price-separator {
       position: absolute;
       text-indent: -9999px;
     }
@@ -3042,17 +3052,39 @@ section {
   &.right-small {
     left: initial;
   }
-}
 
-.preferences ul.warnings {
-  margin: 20px 0;
-  background-color: transparent;
-  text-align: center;
-}
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 
-.preferences ul.warnings li {
-  border-bottom: none;
-  padding: 0;
+  &:not(.slide-left):not(.slide-right):not(.slide-up):not(.slide-down) {
+    &.ng-leave {
+      display: none;
+    }
+  }
+
+  &.slide-left {
+    &.ng-enter-active {
+      -webkit-animation-name: slideInRight;
+      animation-name: slideInRight;
+    }
+    &.ng-leave-active {
+      -webkit-animation-name: slideOutLeft;
+      animation-name: slideOutLeft;
+    }
+  }
+
+  &.slide-right {
+    &.ng-enter-active {
+      -webkit-animation-name: slideInLeft;
+      animation-name: slideInLeft;
+    }
+    &.ng-leave-active {
+      -webkit-animation-name: slideOutRight;
+      animation-name: slideOutRight;
+    }
+  }
 }
 
 .state_icon svg-icon svg {
@@ -3107,12 +3139,59 @@ p.color_red {
   line-height: 40px;
 }
 
-.mCSB_inside > .mCSB_container {
-  margin-right: 0;
+.mCSB_inside{
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+
+  > .mCSB_container {
+    margin-right: 0;
+  }
+
+  .mCSB_scrollTools_vertical{
+    z-index: 12;
+  }
+
+  .mCSB_buttonDown{
+    background: transparent!important;
+    display: none;
+  }
 }
 
-#mCSB_1_scrollbar_vertical {
-  z-index: 12;
+.swiper_tabs_menu {
+  > ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0 15px;
+    @include gradientBackground($main_color, darken($main_color, 5), top, bottom);
+
+    > li {
+      flex: 1;
+      cursor: pointer;
+
+      span {
+        text-align: center;
+        display: block;
+        padding: 15px 0;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: #fff;
+        opacity: 0.5;
+        border-bottom: 2px solid transparent;
+      }
+
+      &.active {
+        span {
+          opacity: 1;
+          border-bottom: 2px solid #fff;
+        }
+      }
+    }
+  }
 }
 
 @-webkit-keyframes slideOutDown {
@@ -3223,4 +3302,24 @@ p.color_red {
   }
 }
 
+.div-with-top-right-img {
+  position: relative;
+  max-height: 100%;
+  max-width: 100%;
+  width: 100%;
+}
 
+.div-with-top-right-img > .star {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: $gold;
+}
+
+.seed-words {
+  -webkit-user-select: text;
+  background: #efefef;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px dashed #ddd;
+}

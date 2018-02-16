@@ -7,7 +7,7 @@
     ($scope, $timeout, profileService, go, isCordova, correspondentListService, gettextCatalog, nodeWebkit) => {
       function onPaired(peerAddress) {
         correspondentListService.setCurrentCorrespondent(peerAddress, () => {
-          go.path('correspondentDevices.correspondentDevice');
+          go.path('correspondentDevice');
         });
       }
 

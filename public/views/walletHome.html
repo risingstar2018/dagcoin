@@ -2,7 +2,7 @@
   <span translate>Wallet seed not backed up</span>
 </div>
 
-<dag-nav-bar title="{{ 'My Wallet' | translate}}">
+<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}">
   <qr-scanner ng-if="tab === 'send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)">
   </qr-scanner>
@@ -163,18 +163,15 @@
                       <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
                       <div ng-if="transaction.action === 'received'">
                         <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
-                          <span ng-if="home.transactionAddress(address).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
-                          <span ng-if="!home.transactionAddress(address).address">{{home.transactionAddress(address).fullName}}</span>
+                          <span>{{home.transactionAddress(address).fullName}}</span>
                         </div>
                       </div>
                       <div class="transaction_address" ng-if="transaction.action === 'sent'">
-                        <span ng-if="home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
-                        <span ng-if="!home.transactionAddress(transaction.addressTo).address">{{home.transactionAddress(transaction.addressTo).fullName}}</span>
+                        <span>{{home.transactionAddress(transaction.addressTo).fullName}}</span>
                       </div>
                     </div>
                     <div class="transaction_sum">
-                      <div class="transaction_sum">{{transaction.action === 'received' ? '+' :
-                        '-'}}{{formatSum(transaction.amountStr)}}
+                      <div class="transaction_sum">{{transaction.action === 'received' ? '+' : '-'}}{{formatSum(transaction.amountStr)}}
                       </div>
                       <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
                     </div>
@@ -304,8 +301,8 @@
                   ng-minlength="1" ng-maxlength="16" ng-model="_amount"
                   ng-required="!home.bSendAll"
                   autocomplete="off" ng-focus="home.formFocus('amount')"
-                  ng-blur="home.formFocus(false)">
-
+                  ng-blur="home.formFocus(false)"
+                  normalize-amount>
 
                 <svg class="icon icon-d">
                   <use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>

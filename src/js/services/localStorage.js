@@ -21,13 +21,13 @@
     /**
      * Same as setItem, but fails if an item already exists
      */
-    root.create = function (name, value, callback) {
+    root.create = function (name, value, cb) {
       root.get(name,
         (err, data) => {
           if (data) {
-            return callback('EXISTS');
+            return cb('EXISTS');
           }
-          return root.set(name, value, callback);
+          return root.set(name, value, cb);
         });
     };
 

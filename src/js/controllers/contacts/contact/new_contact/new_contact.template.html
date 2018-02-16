@@ -6,42 +6,51 @@
 <div class="content" ng-scrollbars>
   <div class="contact_form">
     <form name="newContact" ng-submit="contact.create()" novalidate>
-      <div class="input-wrap">
-        <label class="required" for="address">{{ 'Wallet address' | translate}}</label>
-        <input id="address" class="animated"
-               ng-class="{'shake error' : (newContact.address.$touched && newContact.address.$invalid || contact.address_error)}"
-               valid-address type="text" ng-model="contact.address" name="address" required>
-        <div class="has-error" ng-if="contact.address_error">{{contact.address_error}}</div>
-      </div>
+        <div class="input-wrap">
+          <label class="required" for="address">{{ 'Wallet address' | translate}}</label>
+          <input id="address" class="animated"
+                 ng-class="{'shake error' : (newContact.address.$touched && newContact.address.$invalid || contact.address_error)}"
+                 valid-address type="text" ng-model="contact.data.address" name="address" required>
+          <div class="has-error" ng-if="contact.address_error">{{contact.address_error}}</div>
+        </div>
 
-      <div class="input-wrap">
-        <label class="required" for="first_name">{{ 'First name' | translate}}</label>
-        <input id="first_name" class="animated"
-               ng-class="{'shake error' : newContact.first_name.$touched && newContact.first_name.$invalid}"
-               ng-maxlength="20" type="text" ng-model="contact.first_name" name="first_name" required>
-      </div>
+        <div class="input-wrap">
+          <label class="required" for="first_name">{{ 'First name' | translate}}</label>
+          <input id="first_name" class="animated"
+                 ng-class="{'shake error' : newContact.first_name.$touched && newContact.first_name.$invalid}"
+                 ng-maxlength="20" type="text" ng-model="contact.data.first_name" name="first_name" required>
+        </div>
 
-      <div class="input-wrap">
-        <label for="last_name">{{ 'Last name' | translate}}</label>
-        <input id="last_name" type="text" ng-model="contact.last_name" name="last_name">
-      </div>
+        <div class="input-wrap">
+          <label for="last_name">{{ 'Last name' | translate}}</label>
+          <input id="last_name" type="text" ng-model="contact.data.last_name" name="last_name">
+        </div>
 
-      <div class="input-wrap">
-        <label for="email">{{ 'E-mail' | translate}}</label>
-        <input id="email" type="email"
-               ng-blur="visitedEmail = true"
-               ng-focus="visitedEmail = false"
-               ng-class="{'shake error' : newContact.email.$touched && newContact.email.$invalid && visitedEmail}"
-               ng-model="contact.email" name="email">
-        <div class="has-error" ng-show="newContact.email.$touched && newContact.email.$invalid" translate>E-mail not valid</div>
-      </div>
+        <div class="input-wrap">
+          <label for="email">{{ 'E-mail' | translate}}</label>
+          <input id="email" type="email"
+                 ng-blur="visitedEmail = true"
+                 ng-focus="visitedEmail = false"
+                 ng-class="{'shake error' : newContact.email.$touched && newContact.email.$invalid && visitedEmail}"
+                 ng-model="contact.data.email" name="email">
+          <div class="has-error" ng-show="newContact.email.$touched && newContact.email.$invalid" translate>E-mail not valid</div>
+        </div>
+        <div class="input-wrap">
+          <label for="description">{{ 'Description' | translate}}</label>
+          <textarea name="description" id="description" ng-model="contact.data.description"
+                    cols="30" rows="3" ng-maxlength="500"
+                    ng-class="{'shake error' : newContact.description.$touched && newContact.description.$invalid}">
+          </textarea>
+          <div class="has-error" ng-show="newContact.description.$touched && newContact.description.$invalid" translate>
+            Field is too long
+          </div>
+        </div>
 
-      <div class="input-wrap">
-        <label for="description">{{ 'Description' | translate}}</label>
-        <textarea name="description" id="description" ng-model="contact.description" cols="30" rows="10"></textarea>
+      <div class="contact_form_button_div">
+        <button class="btn btn_red btn_red-full" ng-disabled="newContact.$invalid" type="submit">
+          {{ 'Save' | translate }}
+        </button>
       </div>
-
-      <button class="btn btn_red btn_red-full" ng-disabled="newContact.$invalid" type="submit">{{ 'Save' | translate }}</button>
     </form>
   </div>
 </div>

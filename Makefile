@@ -28,14 +28,13 @@ prepare-package-tn:
 	$(SHELLCMD) devbuilds/prepare-package.sh testnet
 
 ios-prod:
-	cordova/build.sh IOS --clear
-	cd ../byteballbuilds/project-IOS-tn && cordova build ios
-#	open ../byteballbuilds/project-IOS-tn/platforms/ios/Byteball.xcodeproj
+	cordova/build.sh IOS dagcoin --clear live
+	cd ../byteballbuilds/project-IOS && cordova build ios
 
 ios-debug:
-	cordova/build.sh IOS --dbgjs
+	cordova/build.sh IOS dagcoin --dbgjs testnet
 	cd ../byteballbuilds/project-IOS  && cordova build ios
-	open ../byteballbuilds/project-IOS /platforms/ios/Byteball.xcodeproj
+	open ../byteballbuilds/project-IOS/platforms/ios/Dagcoin.xcodeproj
 
 android-prod:
 	cordova/build.sh ANDROID dagcoin --clear live

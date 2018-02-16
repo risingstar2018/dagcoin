@@ -29,21 +29,6 @@
             return '';
           }
 
-          // Regular url
-          if (/^https?:\/\//.test(value)) {
-            ctrl.$setValidity('validAddress', true);
-            return '';
-          }
-
-          // byteball uri
-          const conf = require('byteballcore/conf.js');
-          const re = new RegExp(`^${conf.program}:([A-Z2-7]{32})\b`, 'i');
-          const arrMatches = value.match(re);
-          if (arrMatches) {
-            ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(arrMatches[1]));
-            return '';
-          }
-
           // Regular Address
           ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(value));
           return value;

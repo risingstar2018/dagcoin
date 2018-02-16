@@ -285,6 +285,10 @@ a.missing-copayers {
   font-size: 70%;
   padding: 0.2rem;
 }
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
 
 .sidebar {
   background: #fff;
@@ -699,6 +703,9 @@ to prevent collapsing during animation*/
 
 .reveal-modal-bg {
   display: none !important;
+}
+.reveal-modal.full::-webkit-scrollbar {
+  display: none;
 }
 
 .reveal-modal.full {

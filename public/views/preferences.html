@@ -1,10 +1,9 @@
-<dag-nav-bar title="{{'Wallet Preferences' | translate}}"></dag-nav-bar>
+<dag-nav-bar invert title="{{'Wallet Preferences' | translate}}"></dag-nav-bar>
 
-<div class="content preferences" ng-controller="preferencesController as preferences" ng-init="preferences.init()">
+<div class="content preferences" ng-init="preferences.init()">
 
-  <h4></h4>
-  <ul ng-show="!index.noFocusedWallet">
-    <li dag-right-icon="chevron-thin-right" ui-sref="preferencesAlias">
+  <ul class="preferences_links" ng-show="!index.noFocusedWallet">
+    <li dag-state-transition="slide-left" dag-right-icon="chevron-thin-right" ui-sref="preferencesAlias">
       <div translate>Wallet Alias</div>
       <div class="value">{{index.alias||index.walletName}}</div>
     </li>
@@ -25,21 +24,10 @@
       </div>
       <div translate>Hardware wallet</div>
     </li>
-    <li dag-right-icon="chevron-thin-right" ui-sref="preferencesAdvanced">
+    <li dag-state-transition="slide-left" dag-right-icon="chevron-thin-right" ui-sref="preferencesAdvanced">
       <div translate>Advanced</div>
     </li>
   </ul>
-  <div ng-show="!index.noFocusedWallet && index.canSign && preferences.touchidAvailable">
-    <h4 translate ng-show="index.canSign">
-      Spending Restrictions
-    </h4>
-    <ul class="no-bullet m0">
-      <li ng-show="preferences.touchidAvailable">
-        <switch id="touchid" name="touchid" ng-model="touchid" class="green right"></switch>
-        <div translate>Scan Fingerprint</div>
-      </li>
-    </ul>
-  </div>
   <h4></h4>
 </div>
 <div class="extra-margin-bottom"></div>

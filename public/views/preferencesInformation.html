@@ -2,7 +2,7 @@
 
 <div class="content preferences" ng-scrollbars>
     <h4 translate>Wallet Information</h4>
-    <ul>
+    <ul class="preferences_links">
         <li>
             <div translate>Wallet Name</div>
             <div class="value">{{walletName}}</div>
@@ -38,7 +38,7 @@
         </li>
     </ul>
     <h4 translate>Co-signers</h4>
-    <ul>
+    <ul class="preferences_links">
         <li ng-repeat="copayer in index.copayers">
     <span class="size-12" ng-show="copayer.me">
       <i class="icon-contact size-24 m10r"></i>{{'Me'|translate}} <i class="fi-check m5 right"></i>
@@ -50,7 +50,7 @@
     </ul>
 
     <h4 translate>Extended Public Keys</h4>
-    <ul>
+    <ul class="preferences_links">
         <li ng-repeat="copayer in index.copayers">
             <div>{{copayer.name||'Me'|translate}}</div>
             <div class="value wrapped">
@@ -66,7 +66,7 @@
                 {{'Generate new address' | translate}}
             </button>
         </h4>
-        <ul>
+        <ul class="preferences_links">
             <li ng-repeat="a in addrs">
                 <div class="enable_text_select ellipsis">
                     {{a.address}}
@@ -88,7 +88,7 @@
 
         <div ng-show="hasListOfBalances()">
             <h4 translate>Balance By Address</h4>
-            <ul>
+            <ul class="preferences_links">
                 <li class="line-b p20" ng-repeat="(key, value) in assocListOfBalances">
                     <div class="enable_text_select">
                         {{key}}

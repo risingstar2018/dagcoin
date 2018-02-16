@@ -1,15 +1,16 @@
+/* eslint-disable no-unused-vars */
 (function () {
   'use strict';
 
   const chokidar = require('chokidar');
 
-  /* function triggerReload() {
+  function triggerReload() {
     console.warn('Reloading app...');
 
-    if (location) {
-      location.reload();
+    if (window && window.location) {
+      window.location.reload();
     }
-  } */
+  }
 
   if (window.location.href.indexOf('chrome') > -1) {
     const watcher = chokidar.watch('public', {
@@ -29,7 +30,7 @@
         }
       } else if (!reloading) {
         reloading = true;
-        /* setInterval(triggerReload, 100); */
+        // setInterval(triggerReload, 100);
       }
     });
   }

@@ -8,28 +8,30 @@
   EditContactController.$inject = ['$stateParams', 'addressbookService', '$state'];
 
   function EditContactController($stateParams, addressbookService, $state) {
+    const MAX_LENGTH_OF_DESCRIPTION = 500;
     const contact = this;
+    contact.maxLengthOfDescription = MAX_LENGTH_OF_DESCRIPTION;
+    const contactData = addressbookService.getContact($stateParams.address) || {};
+
+    contact.data = {};
+    Object.keys(contactData).map((key) => {
+      contact.data[key] = contactData[key];
+      return true;
+    });
+
+    // arranges max length of desc in case of user entered description whose length more than MAX_LENGTH_OF_DESCRIPTION
+    const descriptionLength = contact.data.description ? contact.data.description.length : 0;
+    contact.maxLengthOfDescription = MAX_LENGTH_OF_DESCRIPTION < descriptionLength ? descriptionLength : MAX_LENGTH_OF_DESCRIPTION;
     contact.backParams = { address: $stateParams.address };
-    let contactData = {};
 
     contact.update = () => {
-      contactData.first_name = contact.first_name;
-      contactData.last_name = contact.last_name;
-      contactData.email = contact.email;
-      contactData.description = contact.description;
-
-      addressbookService.update(contactData, () => {
-        $state.go('contact', contact.backParams);
+      console.log(contact.data);
+      addressbookService.update(contact.data, (error, record) => {
+        const exists = !!record;
+        if (exists) {
+          $state.go('contact', contact.backParams);
+        }
       });
     };
-
-    contact.address = $stateParams.address;
-    addressbookService.getContact(contact.address, (err, data) => {
-      contactData = data;
-      Object.keys(data).map((key) => {
-        contact[key] = data[key] || '';
-        return true;
-      });
-    });
   }
 })();

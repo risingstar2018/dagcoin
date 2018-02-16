@@ -1,31 +1,34 @@
 @import "../../../css/variables";
 
+$nav_bar_height: 50px;
+
 .navbar-container {
   position: relative;
   z-index: 2;
-  height: 50px;
-  background: $red;
+  height: $nav_bar_height;
+  background: $main_color;
   color: #fff;
 
   .navbar-container-triggers {
     position: absolute;
     z-index: 1;
-    height: 50px;
-    line-height: 50px;
+    height: $nav_bar_height;
+    line-height: $nav_bar_height;
     left: 0;
     top: 0;
-    width: 50px;
+    min-width: 50px;
     text-align: center;
 
-    span{
-      display: block;
+    a, span {
+      color: currentColor;
       height: 100%;
-      width: 100%;
+      width: 50px;
+      display: inline-block;
     }
 
     &.navbar-container-triggers-right {
       left: auto;
-      right: 0
+      right: 0;
     }
   }
 
@@ -33,20 +36,25 @@
     width: 100%;
     padding: 0 50px;
     text-align: center;
-    line-height: 50px;
+    line-height: $nav_bar_height;
     font-weight: 600;
     font-size: 16px;
     text-transform: uppercase;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 
     @media only screen and (max-width: 350px) {
       font-size: 14px;
     }
   }
 
-  .navbar-container-back-trigger svg {
-    width: 16px;
-    height: 16px;
-    margin-top: -8px
+  .navbar-container-back-trigger {
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-top: -8px;
+    }
   }
 
   svg-icon {
@@ -62,27 +70,20 @@
       }
     }
 
-    &.back-button{
-      svg{
+    &.back-button {
+      svg {
         width: 16px;
         height: 16px;
       }
     }
   }
 
-  a {
-    color: currentColor;
-    height: 100%;
-    width: 100%;
-    display: block;
-  }
-
   &.invert {
     background: transparent;
-    color: #d51f26
+    color: $main_color;
   }
 
   &:not(.invert) {
-    text-shadow: 1px 1px 1px #a8191e
+    text-shadow: 1px 1px 1px darken($main_color, 10);
   }
 }

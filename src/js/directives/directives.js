@@ -229,5 +229,39 @@
     restrict: 'E',
     replace: true,
     templateUrl: 'views/includes/available-balance.html',
-  }));
+  }))
+  .directive('normalizeAmount', ['utilityService', function (utilityService) {
+    return {
+      require: 'ngModel',
+      link: (scope, element, attrs, ctrl) => {
+        const normalizeAmount = function (inputValue) {
+          let normalized;
+          if (inputValue === undefined || inputValue === null) {
+            return '';
+          }
+
+          // when amount is set by javascript (not by user action in form, set by barcode scan), element.val() returns ''
+          // So that, below comparison is made
+          let rawValue = element.val();
+          rawValue = rawValue && rawValue !== '' ? rawValue : `${inputValue}`;
+
+          const attrMaxLength = attrs['ng-maxlength'];
+          const maxLength = attrMaxLength ? parseInt(attrMaxLength, 10) : 16;
+          normalized = utilityService.normalizeAmount(rawValue).substring(0, maxLength);
+          if (normalized !== inputValue) {
+            if (normalized.indexOf('.') >= 0) {
+              normalized = normalized.substring(0, normalized.indexOf('.') + 7);
+            }
+            if (normalized.charAt(normalized.length - 1) === '.') {
+              normalized = normalized.substring(0, normalized.length - 2);
+            }
+            ctrl.$setViewValue(normalized);
+            ctrl.$render();
+          }
+          return normalized;
+        };
+        ctrl.$parsers.push(normalizeAmount);
+      }
+    };
+  }]);
 }());

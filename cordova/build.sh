@@ -109,9 +109,6 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-x-toast && cordova prepare
 	checkOK
 
-	#cordova plugin add https://github.com/VersoSolutions/CordovaClipboard
-	#checkOK
-
 	phonegap local plugin add https://github.com/ibnclaudius/CordovaClipboard
 	checkOK
 
@@ -139,6 +136,9 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-touch-id && cordova prepare
 	checkOK
 
+	cordova plugin add cordova-plugin-android-fingerprint-auth
+	checkOK
+
 	cordova plugin add cordova-plugin-transport-security
 	checkOK
 
@@ -151,13 +151,10 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-device-name
 	checkOK
 
+	if [ $CURRENT_OS == "ANDROID" ]; then
 	cordova plugin add https://github.com/phonegap/phonegap-plugin-push
 	checkOK
-
-
-
-	#phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
-	#checkOK
+	fi
 
 	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
 	checkOK
@@ -221,6 +218,8 @@ if [ $CURRENT_OS == "IOS" ]; then
 
 	echo "IOS project!!!"
 
+	cp -R ios $PROJECT/../
+	checkOK
 #  mkdir -p $PROJECT/platforms/ios
 #  checkOK
 #
@@ -259,5 +258,3 @@ if [ $CURRENT_OS == "WP8" ]; then
 		checkOK
 	fi
 fi
-
-
