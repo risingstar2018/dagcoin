@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesDeleteWalletController',
+  angular.module('dagcoin.controllers').controller('preferencesDeleteWalletController',
     function ($scope, $rootScope, $filter, $timeout, $modal, $log, storageService, notification, profileService, isCordova, go, gettextCatalog, animationService, sharedService) {
       this.isCordova = isCordova;
       this.error = null;

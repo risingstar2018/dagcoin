@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('profileService', ($rootScope,
+  angular.module('dagcoin.services').factory('profileService', ($rootScope,
                               $location,
                               $timeout,
                               $filter,

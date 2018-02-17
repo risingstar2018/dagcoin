@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('createController',
+  angular.module('dagcoin.controllers').controller('createController',
     function ($scope,
               $rootScope,
               $location,

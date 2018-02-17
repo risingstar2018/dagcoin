@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('localStorageService', () => {
     const root = {};
     const ls = ((typeof window.localStorage !== 'undefined') ? window.localStorage : null);

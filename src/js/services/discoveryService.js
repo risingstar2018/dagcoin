@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
     .factory('discoveryService', ($q, fileSystemService, promiseService, ENV) => {
       const eventBus = require('byteballcore/event_bus.js');
 

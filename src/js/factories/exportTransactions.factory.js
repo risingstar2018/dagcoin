@@ -4,7 +4,7 @@
   const fs = require('fs');
 
   angular
-    .module('copayApp.services')
+    .module('dagcoin.services')
     .factory('exportTransactions', exportTransactions);
 
   exportTransactions.$inject = ['$q', '$log', 'isCordova', 'nodeWebkit', 'profileService', '$rootScope', 'ENV', '$timeout'];

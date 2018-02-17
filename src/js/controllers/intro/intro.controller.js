@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.controllers')
+    .module('dagcoin.controllers')
     .controller('IntroController', IntroController);
 
   IntroController.$inject = ['$scope', '$timeout'];

@@ -6,7 +6,7 @@
    * @example <dag-transactions-table></dag-transactions-table>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagTransactionsTable', dagTransactionsTable);
 
   dagTransactionsTable.$inject = ['moment', 'exportTransactions', 'isCordova', '$timeout', '$rootScope', 'gettextCatalog', '$q', 'profileService'];

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesGlobalController',
+  angular.module('dagcoin.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $log, $modal, configService, uxLanguage, pushNotificationsService, profileService,
               fundingExchangeProviderService, animationService, changeWalletTypeService, gettextCatalog) {
       const conf = require('byteballcore/conf.js');

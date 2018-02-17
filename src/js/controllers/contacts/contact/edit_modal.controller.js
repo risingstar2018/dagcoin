@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.controllers')
+    .module('dagcoin.controllers')
     .controller('EditContactModalController', EditContactModalController);
 
   EditContactModalController.$inject = ['$scope', '$stateParams', 'addressbookService', '$state'];

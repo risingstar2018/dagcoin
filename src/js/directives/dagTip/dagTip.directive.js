@@ -6,7 +6,7 @@
    * @example <dag-tip heading="Title" body="Text" link="URL|Hash"></dag-tip>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagTip', dagTip);
 
   dagTip.$inject = [];

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('importController',
+  angular.module('dagcoin.controllers').controller('importController',
     function ($scope, $rootScope, $state, $location, $timeout, $log, storageService, fileSystemService, isCordova, isMobile, gettextCatalog) {
       const JSZip = require('jszip');
       const async = require('async');

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('passwordController',
+  angular.module('dagcoin.controllers').controller('passwordController',
     function ($rootScope, $scope, $timeout, profileService, notification, go, gettextCatalog) {
       const self = this;
 

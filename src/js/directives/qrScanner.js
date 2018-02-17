@@ -12,7 +12,7 @@
    * @example <qr-scanner></qr-scanner>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('qrScanner', qrScanner);
 
   qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog'];

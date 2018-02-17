@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('fileStorageService', (lodash, $log) => {
     const root = {};
     let fileSystem;

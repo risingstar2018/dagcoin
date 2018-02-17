@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesLogs',
+  angular.module('dagcoin.controllers').controller('preferencesLogs',
     function (historicLog, gettextCatalog) {
       this.logs = historicLog.get();
 

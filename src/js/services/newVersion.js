@@ -3,7 +3,7 @@
 
   const eventBus = require('byteballcore/event_bus.js');
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('newVersion', ($modal, $timeout, $rootScope, $q, configService) => {
     const root = {};
     root.shown = false;

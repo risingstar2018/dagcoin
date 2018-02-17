@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.controllers')
+    .module('dagcoin.controllers')
     .controller('TransactionsController', TransactionsController);
 
   TransactionsController.$inject = ['$stateParams'];

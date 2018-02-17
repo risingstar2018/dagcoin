@@ -3,7 +3,7 @@
   'use strinct';
 
   const eventBus = require('byteballcore/event_bus.js');
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('go',
     ($window,
      $rootScope,

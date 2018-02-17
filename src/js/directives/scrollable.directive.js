@@ -6,7 +6,7 @@
    * @example <div class="scrollable"></div>
    */
   angular
-      .module('copayApp.directives')
+      .module('dagcoin.directives')
       .directive('scrollable', scrollable);
 
   scrollable.$inject = [];

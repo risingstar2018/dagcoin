@@ -3,7 +3,7 @@
   'use strict';
 
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
 
 
     /**

@@ -1,5 +1,5 @@
 /* global inject */
-angular.module('copayApp.directives', [])
+angular.module('dagcoin.directives', [])
 .value('isCordova', false);
 
 describe('svgIcon directive', () => {
@@ -9,7 +9,7 @@ describe('svgIcon directive', () => {
   const svgName = 'menu';
 
   beforeEach(module('templates'));
-  beforeEach(module('copayApp.directives'));
+  beforeEach(module('dagcoin.directives'));
 
   beforeEach(inject((_$controller_, _$httpBackend_) => {
     $httpBackend = _$httpBackend_;

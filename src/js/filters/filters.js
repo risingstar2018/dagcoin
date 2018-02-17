@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.filters', [])
+  angular.module('dagcoin.filters', [])
   .filter('amTimeAgo', ['amMoment',
     function (amMoment) {
       return function (input) {

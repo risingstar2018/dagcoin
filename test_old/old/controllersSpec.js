@@ -30,8 +30,8 @@ describe('Unit: Controllers', () => {
   let scope;
   let server;
 
-  beforeEach(module('copayApp'));
-  beforeEach(module('copayApp.controllers'));
+  beforeEach(module('dagcoin'));
+  beforeEach(module('dagcoin.controllers'));
   beforeEach(module(($provide) => {
     $provide.value('request', {
       get(_, cb) {

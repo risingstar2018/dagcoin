@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').service('addonManager', function (lodash) {
+  angular.module('dagcoin.services').service('addonManager', function (lodash) {
     const addons = [];
 
     this.registerAddon = function (addonSpec) {

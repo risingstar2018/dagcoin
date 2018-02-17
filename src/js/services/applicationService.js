@@ -2,7 +2,7 @@
   'use strict';
 
   /* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('applicationService', ($rootScope, $timeout, isCordova, nodeWebkit, go) => {
     const root = {};
 

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesEditWitnessController',
+  angular.module('dagcoin.controllers').controller('preferencesEditWitnessController',
     function ($scope, $timeout, go, witnessListService) {
       const self = this;
       this.witness = witnessListService.currentWitness;

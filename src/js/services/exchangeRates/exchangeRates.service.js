@@ -6,7 +6,7 @@
   const request = require('request');
 
   angular
-    .module('copayApp.services')
+    .module('dagcoin.services')
     .factory('exchangeRates', exchangeRates);
 
   exchangeRates.$inject = ['$http', '$q'];

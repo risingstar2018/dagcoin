@@ -18,7 +18,7 @@
 
 // Setting up route
   angular
-    .module('copayApp')
+    .module('dagcoin')
     .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider, ngDialogProvider) => {
       ScrollBarsProvider.defaults = {
         autoHideScrollbar: true,
@@ -713,10 +713,7 @@
 
         if (!animationService.transitionAnimated(fromState, toState)) {
           event.preventDefault();
-          // Time for the backpane to render
-          setTimeout(() => {
-            $state.go(toState);
-          }, 50);
+          $state.go(toState);
         }
       });
     });

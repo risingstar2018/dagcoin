@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesWitnessesController',
+  angular.module('dagcoin.controllers').controller('preferencesWitnessesController',
     function ($scope, go, witnessListService, autoUpdatingWitnessesList) {
       const self = this;
       this.witnesses = [];

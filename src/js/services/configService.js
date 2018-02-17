@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('configService', (storageService, lodash, $log, isCordova, ENV) => {
+  angular.module('dagcoin.services').factory('configService', (storageService, lodash, $log, isCordova, ENV) => {
     const root = {};
 
     root.colorOpts = [

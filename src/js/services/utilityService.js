@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('utilityService', (lodash) => {
+  angular.module('dagcoin.services').factory('utilityService', (lodash) => {
     const root = {};
     const regexStartWithPunctuationMark = /^[!@#$%^&*()-=_+|;'`:",.<>?']/i;
 

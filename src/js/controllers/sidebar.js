@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('sidebarController',
+  angular.module('dagcoin.controllers').controller('sidebarController',
     function ($rootScope, $timeout, lodash, profileService, configService, go, isMobile, isCordova, backButton, $state,
               utilityService) {
       const self = this;

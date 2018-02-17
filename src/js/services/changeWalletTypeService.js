@@ -3,7 +3,7 @@
   'use strict';
 
   angular
-    .module('copayApp.services')
+    .module('dagcoin.services')
     .factory('changeWalletTypeService', changeWalletTypeService);
 
   changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova', 'gettextCatalog'];

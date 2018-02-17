@@ -13,5 +13,5 @@
     }
   };
 
-  angular.module('copayApp.services').value('uriHandler', new UriHandler());
+  angular.module('dagcoin.services').value('uriHandler', new UriHandler());
 }());

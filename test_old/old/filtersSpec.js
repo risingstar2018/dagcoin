@@ -3,8 +3,8 @@
 // test/unit/filters/filtersSpec.js
 //
 describe('Angular Filters', () => {
-  beforeEach(angular.mock.module('copayApp'));
-  beforeEach(module('copayApp.filters'));
+  beforeEach(angular.mock.module('dagcoin'));
+  beforeEach(module('dagcoin.filters'));
   beforeEach(inject(($rootScope) => {
     const w = {};
     w.isComplete = sinon.stub().returns(true);

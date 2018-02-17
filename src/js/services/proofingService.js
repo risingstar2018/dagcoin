@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('proofingService', (
+  angular.module('dagcoin.services').factory('proofingService', (
     profileService,
     addressService,
     dagcoinProtocolService,

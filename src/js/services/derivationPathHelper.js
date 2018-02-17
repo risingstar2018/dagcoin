@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('derivationPathHelper', () => {
+  angular.module('dagcoin.services').factory('derivationPathHelper', () => {
     const root = {};
 
     root.default = "m/44'/0'/0'";

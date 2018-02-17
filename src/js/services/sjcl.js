@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('sjcl', (bwcService) => {
     const sjcl = bwcService.getSJCL();
     return sjcl;

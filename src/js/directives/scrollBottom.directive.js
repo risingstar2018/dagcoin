@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('scrollBottom', ($timeout) => { // based on http://plnkr.co/edit/H6tFjw1590jHT28Uihcx?p=preview
       console.log('scrollBottom directive');
       return {

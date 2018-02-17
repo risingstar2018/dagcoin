@@ -6,7 +6,7 @@
    * @example <li dag-left-icon="shield"></li>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagLeftIcon', dagLeftIcon);
 
   dagLeftIcon.$inject = ['$compile'];

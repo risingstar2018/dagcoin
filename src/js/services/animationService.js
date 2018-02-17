@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('animationService', (isCordova) => {
+  angular.module('dagcoin.services').factory('animationService', (isCordova) => {
     const root = {};
 
     let cachedTransitionState;

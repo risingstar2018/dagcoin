@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
     .factory('faucetService', ($rootScope, $q, ENV) => {
       const self = {};
       const code = 'A6thOoiPnsPGKgMj4G/OYkh4d7WR/MX3r1k2tG/WJPof@byteball.org/bb-test#0000';

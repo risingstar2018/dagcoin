@@ -1,4 +1,4 @@
-angular.module('copayApp.services').factory('correspondentListService',
+angular.module('dagcoin.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
    profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService, ENV, gettextCatalog) => {
     const eventBus = require('byteballcore/event_bus.js');

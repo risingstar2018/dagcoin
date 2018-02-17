@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('dagcoinProtocolService', (promiseService) => {
+  angular.module('dagcoin.services').factory('dagcoinProtocolService', (promiseService) => {
     const eventBus = require('byteballcore/event_bus.js');
     const root = {};
 

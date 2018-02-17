@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('logHeader', ($log, isCordova, nodeWebkit) => {
     $log.info(`Starting Dagcoin v${window.version} #${window.commitHash}`);
     $log.info('Client: isCordova:', isCordova, 'isNodeWebkit:', nodeWebkit.isDefined());

@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
     .factory('fundingExchangeProviderService', ($q, $rootScope, discoveryService, fileSystemService, configService) => {
       const self = {};
 

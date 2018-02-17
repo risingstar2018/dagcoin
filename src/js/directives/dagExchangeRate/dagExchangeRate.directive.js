@@ -6,7 +6,7 @@
    * @example <dag-exchange-rate-view></dag-exchange-rate-view>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagExchangeRateView', dagExchangeRateView);
 
   dagExchangeRateView.$inject = ['exchangeRates'];

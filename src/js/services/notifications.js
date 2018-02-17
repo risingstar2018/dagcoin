@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('notification', ['$timeout',
     function ($timeout) {
       let notifications = [];

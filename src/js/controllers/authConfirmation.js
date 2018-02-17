@@ -18,7 +18,7 @@
    */
   const Bitcore = require('bitcore-lib');
 
-  angular.module('copayApp.controllers').controller('authConfirmationController',
+  angular.module('dagcoin.controllers').controller('authConfirmationController',
     ($scope, $timeout, configService, profileService, go, authService, lodash) => {
       const ecdsaSig = require('byteballcore/signature.js');
       function extractDomainFromUrl(url) {

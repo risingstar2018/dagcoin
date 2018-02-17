@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('fileSystemService', ($log, isCordova) => {
     const root = {};
     let bFsInitialized = false;

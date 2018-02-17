@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('txStatus', ($modal, lodash, profileService, $timeout) => {
+  angular.module('dagcoin.services').factory('txStatus', ($modal, lodash, profileService, $timeout) => {
     const root = {};
 
     const openModal = function (type, txp, cb) {

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.controllers')
+    .module('dagcoin.controllers')
     .controller('IntroConfirmController', IntroConfirmController);
 
   IntroConfirmController.$inject = ['$scope', 'ngDialog', 'isCordova', 'gettextCatalog', '$timeout', 'storageService', 'go'];

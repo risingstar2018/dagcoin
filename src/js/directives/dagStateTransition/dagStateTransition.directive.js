@@ -6,7 +6,7 @@
    * @example <a dag-state-transition="slide-left"></a>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagStateTransition', dagStateTransition);
 
   dagStateTransition.$inject = ['$rootScope'];

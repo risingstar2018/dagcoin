@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('txFormatService', (profileService, configService, lodash, ENV) => {
+  angular.module('dagcoin.services').factory('txFormatService', (profileService, configService, lodash, ENV) => {
     const root = {};
     const formatAmountStr = function (amount, asset) {
       if (!amount) {

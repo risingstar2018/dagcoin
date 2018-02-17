@@ -3,7 +3,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('indexController',
+  angular.module('dagcoin.controllers').controller('indexController',
       function ($rootScope,
                 $scope,
                 $log,

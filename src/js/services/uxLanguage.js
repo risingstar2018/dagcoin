@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('uxLanguage', ($log, lodash, gettextCatalog, amMoment, configService) => {
     const root = {};
     const ENGLISH = 'en';

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.services')
+    .module('dagcoin.services')
     .factory('addressbookService', addressbookService);
 
   addressbookService.$inject = ['storageService', 'profileService'];

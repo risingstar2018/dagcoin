@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.controllers')
+    .module('dagcoin.controllers')
     .controller('NewContactController', NewContactController);
 
   NewContactController.$inject = ['addressbookService', '$state', 'gettextCatalog'];

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('wordsController',
+  angular.module('dagcoin.controllers').controller('wordsController',
     function ($rootScope, $scope, $timeout, profileService, go, gettextCatalog, confirmDialog, notification, $log, isCordova) {
       const msg = gettextCatalog.getString('Are you sure you want to delete the backup words?');
       const successMsg = gettextCatalog.getString('Backup words deleted');

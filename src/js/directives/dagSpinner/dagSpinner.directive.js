@@ -6,7 +6,7 @@
    * @example <dag-spinner></dag-spinner>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagSpinner', dagSpinner);
 
   dagSpinner.$inject = [];

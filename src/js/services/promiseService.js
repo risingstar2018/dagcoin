@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('promiseService', () => {
+  angular.module('dagcoin.services').factory('promiseService', () => {
     const root = {};
 
     root.objRequest = null;

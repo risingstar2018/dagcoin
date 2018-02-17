@@ -16,7 +16,7 @@
     }
   }
 
-  angular.module('copayApp.directives')
+  angular.module('dagcoin.directives')
   .directive('validUrl', [
 
     function () {

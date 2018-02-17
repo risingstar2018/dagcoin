@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('acceptCorrespondentInvitationController',
+  angular.module('dagcoin.controllers').controller('acceptCorrespondentInvitationController',
     function ($scope, $rootScope, $timeout, configService, profileService, isCordova, go, correspondentListService, gettextCatalog) {
       const self = this;
       const fc = profileService.focusedClient;

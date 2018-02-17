@@ -1,9 +1,8 @@
-angular.module('copayApp.controllers').controller('correspondentDeviceController',
+angular.module('dagcoin.controllers').controller('correspondentDeviceController',
   ($scope, $rootScope, $timeout, $sce, $modal, configService, profileService, animationService, isCordova, go,
     correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) => {
     const chatStorage = require('byteballcore/chat_storage.js');
     const constants = require('byteballcore/constants.js');
-    console.log('correspondentDeviceController');
     const device = require('byteballcore/device.js');
     const eventBus = require('byteballcore/event_bus.js');
     const conf = require('byteballcore/conf.js');

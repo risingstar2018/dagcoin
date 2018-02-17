@@ -6,7 +6,7 @@
    * @example <svg-icon name="name"></svg-icon>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('svgIcon', svgIcon);
 
   svgIcon.$inject = ['$sce', '$templateRequest', '$templateCache', 'isCordova'];

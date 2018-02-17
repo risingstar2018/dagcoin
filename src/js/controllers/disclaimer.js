@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('disclaimerController',
+  angular.module('dagcoin.controllers').controller('disclaimerController',
     ($scope, $timeout, storageService, applicationService, gettextCatalog, isCordova, uxLanguage, go, $rootScope) => {
       if (!isCordova && process.platform === 'win32' && navigator.userAgent.indexOf('Windows NT 5.1') >= 0) {
         $rootScope.$emit('Local/ShowAlert', 'Windows XP is not supported', 'fi-alert', () => {

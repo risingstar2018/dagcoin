@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('confirmDialog', ($log, $timeout, gettextCatalog, isCordova) => {
+  angular.module('dagcoin.services').factory('confirmDialog', ($log, $timeout, gettextCatalog, isCordova) => {
     const root = {};
 
 

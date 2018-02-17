@@ -6,7 +6,7 @@
    * @example <dag-side-bar></dag-side-bar>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagSideBar', dagSideBar);
 
   dagSideBar.$inject = ['$rootScope'];

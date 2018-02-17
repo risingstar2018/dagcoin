@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
     .factory('connectionService', ($rootScope, $timeout) => {
       const self = {};
       const updateInterval = 30000;

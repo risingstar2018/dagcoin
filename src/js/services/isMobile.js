@@ -42,5 +42,5 @@
   };
 
 
-  angular.module('copayApp.services').value('isMobile', isMobile);
+  angular.module('dagcoin.services').value('isMobile', isMobile);
 }());

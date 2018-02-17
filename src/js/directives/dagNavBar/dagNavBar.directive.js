@@ -7,7 +7,7 @@
    * @example <dag-nav-bar title="Language" invert goBack="preferencesSystem"></dag-nav-bar>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagNavBar', dagNavBar);
 
   dagNavBar.$inject = ['$state', '$rootScope', '$stateParams'];

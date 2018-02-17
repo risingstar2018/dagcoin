@@ -6,7 +6,7 @@
    * @example <dag-bottom-bar></dag-bottom-bar>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagBottomBar', dagBottomBar);
 
   dagBottomBar.$inject = ['menuLinks'];

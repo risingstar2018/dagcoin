@@ -1,6 +1,6 @@
 
 
-angular.module('copayApp.controllers').controller('preferencesColorController',
+angular.module('dagcoin.controllers').controller('preferencesColorController',
   function ($scope, configService, profileService, go) {
     var config = configService.getSync();
     this.colorOpts = configService.colorOpts;

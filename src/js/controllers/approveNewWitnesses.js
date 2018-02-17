@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers')
+  angular.module('dagcoin.controllers')
   .controller('approveNewWitnesses', ($scope, $modalInstance, $document, autoUpdatingWitnessesList, gettextCatalog) => {
     $scope.addWitnesses = autoUpdatingWitnessesList.addWitnesses;
     $scope.delWitnesses = autoUpdatingWitnessesList.delWitnesses;

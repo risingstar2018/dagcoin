@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('copayersController',
+  angular.module('dagcoin.controllers').controller('copayersController',
     function ($scope, $rootScope, $timeout, $log, $modal, profileService, go, notification, isCordova, gettextCatalog, animationService) {
       const self = this;
 

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('backButton', ($log, $rootScope, gettextCatalog, $deepStateRedirect, $document, $timeout, go, lodash, $state) => {
+  angular.module('dagcoin.services').factory('backButton', ($log, $rootScope, gettextCatalog, $deepStateRedirect, $document, $timeout, go, lodash, $state) => {
     const root = {};
 
     root.menuOpened = false;

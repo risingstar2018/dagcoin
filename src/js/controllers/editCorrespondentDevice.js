@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('editCorrespondentDeviceController',
+  angular.module('dagcoin.controllers').controller('editCorrespondentDeviceController',
     ($scope, $rootScope, $timeout, configService, profileService, isCordova, go, correspondentListService, $modal, animationService, gettextCatalog) => {
       const fc = profileService.focusedClient;
       $scope.backgroundColor = fc.backgroundColor;

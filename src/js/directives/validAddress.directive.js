@@ -9,7 +9,7 @@
    * @example <input type="text" valid-address>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('validAddress', validAddress);
 
   validAddress.$inject = ['$rootScope', 'profileService'];

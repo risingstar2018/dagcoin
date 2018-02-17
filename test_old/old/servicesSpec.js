@@ -8,8 +8,8 @@ const preconditions = require('preconditions').singleton();
 
 
 describe('Angular services', () => {
-  beforeEach(angular.mock.module('copayApp'));
-  beforeEach(angular.mock.module('copayApp.services'));
+  beforeEach(angular.mock.module('dagcoin'));
+  beforeEach(angular.mock.module('dagcoin.services'));
   beforeEach(module(($provide) => {
     $provide.value('request', {
       get(_, cb) {

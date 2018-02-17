@@ -2,7 +2,7 @@
 describe('exchange rate api service', () => {
   let $exchangeRate;
 
-  beforeEach(module('copayApp.services'));
+  beforeEach(module('dagcoin.services'));
 
   beforeEach(() => {
     inject((exchangeRate) => {

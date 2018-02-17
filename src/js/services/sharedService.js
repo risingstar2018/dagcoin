@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.services')
+    .module('dagcoin.services')
     .factory('sharedService', sharedService);
 
   sharedService.$inject = ['$rootScope', 'ENV'];

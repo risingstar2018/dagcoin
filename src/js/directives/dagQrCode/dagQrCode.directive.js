@@ -8,7 +8,7 @@
    * @example <dag-qr-code></dag-qr-code>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagQrCode', dagQrCode);
 
   dagQrCode.$inject = [];

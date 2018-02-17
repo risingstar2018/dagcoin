@@ -9,7 +9,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('paperWalletController',
+  angular.module('dagcoin.controllers').controller('paperWalletController',
     function ($scope, $http, $timeout, $log, configService, profileService, go, addressService, txStatus, bitcore) {
       const self = this;
       const fc = profileService.focusedClient;

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.services')
+    .module('dagcoin.services')
     .factory('autoRefreshClientService', autoRefreshClientService);
 
   autoRefreshClientService.$inject = ['$rootScope', '$interval'];

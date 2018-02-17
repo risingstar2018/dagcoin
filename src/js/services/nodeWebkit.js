@@ -2,7 +2,7 @@
   'use strict';
 
   /* eslint-disable import/no-unresolved,import/no-extraneous-dependencies */
-  angular.module('copayApp.services').factory('nodeWebkit', () => {
+  angular.module('dagcoin.services').factory('nodeWebkit', () => {
     const root = {};
 
     const isNodeWebkit = function () {

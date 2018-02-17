@@ -10,28 +10,28 @@ const modules = [
   'ngLodash',
   'uiSwitch',
   'bwcModule',
-  'copayApp.filters',
-  'copayApp.services',
-  'copayApp.controllers',
-  'copayApp.directives',
-  'copayApp.addons',
   'ct.ui.router.extras',
   'ngRaven',
   'ngDialog',
   'ngAnimate',
   'swipe',
   'ksSwiper',
-  'ngScrollbars'
+  'ngScrollbars',
+  'dagcoin.filters',
+  'dagcoin.services',
+  'dagcoin.controllers',
+  'dagcoin.directives',
+  'dagcoin.addons'
 ];
 
-const copayApp = angular.module('copayApp', modules);
-window.copayApp = angular.module('copayApp', modules);
+const dagcoin = angular.module('dagcoin', modules);
+window.dagcoin = angular.module('dagcoin', modules);
 
-angular.module('copayApp.filters', []);
-angular.module('copayApp.services', []);
-angular.module('copayApp.controllers', []);
-angular.module('copayApp.directives', []);
-angular.module('copayApp.addons', []);
+angular.module('dagcoin.filters', []);
+angular.module('dagcoin.services', []);
+angular.module('dagcoin.controllers', []);
+angular.module('dagcoin.directives', []);
+angular.module('dagcoin.addons', []);
 
 const constants = require('byteballcore/constants.js');
 const fs = require('fs');

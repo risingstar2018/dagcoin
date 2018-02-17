@@ -4,7 +4,7 @@
 
 
 function makeSwipeDirective(directiveName, direction, eventName) {
-  angular.module('copayApp.directives')
+  angular.module('dagcoin.directives')
   .directive(directiveName, ['$parse', '$swipe',
     function ($parse, $swipe) {
       // The maximum vertical delta for a swipe should be less than 75px.

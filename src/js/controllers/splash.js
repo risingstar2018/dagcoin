@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('splashController',
+  angular.module('dagcoin.controllers').controller('splashController',
     function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova) {
       const self = this;
 

@@ -2,7 +2,7 @@
   'use strict';
 
   const logs = [];
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('historicLog', () => {
     const root = {};
 

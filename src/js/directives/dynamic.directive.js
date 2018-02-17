@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dynamic', ($compile) => {
       console.log('dynamic directive');
       return {

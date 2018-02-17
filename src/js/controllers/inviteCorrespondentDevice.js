@@ -3,7 +3,7 @@
 
   const eventBus = require('byteballcore/event_bus.js');
 
-  angular.module('copayApp.controllers').controller('inviteCorrespondentDeviceController',
+  angular.module('dagcoin.controllers').controller('inviteCorrespondentDeviceController',
     ($scope, $timeout, profileService, go, isCordova, correspondentListService, gettextCatalog, nodeWebkit) => {
       function onPaired(peerAddress) {
         correspondentListService.setCurrentCorrespondent(peerAddress, () => {

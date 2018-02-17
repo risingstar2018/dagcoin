@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesDeviceNameController',
+  angular.module('dagcoin.controllers').controller('preferencesDeviceNameController',
     function ($scope, $timeout, configService, $state) {
       const config = configService.getSync();
       this.deviceName = config.deviceName;

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('sendPayment', () => {
       console.log('sendPayment directive');
       return {

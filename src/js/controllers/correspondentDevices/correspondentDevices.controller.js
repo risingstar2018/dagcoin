@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('correspondentDevicesController',
+  angular.module('dagcoin.controllers').controller('correspondentDevicesController',
     ($scope, $timeout, configService, profileService, go, correspondentListService, $state, $rootScope, lodash, ENV) => {
       const wallet = require('byteballcore/wallet.js');
       $scope.editCorrespondentList = false;

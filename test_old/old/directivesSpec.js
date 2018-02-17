@@ -6,7 +6,7 @@ describe('Unit: Testing Directives', () => {
   let $scope,
     form;
 
-  beforeEach(module('copayApp.directives'));
+  beforeEach(module('dagcoin.directives'));
   beforeEach(inject(($rootScope) => {
     const w = {};
     w.isComplete = sinon.stub().returns(true);

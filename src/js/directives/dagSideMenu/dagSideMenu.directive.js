@@ -8,7 +8,7 @@
    * @example <dag-side-menu></dag-side-menu>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagSideMenu', dagSideMenu);
 
   dagSideMenu.$inject = ['menuLinks', '$rootScope'];

@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers')
+  angular.module('dagcoin.controllers')
     .controller('walletHomeController',
       function ($scope,
                 $rootScope,

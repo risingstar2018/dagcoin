@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('ngEnter', () => function (scope, element, attrs) {
       element.bind('keydown', (e) => {
         if (e.which === 13 && !e.shiftKey) {

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesController',
+  angular.module('dagcoin.controllers').controller('preferencesController',
     function ($scope, $rootScope, $filter, $timeout, $modal, $log, lodash, configService, profileService, fingerprintService, uxLanguage) {
       this.init = function () {
         const config = configService.getSync();

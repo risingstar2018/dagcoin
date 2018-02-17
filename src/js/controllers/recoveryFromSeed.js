@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('recoveryFromSeed',
+  angular.module('dagcoin.controllers').controller('recoveryFromSeed',
     function ($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService, configService) {
       const async = require('async');
       const conf = require('byteballcore/conf.js');

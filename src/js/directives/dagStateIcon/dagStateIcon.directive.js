@@ -6,7 +6,7 @@
    * @example <dag-state-icon icon="home"></dag-state-icon>
    */
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('dagStateIcon', dagStateIcon);
 
   dagStateIcon.$inject = [];

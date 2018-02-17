@@ -67,7 +67,7 @@ module.exports = function (grunt) {
     },
 
     ngtemplates: {
-      copayApp: {
+      dagcoin: {
         cwd: 'src/js',
         src: '**/**.html',
         dest: 'public/templates.js',
@@ -276,7 +276,7 @@ module.exports = function (grunt) {
       all: {
         options: {
           format: 'json',
-          module: 'copayApp'
+          module: 'dagcoin'
         },
         files: [
           {

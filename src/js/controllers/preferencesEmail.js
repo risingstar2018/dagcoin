@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('preferencesEmailController',
+  angular.module('dagcoin.controllers').controller('preferencesEmailController',
     function ($scope, go) {
       this.save = function () {
         const self = this;

@@ -2,7 +2,7 @@
   'use strict';
 
   /* eslint-disable no-shadow */
-  angular.module('copayApp.services')
+  angular.module('dagcoin.services')
   .factory('pushNotificationsService', ($http, $rootScope, $log, isMobile, storageService, configService, lodash, isCordova) => {
     const root = {};
     const usePushNotifications = isCordova && !isMobile.Windows();

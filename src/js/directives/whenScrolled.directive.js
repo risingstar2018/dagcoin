@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('copayApp.directives')
+    .module('dagcoin.directives')
     .directive('whenScrolled', ['$timeout', function ($timeout) {
       function ScrollPosition(node) {
         this.node = node;

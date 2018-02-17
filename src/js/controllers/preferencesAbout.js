@@ -1,4 +1,4 @@
 
 
-angular.module('copayApp.controllers').controller('preferencesAbout',
+angular.module('dagcoin.controllers').controller('preferencesAbout',
   () => {});

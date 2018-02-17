@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('newVersionIsAvailable', ($scope, $modalInstance, go, newVersion) => {
+  angular.module('dagcoin.controllers').controller('newVersionIsAvailable', ($scope, $modalInstance, go, newVersion) => {
     $scope.version = newVersion.version;
 
     $scope.openDownloadLink = function () {
