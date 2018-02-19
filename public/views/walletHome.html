@@ -5,7 +5,8 @@
 
 <dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="!index.needsUnlock || index.needsUnlock.success === true">
   <qr-scanner ng-if="tab === 'send' && index.isComplete"
-              on-scan="index.onQrCodeScanned(data)">
+              on-scan="index.onQrCodeScanned(data)"
+              title="{{ 'Scan address' | translate }}">
   </qr-scanner>
   <a id="address-share" ng-if="index.isCordova && tab === 'receive' && index.isComplete"
      ng-click="home.shareAddress(home.addr[index.walletId])">
