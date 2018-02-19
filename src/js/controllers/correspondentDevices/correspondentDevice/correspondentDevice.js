@@ -826,6 +826,8 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       } */
 
     function appendText(text) {
+      const msgField = document.getElementById('message');
+
       if (!$scope.message) {
         $scope.message = '';
       }
@@ -834,10 +836,10 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       }
       $scope.message += text;
       $scope.message += ' ';
-      if (!document.chatForm || !document.chatForm.message) { // already gone
+      if (!msgField) { // already gone
         return;
       }
-      const msgField = document.chatForm.message;
+
       msgField.focus();
       msgField.selectionEnd = msgField.value.length;
       msgField.selectionStart = msgField.selectionEnd;
