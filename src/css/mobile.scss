@@ -562,27 +562,6 @@ to prevent collapsing during animation*/
   animation-fill-mode: both;
 }
 
-.CslideInUp {
-  animation-name: slideInUp;
-  z-index: 1003;
-}
-
-.CslideOutDown {
-  animation-name: slideOutDown;
-  z-index: 1003;
-}
-
-.CslideOutRight {
-  animation-name: slideOutRight;
-  z-index: 1003;
-}
-
-.CslideInRight {
-  animation-name: slideInRight;
-  z-index: 1003;
-}
-
-/* == */
 
 .icon-circle, .icon-circle-active {
   color: #1abc9c;
