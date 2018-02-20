@@ -87,17 +87,6 @@
               if (x <= $scope.limit) {
                 const t = $scope.rows[x];
                 console.log(t);
-                if (!t.isFundingNodeTransaction) {
-                  const timestamp = t.time * 1000;
-                  const date = moment(timestamp).format('DD/MM/YYYY');
-
-                  if (!$scope.transactions[date]) {
-                    $scope.transactions[date] = [];
-                  }
-
-                  $scope.transactions[date].push(t);
-                  $scope.visible_rows += 1;
-                }
               }
             }
             resolve(true);

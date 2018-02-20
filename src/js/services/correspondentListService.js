@@ -1,6 +1,6 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
-   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService, ENV, gettextCatalog) => {
+   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, faucetService, ENV, gettextCatalog) => {
     const eventBus = require('byteballcore/event_bus.js');
     const ValidationUtils = require('byteballcore/validation_utils.js');
     const objectHash = require('byteballcore/object_hash.js');
@@ -152,10 +152,10 @@ angular.module('copayApp.services').factory('correspondentListService',
       let arrMovements = [];
       if (bAggregatedByAsset) {
         Object.keys(assocPaymentsByAsset).forEach((asset) => {
-          arrMovements.push(getAmountText(assocPaymentsByAsset[asset], asset));
+          arrMovements.push(getAmountText(assocPaymentsByAsset[asset]));
         });
       } else {
-        arrMovements = objMultiPaymentRequest.payments.map(objPayment => `${getAmountText(objPayment.amount, objPayment.asset || 'base')} to ${objPayment.address}`);
+        arrMovements = objMultiPaymentRequest.payments.map(objPayment => `${getAmountText(objPayment.amount)} to ${objPayment.address}`);
       }
       return arrMovements;
     }
@@ -163,10 +163,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     function getPaymentsByAsset(objMultiPaymentRequest) {
       const assocPaymentsByAsset = {};
       objMultiPaymentRequest.payments.forEach((objPayment) => {
-        const asset = objPayment.asset || 'base';
-        if (asset !== 'base' && !ValidationUtils.isValidBase64(asset, constants.HASH_LENGTH)) {
-          throw Error(`asset ${asset} is not valid`);
-        }
+        const asset = 'base';
         if (!ValidationUtils.isPositiveInteger(objPayment.amount)) {
           throw Error(`amount ${objPayment.amount} is not valid`);
         }
@@ -221,7 +218,7 @@ angular.module('copayApp.services').factory('correspondentListService',
       if (deviceAddress && !ValidationUtils.isValidDeviceAddress(deviceAddress)) {
         return null;
       }
-      const amountStr = `Payment request: ${getAmountText(amount, asset)}`;
+      const amountStr = `Payment request: ${getAmountText(amount)}`;
       return {
         amount,
         asset,
@@ -266,29 +263,14 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     // amount is in smallest units
-    function getAmountText(amount, asset) {
+    function getAmountText(amount) {
       const walletSettings = configService.getSync().wallet.settings;
       let newAmount = amount;
 
-      if (asset === 'base') {
-        const unitValue = walletSettings.unitValue;
-        const unitName = walletSettings.unitName;
-        if (newAmount !== 'all') {
-          newAmount /= unitValue;
-        }
-        return `${newAmount} ${unitName}`;
-      } else if (asset === constants.BLACKBYTES_ASSET) {
-        const bbUnitValue = walletSettings.bbUnitValue;
-        const bbUnitName = walletSettings.bbUnitName;
-        newAmount /= bbUnitValue;
-        return `${newAmount} ${bbUnitName}`;
-      } else if (asset === ENV.DAGCOIN_ASSET) {
-        const dagUnitValue = walletSettings.dagUnitValue;
-        const dagUnitName = walletSettings.dagUnitName;
-        newAmount /= dagUnitValue;
-        return `${newAmount} ${dagUnitName}`;
-      }
-      return `${newAmount} of ${asset}`;
+      const unitValue = walletSettings.unitValue;
+      const unitName = walletSettings.unitName;
+      newAmount /= unitValue;
+      return `${newAmount} ${unitName}`;
     }
 
     function getHumanReadableDefinition(arrDefinition, arrMyAddresses, arrMyPubKeys, bWithLinks) {
@@ -348,7 +330,7 @@ angular.module('copayApp.services').factory('correspondentListService',
             return str;
           case 'has':
             if (args.what === 'output' && args.asset && args.amount_at_least && args.address) {
-              return `sends at least ${getAmountText(args.amount_at_least, args.asset)} to ${arrMyAddresses.indexOf(args.address) >= 0 ? 'you' : args.address}`;
+              return `sends at least ${getAmountText(args.amount_at_least)} to ${arrMyAddresses.indexOf(args.address) >= 0 ? 'you' : args.address}`;
             }
             return JSON.stringify(arrSubdefinition);
           case 'seen':
@@ -581,14 +563,14 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     eventBus.on('sent_payment', (peerAddress, amount, asset, walletId, sendMessageToDevice, address) => {
       setCurrentCorrespondent(peerAddress, () => {
-        const body = `<a ng-click="showPayment('${asset}', '${walletId}')" class="payment">Payment: ${getAmountText(amount, asset)}</a>`;
+        const body = `<a ng-click="showPayment('${asset}', '${walletId}')" class="payment">Payment: ${getAmountText(amount)}</a>`;
         addMessageEvent(false, peerAddress, body);
         device.readCorrespondent(peerAddress, (correspondent) => {
           if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(peerAddress, body, 0, 'html');
         });
 
         if (sendMessageToDevice) {
-          const deviceMessage = `<a ng-click="showPayment('${asset}', null, '${address}')" class="payment">Payment: ${getAmountText(amount, asset)}</a>`;
+          const deviceMessage = `<a ng-click="showPayment('${asset}', null, '${address}')" class="payment">Payment: ${getAmountText(amount)}</a>`;
           device.sendMessageToDevice(peerAddress, 'text', deviceMessage);
         }
 
@@ -597,7 +579,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     });
 
     eventBus.on('received_payment', (peerAddress, amount, asset) => {
-      const body = `<a ng-click="showPayment('${asset}')" class="payment">Payment: ${getAmountText(amount, asset)}</a>`;
+      const body = `<a ng-click="showPayment('${asset}')" class="payment">Payment: ${getAmountText(amount)}</a>`;
       addMessageEvent(true, peerAddress, body);
       device.readCorrespondent(peerAddress, (correspondent) => {
         if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(peerAddress, body, 1, 'html');

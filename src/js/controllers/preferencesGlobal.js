@@ -3,36 +3,23 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $log, $modal, configService, uxLanguage, pushNotificationsService, profileService,
-              fundingExchangeProviderService, animationService, changeWalletTypeService, gettextCatalog) {
+              animationService, changeWalletTypeService, gettextCatalog) {
       const conf = require('byteballcore/conf.js');
       const self = this;
-      self.fundingNodeSettings = {};
       self.isLight = conf.bLight;
       self.canChangeWalletType = changeWalletTypeService.canChange();
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
-
-      self.initFundingNode = () => {
-        self.fundingNode = fundingExchangeProviderService.isActivated();
-        self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
-
-        fundingExchangeProviderService.canEnable().then(() => {
-          self.canEnableFundingNode = true;
-        });
-      };
 
       this.init = function () {
         const config = configService.getSync();
         this.type = conf.bLight ? gettextCatalog.getString('light wallet') : gettextCatalog.getString('full wallet');
         this.unitName = config.wallet.settings.unitName;
-        this.dagUnitName = config.wallet.settings.dagUnitName;
         this.deviceName = config.deviceName;
         this.myDeviceAddress = require('byteballcore/device.js').getMyDeviceAddress();
         this.hub = config.hub;
         this.currentLanguageName = uxLanguage.getCurrentLanguageName();
         this.torEnabled = conf.socksHost && conf.socksPort;
         $scope.pushNotifications = config.pushNotifications.enabled;
-
-        self.initFundingNode();
       };
 
       const unwatchPushNotifications = $scope.$watch('pushNotifications', (newVal, oldVal) => {
@@ -101,48 +88,9 @@
         }
       });
 
-      const unwatchFundingNode = $scope.$watch(() => self.fundingNode, (newVal, oldVal) => {
-        if (oldVal === null || oldVal === undefined || newVal === oldVal) {
-          return;
-        }
-
-        fundingExchangeProviderService.canEnable().then(() => {
-          fundingExchangeProviderService.update(newVal).then(() => {
-            self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
-          });
-        }, () => {
-          self.fundingNode = false;
-        });
-      }, true);
-
-      function getCorrectValue(oldValue, newValue, isFloat) {
-        const newValueParsed = isFloat ? parseFloat(newValue) : parseInt(newValue, 10);
-        if (newValue && newValueParsed.toString() === newValue.toString() && newValueParsed >= 0) {
-          return newValueParsed;
-        }
-        return oldValue;
-      }
-
-      self.onFundingNodeSettingBlur = function () {
-        const oldSettings = fundingExchangeProviderService.getSettings();
-        const newSettings = {
-          exchangeFee: getCorrectValue(oldSettings.exchangeFee, self.fundingNodeSettings.exchangeFee, true),
-          totalBytes: getCorrectValue(oldSettings.totalBytes, self.fundingNodeSettings.totalBytes, false),
-          bytesPerAddress: getCorrectValue(oldSettings.bytesPerAddress, self.fundingNodeSettings.bytesPerAddress, false),
-          maxEndUserCapacity: getCorrectValue(oldSettings.maxEndUserCapacity, self.fundingNodeSettings.maxEndUserCapacity, false)
-        };
-
-        fundingExchangeProviderService.setSettings(newSettings).then(() => {
-          self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
-        }, () => {
-          self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
-        });
-      };
-
       $scope.$on('$destroy', () => {
         unwatchPushNotifications();
         unwatchEncrypt();
-        unwatchFundingNode();
       });
 
       self.changeWalletType = function () {

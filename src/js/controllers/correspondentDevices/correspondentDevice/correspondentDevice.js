@@ -199,17 +199,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           display_value: 'this contract',
         }];
         $scopeModal.arrAssetInfos = indexScope.arrBalances.map((b) => {
-          const info = { asset: b.asset, is_private: b.is_private };
-          if (b.asset === 'base') {
-            info.displayName = walletSettings.unitName;
-          } else if (b.asset === constants.BLACKBYTES_ASSET) {
-            info.displayName = walletSettings.bbUnitName;
-          } else if (b.asset === ENV.DAGCOIN_ASSET) {
-            info.displayName = walletSettings.dagUnitName;
-          } else {
-            info.displayName = `of ${b.asset.substr(0, 4)}`;
-          }
-          return info;
+          return { asset: b.asset, is_private: b.is_private, displayName: walletSettings.unitName };
         });
         $scopeModal.arrPublicAssetInfos = $scopeModal.arrAssetInfos.filter(b => !b.is_private);
         const contract = {
@@ -267,24 +257,11 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             }
 
             let myAmount = contract.myAmount;
-            if (contract.myAsset === 'base') {
-              myAmount *= walletSettings.unitValue;
-            }
-            if (contract.myAsset === constants.BLACKBYTES_ASSET) {
-              myAmount *= walletSettings.bbUnitValue;
-            }
-            if (contract.myAsset === ENV.DAGCOIN_ASSET) {
-              myAmount *= walletSettings.dagUnitValue;
-            }
+            myAmount *= walletSettings.unitValue;
             myAmount = Math.round(myAmount);
 
             let peerAmount = contract.peerAmount;
-            if (contract.peerAsset === 'base') {
-              peerAmount *= walletSettings.unitValue;
-            }
-            if (contract.peerAsset === constants.BLACKBYTES_ASSET) {
-              throw Error('peer asset cannot be blackbytes');
-            }
+            peerAmount *= walletSettings.unitValue;
             peerAmount = Math.round(peerAmount);
 
             if (myAmount === peerAmount && contract.myAsset === contract.peerAsset && contract.peer_pays_to === 'contract') {
@@ -489,7 +466,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         const assocSharedDestinationAddresses = {};
         const createMovementLines = function () {
           $scopeModal.arrMovements = objMultiPaymentRequest.payments.map((objPayment) => {
-            let text = `${correspondentListService.getAmountText(objPayment.amount, objPayment.asset || 'base')} to ${objPayment.address}`;
+            let text = `${correspondentListService.getAmountText(objPayment.amount, 'base')} to ${objPayment.address}`;
             if (assocSharedDestinationAddresses[objPayment.address]) {
               text += ' (smart address, see below)';
             }
@@ -856,13 +833,8 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         const walletSettings = configWallet.settings;
         $scopeModal.unitValue = walletSettings.unitValue;
         $scopeModal.unitName = walletSettings.unitName;
-        $scopeModal.bbUnitValue = walletSettings.bbUnitValue;
-        $scopeModal.bbUnitName = walletSettings.bbUnitName;
-        $scopeModal.dagUnitName = walletSettings.dagUnitName;
-        $scopeModal.dagUnitValue = walletSettings.dagUnitValue;
         $scopeModal.color = fc.backgroundColor;
         $scopeModal.isCordova = isCordova;
-        $scopeModal.dagAsset = ENV.DAGCOIN_ASSET;
         $scopeModal.buttonLabel = gettextCatalog.getString('Request payment');
         // $scopeModal.selectedAsset = $scopeModal.index.arrBalances[$scopeModal.index.assetIndex];
         // console.log($scopeModal.index.arrBalances.length+" assets, current: "+$scopeModal.asset);
@@ -884,18 +856,18 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             return console.log('showRequestPaymentModal: no balances yet');
           }
           const amount = form.amount.$modelValue;
-          const asset = ENV.DAGCOIN_ASSET;
+          const asset = 'base';
 
           if (!asset) {
             throw Error('no asset');
           }
-          const amountInSmallestUnits = amount * $scopeModal.dagUnitValue;
+          const amountInSmallestUnits = amount * $scopeModal.unitValue;
           let params = `amount=${amountInSmallestUnits}`;
 
           if (asset !== 'base') {
             params += `&asset=${encodeURIComponent(asset)}`;
           }
-          const units = $scopeModal.dagUnitName;
+          const units = $scopeModal.unitName;
 
           appendText(`[${amount} ${units}](dagcoin:${myPaymentAddress}?${params})`);
 

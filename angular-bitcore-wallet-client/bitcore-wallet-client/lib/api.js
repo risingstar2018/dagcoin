@@ -6,7 +6,6 @@ const breadcrumbs = require('byteballcore/breadcrumbs.js');
 const constants = require('byteballcore/constants.js');
 
 const isTestnet = constants.version.match(/t$/);
-constants.DAGCOIN_ASSET = isTestnet ? 'B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=' : 'j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=';
 const lodash = require('lodash');
 const $ = require('preconditions').singleton();
 const util = require('util');
@@ -558,9 +557,6 @@ API.prototype.getBalance = function (sharedAddress, cb) {
   $.checkState(this.credentials && this.credentials.isComplete());
   const walletId = this.credentials.walletId;
   Wallet.readBalance(sharedAddress || walletId, (assocBalances) => {
-    if (!assocBalances[constants.DAGCOIN_ASSET]) {
-      assocBalances[constants.DAGCOIN_ASSET] = { stable: 0, pending: 0 };
-    }
     Wallet.readSharedBalance(walletId, (assocSharedBalances) => {
       Object.keys(assocSharedBalances).forEach((asset) => {
         if (!assocBalances[asset]) {

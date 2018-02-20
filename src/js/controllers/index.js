@@ -28,8 +28,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 addressbookService,
                 notification,
                 animationService,
-                fundingExchangeProviderService,
-                fundingExchangeClientService,
                 $modal,
                 bwcService,
                 backButton,
@@ -59,11 +57,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.$state = $state;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
-
-        constants.DAG_FEE = 500; // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
         constants.MIN_BYTE_FEE = 950;
-
-        fundingExchangeClientService.setIndex(this);
 
         self.triggerUrl = (state) => {
           $state.go(state);
@@ -152,7 +146,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         eventBus.on('catching_up_started', () => {
           self.setOngoingProcess('Syncing', true);
           self.syncProgress = '0% of new units';
-          fundingExchangeProviderService.pause();
         });
         eventBus.on('catchup_balls_left', (countLeft) => {
           self.setOngoingProcess('Syncing', true);
@@ -169,7 +162,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           catchupBallsAtStart = -1;
           self.setOngoingProcess('Syncing', false);
           self.syncProgress = '';
-          fundingExchangeProviderService.unpause();
         });
         eventBus.on('refresh_light_started', () => {
           console.log('refresh_light_started');
@@ -487,13 +479,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                     let value;
 
                     Object.keys(assocAmountByAssetAndAddress[asset]).forEach((address) => {
-                      if (asset !== 'base') {
-                        currency = asset === ENV.DAGCOIN_ASSET ? 'dag' : `of asset ${formattedAsset}`;
-                        value = assocAmountByAssetAndAddress[asset][address] / walletSettings.dagUnitValue;
-                      } else {
-                        currency = 'bytes';
-                        value = assocAmountByAssetAndAddress[asset][address] / walletSettings.unitValue;
-                      }
+                      currency = 'bytes';
+                      value = assocAmountByAssetAndAddress[asset][address] / walletSettings.unitValue;
                       arrDestinations.push(`${value} ${currency} to ${address}`);
                     });
                   });
@@ -546,8 +533,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             $scope.color = fc.backgroundColor;
             $scope.indexCtl = self;
             const arrSharedWallets = [];
-            $scope.mainWalletBalanceInfo = _.find(self.arrMainWalletBalances, { asset: ENV.DAGCOIN_ASSET });
-            $scope.asset = ENV.DAGCOIN_ASSET;
+            $scope.mainWalletBalanceInfo = _.find(self.arrMainWalletBalances, { asset: 'base' });
+            $scope.asset = 'base';
             const assocSharedByAddress = $scope.mainWalletBalanceInfo.assocSharedByAddress;
 
             if (assocSharedByAddress) {
@@ -910,10 +897,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
           lodash.each(txs, (tx) => {
             const transaction = txFormatService.processTx(tx);
-            const fundingNodeTx = txs.filter(x => (x.time === tx.time && x.unit === tx.unit &&
-              x.amount === constants.DAG_FEE && x.amount === tx.amount));
-
-            transaction.isFundingNodeTransaction = fundingNodeTx.length > 0;
 
             // no future transactions...
             if (transaction.time > now) {
@@ -956,7 +939,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           // Selected unit
           self.unitValue = config.unitValue;
           self.unitName = config.unitName;
-          self.dagUnitName = config.dagUnitName;
 
           self.arrBalances = [];
 
@@ -973,15 +955,15 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 balanceInfo.assocSharedByAddress[sa] = totalOnSharedAddress;
               });
             }
-            if (asset === 'base' || asset === ENV.DAGCOIN_ASSET) {
-              const assetName = asset !== 'base' ? 'DAG' : 'base';
-              balanceInfo.totalStr = profileService.formatAmount(balanceInfo.total, assetName);
-              balanceInfo.stableStr = profileService.formatAmount(balanceInfo.stable, assetName);
-              balanceInfo.pendingStr = `${profileService.formatAmount(balanceInfo.pending, assetName)} ${config.dagUnitName}`;
-              if (balanceInfo.shared) {
-                balanceInfo.sharedStr = profileService.formatAmount(balanceInfo.shared, assetName);
-              }
+
+            const assetName = 'base';
+            balanceInfo.totalStr = profileService.formatAmount(balanceInfo.total, assetName);
+            balanceInfo.stableStr = profileService.formatAmount(balanceInfo.stable, assetName);
+            balanceInfo.pendingStr = `${profileService.formatAmount(balanceInfo.pending, assetName)} ${config.unitName}`;
+            if (balanceInfo.shared) {
+              balanceInfo.sharedStr = profileService.formatAmount(balanceInfo.shared, assetName);
             }
+
             self.arrBalances.push(balanceInfo);
           });
           self.assetIndex = self.assetIndex || 0;
@@ -993,7 +975,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             self.arrMainWalletBalances = self.arrBalances;
           }
 
-          self.dagBalance = _.find(self.arrBalances, { asset: ENV.DAGCOIN_ASSET });
           self.baseBalance = _.find(self.arrBalances, { asset: 'base' });
           console.log(`========= setBalance done, balances: ${JSON.stringify(self.arrBalances)}`);
           breadcrumbs.add(`setBalance done, balances: ${JSON.stringify(self.arrBalances)}`);
@@ -1084,7 +1065,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.setOngoingProcess('generatingCSV', true);
 
           $timeout(() => {
-            fc.getTxHistory(ENV.DAGCOIN_ASSET, self.shared_address, (txs) => {
+            fc.getTxHistory('base', self.shared_address, (txs) => {
               self.setOngoingProcess('generatingCSV', false);
               $log.debug('Wallet Transaction History:', txs);
 
@@ -1152,7 +1133,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           if (!client.isComplete()) {
             return console.log('fc incomplete yet');
           }
-          return client.getTxHistory(ENV.DAGCOIN_ASSET, self.shared_address, (txs) => {
+          return client.getTxHistory('base', self.shared_address, (txs) => {
             const newHistory = self.processNewTxs(txs);
             $log.debug(`Tx History synced. Total Txs: ${newHistory.length}`);
             self.checkTransactionsAreConfirmed(self.txHistory, newHistory);
@@ -1165,23 +1146,21 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
               for (let x = 0, maxLen = self.txHistory.length; x < maxLen; x += 1) {
                 const t = self.txHistory[x];
-                if (!t.isFundingNodeTransaction) {
-                  const timestamp = t.time * 1000;
-                  const date = moment(timestamp).format('DD/MM/YYYY');
+                const timestamp = t.time * 1000;
+                const date = moment(timestamp).format('DD/MM/YYYY');
 
-                  if (!self.completeHistory[date]) {
-                    self.completeHistory[date] = { balance: 0, rows: [] };
-                  }
-
-                  if (t.action === 'received') {
-                    self.completeHistory[date].balance += (t.amount / walletSettings.dagUnitValue);
-                  } else {
-                    self.completeHistory[date].balance -= (t.amount / walletSettings.dagUnitValue);
-                  }
-
-                  self.completeHistory[date].rows.push(t);
-                  self.visible_rows += 1;
+                if (!self.completeHistory[date]) {
+                  self.completeHistory[date] = { balance: 0, rows: [] };
                 }
+
+                if (t.action === 'received') {
+                  self.completeHistory[date].balance += (t.amount / walletSettings.unitValue);
+                } else {
+                  self.completeHistory[date].balance -= (t.amount / walletSettings.unitValue);
+                }
+
+                self.completeHistory[date].rows.push(t);
+                self.visible_rows += 1;
               }
 
               self.historyShowShowAll = newHistory.length >= self.historyShowLimit;
@@ -1706,33 +1685,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           gui = require('nw.gui');
         } catch (e) {
           // continue regardless of error
-        }
-
-        if (gui) { // nwjs
-          const win = gui.Window.get();
-          win.on('close', function () {
-            fundingExchangeProviderService.deactivate()
-              .then(() => {
-                this.close(true);
-              });
-          });
-          win.on('closed', function () {
-            fundingExchangeProviderService.deactivate()
-              .then(() => {
-                this.close(true);
-              });
-          });
-        } else if (window.cordova) {
-          document.addEventListener('resume', () => {
-            fundingExchangeProviderService.init()
-              .then(() => {
-              });
-          }, false);
-          document.addEventListener('pause', () => {
-            fundingExchangeProviderService.deactivate()
-              .then(() => {
-              });
-          }, false);
         }
       });
 }());

@@ -24,9 +24,7 @@
                 animationService,
                 addressbookService,
                 correspondentListService,
-                discoveryService,
                 isMobile,
-                fundingExchangeClientService,
                 ENV,
                 migrationService,
                 moment,
@@ -37,7 +35,6 @@
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const self = this;
         const conf = require('byteballcore/conf.js');
-        self.protocol = ENV.protocolPrefix;
         $rootScope.hideMenuBar = false;
         $rootScope.wpInputFocused = false;
         const config = configService.getSync();
@@ -48,9 +45,7 @@
         // INIT
         const walletSettings = configWallet.settings;
         this.unitValue = walletSettings.unitValue;
-        this.dagUnitValue = walletSettings.dagUnitValue;
         this.unitName = walletSettings.unitName;
-        this.dagUnitName = walletSettings.dagUnitName;
         this.unitDecimals = walletSettings.unitDecimals;
         this.isCordova = isCordova;
         this.addresses = [];
@@ -445,9 +440,6 @@
             $scope.unitName = self.unitName;
             $scope.unitValue = self.unitValue;
             $scope.unitDecimals = self.unitDecimals;
-            $scope.dagUnitValue = walletSettings.dagUnitValue;
-            $scope.dagUnitName = walletSettings.dagUnitName;
-            $scope.dagAsset = ENV.DAGCOIN_ASSET;
             $scope.isCordova = isCordova;
             $scope.buttonLabel = gettextCatalog.getString('Generate QR Code');
             $scope.protocol = conf.program;
@@ -468,17 +460,12 @@
                 return console.log('openCustomizedAmountModal: no balances yet');
               }
               const amount = form.amount.$modelValue;
-              const asset = ENV.DAGCOIN_ASSET;
-              if (!asset) {
-                throw Error('no asset');
-              }
-
-              const amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
+              const amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
 
               return $timeout(() => {
-                $scope.customizedAmountUnit = `${amount} ${(asset === 'base') ? $scope.unitName : (asset === ENV.DAGCOIN_ASSET ? $scope.dagUnitName : `of ${asset}`)}`;
+                $scope.customizedAmountUnit = `${amount} ${$scope.unitName}`;
                 $scope.amountInSmallestUnits = amountInSmallestUnits;
-                $scope.asset_param = (asset === 'base') ? '' : `&asset=${encodeURIComponent(asset)}`;
+                $scope.asset_param = '';
               }, 1);
             };
 
@@ -665,7 +652,7 @@
             return console.log('send payment: no balances yet');
           }
           const fc = profileService.focusedClient;
-          const dagUnitValue = this.dagUnitValue;
+          const unitValue = this.unitValue;
 
           if (isCordova && this.isWindowsPhoneApp) {
             this.hideAddress = false;
@@ -698,7 +685,7 @@
            return self.setSendError(gettext(msg));
            } */
 
-          const asset = ENV.DAGCOIN_ASSET;
+          const asset = 'base';
           console.log(`asset ${asset}`);
           const address = form.address.$modelValue;
           const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
@@ -709,7 +696,7 @@
           if (form.merkle_proof && form.merkle_proof.$modelValue) {
             merkleProof = form.merkle_proof.$modelValue.trim();
           }
-          amount *= dagUnitValue;
+          amount *= unitValue;
           amount = Math.round(amount);
 
           const currentPaymentKey = `${asset}${address}${amount}`;
@@ -749,7 +736,7 @@
                     const arrSeenCondition = ['seen', {
                       what: 'output',
                       address: myAddress,
-                      asset: ENV.DAGCOIN_ASSET,
+                      asset: 'base',
                       amount: self.binding.reverseAmount,
                     }];
                     arrDefinition = ['or', [
@@ -842,6 +829,10 @@
                 } else if (indexScope.shared_address) {
                   arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address);
                 }
+
+                breadcrumbs.add(`sending payment in ${asset}`);
+                profileService.bKeepUnlocked = true;
+
                 opts = {
                   shared_address: indexScope.shared_address,
                   merkleProof,
@@ -852,142 +843,56 @@
                   arrSigningDeviceAddresses,
                   recipientDeviceAddress,
                 };
-                breadcrumbs.add(`sending payment in ${asset}`);
-                profileService.bKeepUnlocked = true;
 
-                let paymentPromise = null;
-
-                if (indexScope.baseBalance.stable < constants.MIN_BYTE_FEE) {
-                  if (!fundingExchangeClientService.active) {
-                    paymentPromise = Promise.reject(gettextCatalog.getString('The Funding Client is not ready'));
-                  } else {
-                    paymentPromise = fundingExchangeClientService.getByteOrigin().then((sharedAddress) => {
-                      console.log(`ADDRESS${sharedAddress ? ' ' : ' NOT '}SERVED BY THE FUNDING NODE`);
-                      if (!sharedAddress) {
-                        return Promise.reject(gettextCatalog.getString('The funding service is currently not supported on secondary wallets. Load some bytes on it'));
+                fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
+                  let error = sendMultiPaymentError;
+                  // if multisig, it might take very long before the callback is called
+                  indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+                  breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
+                  delete self.current_payment_key;
+                  profileService.bKeepUnlocked = false;
+                  if (sendMultiPaymentError) {
+                    if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
+                      error = gettextCatalog.getString('Not enough dagcoins');
+                    } else if (sendMultiPaymentError.match(/connection closed/) || sendMultiPaymentError.match(/connect to light vendor failed/)) {
+                      error = gettextCatalog.getString('Problems with connecting to the hub. Please try again later');
+                    }
+                    return self.setSendError(error);
+                  }
+                  const binding = self.binding;
+                  self.resetForm();
+                  $rootScope.$emit('NewOutgoingTx');
+                  if (recipientDeviceAddress) { // show payment in chat window
+                    eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset, indexScope.walletId, true, toAddress);
+                    if (binding && binding.reverseAmount) { // create a request for reverse payment
+                      if (!myAddress) {
+                        throw Error(gettextCatalog.getString('my address not known'));
                       }
-
-                      return fundingExchangeClientService.getSharedAddressBalance(sharedAddress).then((assocBalances) => {
-                        console.log(`BALANCE FOR ${sharedAddress}: ${JSON.stringify(assocBalances)}`);
-
-                        if (assocBalances.base.stable === 0 || assocBalances.base.stable < 1500) {
-                          return Promise.reject(gettextCatalog.getString('Funding hub is fueling your wallet, it may take several minutes. Please try again a bit later.'));
-                        }
-
-                        opts = {
-                          from_address: fundingExchangeClientService.walletAddresses,
-                          main_address: fundingExchangeClientService.dagcoinOrigin,
-                          shared_address: sharedAddress,
-                          merkleProof,
-                          asset,
-                          /* to_address: toAddress,
-                           amount, */
-                          send_all: false,
-                          arrSigningDeviceAddresses,
-                          recipientDeviceAddress,
-                          externallyFundedPayment: true,
-                          asset_outputs: [
-                            {
-                              address: fundingExchangeClientService.dagcoinDestination,
-                              amount: constants.DAG_FEE // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
-                            }, {
-                              address: toAddress,
-                              amount
-                            }
-                          ]
-                        };
-
-                        return Promise.resolve();
+                      const paymentRequestCode = `dagcoin:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                      const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
+                      device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
+                      correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
+                        bIncoming: false,
+                        message: correspondentListService.formatOutgoingMessage(paymentRequestText),
+                        timestamp: Math.floor(Date.now() / 1000)
                       });
-                    });
-                  }
-                } else {
-                  paymentPromise = Promise.resolve();
-                }
-
-                paymentPromise.then(() => new Promise((resolve, reject) => {
-                  if (paymentId != null) {
-                    const objectHash = require('byteballcore/object_hash');
-                    const payload = JSON.stringify({ paymentId });
-                    opts.messages = [{
-                      app: 'text',
-                      payload_location: 'inline',
-                      payload_hash: objectHash.getBase64Hash(payload),
-                      payload
-                    }];
-                  }
-
-                  console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
-                  useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
-                    opts.change_address = addressInfo.address;
-                    fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
-                      let error = sendMultiPaymentError;
-                      // if multisig, it might take very long before the callback is called
-                      indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
-                      breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
-                      delete self.current_payment_key;
-                      profileService.bKeepUnlocked = false;
-                      if (sendMultiPaymentError) {
-                        if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
-                          error = gettextCatalog.getString('Not enough dagcoins');
-                        } else if (sendMultiPaymentError.match(/connection closed/) || sendMultiPaymentError.match(/connect to light vendor failed/)) {
-                          error = gettextCatalog.getString('Problems with connecting to the hub. Please try again later');
-                        }
-                        return self.setSendError(error);
-                      }
-                      const binding = self.binding;
-                      self.resetForm();
-                      $rootScope.$emit('NewOutgoingTx');
-                      if (recipientDeviceAddress) { // show payment in chat window
-                        eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset, indexScope.walletId, true, toAddress);
-                        if (binding && binding.reverseAmount) { // create a request for reverse payment
-                          if (!myAddress) {
-                            throw Error(gettextCatalog.getString('my address not known'));
-                          }
-                          const paymentRequestCode = `dagcoin:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
-                          const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
-                          device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
-                          correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
-                            bIncoming: false,
-                            message: correspondentListService.formatOutgoingMessage(paymentRequestText),
-                            timestamp: Math.floor(Date.now() / 1000)
-                          });
-                          // issue next address to avoid reusing the reverse payment address
-                          if (!fc.isSingleAddress) {
-                            walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
-                            });
-                          }
-                        }
-                      } else {
-                        indexScope.updateHistory((success) => {
-                          if (success) {
-                            $rootScope.$emit('Local/SetTab', 'walletHome');
-                            self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
-                          } else {
-                            console.error('updateTxHistory not executed');
-                          }
+                      // issue next address to avoid reusing the reverse payment address
+                      if (!fc.isSingleAddress) {
+                        walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
                         });
                       }
-                      resolve();
+                    }
+                  } else {
+                    indexScope.updateHistory((success) => {
+                      if (success) {
+                        $rootScope.$emit('Local/SetTab', 'walletHome');
+                        self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
+                      } else {
+                        console.error('updateTxHistory not executed');
+                      }
                     });
-                  });
-                  $scope.sendForm.$setPristine();
-                })).catch((error) => {
-                  delete self.current_payment_key;
-                  indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
-                  $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {
-                  });
+                  }
                 });
-              }
-
-              function useOrIssueNextAddress(wallet, isChange, handleAddress) {
-                if (fc.isSingleAddress) {
-                  handleAddress({
-                    address: self.addr[fc.credentials.walletId]
-                  });
-                } else {
-                  walletDefinedByKeys.issueNextAddress(wallet, isChange, handleAddress);
-                }
               }
             });
           }, 100);
@@ -1037,25 +942,17 @@
             // disappeared
             return;
           }
-          const address = form.address;
 
           const ModalInstanceCtrl = function ($scope, $modalInstance) {
             $scope.color = fc.backgroundColor;
             $scope.arrPublicAssetInfos = indexScope.arrBalances.filter(b => !b.is_private).map((b) => {
-              const info = { asset: b.asset };
-              if (b.asset === 'base') {
-                info.displayName = self.unitName;
-              } else if (b.asset === ENV.DAGCOIN_ASSET) {
-                info.displayName = self.dagUnitName;
-              } else {
-                info.displayName = `of ${b.asset.substr(0, 4)}`;
-              }
-              return info;
+              const r = { asset: b.asset, displayName: self.unitName };
+              return r;
             });
             $scope.binding = { // defaults
               type: 'reverse_payment',
               timeout: 4,
-              reverseAsset: ENV.DAGCOIN_ASSET,
+              reverseAsset: 'base',
               feed_type: 'either',
               oracle_address: ''
             };
@@ -1114,23 +1011,12 @@
 
         function getAmountInSmallestUnits(amount, asset) {
           console.log(amount, asset, self.unitValue);
-          let moneyAmount = amount;
-          if (asset === 'base') {
-            moneyAmount *= self.unitValue;
-          } else if (asset === ENV.DAGCOIN_ASSET) {
-            moneyAmount *= self.dagUnitValue;
-          }
+          const moneyAmount = amount * self.unitValue;
           return Math.round(moneyAmount);
         }
 
-        function getAmountInDisplayUnits(amount, asset) {
-          let moneyAmount = amount;
-          if (asset === 'base') {
-            moneyAmount /= self.unitValue;
-          } else if (asset === ENV.DAGCOIN_ASSET) {
-            moneyAmount /= self.dagUnitValue;
-          }
-          return moneyAmount;
+        function getAmountInDisplayUnits(amount) {
+          return amount / self.unitValue;
         }
 
         this.setToAddress = function (to) {
@@ -1166,12 +1052,7 @@
           }
 
           if (moneyAmount) {
-            if (asset === 'base') {
-              moneyAmount /= this.unitValue;
-            }
-            if (asset === ENV.DAGCOIN_ASSET) {
-              moneyAmount /= this.dagUnitValue;
-            }
+            moneyAmount /= this.unitValue;
             // form.amount.$setViewValue("" + amount);
             // form.amount.$isValid = true;
             this.lockAmount = true;
@@ -1266,21 +1147,10 @@
           if (!form || !form.amount || indexScope.arrBalances.length === 0) {
             return;
           }
-          let availableDags = indexScope.dagBalance.stable;
-          const availableBytes = indexScope.baseBalance.stable;
-
-          if (availableBytes < constants.MIN_BYTE_FEE) {
-            $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('You are sending all your stable amount. Transaction fee will be automatically excluded!'), 'fi-alert', () => {
-              availableDags = availableDags > constants.DAG_FEE ? availableDags - constants.DAG_FEE : 0;
-              availableDags /= this.dagUnitValue;
-              form.amount.$setViewValue(`${availableDags}`);
-              form.amount.$render();
-            });
-          } else {
-            availableDags /= this.dagUnitValue;
-            form.amount.$setViewValue(`${availableDags}`);
-            form.amount.$render();
-          }
+          let available = indexScope.baseBalance.stable;
+          available /= this.unitValue;
+          form.amount.$setViewValue(`${available}`);
+          form.amount.$render();
         };
 
         this.setFromUri = function (uri) {
@@ -1309,9 +1179,6 @@
           this.resetError();
           if (!value) return '';
 
-          if (value.indexOf(`${self.protocol}:`) === 0) {
-            return this.setFromUri(value);
-          }
           return value;
         };
 
@@ -1325,12 +1192,6 @@
           return this.unitName;
         };
 
-        this.checkFeeIsPayedByHub = function (btx, txHistory) {
-          const fundingNodeTx = txHistory.filter(x => (x.time === btx.time && x.unit === btx.unit && x.amount === constants.DAG_FEE))[0];
-
-          return (fundingNodeTx && btx.amount !== constants.DAG_FEE);
-        };
-
         this.openTxModal = function (btx, txHistory) {
           console.log(btx);
           $rootScope.modalOpened = true;
@@ -1342,11 +1203,6 @@
             $scope.isPrivate = indexScope.arrBalances[assetIndex].is_private;
             $scope.settings = walletSettings;
             $scope.color = fc.backgroundColor;
-
-            if (self.checkFeeIsPayedByHub(btx, txHistory)) {
-              $scope.feeIsPayedByHub = true;
-              $scope.btx.feeStr = getAmountInDisplayUnits(constants.DAG_FEE, ENV.DAGCOIN_ASSET);
-            }
 
             $scope.getAmount = function (amount) {
               return self.getAmount(amount);

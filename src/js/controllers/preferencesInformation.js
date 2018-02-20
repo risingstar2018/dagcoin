@@ -15,9 +15,6 @@
       configService,
       addressService,
       $rootScope,
-      fundingExchangeClientService,
-      proofingService,
-      dagcoinProtocolService,
       ENV) {
       const fc = profileService.focusedClient;
       const c = fc.credentials;
@@ -39,13 +36,6 @@
           } else if (addr) {
             $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('New Address successfully generated.'), 'fi-check', () => { });
             this.init();
-            proofingService.proofCurrentAddress().then((proof) => {
-              dagcoinProtocolService.sendRequest(
-                fundingExchangeClientService.bytesProviderDeviceAddress,
-                'link-address',
-                proof
-              );
-            });
           }
         });
       };
@@ -87,12 +77,9 @@
 
         fc.getListOfBalancesOnAddresses((listOfBalances) => {
           const balanceList = listOfBalances.map((row) => {
-            if (row.asset === 'base' || row.asset === ENV.DAGCOIN_ASSET) {
-              const assetName = row.asset !== 'base' ? 'DAG' : 'base';
-              const unitName = row.asset !== 'base' ? config.dagUnitName : config.unitName;
-              row.amount = `${profileService.formatAmount(row.amount, assetName, { dontRound: true })} ${unitName}`;
-              return row;
-            }
+            const assetName = 'base';
+            const unitName = config.unitName;
+            row.amount = `${profileService.formatAmount(row.amount, assetName, { dontRound: true })} ${unitName}`;
             return row;
           });
           // groupBy address
