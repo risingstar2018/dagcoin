@@ -1,11 +1,11 @@
 <div class="intro_content content">
-    <button ng-show="active_index !== 2" ui-sref="intro_confirm" class="btn btn_red skip_button">Skip</button>
+    <button ng-show="intro.active_index !== 2" ui-sref="intro_confirm" class="btn btn_red skip_button">Skip</button>
 
     <div class="intro_content_body">
         <div class="icons_states_swiper">
             <ks-swiper-container pagination-is-active="true"
-                                 swiper="swiper"
-                                 on-ready="onReadySwiper(swiper)"
+                                 swiper="intro.swiper"
+                                 on-ready="intro.onReadySwiper(swiper)"
                                  override-parameters="{'slidesPerView': 1, 'spaceBetween': 0, 'centeredSlides': true}">
                 <ks-swiper-slide class="swiper-slide">
                     <dag-state-icon icon="safe"></dag-state-icon>
@@ -38,9 +38,9 @@
         </div>
 
         <div class="intro_content_trigger">
-            <button ng-show="active_index === 0" ng-click="nextSlide()" class="btn btn_red">GOT IT</button>
-            <button ng-show="active_index === 1" ng-click="nextSlide()" class="btn btn_red">AWESOME</button>
-            <button ng-show="active_index === 2" ui-sref="intro_confirm" class="btn btn_red-full">CREATE WALLET</button>
+            <button ng-show="intro.active_index === 0" ng-click="intro.nextSlide()" class="btn btn_red">GOT IT</button>
+            <button ng-show="intro.active_index === 1" ng-click="intro.nextSlide()" class="btn btn_red">AWESOME</button>
+            <button ng-show="intro.active_index === 2" ui-sref="intro_confirm" class="btn btn_red-full">CREATE WALLET</button>
         </div>
     </div>
 </div>

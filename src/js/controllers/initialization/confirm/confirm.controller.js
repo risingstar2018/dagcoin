@@ -3,11 +3,11 @@
 
   angular
     .module('copayApp.controllers')
-    .controller('IntroConfirmController', IntroConfirmController);
+    .controller('IntroConfirmCtrl', IntroConfirmCtrl);
 
-  IntroConfirmController.$inject = ['$scope', 'ngDialog', 'isCordova', 'gettextCatalog', '$timeout', 'storageService', 'go'];
+  IntroConfirmCtrl.$inject = ['$scope', 'ngDialog', 'isCordova', 'gettextCatalog', '$timeout', 'storageService', 'go'];
 
-  function IntroConfirmController($scope, ngDialog, isCordova, gettextCatalog, $timeout, storageService, go) {
+  function IntroConfirmCtrl($scope, ngDialog, isCordova, gettextCatalog, $timeout, storageService, go) {
     $scope.agree = () => {
       if (isCordova) {
         window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Loading...'), true);
@@ -19,8 +19,6 @@
             if (isCordova) {
               window.plugins.spinnerDialog.hide();
             }
-            // why reload the page?
-            // applicationService.restart();
             go.walletHome();
           }, 1000);
         });

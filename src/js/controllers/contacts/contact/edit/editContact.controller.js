@@ -25,7 +25,6 @@
     contact.backParams = { address: $stateParams.address };
 
     contact.update = () => {
-      console.log(contact.data);
       addressbookService.update(contact.data, (error, record) => {
         const exists = !!record;
         if (exists) {

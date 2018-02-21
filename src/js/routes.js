@@ -120,8 +120,8 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/intro/intro.template.html',
-              controller: 'IntroController'
+              templateUrl: 'controllers/initialization/intro/intro.template.html',
+              controller: 'IntroCtrl as intro'
             }
           }
         })
@@ -130,8 +130,8 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/intro_confirm/intro_confirm.template.html',
-              controller: 'IntroConfirmController'
+              templateUrl: 'controllers/initialization/confirm/confirm.template.html',
+              controller: 'IntroCtrl as confirm'
             }
           }
         })
@@ -538,7 +538,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/contacts/contact/new_contact/new_contact.template.html',
+              templateUrl: 'controllers/contacts/contact/new/newContact.template.html',
               controller: 'NewContactController as contact'
             }
           }
@@ -565,7 +565,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/contacts/contact/edit_contact/edit_contact.template.html',
+              templateUrl: 'controllers/contacts/contact/edit/editContact.template.html',
               controller: 'EditContactController as contact'
             },
           }
