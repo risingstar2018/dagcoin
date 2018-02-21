@@ -868,7 +868,7 @@
                       if (!myAddress) {
                         throw Error(gettextCatalog.getString('my address not known'));
                       }
-                      const paymentRequestCode = `dagcoin:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                      const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
                       const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
                       device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
                       correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({

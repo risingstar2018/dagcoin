@@ -43,7 +43,7 @@
         idleDurationMin: 4,
         settings: {
           unitName: 'DAG',
-          unitValue: 100000,
+          unitValue: 1000000,
           unitDecimals: 6,
           unitCode: 'one',
           alternativeName: 'US Dollar',

@@ -402,7 +402,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   const paymentJsonBase64 = Buffer(paymentJson).toString('base64');
                   paymentRequestCode = `payment:${paymentJsonBase64}`;
                 } else {
-                  paymentRequestCode = `dagcoin:${myAddress}?amount=${peerAmount}&asset=${encodeURIComponent(contract.peerAsset)}`;
+                  paymentRequestCode = `byteball:${myAddress}?amount=${peerAmount}&asset=${encodeURIComponent(contract.peerAsset)}`;
                 }
                 const paymentRequestText = gettextCatalog.getString(`[your share of payment to the contract](${paymentRequestCode})`);
                 device.sendMessageToDevice(correspondent.device_address, 'text', paymentRequestText);
@@ -466,7 +466,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         const assocSharedDestinationAddresses = {};
         const createMovementLines = function () {
           $scopeModal.arrMovements = objMultiPaymentRequest.payments.map((objPayment) => {
-            let text = `${correspondentListService.getAmountText(objPayment.amount, 'base')} to ${objPayment.address}`;
+            let text = `${correspondentListService.getAmountText(objPayment.amount)} to ${objPayment.address}`;
             if (assocSharedDestinationAddresses[objPayment.address]) {
               text += ' (smart address, see below)';
             }
@@ -869,7 +869,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           }
           const units = $scopeModal.unitName;
 
-          appendText(`[${amount} ${units}](dagcoin:${myPaymentAddress}?${params})`);
+          appendText(`[${amount} ${units}](byteball:${myPaymentAddress}?${params})`);
 
           return $modalInstance.dismiss('cancel');
         };

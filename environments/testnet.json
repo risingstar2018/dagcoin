@@ -4,7 +4,7 @@
     "isTestnet": true,
     "explorerPrefix": "testnet",
     "TIMESTAMPER_ADDRESS": "OPNUXBRSSQQGHKQNEPD2GLWQYEUY5XLD",
-    "hub": "testnetexplorer.dagcoin.org/wss/",
+    "hub": "localhost:6611",
     "DATABASE_MIGRATION_TOOL": "native-queries"
   }
 }

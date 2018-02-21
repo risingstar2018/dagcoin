@@ -82,7 +82,7 @@ angular.module('copayApp.services').factory('correspondentListService',
       }
     }
 
-    const paymentRequestRegexp = /\[.*?\]\(dagcoin:([0-9A-Z]{32})\?([\w=&;+%]+)\)/g; // payment description within [] is ignored
+    const paymentRequestRegexp = /\[.*?\]\(byteball:([0-9A-Z]{32})\?([\w=&;+%]+)\)/g; // payment description within [] is ignored
 
     function highlightActions(text) {
       if (text.indexOf('a ng-click="showPayment') > 0) {
