@@ -1,19 +1,29 @@
-angular.module('copayApp.controllers').controller('correspondentDeviceController',
-  ($scope, $rootScope, $timeout, $sce, $modal, configService, profileService, animationService, isCordova, go,
-    correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) => {
-    const chatStorage = require('byteballcore/chat_storage.js');
-    const constants = require('byteballcore/constants.js');
-    console.log('correspondentDeviceController');
-    const device = require('byteballcore/device.js');
-    const eventBus = require('byteballcore/event_bus.js');
-    const conf = require('byteballcore/conf.js');
-    const storage = require('byteballcore/storage.js');
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+(() => {
+  'use strict';
+
+  const chatStorage = require('byteballcore/chat_storage.js');
+  const constants = require('byteballcore/constants.js');
+  const device = require('byteballcore/device.js');
+  const eventBus = require('byteballcore/event_bus.js');
+  const conf = require('byteballcore/conf.js');
+  const storage = require('byteballcore/storage.js');
+  const breadcrumbs = require('byteballcore/breadcrumbs.js');
+  const network = require('byteballcore/network.js');
+  const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+
+  angular
+    .module('copayApp.controllers')
+    .controller('CorrespondentDeviceCtrl', CorrespondentDeviceCtrl);
+
+  CorrespondentDeviceCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$modal', 'configService', 'profileService', 'animationService', 'isCordova', 'go',
+    'correspondentListService', 'addressService', 'lodash', '$deepStateRedirect', '$state', 'backButton', 'connectionService', 'ENV', 'gettextCatalog'];
+
+  function CorrespondentDeviceCtrl($scope, $rootScope, $timeout, $modal, configService, profileService, animationService, isCordova, go,
+                                    correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) {
     const chatScope = $scope;
     const indexScope = $scope.index;
     $scope.index.tab = 'chat';
     $rootScope.tab = $scope.index.tab;
-    $scope.profileService = profileService;
     $scope.backgroundColor = profileService.focusedClient.backgroundColor;
     const correspondent = correspondentListService.currentCorrespondent;
     $scope.correspondent = correspondent;
@@ -28,10 +38,9 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 
     $scope.$watch('correspondent.my_record_pref', (pref, oldPref) => {
       if (pref === oldPref) return;
-      const deviceReq = require('byteballcore/device.js');
-      deviceReq.sendMessageToDevice(correspondent.device_address, 'chat_recording_pref', pref, {
+      device.sendMessageToDevice(correspondent.device_address, 'chat_recording_pref', pref, {
         ifOk() {
-          deviceReq.updateCorrespondentProps(correspondent);
+          device.updateCorrespondentProps(correspondent);
           const oldState = (correspondent.peer_record_pref && !correspondent.my_record_pref);
           const newState = (correspondent.peer_record_pref && correspondent.my_record_pref);
           if (newState !== oldState) {
@@ -46,9 +55,6 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             $scope.$digest();
             chatStorage.store(correspondent.device_address, JSON.stringify({ state: newState }), 0, 'system');
           }
-          /* if (!pref) {
-                      chatStorage.purge(correspondent.device_address);
-                  } */
         },
         ifError() {
           // ignore
@@ -66,7 +72,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 
     $scope.$watch(`newMessagesCount['${correspondent.device_address}']`, () => {
       if (!$scope.newMsgCounterEnabled && $state.is('correspondentDevice')) {
-        $scope.newMessagesCount[$scope.correspondent.device_address] = 0;
+        $scope.newMessagesCount[correspondent.device_address] = 0;
       }
     });
 
@@ -90,7 +96,6 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       device.sendMessageToDevice(correspondent.device_address, 'text', message, {
         ifOk() {
           setOngoingProcess();
-          // $scope.messageEvents.push({bIncoming: false, message: $sce.trustAsHtml($scope.message)});
           $scope.autoScrollEnabled = true;
           const msgObj = {
             bIncoming: false,
@@ -101,7 +106,9 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           $scope.messageEvents.push(msgObj);
           $scope.message = '';
           $scope.$apply();
-          if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(correspondent.device_address, message, 0);
+          if (correspondent.my_record_pref && correspondent.peer_record_pref) {
+            chatStorage.store(correspondent.device_address, message, 0);
+          }
         },
         ifError(error) {
           setOngoingProcess();
@@ -135,7 +142,6 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       }
       backButton.dontDeletePath = true;
       go.send(() => {
-        // $rootScope.$emit('Local/SetTab', 'send', true);
         $rootScope.$emit('paymentRequest', address, amount, asset, correspondent.device_address);
       });
     };
@@ -312,9 +318,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   }, 1);
                   return;
                 }
-                const arrExplicitEventCondition =
-                  ['in data feed', [[contract.oracle_address], contract.feed_name, contract.relation, `${contract.feed_value}`, lastMci]];
-                const arrEventCondition = arrExplicitEventCondition;
+                const arrEventCondition = ['in data feed', [[contract.oracle_address], contract.feed_name, contract.relation, `${contract.feed_value}`, lastMci]];
                 const dataAddress = (contract.data_party === 'me') ? myAddress : address;
                 const expiryAddress = (contract.expiry_party === 'me') ? myAddress : address;
                 const dataDeviceAddress = (contract.data_party === 'me') ? device.getMyDeviceAddress() : correspondent.device_address;
@@ -422,7 +426,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   };
                   const objPaymentRequest = { payments: arrPayments, definitions: assocDefinitions };
                   const paymentJson = JSON.stringify(objPaymentRequest);
-                  const paymentJsonBase64 = Buffer(paymentJson).toString('base64');
+                  const paymentJsonBase64 = new Buffer(paymentJson).toString('base64');
                   paymentRequestCode = `payment:${paymentJsonBase64}`;
                 } else {
                   paymentRequestCode = `dagcoin:${myAddress}?amount=${peerAmount}&asset=${encodeURIComponent(contract.peerAsset)}`;
@@ -781,7 +785,6 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 
     function readLastMainChainIndex(cb) {
       if (conf.bLight) {
-        const network = require('byteballcore/network.js');
         network.requestFromLightVendor('get_last_mci', null, (ws, request, responseFlv) => {
           if (responseFlv.error) {
             cb(responseFlv.error);
@@ -805,25 +808,12 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
     }
 
     function issueNextAddress(cb) {
-      const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
       walletDefinedByKeys.issueNextAddress(profileService.focusedClient.credentials.walletId, 0, (addressInfo) => {
         if (cb) {
           cb(addressInfo.address);
         }
       });
     }
-
-    /*
-      function issueNextAddressIfNecessary(onDone){
-          if (myPaymentAddress) // do not issue new address
-              return onDone();
-          var walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
-          walletDefinedByKeys.issueOrSelectNextAddress(fc.credentials.walletId, 0, function(addressInfo){
-              myPaymentAddress = addressInfo.address; // cache it in case we need to insert again
-              onDone();
-              $scope.$apply();
-          });
-      } */
 
     function appendText(text) {
       if (!$scope.message) {
@@ -864,8 +854,6 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         $scopeModal.isCordova = isCordova;
         $scopeModal.dagAsset = ENV.DAGCOIN_ASSET;
         $scopeModal.buttonLabel = gettextCatalog.getString('Request payment');
-        // $scopeModal.selectedAsset = $scopeModal.index.arrBalances[$scopeModal.index.assetIndex];
-        // console.log($scopeModal.index.arrBalances.length+" assets, current: "+$scopeModal.asset);
 
         Object.defineProperty($scopeModal,
           '_customAmount', {
@@ -950,4 +938,6 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         go.path('correspondentDevices');
       }
     };
-  });
+  }
+})();
+

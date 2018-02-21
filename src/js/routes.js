@@ -246,8 +246,8 @@
           sticky: true,
           views: {
             main: {
-              templateUrl: 'views/correspondentDevices.html',
-              controller: 'correspondentDevicesController'
+              templateUrl: 'controllers/correspondentDevices/correspondentDevices.template.html',
+              controller: 'CorrespondentDevicesCtrl as correspondentDevices'
             },
           },
         })
@@ -257,8 +257,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/correspondentDevice.html',
-              controller: 'correspondentDeviceController'
+              templateUrl: 'controllers/correspondentDevices/correspondentDevice/correspondentDevice.template.html',
+              controller: 'CorrespondentDeviceCtrl'
             },
           },
         })
@@ -268,8 +268,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/editCorrespondentDevice.html',
-              controller: 'editCorrespondentDeviceController'
+              templateUrl: 'controllers/correspondentDevices/correspondentDevice/edit/editCorrespondentDevice.template.html',
+              controller: 'EditCorrespondentDeviceCtrl as editDevice'
             },
           },
         })
@@ -278,9 +278,9 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/addCorrespondentDevice.html',
-            },
-          },
+              templateUrl: 'controllers/correspondentDevices/correspondentDevice/add/addCorrespondentDevice.template.html',
+            }
+          }
         })
         .state('inviteCorrespondentDevice', {
           url: '/inviteCorrespondentDevice',
@@ -288,10 +288,10 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/inviteCorrespondentDevice.html',
-              controller: 'inviteCorrespondentDeviceController'
-            },
-          },
+              templateUrl: 'controllers/correspondentDevices/correspondentDevice/invite/inviteCorrespondentDevice.template.html',
+              controller: 'InviteCorrespondentDeviceCtrl as inviteDevice'
+            }
+          }
         })
         .state('acceptCorrespondentInvitation', {
           url: '/acceptCorrespondentInvitation',
@@ -299,8 +299,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/acceptCorrespondentInvitation.html',
-              controller: 'acceptCorrespondentInvitationController'
+              templateUrl: 'controllers/correspondentDevices/correspondentDevice/accept/acceptInvitation.template.html',
+              controller: 'AcceptCorrespondentInvitationCtrl as acceptInvitation'
             },
           },
         })
@@ -358,18 +358,6 @@
             },
           }
         })
-        .state('preferencesColor', {
-          url: '/preferencesColor',
-          templateUrl: 'views/preferencesColor.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/preferencesColor.html',
-            },
-          },
-        })
-
         .state('preferencesAlias', {
           url: '/preferencesAlias',
           templateUrl: 'views/preferencesAlias.html',
@@ -378,18 +366,6 @@
           views: {
             main: {
               templateUrl: 'views/preferencesAlias.html',
-            },
-
-          },
-        })
-        .state('preferencesEmail', {
-          url: '/preferencesEmail',
-          templateUrl: 'views/preferencesEmail.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/preferencesEmail.html',
             },
 
           },

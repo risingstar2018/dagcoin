@@ -3,7 +3,7 @@
 </dag-nav-bar>
 <div class="chat content">
   <div class="onGoingProcess" ng-show="onGoingProcess">
-    <div class="onGoingProcess-content" ng-style="{'background-color':profileService.focusedClient.backgroundColor}">
+    <div class="onGoingProcess-content" ng-style="{'background-color': backgroundColor}">
       <div class="spinner">
         <div class="rect1"></div>
         <div class="rect2"></div>
@@ -24,12 +24,12 @@
     </div>
     <br>
     <div>
-      <switch ng-model="correspondent.my_record_pref" class="green right"></switch>
+      <switch class="green right" ng-model="correspondent.my_record_pref"></switch>
       <div translate>My recording preference</div>
     </div>
     <div class="clear"></div>
     <div class="switch-line">
-      <switch ng-model="correspondent.peer_record_pref" class="green right" disabled="true"></switch>
+      <switch  class="green right" ng-model="correspondent.peer_record_pref" data-disabled="true"></switch>
       <div translate>Their recording preference</div>
     </div>
   </div>
@@ -56,17 +56,16 @@
     <div class="text-warning size-12 m10b" ng-show="error && !index.isOffline">{{error|translate}}</div>
     <div class="text-warning size-12 m10b" ng-show="index.isOffline">{{'Application in Offline mode'|translate}}</div>
 
-    <span dropdown-toggle="#drop"></span>
     <div class="send_form_message">
 
-      <button class="send_form_message_chat_button btn inline" ng-disabled="index.isOffline"
-              onclick="$('#drop').toggle()">
+      <button class="send_form_message_chat_button btn inline" dropdown-toggle="#drop" ng-disabled="index.isOffline"
+              data-options="align:top">
         <svg-icon name="add"></svg-icon>
       </button>
 
-      <ul id="drop" class="f-dropdown drop-top" style="top: -10px;">
-        <li><a ng-click="insertMyAddress()" onclick="$('#drop').hide()" translate>Insert my address</a></li>
-        <li><a ng-click="requestPayment()" onclick="$('#drop').hide()" translate>Request payment</a></li>
+      <ul id="drop" class="f-dropdown drop-top" data-dropdown-content>
+        <li><a ng-click="insertMyAddress()" translate>Insert my address</a></li>
+        <li><a ng-click="requestPayment()" translate>Request payment</a></li>
       </ul>
 
       <form name="chatForm" class="chatForm" no-validate
