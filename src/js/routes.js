@@ -112,8 +112,9 @@
           views: {
             main: {
               templateUrl: 'views/splash.html',
-            },
-          },
+              controller: 'SplashCtrl as splash'
+            }
+          }
         })
         .state('intro', {
           url: '/intro',
@@ -335,7 +336,6 @@
             },
           },
         })
-
         .state('preferencesAdvanced', {
           url: '/preferencesAdvanced',
           templateUrl: 'views/preferencesAdvanced.html',
@@ -431,17 +431,6 @@
             main: {
               templateUrl: 'views/preferencesLogs.html',
               controller: 'preferencesLogs as logs'
-            },
-          },
-        })
-        .state('paperWallet', {
-          url: '/paperWallet',
-          templateUrl: 'views/paperWallet.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/paperWallet.html',
             },
           },
         })
@@ -606,13 +595,6 @@
                   default:
                   // Error handler should be here
                 }
-                // why should we go home on resume or backbutton?
-                /*
-                 $timeout(function() {
-                 $rootScope.$emit('Local/SetTab', 'walletHome', true);
-                 }, 100);
-                 go.walletHome();
-                 */
               },
             },
           },

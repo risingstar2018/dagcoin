@@ -3,11 +3,11 @@
 
   angular
     .module('copayApp.controllers')
-    .controller('IntroController', IntroController);
+    .controller('IntroCtrl', IntroCtrl);
 
-  IntroController.$inject = ['$timeout'];
+  IntroCtrl.$inject = ['$timeout'];
 
-  function IntroController($timeout) {
+  function IntroCtrl($timeout) {
     const vm = this;
     vm.swiper = {};
     vm.currentStep = 'intro';

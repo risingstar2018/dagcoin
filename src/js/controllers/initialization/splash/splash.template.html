@@ -1,24 +1,9 @@
-<style>
-  .dark-centered-input {
-    text-align: center;
-    border-bottom-color: #8597A7 !important;
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-  }
-
-  .dark-centered-input:focus {
-    color: #8597A7 !important;
-  }
-</style>
-<div class="splash content text-center"
-     ng-init="splash.init()"
-     ng-controller="splashController as splash">
+<div class="splash content text-center">
   <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
   <div ng-if="!index.hasProfile">
     <div ng-if="splash.step === 'registration_type'">
       <div class="row text-left" style="margin-top: 40px">
         <div class="start-button large-10 medium-10 small-10 medium-centered small-centered large-centered columns">
-
           <label><span class="text-brand size-14" translate>Please choose registration type</span></label>
           <div class="m20t">
             <label class="text-gray size-14" style="vertical-align: middle" for="default_type">
@@ -37,7 +22,7 @@
               using the wallet immediately.
             </p>
           </div>
-          
+
           <div class="m20t">
             <label class="text-gray size-14" style="vertical-align: middle" for="backup_type">
               <div class="input-wrap-radio">
@@ -93,8 +78,8 @@
 							</span>
             </label>
             <p class="text-gray size-14 m0" translate>
-              The wallet will contain the most current state of the entire Dagcoin database.  This option is better
-              for privacy but will take  several gigabytes of storage and the initial sync will take several days.
+              The wallet will contain the most current state of the entire Dagcoin database. This option is better
+              for privacy but will take several gigabytes of storage and the initial sync will take several days.
               CPU load will be high during sync.
             </p>
           </div>
@@ -111,7 +96,7 @@
 							</span>
             </label>
             <p class="text-gray size-14 m0" translate>
-              The wallet will contain minimum information relevant to you.  The wallet vendor will be able to know
+              The wallet will contain minimum information relevant to you. The wallet vendor will be able to know
               some of your balances and will be able to see which transactions are yours, but you can start using the
               wallet immediately and the wallet is fully functional.
             </p>
@@ -158,25 +143,25 @@
           <div ng-show="!splash.bDeviceNameSet">
             <label><span class="text-gray" translate>Please name this device</span></label>
             <div class="input-wrap m20t">
-              <input type="text" id="deviceName" type="text" name="deviceName" ng-model="splash.deviceName" class="text-gray text-center">
+              <input type="text" id="deviceName" type="text" name="deviceName" ng-model="splash.deviceName"
+                     class="text-gray text-center">
             </div>
 
-            <button ng-click="splash.saveDeviceName()" class="btn btn_red-full m20t" ng-disabled="!splash.deviceName" translate>
+            <button ng-click="splash.saveDeviceName()" class="btn btn_red-full m20t" ng-disabled="!splash.deviceName"
+                    translate>
               CONTINUE
             </button>
           </div>
 
           <div ng-show="splash.bDeviceNameSet">
-            <p class="text-gray size-14 m0 text-gray m20b" translate>Your wallet will be created on this device, keep it safe.  See your backup options in the Settings menu.</p>
-            <p class="text-gray size-14 m0 text-gray m20b" translate>Also in the Settings menu, you will find security options such as setting a password.</p>
+            <p class="text-gray size-14 m0 text-gray m20b" translate>Your wallet will be created on this device, keep it
+              safe. See your backup options in the Settings menu.</p>
+            <p class="text-gray size-14 m0 text-gray m20b" translate>Also in the Settings menu, you will find security
+              options such as setting a password.</p>
             <button ng-click="splash.create()" class="btn btn_red-full" translate>
               GET STARTED
             </button>
           </div>
-          <!--
-          <p class="text-gray m5b size-12" translate>Already have a wallet?</p>
-          <button  ng-click="splash.create(true)" class="button round outline dark-gray tiny" ng-disabled="!splash.deviceName" translate>Import backup </button>
-          -->
         </div>
       </div>
     </div>
