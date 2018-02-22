@@ -229,13 +229,12 @@
         })
         .state('preferences', {
           url: '/preferences',
-          templateUrl: 'views/preferences.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferences.html',
-              controller: 'preferencesController as preferences'
+              templateUrl: 'controllers/preferences/wallet/preferencesWallet.template.html',
+              controller: 'PreferencesCtrl as preferences'
             },
           },
         })
@@ -321,7 +320,8 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/preferencesDeviceName.html',
+              templateUrl: 'controllers/preferences/global/device/name/preferencesDeviceName.template.html',
+              controller: 'PreferencesDeviceNameCtrl as prefDeviceName'
             },
           },
         })
@@ -338,34 +338,33 @@
         })
         .state('preferencesAdvanced', {
           url: '/preferencesAdvanced',
-          templateUrl: 'views/preferencesAdvanced.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAdvanced.html',
-            },
+              templateUrl: 'controllers/preferences/wallet/advanced/preferencesAdvanced.template.html',
+            }
           },
         })
         .state('preferencesDeleteWallet', {
           url: '/delete',
-          templateUrl: 'views/preferencesDeleteWallet.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             'main@': {
-              templateUrl: 'views/preferencesDeleteWallet.html'
+              templateUrl: 'controllers/preferences/wallet/delete/preferencesDeleteWallet.template.html',
+              controller: 'PreferencesDeleteWalletCtrl as preferences'
             },
           }
         })
         .state('preferencesAlias', {
           url: '/preferencesAlias',
-          templateUrl: 'views/preferencesAlias.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAlias.html',
+              templateUrl: 'controllers/preferences/wallet/alias/preferencesAlias.template.html',
+              controller: 'PreferencesAliasCtrl as prefAlias'
             },
 
           },
@@ -376,8 +375,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesInformation.html',
-              controller: 'preferencesInformation as info'
+              templateUrl: 'controllers/preferences/wallet/information/preferencesInformation.template.html',
+              controller: 'PreferencesInformationCtrl as info'
             },
           },
         })
@@ -387,7 +386,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesSystem.html',
+              templateUrl: 'controllers/preferences/global/system/preferencesSystem.html',
+              controller: 'PreferencesSystemCtrl as system'
             },
           },
         })
@@ -397,18 +397,18 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesSecurity.html',
+              templateUrl: 'controllers/preferences/global/security/preferencesSecurity.template.html',
+              controller: 'PreferencesSecurityCtrl as security'
             },
           },
         })
-
         .state('about', {
           url: '/about',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAbout.html',
+              templateUrl: 'controllers/preferences/global/preferencesAbout.template.html',
             },
           },
         })
@@ -418,7 +418,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAboutDevice.html',
+              templateUrl: 'controllers/preferences/global/device/about/preferencesAboutDevice.template.html',
+              controller: 'PreferencesAboutDeviceCtrl as aboutDevice'
             },
           },
         })
@@ -429,59 +430,58 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesLogs.html',
-              controller: 'preferencesLogs as logs'
-            },
-          },
+              templateUrl: 'controllers/preferences/global/log/preferencesLogs.template.html',
+              controller: 'PreferencesLogsCtrl as logs'
+            }
+          }
         })
         .state('backup', {
           url: '/backup',
           params: {
             backTo: 'security'
           },
-          templateUrl: 'views/backup.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/backup.html',
-            },
-          },
+              templateUrl: 'controllers/preferences/global/security/backup/backup.template.html',
+              controller: 'BackupCtrl as backup'
+            }
+          }
         })
         .state('recovery', {
           url: '/recovery',
           params: {
             backTo: 'security'
           },
-          templateUrl: 'views/recovery.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/recovery.html',
-            },
-          },
+              templateUrl: 'controllers/preferences/global/security/recovery/recovery.template.html',
+              controller: 'RecoveryCtrl as recovery'
+            }
+          }
         })
         .state('initialRecovery', {
           url: '/initialRecovery',
-          templateUrl: 'views/recovery.html',
           walletShouldBeComplete: false,
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/recovery.html',
-            },
-          },
+              templateUrl: 'controllers/preferences/global/security/recovery/recovery.html',
+              controller: 'RecoveryCtrl as recovery'
+            }
+          }
         })
         .state('preferencesGlobal', {
           url: '/preferencesGlobal',
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesGlobal.html',
-              controller: 'preferencesGlobalController as prefGlobal'
-            },
-          },
+              templateUrl: 'controllers/preferences/global/preferencesGlobal.template.html'
+            }
+          }
         })
         .state('transactions', {
           url: '/transactions',

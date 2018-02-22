@@ -934,11 +934,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         };
 
         self.updateColor = function () {
-          const config = configService.getSync();
-          config.colorFor = config.colorFor || {};
-          self.backgroundColor = '#d51f26'; // config.colorFor[self.walletId] || '#4A90E2';
+          self.backgroundColor = '#d51f26';
           const fc = profileService.focusedClient;
-          fc.backgroundColor = '#d51f26'; // self.backgroundColor;
+          fc.backgroundColor = '#d51f26';
         };
 
         self.updateSingleAddressFlag = function () {

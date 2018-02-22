@@ -1,0 +1,176 @@
+@import "../../../css/variables";
+$background: #f5f5f5;
+
+.preferences {
+  background: $background;
+
+  &:before {
+    background: $background !important;
+  }
+
+  .backup_error {
+    margin: 20px;
+
+    a:not(.inline) {
+      background: $red;
+      color: #fff;
+    }
+
+    svg-icon {
+      color: $red;
+      top: 40px;
+    }
+  }
+
+  form {
+    padding-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .switch {
+    top: -5px !important;
+  }
+
+  h4 {
+    padding: 0 30px;
+    color: #969696;
+    font-size: 12px;
+    font-weight: 400;
+    margin: 15px 0 5px;
+    text-transform: uppercase;
+    position: relative;
+
+    button {
+      color: $red;
+      float: right;
+      background: transparent;
+
+      &:hover {
+        color: $red;
+        background: transparent;
+      }
+    }
+
+    & + ul {
+      margin-top: 0;
+    }
+  }
+
+  .preferences_links {
+    font-size: 14px;
+    margin: 15px 5px 0;
+    padding: 0 15px;
+
+    .cursor-default {
+      cursor: default !important;
+    }
+
+    li {
+      padding: 15px 30px;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #4e4e4e;
+      position: relative;
+      box-shadow: 0 1px 3px 0 rgba(150, 150, 150, 0.1);
+
+      .description {
+        font-size: 12px;
+        color: #999;
+        display: block;
+        width: 100%;
+        white-space: pre-line;
+      }
+
+      .switch {
+        position: absolute;
+        right: 20px;
+        top: 50% !important;
+        margin-top: -16px;
+      }
+
+      .value {
+        font-size: 12px;
+        color: #999;
+      }
+
+      .wrapped {
+        word-break: break-all;
+        white-space: normal;
+      }
+
+      &.left_icon {
+        padding-left: 60px;
+      }
+
+      &.right_icon {
+        padding-right: 50px;
+      }
+
+      svg-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        margin-top: -10px;
+        float: none;
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+
+        &.svg-icon-chevron-thin-right, &.right {
+          left: auto;
+          right: 20px;
+          margin-top: -5px;
+
+          svg {
+            width: 10px;
+            height: 10px;
+          }
+        }
+      }
+
+      > a, > div {
+        color: #494d50;
+        display: block;
+      }
+
+      &:first-child {
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+      }
+
+      &:last-child {
+        border-bottom: none;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+    }
+
+    &.warnings {
+      margin: 20px 0;
+      background-color: transparent;
+      text-align: center;
+
+      li {
+        border-bottom: none;
+        padding: 0;
+      }
+    }
+  }
+
+  .selections {
+    padding: 20px;
+    .selection {
+      padding: 20px;
+      border-radius: 5px;
+      border: 2px solid darken(#fafafa, 5);
+      background: #fafafa;
+      margin: 20px 0;
+    }
+  }
+}
