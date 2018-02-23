@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('correspondentDevicesController',
-    ($scope, $timeout, configService, profileService, go, correspondentListService, $state, $rootScope, lodash, ENV) => {
+    ($scope, $timeout, configService, profileService, go, correspondentListService, $state, $rootScope) => {
       const wallet = require('byteballcore/wallet.js');
       $scope.editCorrespondentList = false;
       $scope.selectedCorrespondentList = {};

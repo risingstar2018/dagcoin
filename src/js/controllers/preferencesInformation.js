@@ -14,8 +14,7 @@
       go,
       configService,
       addressService,
-      $rootScope,
-      ENV) {
+      $rootScope) {
       const fc = profileService.focusedClient;
       const c = fc.credentials;
 
