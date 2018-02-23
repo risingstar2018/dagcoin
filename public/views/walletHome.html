@@ -71,12 +71,12 @@
                   <div class="price_digits">
                     <div class="price_digits_wrapper" ng-if="!index.needsUnlock || index.needsUnlock.success === true">
                       <span class="price-number"
-                            ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">
-                        {{index.dagBalance.totalStr.split('.')[0]}}</span><span class="price-separator">.
+                            ng-style="home.getFontSizeForWalletNumber(index.baseBalance.totalStr)">
+                        {{index.baseBalance.totalStr.split('.')[0]}}</span><span class="price-separator">.
                       </span>
                       <span class="price-sup"
-                            ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr, 'sup')">
-                        {{index.dagBalance.totalStr.split('.')[1]}}
+                            ng-style="home.getFontSizeForWalletNumber(index.baseBalance.totalStr, 'sup')">
+                        {{index.baseBalance.totalStr.split('.')[1]}}
                       </span>
                     </div>
                   </div>
@@ -84,13 +84,13 @@
 
               </div>
 
-              <span ng-if="index.dagBalance.pending" class="ballance" translate>Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
-              <span ng-if="!index.dagBalance.pending" class="ballance" translate>Wallet balance</span>
+              <span ng-if="index.baseBalance.pending" class="ballance" translate>Pending wallet balance: {{index.baseBalance.pendingStr}}</span>
+              <span ng-if="!index.baseBalance.pending" class="ballance" translate>Wallet balance</span>
 
-              <div class="size-10 m10t" ng-if="index.dagBalance.shared !== undefined">
+              <div class="size-10 m10t" ng-if="index.baseBalance.shared !== undefined">
                 <a ng-click="index.openSubwalletModal()">
                   <span translate>Also</span>
-                  <span>{{index.dagBalance.sharedStr}}</span>
+                  <span>{{index.baseBalance.sharedStr}}</span>
                   <span translate>in smart wallets</span>
                 </a>
               </div>
@@ -291,7 +291,7 @@
               </div>
               <div class="title clearfix">
                 <span class="name" translate>Amount</span>
-                <span class="available" translate>Available <span>{{index.dagBalance.stable / 1e6}}</span></span>
+                <span class="available" translate>Available <span>{{index.baseBalance.stable / 1e6}}</span></span>
                 <a ng-click="home.setSendAll()" ng-show="!home.lockAmount"
                    style="text-transform: none; margin-left: 10px" translate>Send all</a>
               </div>

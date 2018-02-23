@@ -8,7 +8,7 @@
   sharedService.$inject = ['$rootScope', 'ENV'];
 
   /* @ngInject */
-  function sharedService($rootScope, ENV) {
+  function sharedService($rootScope) {
     const service = {};
     const balanceStatuses = {
       total: 'total',
@@ -18,7 +18,6 @@
 
     service.balanceStatuses = balanceStatuses;
     service.hasBalance = hasBalance;
-    service.hasDags = hasDags;
     service.hasBytes = hasBytes;
 
     let currentBalance = null;
@@ -28,17 +27,12 @@
     });
 
     function hasBalance(status) {
-      return hasBytes(status) || hasDags(status);
+      return hasBytes(status);
     }
 
     function hasBytes(status) {
       const st = status || balanceStatuses.stable;
       return (currentBalance && currentBalance.base && currentBalance.base[st] > 0);
-    }
-
-    function hasDags(status) {
-      const st = status || balanceStatuses.stable;
-      return (currentBalance && currentBalance[ENV.DAGCOIN_ASSET] && currentBalance[ENV.DAGCOIN_ASSET][st] > 0);
     }
 
     return service;

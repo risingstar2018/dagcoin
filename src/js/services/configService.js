@@ -27,14 +27,10 @@
         reconnectDelay: 5000,
         idleDurationMin: 4,
         settings: {
-          unitName: 'bytes',
-          unitValue: 1,
-          unitDecimals: 0,
-          unitCode: 'oneByte',
-          dagUnitName: 'DAG',
-          dagUnitValue: 1000000,
-          dagUnitDecimals: 6,
-          dagUnitCode: 'one',
+          unitName: 'DAG',
+          unitValue: 1000000,
+          unitDecimals: 6,
+          unitCode: 'one',
           alternativeName: 'US Dollar',
           alternativeIsoCode: 'USD',
         },
@@ -84,23 +80,7 @@
             configCache.wallet.settings.unitCode = defaultConfig.wallet.settings.unitCode;
           }
           if (!configCache.wallet.settings.unitValue) {
-            if (configCache.wallet.settings.unitToBytes) {
-              configCache.wallet.settings.unitValue = configCache.wallet.settings.unitToBytes;
-            } else {
-              configCache.wallet.settings.unitValue = defaultConfig.wallet.settings.unitValue;
-            }
-          }
-          if (!configCache.wallet.settings.dagUnitName) {
-            configCache.wallet.settings.dagUnitName = defaultConfig.wallet.settings.dagUnitName;
-          }
-          if (!configCache.wallet.settings.dagUnitValue) {
-            configCache.wallet.settings.dagUnitValue = defaultConfig.wallet.settings.dagUnitValue;
-          }
-          if (!configCache.wallet.settings.dagUnitDecimals) {
-            configCache.wallet.settings.dagUnitDecimals = defaultConfig.wallet.settings.dagUnitDecimals;
-          }
-          if (!configCache.wallet.settings.dagUnitCode) {
-            configCache.wallet.settings.dagUnitCode = defaultConfig.wallet.settings.dagUnitCode;
+            configCache.wallet.settings.unitValue = defaultConfig.wallet.settings.unitValue;
           }
           if (!configCache.pushNotifications) {
             configCache.pushNotifications = defaultConfig.pushNotifications;

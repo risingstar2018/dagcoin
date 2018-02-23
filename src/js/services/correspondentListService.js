@@ -1,10 +1,9 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
-   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService, ENV, gettextCatalog) => {
+   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, faucetService, ENV, gettextCatalog) => {
     const eventBus = require('byteballcore/event_bus.js');
     const ValidationUtils = require('byteballcore/validation_utils.js');
     const objectHash = require('byteballcore/object_hash.js');
-    const constants = require('byteballcore/constants.js');
     const root = {};
     const device = require('byteballcore/device.js');
     const chatStorage = require('byteballcore/chat_storage.js');
@@ -82,7 +81,7 @@ angular.module('copayApp.services').factory('correspondentListService',
       }
     }
 
-    const paymentRequestRegexp = /\[.*?\]\(dagcoin:([0-9A-Z]{32})\?([\w=&;+%]+)\)/g; // payment description within [] is ignored
+    const paymentRequestRegexp = /\[.*?\]\(byteball:([0-9A-Z]{32})\?([\w=&;+%]+)\)/g; // payment description within [] is ignored
 
     function highlightActions(text) {
       if (text.indexOf('a ng-click="showPayment') > 0) {
@@ -105,7 +104,7 @@ angular.module('copayApp.services').factory('correspondentListService',
         if (!objPaymentRequest) {
           return str;
         }
-        return `<a ng-click="sendPayment('${address}', ${objPaymentRequest.amount}, '${objPaymentRequest.asset}',` +
+        return `<a ng-click="sendPayment('${address}', ${objPaymentRequest.amount},` +
         `'${objPaymentRequest.device_address}')">${objPaymentRequest.amountStr}</a>`;
       }).replace(/\[(.+?)\]\(command:(.+?)\)/g,
         (str, description, command) => `<a ng-click="sendCommand('${escapeQuotes(command)}',
@@ -124,7 +123,7 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     function getMovementsFromJsonBase64PaymentRequest(paymentJsonBase64, bAggregatedByAsset) {
       let objMultiPaymentRequest;
-      let assocPaymentsByAsset;
+      let assocPayments = 0;
       let invalidChash;
       const paymentJson = new Buffer(paymentJsonBase64, 'base64').toString('utf8');
       console.log(paymentJson);
@@ -145,37 +144,28 @@ angular.module('copayApp.services').factory('correspondentListService',
         }
       }
       try {
-        assocPaymentsByAsset = getPaymentsByAsset(objMultiPaymentRequest);
+        assocPayments = getPayments(objMultiPaymentRequest);
       } catch (e) {
         return null;
       }
       let arrMovements = [];
       if (bAggregatedByAsset) {
-        Object.keys(assocPaymentsByAsset).forEach((asset) => {
-          arrMovements.push(getAmountText(assocPaymentsByAsset[asset], asset));
-        });
+        arrMovements.push(getAmountText(assocPayments));
       } else {
-        arrMovements = objMultiPaymentRequest.payments.map(objPayment => `${getAmountText(objPayment.amount, objPayment.asset || 'base')} to ${objPayment.address}`);
+        arrMovements = objMultiPaymentRequest.payments.map(objPayment => `${getAmountText(objPayment.amount)} to ${objPayment.address}`);
       }
       return arrMovements;
     }
 
-    function getPaymentsByAsset(objMultiPaymentRequest) {
-      const assocPaymentsByAsset = {};
+    function getPayments(objMultiPaymentRequest) {
+      let assocPayments = 0;
       objMultiPaymentRequest.payments.forEach((objPayment) => {
-        const asset = objPayment.asset || 'base';
-        if (asset !== 'base' && !ValidationUtils.isValidBase64(asset, constants.HASH_LENGTH)) {
-          throw Error(`asset ${asset} is not valid`);
-        }
         if (!ValidationUtils.isPositiveInteger(objPayment.amount)) {
           throw Error(`amount ${objPayment.amount} is not valid`);
         }
-        if (!assocPaymentsByAsset[asset]) {
-          assocPaymentsByAsset[asset] = 0;
-        }
-        assocPaymentsByAsset[asset] += objPayment.amount;
+        assocPayments += objPayment.amount;
       });
-      return assocPaymentsByAsset;
+      return assocPayments;
     }
 
     function formatOutgoingMessage(text) {
@@ -212,21 +202,15 @@ angular.module('copayApp.services').factory('correspondentListService',
       if (!ValidationUtils.isPositiveInteger(amount)) {
         return null;
       }
-      const asset = assocParams.asset || 'base';
-      console.log(`asset=${asset}`);
-      if (asset !== 'base' && !ValidationUtils.isValidBase64(asset, constants.HASH_LENGTH)) { // invalid asset
-        return null;
-      }
       const deviceAddress = assocParams.device_address || '';
       if (deviceAddress && !ValidationUtils.isValidDeviceAddress(deviceAddress)) {
         return null;
       }
-      const amountStr = `Payment request: ${getAmountText(amount, asset)}`;
+      const amountStr = `Payment request: ${getAmountText(amount)}`;
       return {
         amount,
-        asset,
         device_address: deviceAddress,
-        amountStr,
+        amountStr
       };
     }
 
@@ -266,29 +250,14 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     // amount is in smallest units
-    function getAmountText(amount, asset) {
+    function getAmountText(amount) {
       const walletSettings = configService.getSync().wallet.settings;
       let newAmount = amount;
 
-      if (asset === 'base') {
-        const unitValue = walletSettings.unitValue;
-        const unitName = walletSettings.unitName;
-        if (newAmount !== 'all') {
-          newAmount /= unitValue;
-        }
-        return `${newAmount} ${unitName}`;
-      } else if (asset === constants.BLACKBYTES_ASSET) {
-        const bbUnitValue = walletSettings.bbUnitValue;
-        const bbUnitName = walletSettings.bbUnitName;
-        newAmount /= bbUnitValue;
-        return `${newAmount} ${bbUnitName}`;
-      } else if (asset === ENV.DAGCOIN_ASSET) {
-        const dagUnitValue = walletSettings.dagUnitValue;
-        const dagUnitName = walletSettings.dagUnitName;
-        newAmount /= dagUnitValue;
-        return `${newAmount} ${dagUnitName}`;
-      }
-      return `${newAmount} of ${asset}`;
+      const unitValue = walletSettings.unitValue;
+      const unitName = walletSettings.unitName;
+      newAmount /= unitValue;
+      return `${newAmount} ${unitName}`;
     }
 
     function getHumanReadableDefinition(arrDefinition, arrMyAddresses, arrMyPubKeys, bWithLinks) {
@@ -348,7 +317,7 @@ angular.module('copayApp.services').factory('correspondentListService',
             return str;
           case 'has':
             if (args.what === 'output' && args.asset && args.amount_at_least && args.address) {
-              return `sends at least ${getAmountText(args.amount_at_least, args.asset)} to ${arrMyAddresses.indexOf(args.address) >= 0 ? 'you' : args.address}`;
+              return `sends at least ${getAmountText(args.amount_at_least)} to ${arrMyAddresses.indexOf(args.address) >= 0 ? 'you' : args.address}`;
             }
             return JSON.stringify(arrSubdefinition);
           case 'seen':
@@ -358,7 +327,7 @@ angular.module('copayApp.services').factory('correspondentListService',
               const displayDestAddress = (bOwnAddress ? 'you' : args.address);
               const expectedPayment = `${getAmountText(args.amount, args.asset)} to ${displayDestAddress}`;
               return `there was a transaction that sends ${(bWithLinks && !bOwnAddress) ?
-                (`<a ng-click="sendPayment('${destAddress}', ${args.amount}, '${args.asset}')">${expectedPayment}</a>`)
+                (`<a ng-click="sendPayment('${destAddress}', ${args.amount})">${expectedPayment}</a>`)
                 : expectedPayment}`;
             }
             return JSON.stringify(arrSubdefinition);
@@ -581,14 +550,14 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     eventBus.on('sent_payment', (peerAddress, amount, asset, walletId, sendMessageToDevice, address) => {
       setCurrentCorrespondent(peerAddress, () => {
-        const body = `<a ng-click="showPayment('${asset}', '${walletId}')" class="payment">Payment: ${getAmountText(amount, asset)}</a>`;
+        const body = `<a ng-click="showPayment('${walletId}')" class="payment">Payment: ${getAmountText(amount)}</a>`;
         addMessageEvent(false, peerAddress, body);
         device.readCorrespondent(peerAddress, (correspondent) => {
           if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(peerAddress, body, 0, 'html');
         });
 
         if (sendMessageToDevice) {
-          const deviceMessage = `<a ng-click="showPayment('${asset}', null, '${address}')" class="payment">Payment: ${getAmountText(amount, asset)}</a>`;
+          const deviceMessage = `<a ng-click="showPayment(null, '${address}')" class="payment">Payment: ${getAmountText(amount)}</a>`;
           device.sendMessageToDevice(peerAddress, 'text', deviceMessage);
         }
 
@@ -596,8 +565,8 @@ angular.module('copayApp.services').factory('correspondentListService',
       });
     });
 
-    eventBus.on('received_payment', (peerAddress, amount, asset) => {
-      const body = `<a ng-click="showPayment('${asset}')" class="payment">Payment: ${getAmountText(amount, asset)}</a>`;
+    eventBus.on('received_payment', (peerAddress, amount) => {
+      const body = `<a ng-click="showPayment()" class="payment">Payment: ${getAmountText(amount)}</a>`;
       addMessageEvent(true, peerAddress, body);
       device.readCorrespondent(peerAddress, (correspondent) => {
         if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(peerAddress, body, 1, 'html');
@@ -660,7 +629,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     });
 
 
-    root.getPaymentsByAsset = getPaymentsByAsset;
+    root.getPayments = getPayments;
     root.getAmountText = getAmountText;
     root.setCurrentCorrespondent = setCurrentCorrespondent;
     root.formatOutgoingMessage = formatOutgoingMessage;

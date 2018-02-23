@@ -2,7 +2,6 @@
   'use strict';
 
   const chatStorage = require('byteballcore/chat_storage.js');
-  const constants = require('byteballcore/constants.js');
   const device = require('byteballcore/device.js');
   const eventBus = require('byteballcore/event_bus.js');
   const conf = require('byteballcore/conf.js');
@@ -134,30 +133,19 @@
       return readMyPaymentAddress(showRequestPaymentModal);
     };
 
-    $scope.sendPayment = function (address, amount, asset) {
+    $scope.sendPayment = function (address, amount) {
       console.log(`will send payment to ${address}`);
-      if (asset && $scope.index.arrBalances.filter(balance => (balance.asset === asset)).length === 0) {
-        console.log(`i do not own anything of asset ${asset}`);
-        return;
-      }
       backButton.dontDeletePath = true;
       go.send(() => {
-        $rootScope.$emit('paymentRequest', address, amount, asset, correspondent.device_address);
+        // $rootScope.$emit('Local/SetTab', 'send', true);
+        $rootScope.$emit('paymentRequest', address, amount, 'base', correspondent.device_address);
       });
     };
 
-    $scope.showPayment = function (asset, walletId, address) {
-      console.log(`will show payment in asset ${asset}`);
-      if (!asset) {
-        throw Error('no asset in showPayment');
-      }
-      if (asset && $scope.index.arrBalances.filter(balance => (balance.asset === asset)).length === 0) {
-        console.log(`i do not own anything of asset ${asset}`);
-        return;
-      }
-      const assetIndex = lodash.findIndex($scope.index.arrBalances, { asset });
+    $scope.showPayment = function (walletId, address) {
+      const assetIndex = lodash.findIndex($scope.index.arrBalances, { asset: 'base' });
       if (assetIndex < 0) {
-        throw Error(`failed to find asset index of asset ${asset}`);
+        throw Error(`failed to find asset index of asset ${'base'}`);
       }
       $scope.index.assetIndex = assetIndex;
 
@@ -205,17 +193,8 @@
           display_value: 'this contract',
         }];
         $scopeModal.arrAssetInfos = indexScope.arrBalances.map((b) => {
-          const info = { asset: b.asset, is_private: b.is_private };
-          if (b.asset === 'base') {
-            info.displayName = walletSettings.unitName;
-          } else if (b.asset === constants.BLACKBYTES_ASSET) {
-            info.displayName = walletSettings.bbUnitName;
-          } else if (b.asset === ENV.DAGCOIN_ASSET) {
-            info.displayName = walletSettings.dagUnitName;
-          } else {
-            info.displayName = `of ${b.asset.substr(0, 4)}`;
-          }
-          return info;
+          const infos = { asset: b.asset, is_private: b.is_private, displayName: walletSettings.unitName };
+          return infos;
         });
         $scopeModal.arrPublicAssetInfos = $scopeModal.arrAssetInfos.filter(b => !b.is_private);
         const contract = {
@@ -273,24 +252,11 @@
             }
 
             let myAmount = contract.myAmount;
-            if (contract.myAsset === 'base') {
-              myAmount *= walletSettings.unitValue;
-            }
-            if (contract.myAsset === constants.BLACKBYTES_ASSET) {
-              myAmount *= walletSettings.bbUnitValue;
-            }
-            if (contract.myAsset === ENV.DAGCOIN_ASSET) {
-              myAmount *= walletSettings.dagUnitValue;
-            }
+            myAmount *= walletSettings.unitValue;
             myAmount = Math.round(myAmount);
 
             let peerAmount = contract.peerAmount;
-            if (contract.peerAsset === 'base') {
-              peerAmount *= walletSettings.unitValue;
-            }
-            if (contract.peerAsset === constants.BLACKBYTES_ASSET) {
-              throw Error('peer asset cannot be blackbytes');
-            }
+            peerAmount *= walletSettings.unitValue;
             peerAmount = Math.round(peerAmount);
 
             if (myAmount === peerAmount && contract.myAsset === contract.peerAsset && contract.peer_pays_to === 'contract') {
@@ -493,7 +459,7 @@
         const assocSharedDestinationAddresses = {};
         const createMovementLines = function () {
           $scopeModal.arrMovements = objMultiPaymentRequest.payments.map((objPayment) => {
-            let text = `${correspondentListService.getAmountText(objPayment.amount, objPayment.asset || 'base')} to ${objPayment.address}`;
+            let text = `${correspondentListService.getAmountText(objPayment.amount)} to ${objPayment.address}`;
             if (assocSharedDestinationAddresses[objPayment.address]) {
               text += ' (smart address, see below)';
             }
@@ -614,23 +580,10 @@
             });
             async.series(arrFuncs, () => {
               // shared addresses inserted, now pay
-              const assocOutputsByAsset = {};
+              const arrBaseOutputs = [];
               objMultiPaymentRequest.payments.forEach((objPayment) => {
-                const asset = objPayment.asset || 'base';
-                if (!assocOutputsByAsset[asset]) {
-                  assocOutputsByAsset[asset] = [];
-                }
-                assocOutputsByAsset[asset].push({ address: objPayment.address, amount: objPayment.amount });
+                arrBaseOutputs.push({ address: objPayment.address, amount: objPayment.amount });
               });
-              const arrNonBaseAssets = Object.keys(assocOutputsByAsset).filter(asset => (asset !== 'base'));
-              if (arrNonBaseAssets.length > 1) {
-                $scopeModal.error = gettextCatalog.getString('more than 1 non-base asset not supported');
-                $scopeModal.$apply();
-                return;
-              }
-              const asset = (arrNonBaseAssets.length > 0) ? arrNonBaseAssets[0] : null;
-              const arrBaseOutputs = assocOutputsByAsset.base || [];
-              const arrAssetOutputs = asset ? assocOutputsByAsset[asset] : null;
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
               if (fc.credentials.m < fc.credentials.n) {
                 indexScope.copayers.forEach((copayer) => {
@@ -650,11 +603,11 @@
               indexScope.current_multi_payment_key = currentMultiPaymentKey;
               const recipientDeviceAddress = lodash.clone(correspondent.device_address);
               fc.sendMultiPayment({
-                asset,
+                asset: 'base',
                 arrSigningDeviceAddresses,
                 recipient_device_address: recipientDeviceAddress,
                 base_outputs: arrBaseOutputs,
-                asset_outputs: arrAssetOutputs,
+                asset_outputs: arrBaseOutputs,
               }, (errSmp) => { // can take long if multisig
                 delete indexScope.current_multi_payment_key;
                 if (errSmp) {
@@ -665,10 +618,8 @@
                   return;
                 }
                 $rootScope.$emit('NewOutgoingTx');
-                const assocPaymentsByAsset = correspondentListService.getPaymentsByAsset(objMultiPaymentRequest);
-                Object.keys(assocPaymentsByAsset).forEach((ass) => {
-                  eventBus.emit('sent_payment', recipientDeviceAddress, assocPaymentsByAsset[ass], ass, indexScope.walletId);
-                });
+                const assocPayments = correspondentListService.getPayments(objMultiPaymentRequest);
+                eventBus.emit('sent_payment', recipientDeviceAddress, assocPayments, 'base', indexScope.walletId);
               });
               $modalInstance.dismiss('cancel');
             });
@@ -846,13 +797,8 @@
         const walletSettings = configWallet.settings;
         $scopeModal.unitValue = walletSettings.unitValue;
         $scopeModal.unitName = walletSettings.unitName;
-        $scopeModal.bbUnitValue = walletSettings.bbUnitValue;
-        $scopeModal.bbUnitName = walletSettings.bbUnitName;
-        $scopeModal.dagUnitName = walletSettings.dagUnitName;
-        $scopeModal.dagUnitValue = walletSettings.dagUnitValue;
         $scopeModal.color = fc.backgroundColor;
         $scopeModal.isCordova = isCordova;
-        $scopeModal.dagAsset = ENV.DAGCOIN_ASSET;
         $scopeModal.buttonLabel = gettextCatalog.getString('Request payment');
 
         Object.defineProperty($scopeModal,
@@ -872,20 +818,12 @@
             return console.log('showRequestPaymentModal: no balances yet');
           }
           const amount = form.amount.$modelValue;
-          const asset = ENV.DAGCOIN_ASSET;
+          const amountInSmallestUnits = amount * $scopeModal.unitValue;
+          const params = `amount=${amountInSmallestUnits}`;
 
-          if (!asset) {
-            throw Error('no asset');
-          }
-          const amountInSmallestUnits = amount * $scopeModal.dagUnitValue;
-          let params = `amount=${amountInSmallestUnits}`;
+          const units = $scopeModal.unitName;
 
-          if (asset !== 'base') {
-            params += `&asset=${encodeURIComponent(asset)}`;
-          }
-          const units = $scopeModal.dagUnitName;
-
-          appendText(`[${amount} ${units}](dagcoin:${myPaymentAddress}?${params})`);
+          appendText(`[${amount} ${units}](Dagcoin:${myPaymentAddress}?${params})`);
 
           return $modalInstance.dismiss('cancel');
         };

@@ -40,22 +40,15 @@
     },
   ])
   .directive('validAmount', ['configService', 'ENV',
-    function (configService, ENV) {
+    function (configService) {
       return {
         require: 'ngModel',
         link(scope, element, attrs, ctrl) {
           const val = function (value) {
             const asset = attrs.validAmount;
             const settings = configService.getSync().wallet.settings;
-            let unitValue = 1;
-            let decimals = 0;
-            if (asset === 'base') {
-              unitValue = settings.unitValue;
-              decimals = Number(settings.unitDecimals);
-            } else if (asset === ENV.DAGCOIN_ASSET) {
-              unitValue = settings.dagUnitValue;
-              decimals = Number(settings.dagUnitDecimals);
-            }
+            const unitValue = settings.unitValue;
+            const decimals = Number(settings.unitDecimals);
 
             const vNum = Number((value * unitValue).toFixed(0));
 

@@ -69,7 +69,7 @@
 
       return $q((resolve) => {
         $timeout(() => {
-          fc.getTxHistory(ENV.DAGCOIN_ASSET, self.shared_address, (txs) => {
+          fc.getTxHistory('base', self.shared_address, (txs) => {
             $log.debug('Wallet Transaction History:', txs);
 
             const data = txs;
