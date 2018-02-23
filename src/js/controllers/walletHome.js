@@ -88,7 +88,6 @@
         const disableResumeListener = $rootScope.$on('Local/Resume', () => {
           // This is needed then the apps go to sleep
           // looks like it already works ok without rebinding touch events after every resume
-          // self.bindTouchDown();
         });
 
         const disableTabListener = $rootScope.$on('Local/TabChanged', (e, tab) => {
@@ -148,10 +147,6 @@
           eventBus.removeListener('new_wallet_address', onNewWalletAddress);
         });
 
-        // const accept_msg = gettextCatalog.getString('Accept');
-        // const cancel_msg = gettextCatalog.getString('Cancel');
-        // const confirm_msg = gettextCatalog.getString('Confirm');
-
         $scope.formatSum = (sum) => {
           const string = sum.toString().split('.');
 
@@ -208,7 +203,6 @@
         $scope.openDestinationAddressModal = function (wallets, address) {
           $rootScope.modalOpened = true;
           const fc = profileService.focusedClient;
-          // self.resetForm();
 
           const ModalInstanceCtrl = function ($scope, $modalInstance) {
             $scope.wallets = wallets;
@@ -607,7 +601,6 @@
               configurable: true,
             });
 
-          // const fc = profileService.focusedClient;
           // ToDo: use a credential's (or fc's) function for this
           this.hideNote = true;
         };
@@ -674,20 +667,11 @@
             return;
           }
 
-          /* var comment = form.comment.$modelValue;
-           // ToDo: use a credential's (or fc's) function for this
-           if (comment) {
-           var msg = 'Could not add message to imported wallet without shared encrypting key';
-           $log.warn(msg);
-           return self.setSendError(gettext(msg));
-           } */
-
           const asset = 'base';
           console.log(`asset ${asset}`);
           const address = form.address.$modelValue;
           const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
           let amount = form.amount.$modelValue;
-          // const paymentId = 1;
           let merkleProof = '';
           if (form.merkle_proof && form.merkle_proof.$modelValue) {
             merkleProof = form.merkle_proof.$modelValue.trim();
@@ -915,7 +899,6 @@
         };
 
         this.deviceAddressIsKnown = function () {
-          // return true;
           if ($scope.index.arrBalances.length === 0) {
             // no balances yet
             return false;
@@ -1049,8 +1032,6 @@
 
           if (moneyAmount) {
             moneyAmount /= this.unitValue;
-            // form.amount.$setViewValue("" + amount);
-            // form.amount.$isValid = true;
             this.lockAmount = true;
             $timeout(() => {
               form.amount.$setViewValue(`${moneyAmount}`);
@@ -1064,10 +1045,8 @@
           } else {
             this.lockAmount = false;
             form.amount.$pristine = true;
-            form.amount.$setViewValue('');
             form.amount.$render();
           }
-          // form.amount.$render();
 
           if (form.merkle_proof) {
             form.merkle_proof.$setViewValue('');
@@ -1165,7 +1144,6 @@
           }
           if (objRequest.amount) {
             // setForm() cares about units conversion
-            // var amount = (objRequest.amount / this.unitValue).toFixed(this.unitDecimals);
             this.setForm(objRequest.address, objRequest.amount);
           }
           return objRequest.address;
@@ -1233,7 +1211,7 @@
               try {
                 $modalInstance.dismiss('cancel');
               } catch (e) {
-                // indexScope.sendBugReport('simulated in dismiss tx details', e);
+                // continue regardless of error
               }
             };
           };

@@ -146,7 +146,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       if (walletId && walletId !== indexScope.walletId) {
         return profileService.setAndStoreFocus(walletId, () => {
           $timeout(() => {
-            go.history();
+            go.walletHome();
           }, 500);
         });
       }
@@ -156,14 +156,14 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           if (wallet) {
             return profileService.setAndStoreFocus(wallet, () => {
               $timeout(() => {
-                go.history();
+                go.walletHome();
               }, 500);
             });
           }
         });
       }
 
-      go.history();
+      go.walletHome();
     };
 
 
