@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('copayApp.controllers')
-  .controller('PreferencesLogsCtrl', PreferencesLogsCtrl);
+    .module('copayApp.controllers')
+    .controller('PreferencesLogsCtrl', PreferencesLogsCtrl);
 
   PreferencesLogsCtrl.$inject = ['historicLog', 'gettextCatalog'];
 

@@ -14,8 +14,8 @@
       root.version = data.version;
       if (!root.shown) {
         const modalInstance = $modal.open({
-          templateUrl: 'views/modals/newVersionIsAvailable.html',
-          controller: 'newVersionIsAvailable'
+          templateUrl: 'controllers/new-version/newVersionIsAvailable.template.html',
+          controller: 'NewVersionIsAvailableCtrl'
         });
         $rootScope.$on('closeModal', () => {
           modalInstance.dismiss('cancel');

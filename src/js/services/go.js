@@ -102,10 +102,6 @@
         });
       };
 
-      root.addWallet = function () {
-        $state.go('add');
-      };
-
       root.preferences = function () {
         $state.go('preferences');
       };

@@ -2,11 +2,15 @@
 
 <div class="content preferences">
   <h4 translate>Release Information</h4>
-  <div ng-controller="versionController as v">
+  <div>
     <ul class="preferences_links">
       <li>
         <div translate>Version</div>
-        <div class="value">v{{v.version}}</div>
+        <div class="value">v{{about.version}}</div>
+      </li>
+      <li>
+        <div translate>Commit hash</div>
+        <div class="value">v{{about.commitHash}}</div>
       </li>
     </ul>
   </div>

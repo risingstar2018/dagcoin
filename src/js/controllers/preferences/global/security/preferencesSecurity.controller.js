@@ -15,7 +15,7 @@
     vm.touchidAvailable = fingerprintService.isAvailable();
     vm.touchid = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
 
-    const unwatchEncrypt = $scope.$watch('encrypt', (val) => {
+    const unwatchEncrypt = $scope.$watch('security.encrypt', (val) => {
       const fc = profileService.focusedClient;
 
       if (!fc) {
@@ -64,6 +64,7 @@
 
     function lock() {
       $rootScope.$emit('Local/NeedsPassword', true, null, (err, password) => {
+        debugger
         if (err && !password) {
           vm.encrypt = false;
           return;

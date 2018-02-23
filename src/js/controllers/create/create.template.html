@@ -1,8 +1,5 @@
 <dag-nav-bar title="{{ 'Create new wallet' | translate}}"></dag-nav-bar>
-
-
-<div class="content p20v" ng-controller="createController as create" ng-init="create.setTotalCosigners(1)">
-
+<div class="content p20v" ng-init="create.setTotalCosigners(1)">
   <div class="onGoingProcess" ng-show="create.loading">
     <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
       <div class="spinner">
@@ -15,87 +12,72 @@
       <span translate>Creating Wallet...</span>
     </div>
   </div>
-
-
   <dag-tabset ng-show="!create.loading">
     <dag-tab heading="{{'Plain Wallet' | translate}}" tab-click="create.setTotalCosigners(1)">
-
       <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
         <div class="box-notification" ng-show="create.error">
           <span class="text-warning size-14">{{create.error|translate}}</span>
         </div>
-
         <div ng-hide="create.hideWalletName">
           <label class="input-wrap">
             <span translate>Wallet name</span>
-
             <input type="text"
                    placeholder="{{'New wallet' | translate}}"
                    ng-maxlength="50" maxlength="50"
-                   name="walletName" ng-model="walletName" ng-required="true"
+                   name="walletName" ng-model="create.walletName" ng-required="true"
                    ng-focus="create.formFocus('wallet-name')" ng-blur="create.formFocus(false)">
-
           </label>
         </div>
-
         <div ng-hide="create.hideWalletName">
           <div class="description m10b" translate>
-          	Single address wallets will not spawn new addresses for every transaction, change will always go to the one and only address the wallet contains.
+            Single address wallets will not spawn new addresses for every transaction, change will always go to the one
+            and only address the wallet contains.
           </div>
           <label><span translate class="left m10t">Single address wallet</span>
-            <switch name="isSingleAddress" ng-model="isSingleAddress" class="red right m10b"></switch>
+            <switch name="isSingleAddress" ng-model="create.isSingleAddress" class="red right m10b"></switch>
           </label>
         </div>
-
         <button type="submit" class="btn btn_red-full" ng-disabled="setupForm.$invalid || create.loading">
           <span translate>Create new wallet</span>
         </button>
       </form>
     </dag-tab>
-
-
-    <dag-tab heading="{{'Multidevice Wallet' | translate}}" tab-click="create.setMultisig()" selected="create.multisigSelected">
-
+    <dag-tab heading="{{'Multidevice Wallet' | translate}}" tab-click="create.setMultisig()"
+             selected="create.multisigSelected">
       <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
-
         <div id="error-area" class="box-notification" ng-show="create.error">
           <span class="text-warning size-14">{{create.error|translate}}</span>
         </div>
-
         <div class="row" ng-hide="create.hideWalletName">
           <label class="input-wrap">
             <span translate>Wallet name</span>
             <input type="text"
                    placeholder="{{'Laptop + phone + tablet' | translate}}"
-                   class="form-control" name="walletName" ng-model="walletName"
+                   class="form-control" name="walletName" ng-model="create.walletName"
                    ng-required="true"
                    ng-focus="create.formFocus('wallet-name')" ng-blur="create.formFocus(false)">
           </label>
           <div class="description m10b" translate>
-            Single address wallets will not spawn new addresses for every transaction, change will always go to the one and only address the wallet contains.
+            Single address wallets will not spawn new addresses for every transaction, change will always go to the one
+            and only address the wallet contains.
           </div>
           <label><span translate class="left m10t">Single address wallet</span>
-            <switch name="isSingleAddress" ng-model="isSingleAddress" class="red right m10b"></switch>
+            <switch name="isSingleAddress" ng-model="create.isSingleAddress" class="red right m10b"></switch>
           </label>
         </div>
-        <div class="row" ng-show="totalCosigners != 1">
-
+        <div class="row" ng-show="create.totalCosigners != 1">
           <label class="input-wrap"><span translate>Total number of co-signers</span>
-            <select ng-model="totalCosigners"
+            <select ng-model="create.totalCosigners"
                     ng-options="totalCosigners as totalCosigners for totalCosigners in create.TCValues"
-                    ng-change="create.setTotalCosigners(totalCosigners)">
+                    ng-change="create.setTotalCosigners(create.totalCosigners)">
             </select>
           </label>
-
-
           <label class="input-wrap"><span translate>Required number of signatures</span>
-            <select ng-model="requiredCosigners"
+            <select ng-model="create.requiredCosigners"
                     ng-options="requiredCosigners as requiredCosigners for requiredCosigners in create.RCValues"
-                    ng-disabled="totalCosigners == 1">
+                    ng-disabled="create.totalCosigners == 1">
             </select>
           </label>
-
-
           <div ng-repeat="cosigner in create.cosigners track by $index">
             <label class="input-wrap"><span translate>Co-signer {{$index+1}}:</span>
               <select ng-model="cosigner.device_address"
@@ -104,23 +86,19 @@
                 <option value="" translate>-- Select co-signer --</option>
                 <option ng-repeat="candidate_cosigner in create.candidate_cosigners"
                         value="{{candidate_cosigner.device_address}}">
-                  {{candidate_cosigner.name+'
-                  ('+candidate_cosigner.device_address.substr(0,4)+'...)'}}
+                  {{candidate_cosigner.name+'('+candidate_cosigner.device_address.substr(0,4)+'...)'}}
                 </option>
                 <option value="new" translate>[ Add new co-signer device ]</option>
               </select>
             </label>
           </div>
-
           <button type="submit"
                   class="btn btn_red-full"
                   ng-disabled="setupForm.$invalid || create.loading">
-            <span translate>Create {{requiredCosigners}}-of-{{totalCosigners}} wallet</span>
+            <span translate>Create {{create.requiredCosigners}}-of-{{create.totalCosigners}} wallet</span>
           </button>
         </div>
-
       </form>
-
     </dag-tab>
   </dag-tabset>
 </div>

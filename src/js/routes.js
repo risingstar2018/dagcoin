@@ -2,21 +2,6 @@
 (function () {
   'use strict';
 
-  let unsupported;
-  let isaosp;
-
-  if (window && window.navigator) {
-    const rxaosp = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
-    isaosp = (rxaosp && rxaosp[1] < 537);
-    if (!window.cordova && isaosp) {
-      unsupported = true;
-    }
-    if (unsupported) {
-      window.location = '#/unsupported';
-    }
-  }
-
-// Setting up route
   angular
     .module('copayApp')
     .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider, ngDialogProvider) => {
@@ -111,7 +96,7 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/splash.html',
+              templateUrl: 'controllers/initialization/splash/splash.template.html',
               controller: 'SplashCtrl as splash'
             }
           }
@@ -136,23 +121,13 @@
             }
           }
         })
-        .state('translators', {
-          url: '/translators',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/translators.html',
-            },
-          },
-        })
         .state('disclaimer', {
           url: '/disclaimer',
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/disclaimer.html',
-              controller: 'disclaimerController'
+              templateUrl: 'controllers/disclaimer/disclaimer.template.html',
+              controller: 'DisclaimerCtrl as disclaimer'
             }
           }
         })
@@ -169,15 +144,6 @@
             },
           },
         })
-        .state('unsupported', {
-          url: '/unsupported',
-          needProfile: false,
-          views: {
-            main: {
-              templateUrl: 'views/unsupported.html',
-            }
-          }
-        })
         .state('payment', {
           url: '/uri-payment/:data',
           templateUrl: 'views/paymentUri.html',
@@ -188,42 +154,23 @@
           },
           needProfile: true,
         })
-        .state('selectWalletForPayment', {
-          url: '/selectWalletForPayment',
-          controller: 'walletForPaymentController',
-          needProfile: true,
-        })
-        .state('importProfile', {
-          url: '/importProfile',
-          templateUrl: 'views/importProfile.html',
-          needProfile: false,
-        })
-        .state('importLegacy', {
-          url: '/importLegacy',
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/importLegacy.html',
-            },
-          },
-
-        })
         .state('create', {
           url: '/create',
-          templateUrl: 'views/create.html',
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/create.html',
-            },
-          },
+              templateUrl: 'controllers/create/create.template.html',
+              controller: 'CreateCtrl as create'
+            }
+          }
         })
         .state('copayers', {
           url: '/copayers',
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/copayers.html',
+              templateUrl: 'controllers/copayers/copayers.template.html',
+              controller: 'CopayersCtrl as copayers'
             },
           },
         })
@@ -310,7 +257,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/authConfirmation.html',
+              templateUrl: 'controllers/authConfirmation/authConfirmation.template.html',
+              controller: ''
             },
           },
         })
@@ -331,7 +279,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesLanguage.html',
+              templateUrl: 'controllers/preferences/global/language/preferencesLanguage.html',
               controller: 'preferencesLanguageController as prefLang'
             },
           },
@@ -408,7 +356,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/preferences/global/preferencesAbout.template.html',
+              templateUrl: 'controllers/preferences/global/about/preferencesAbout.template.html',
+              controller: 'PreferencesAboutCtrl as about'
             },
           },
         })
@@ -564,16 +513,6 @@
           controller: 'warningController',
           templateUrl: 'views/warning.html',
           needProfile: false,
-        })
-
-        .state('add', {
-          url: '/add',
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/add.html',
-            },
-          },
         })
         .state('cordova', { // never used
           url: '/cordova/:status/:isHome',

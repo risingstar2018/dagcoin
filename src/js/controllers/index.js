@@ -1648,26 +1648,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.showErrorPopup(msg, cb);
         });
 
-        $rootScope.$on('Local/NeedsPassword', (event, isSetup, errorMessage, cb) => {
-          console.log('NeedsPassword');
-
-          // needsUnlock used for controlling initial display of wallet information in case of enabled password protection
-          if (!self.needsUnlock) {
-            self.needsUnlock = {};
-          }
-          self.askPassword = {
-            isSetup,
-            error: errorMessage,
-            callback(err, pass) {
-              self.askPassword = null;
-              return cb(err, pass);
-            }
-          };
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        });
-
         lodash.each(['NewCopayer', 'CopayerUpdated'], (eventName) => {
           $rootScope.$on(eventName, () => {
             // Re try to open wallet (will triggers)
@@ -1690,10 +1670,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
-          // needsUnlock used for controlling initial display of wallet information in case of enabled password protection
-          self.needsUnlock = { success: true };
-        });
+
 
         if (autoRefreshClientService) {
           autoRefreshClientService.initHistoryAutoRefresh();

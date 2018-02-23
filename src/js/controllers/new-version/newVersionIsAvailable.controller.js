@@ -1,7 +1,13 @@
-(function () {
+(() => {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('newVersionIsAvailable', ($scope, $modalInstance, go, newVersion) => {
+  angular
+    .module('copayApp.controllers')
+    .controller('NewVersionIsAvailableCtrl', NewVersionIsAvailableCtrl);
+
+  NewVersionIsAvailableCtrl.$inject = ['$scope', '$modalInstance', 'go', 'newVersion'];
+
+  function NewVersionIsAvailableCtrl($scope, $modalInstance, go, newVersion) {
     $scope.version = newVersion.version;
 
     $scope.openDownloadLink = function () {
@@ -21,5 +27,5 @@
     $scope.later = function () {
       $modalInstance.close('closed result');
     };
-  });
-}());
+  }
+})();

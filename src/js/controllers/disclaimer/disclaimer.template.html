@@ -1,0 +1,12 @@
+<div style="height:100%;" ng-scrollbars>
+  <dag-nav-bar ng-if="disclaimer.agreed && index.hasProfile" title="{{'Terms of Use' | translate}}" go-back="about"
+               invert></dag-nav-bar>
+  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
+  <div class="content p20b" ng-class="{'disclaimer':!index.hasProfile}">
+    <div class="p20h m10t">
+      <div class="p20h">
+        <div class="enable_text_select size-14" ng-include="'views/includes/terms_of_use.html'"></div>
+      </div>
+    </div>
+  </div>
+</div>
