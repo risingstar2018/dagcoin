@@ -1421,40 +1421,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           return profileService.getWallets('livenet');
         };
 
-        self.openBackupNeededModal = function () {
-          const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
-            $scopeModal.header = $sce.trustAsHtml(gettextCatalog.getString('Backup needed'));
-            $scopeModal.title = $sce.trustAsHtml(gettextCatalog.getString(`Now is a good time to backup your wallet seed.
-          Write it down and keep it somewhere safe. Once you have written your wallet seed down, you must delete it from
-          this device. If this device is lost, it will be impossible to access your funds without a backup.`));
-
-            $scopeModal.yes_label = gettextCatalog.getString('Backup now');
-            $scopeModal.ok = function () {
-              $modalInstance.close(true);
-            };
-            $scopeModal.cancel = function () {
-              $modalInstance.dismiss('cancel');
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/confirmation.html',
-            windowClass: animationService.modalAnimated.slideUp,
-            controller: ['$scope', '$modalInstance', '$sce', ModalInstanceCtrl],
-          });
-
-          modalInstance.result.finally(() => {
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutDown);
-          });
-
-          modalInstance.result.then((ok) => {
-            if (ok) {
-              $state.go('backup');
-            }
-          });
-        };
-
         $rootScope.$on('Local/ClearHistory', (event) => {
           $log.debug('The wallet transaction history has been deleted', event);
           self.txHistory = [];
@@ -1669,7 +1635,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             $rootScope.$apply();
           });
         });
-
 
 
         if (autoRefreshClientService) {

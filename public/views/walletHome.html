@@ -1,7 +1,5 @@
-<div class="backup" ng-if="(!pass.needsUnlock || pass.needsUnlock.success === true) && index.needsBackup"
-     ng-click="index.openBackupNeededModal()">
-  <span translate>Wallet seed not backed up</span>
-</div>
+<dag-backup-notification ng-if="(!pass.needsUnlock || pass.needsUnlock.success === true) && index.needsBackup">
+</dag-backup-notification>
 
 <dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="!pass.needsUnlock || pass.needsUnlock.success === true">
   <qr-scanner ng-if="tab === 'send' && index.isComplete"
@@ -370,7 +368,7 @@
       </div>
     </div>
   </div>
-
+  {{index.addonViews}}
   <div id="{{view.id}}" class="{{view.class}} tab-view" ng-repeat="view in index.addonViews"
        ng-include="view.template">
   </div>
