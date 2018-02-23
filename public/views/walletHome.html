@@ -1,9 +1,9 @@
-<div class="backup" ng-if="(!index.needsUnlock || index.needsUnlock.success === true) && index.needsBackup"
+<div class="backup" ng-if="(!pass.needsUnlock || pass.needsUnlock.success === true) && index.needsBackup"
      ng-click="index.openBackupNeededModal()">
   <span translate>Wallet seed not backed up</span>
 </div>
 
-<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="!index.needsUnlock || index.needsUnlock.success === true">
+<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="!pass.needsUnlock || pass.needsUnlock.success === true">
   <qr-scanner ng-if="tab === 'send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)"
               title="{{ 'Scan address' | translate }}">
@@ -360,7 +360,9 @@
             </div>
             <div class="page-action">
               <button ng-disabled="sendForm.$invalid || index.onGoingProcessName == 'sending'" class="btn btn_red-full"
-                      ng-click="home.submitForm()" translate>Send
+                      ng-click="home.submitForm()" translate>Send <i ng-if="home.validForSeconds > 0">({{home.validForSeconds}})</i>
+              </button>
+              <button ng-if="home.validForSeconds > 0" class="btn btn_red-full" ng-click="home.resetForm()" translate>Cancel
               </button>
             </div>
           </form>

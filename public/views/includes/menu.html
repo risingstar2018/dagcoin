@@ -6,9 +6,7 @@
           <use xlink:href="{{index.getSvgSrc(item.icon)}}"></use>
         </svg>
         <span>{{ item.title|translate }}</span>
-        <div ng-if="item.title == 'Chat' && totalNewMsgCnt > 0" class="badge">
-          {{totalNewMsgCnt}}
-        </div>
+
       </a>
     </li>
   </ul>

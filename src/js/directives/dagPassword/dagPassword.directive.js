@@ -71,8 +71,8 @@
         $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
           self.needsUnlock = { success: true };
         });
+
         $rootScope.$on('Local/NeedsPassword', (event, isSetup, errorMessage, cb) => {
-          debugger
           if (!self.needsUnlock) {
             self.needsUnlock = {};
           }

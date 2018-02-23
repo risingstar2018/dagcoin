@@ -1,11 +1,3 @@
-/*
- *
- * Byteball mobile CSS
- *
- */
-
-/* disabling text selection */
-
 * {
   -webkit-user-drag: none;
   -ms-user-drag: none;
@@ -27,8 +19,6 @@ body {
 .enable_text_select {
   user-select: text;
 }
-
-/* END disabling text selection */
 
 .inner-wrap {
   transition-duration: 200ms;

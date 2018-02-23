@@ -45,13 +45,6 @@
         require: 'ngModel',
         link(scope, element, attrs, ctrl) {
           const val = function (value) {
-            // console.log('-- scope', ctrl);
-            /* if (scope.home && scope.home.bSendAll){
-             console.log('-- send all');
-             ctrl.$setValidity('validAmount', true);
-             return value;
-             } */
-            // console.log('-- amount');
             const asset = attrs.validAmount;
             const settings = configService.getSync().wallet.settings;
             let unitValue = 1;
@@ -206,11 +199,6 @@
       });
     },
   }))
-  .directive('menuToggle', () => ({
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'views/includes/menu-toggle.html',
-  }))
   .directive('logo', () => ({
     restrict: 'E',
     scope: {
@@ -224,11 +212,6 @@
     replace: true,
     // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
     template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
-  }))
-  .directive('availableBalance', () => ({
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'views/includes/available-balance.html',
   }))
   .directive('normalizeAmount', ['utilityService', function (utilityService) {
     return {
