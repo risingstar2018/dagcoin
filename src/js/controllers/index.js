@@ -441,7 +441,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               if (arrPaymentMessages.length === 0) {
                 throw Error('no payment message found');
               }
-              const assocAmountByAssetAndAddress = {};
+              const assocAmountByAddress = {};
               // exclude outputs paying to my change addresses
               async.eachSeries(
                 arrPaymentMessages,
@@ -453,36 +453,27 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                   if (!payload) {
                     throw Error(`no inline payload and no private payload either, message=${JSON.stringify(objMessage)}`);
                   }
-                  const asset = payload.asset || 'base';
                   if (!payload.outputs) {
                     throw Error('no outputs');
                   }
-                  if (!assocAmountByAssetAndAddress[asset]) {
-                    assocAmountByAssetAndAddress[asset] = {};
-                  }
                   payload.outputs.forEach((output) => {
                     if (arrChangeAddresses.indexOf(output.address) === -1) {
-                      if (!assocAmountByAssetAndAddress[asset][output.address]) {
-                        assocAmountByAssetAndAddress[asset][output.address] = 0;
+                      if (!assocAmountByAddress[output.address]) {
+                        assocAmountByAddress[output.address] = 0;
                       }
-                      assocAmountByAssetAndAddress[asset][output.address] += output.amount;
+                      assocAmountByAddress[output.address] += output.amount;
                     }
                   });
                   cb();
                 },
                 () => {
                   const arrDestinations = [];
-                  Object.keys(assocAmountByAssetAndAddress).forEach((asset) => {
-                    const walletSettings = configService.getSync().wallet.settings;
-                    const formattedAsset = isCordova ? asset : (`<span class='small'>${asset}</span><br/>`);
-                    let currency;
-                    let value;
+                  const walletSettings = configService.getSync().wallet.settings;
 
-                    Object.keys(assocAmountByAssetAndAddress[asset]).forEach((address) => {
-                      currency = 'bytes';
-                      value = assocAmountByAssetAndAddress[asset][address] / walletSettings.unitValue;
-                      arrDestinations.push(`${value} ${currency} to ${address}`);
-                    });
+                  Object.keys(assocAmountByAddress).forEach((address) => {
+                    const currency = 'bytes';
+                    const value = assocAmountByAddress[address] / walletSettings.unitValue;
+                    arrDestinations.push(`${value} ${currency} to ${address}`);
                   });
                   const dest = (arrDestinations.length > 0) ? arrDestinations.join(', ') : 'to myself';
                   const question = gettextCatalog.getString(`Sign transaction spending ${dest} from wallet ${credentials.walletName}?`);

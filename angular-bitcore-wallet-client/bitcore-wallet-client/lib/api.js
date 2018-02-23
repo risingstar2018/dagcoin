@@ -488,17 +488,6 @@ API.prototype.createAddress = function (isChange, cb) {
   }
 };
 
-/*
- API.prototype.sendPayment = function(asset, to_address, amount, arrSigningDeviceAddresses, recipient_device_address, cb) {
- this.sendMultiPayment({
- asset: asset,
- to_address: to_address,
- amount: amount,
- arrSigningDeviceAddresses: arrSigningDeviceAddresses,
- recipient_device_address: recipient_device_address
- }, cb);
- } */
-
 API.prototype.sendMultiPayment = function (opts, cb) {
   const self = this;
   const coin = (this.credentials.network === 'livenet' ? '0' : '1');
@@ -519,9 +508,6 @@ API.prototype.sendMultiPayment = function (opts, cb) {
       opts.change_address = opts.main_address;
     } else {
       opts.change_address = opts.shared_address;
-    }
-    if (opts.asset && opts.asset !== 'base') {
-      opts.fee_paying_wallet = self.credentials.walletId;
     }
     Wallet.sendMultiPayment(opts, cb);
   } else {

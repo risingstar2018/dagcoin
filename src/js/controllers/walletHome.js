@@ -321,16 +321,13 @@
             });
 
             // clicked a link in the definition
-            $scope.sendPayment = function (receiverAddress, amount, asset) {
-              if (asset && indexScope.arrBalances.filter(balance => (balance.asset === asset)).length === 0) {
-                return console.log(`i do not own anything of asset ${asset}`);
-              }
+            $scope.sendPayment = function (receiverAddress, amount) {
               $modalInstance.dismiss('done');
               return $timeout(() => {
                 indexScope.shared_address = null;
                 indexScope.updateAll();
                 indexScope.updateTxHistory();
-                $rootScope.$emit('paymentRequest', receiverAddress, amount, asset);
+                $rootScope.$emit('paymentRequest', receiverAddress, amount, 'base');
               });
             };
 
@@ -690,7 +687,6 @@
           const address = form.address.$modelValue;
           const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
           let amount = form.amount.$modelValue;
-          const paymentId = form.paymentId ? form.paymentId.$modelValue : null;
           // const paymentId = 1;
           let merkleProof = '';
           if (form.merkle_proof && form.merkle_proof.$modelValue) {

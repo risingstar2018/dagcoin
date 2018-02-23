@@ -7,7 +7,7 @@
       if (!amount) {
         return;
       }
-      return profileService.formatAmount(amount, 'base');
+      return profileService.formatAmount(amount);
     };
 
     const formatFeeStr = function (fee) {

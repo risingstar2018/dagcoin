@@ -77,9 +77,7 @@
 
         fc.getListOfBalancesOnAddresses((listOfBalances) => {
           const balanceList = listOfBalances.map((row) => {
-            const assetName = 'base';
-            const unitName = config.unitName;
-            row.amount = `${profileService.formatAmount(row.amount, assetName, { dontRound: true })} ${unitName}`;
+            row.amount = `${profileService.formatAmount(row.amount)} ${config.unitName}`;
             return row;
           });
           // groupBy address

@@ -127,31 +127,19 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       return readMyPaymentAddress(showRequestPaymentModal);
     };
 
-    $scope.sendPayment = function (address, amount, asset) {
+    $scope.sendPayment = function (address, amount) {
       console.log(`will send payment to ${address}`);
-      if (asset && $scope.index.arrBalances.filter(balance => (balance.asset === asset)).length === 0) {
-        console.log(`i do not own anything of asset ${asset}`);
-        return;
-      }
       backButton.dontDeletePath = true;
       go.send(() => {
         // $rootScope.$emit('Local/SetTab', 'send', true);
-        $rootScope.$emit('paymentRequest', address, amount, asset, correspondent.device_address);
+        $rootScope.$emit('paymentRequest', address, amount, 'base', correspondent.device_address);
       });
     };
 
-    $scope.showPayment = function (asset, walletId, address) {
-      console.log(`will show payment in asset ${asset}`);
-      if (!asset) {
-        throw Error('no asset in showPayment');
-      }
-      if (asset && $scope.index.arrBalances.filter(balance => (balance.asset === asset)).length === 0) {
-        console.log(`i do not own anything of asset ${asset}`);
-        return;
-      }
-      const assetIndex = lodash.findIndex($scope.index.arrBalances, { asset });
+    $scope.showPayment = function (walletId, address) {
+      const assetIndex = lodash.findIndex($scope.index.arrBalances, { asset: 'base' });
       if (assetIndex < 0) {
-        throw Error(`failed to find asset index of asset ${asset}`);
+        throw Error(`failed to find asset index of asset ${'base'}`);
       }
       $scope.index.assetIndex = assetIndex;
 
@@ -587,23 +575,10 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             });
             async.series(arrFuncs, () => {
               // shared addresses inserted, now pay
-              const assocOutputsByAsset = {};
+              const arrBaseOutputs = [];
               objMultiPaymentRequest.payments.forEach((objPayment) => {
-                const asset = objPayment.asset || 'base';
-                if (!assocOutputsByAsset[asset]) {
-                  assocOutputsByAsset[asset] = [];
-                }
-                assocOutputsByAsset[asset].push({ address: objPayment.address, amount: objPayment.amount });
+                arrBaseOutputs.push({ address: objPayment.address, amount: objPayment.amount });
               });
-              const arrNonBaseAssets = Object.keys(assocOutputsByAsset).filter(asset => (asset !== 'base'));
-              if (arrNonBaseAssets.length > 1) {
-                $scopeModal.error = gettextCatalog.getString('more than 1 non-base asset not supported');
-                $scopeModal.$apply();
-                return;
-              }
-              const asset = (arrNonBaseAssets.length > 0) ? arrNonBaseAssets[0] : null;
-              const arrBaseOutputs = assocOutputsByAsset.base || [];
-              const arrAssetOutputs = asset ? assocOutputsByAsset[asset] : null;
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
               if (fc.credentials.m < fc.credentials.n) {
                 indexScope.copayers.forEach((copayer) => {
@@ -623,11 +598,11 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
               indexScope.current_multi_payment_key = currentMultiPaymentKey;
               const recipientDeviceAddress = lodash.clone(correspondent.device_address);
               fc.sendMultiPayment({
-                asset,
+                asset: 'base',
                 arrSigningDeviceAddresses,
                 recipient_device_address: recipientDeviceAddress,
                 base_outputs: arrBaseOutputs,
-                asset_outputs: arrAssetOutputs,
+                asset_outputs: arrBaseOutputs,
               }, (errSmp) => { // can take long if multisig
                 delete indexScope.current_multi_payment_key;
                 if (errSmp) {
@@ -638,10 +613,8 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                   return;
                 }
                 $rootScope.$emit('NewOutgoingTx');
-                const assocPaymentsByAsset = correspondentListService.getPaymentsByAsset(objMultiPaymentRequest);
-                Object.keys(assocPaymentsByAsset).forEach((ass) => {
-                  eventBus.emit('sent_payment', recipientDeviceAddress, assocPaymentsByAsset[ass], ass, indexScope.walletId);
-                });
+                const assocPayments = correspondentListService.getPayments(objMultiPaymentRequest);
+                eventBus.emit('sent_payment', recipientDeviceAddress, assocPayments, 'base', indexScope.walletId);
               });
               $modalInstance.dismiss('cancel');
             });
@@ -836,8 +809,6 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         $scopeModal.color = fc.backgroundColor;
         $scopeModal.isCordova = isCordova;
         $scopeModal.buttonLabel = gettextCatalog.getString('Request payment');
-        // $scopeModal.selectedAsset = $scopeModal.index.arrBalances[$scopeModal.index.assetIndex];
-        // console.log($scopeModal.index.arrBalances.length+" assets, current: "+$scopeModal.asset);
 
         Object.defineProperty($scopeModal,
           '_customAmount', {
@@ -856,17 +827,9 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             return console.log('showRequestPaymentModal: no balances yet');
           }
           const amount = form.amount.$modelValue;
-          const asset = 'base';
-
-          if (!asset) {
-            throw Error('no asset');
-          }
           const amountInSmallestUnits = amount * $scopeModal.unitValue;
           let params = `amount=${amountInSmallestUnits}`;
 
-          if (asset !== 'base') {
-            params += `&asset=${encodeURIComponent(asset)}`;
-          }
           const units = $scopeModal.unitName;
 
           appendText(`[${amount} ${units}](byteball:${myPaymentAddress}?${params})`);
