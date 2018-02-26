@@ -828,14 +828,14 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
     function appendText(text) {
       const msgField = document.getElementById('message');
 
-      if (!$scope.message) {
-        $scope.message = '';
-      }
+      let messageText = !$scope.message ? '' : $scope.message;
       if ($scope.message && $scope.message.charAt($scope.message.length - 1) !== ' ') {
-        $scope.message += ' ';
+        messageText += ' ';
       }
-      $scope.message += text;
-      $scope.message += ' ';
+      messageText += text;
+      messageText += ' ';
+      $scope.message = messageText;
+
       if (!msgField) { // already gone
         return;
       }
@@ -843,6 +843,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       msgField.focus();
       msgField.selectionEnd = msgField.value.length;
       msgField.selectionStart = msgField.selectionEnd;
+      msgField.value = messageText;
     }
 
     function appendMyPaymentAddress(myPaymentAddress) {
