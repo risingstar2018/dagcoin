@@ -9,11 +9,9 @@
   .module('copayApp.directives')
   .directive('dagLeftSideBar', dagLeftSideBar);
 
-  dagLeftSideBar.$inject = ['$rootScope', 'lodash', 'profileService', 'configService', 'isMobile', 'isCordova', 'backButton', '$state',
-    'utilityService'];
+  dagLeftSideBar.$inject = ['$rootScope', 'lodash', 'profileService', 'configService', 'backButton', '$state', 'utilityService', 'Device'];
 
-  function dagLeftSideBar($rootScope, lodash, profileService, configService, isMobile, isCordova, backButton, $state,
-                       utilityService) {
+  function dagLeftSideBar($rootScope, lodash, profileService, configService, backButton, $state, utilityService, Device) {
     return {
       restrict: 'E',
       transclude: true,
@@ -23,7 +21,7 @@
       controllerAs: 'sidebar',
       controller() {
         const self = this;
-        self.isWindowsPhoneApp = isMobile.Windows() && isCordova;
+        self.isWindowsPhoneApp = Device.windows() && Device.cordova();
         self.walletSelection = false;
 
         $rootScope.$on('Local/WalletListUpdated', () => {

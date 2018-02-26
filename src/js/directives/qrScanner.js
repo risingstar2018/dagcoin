@@ -15,9 +15,9 @@
     .module('copayApp.directives')
     .directive('qrScanner', qrScanner);
 
-  qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog'];
+  qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'Device', 'gettextCatalog'];
 
-  function qrScanner($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
+  function qrScanner($rootScope, $timeout, $modal, Device, gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -25,6 +25,7 @@
         beforeScan: '&',
       },
       controller: ($scope) => {
+        const isCordova = Device.isCordova();
         $scope.cordovaOpenScanner = function () {
           window.ignoreMobilePause = true;
           window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Preparing camera...'), true);

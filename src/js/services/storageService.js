@@ -2,12 +2,12 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('storageService', (logHeader, fileStorageService, localStorageService, sjcl, $log, lodash, isCordova, isMobile) => {
+    .factory('storageService', (logHeader, fileStorageService, localStorageService, sjcl, $log, Device) => {
       const root = {};
 
       // File storage is not supported for writting according to
       // https://github.com/apache/cordova-plugin-file/#supported-platforms
-      const shouldUseFileStorage = isCordova && !isMobile.Windows();
+      const shouldUseFileStorage = Device.cordova && !Device.windows;
       $log.debug('Using file storage:', shouldUseFileStorage);
 
       const storage = shouldUseFileStorage ? fileStorageService : localStorageService;

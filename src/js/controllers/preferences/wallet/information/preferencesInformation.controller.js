@@ -6,10 +6,10 @@
     .controller('PreferencesInformationCtrl', PreferencesInformationCtrl);
 
   PreferencesInformationCtrl.$inject = ['$scope', '$rootScope', '$log', 'configService', 'profileService', 'fundingExchangeClientService',
-    '$timeout', 'isMobile', 'gettextCatalog', 'addressService', 'proofingService', 'dagcoinProtocolService', 'ENV'];
+    '$timeout', 'gettextCatalog', 'addressService', 'proofingService', 'dagcoinProtocolService', 'ENV', 'Device'];
 
   function PreferencesInformationCtrl($scope, $rootScope, $log, configService, profileService, fundingExchangeClientService,
-                                      $timeout, isMobile, gettextCatalog, addressService, proofingService, dagcoinProtocolService, ENV) {
+                                      $timeout, gettextCatalog, addressService, proofingService, dagcoinProtocolService, ENV, Device) {
     const vm = this;
     const fc = profileService.focusedClient;
     const c = fc.credentials;
@@ -24,6 +24,7 @@
     vm.M = c.m;
     vm.N = c.n;
     vm.addrs = null;
+    vm.isCordova = Device.android;
 
     vm.hasListOfBalances = () => !!Object.keys(vm.assocListOfBalances || {}).length;
     vm.isSingleAddressWallet = () => fc.isSingleAddress;
@@ -34,10 +35,6 @@
     function sendAddrs() {
       const self = this;
       self.loading = true;
-
-      if (isMobile.Android() || isMobile.Windows()) {
-        window.ignoreMobilePause = true;
-      }
       $timeout(() => {
         fc.getAddresses({
           doNotVerify: true,

@@ -7,9 +7,9 @@
     .module('copayApp.services')
     .factory('exportTransactions', exportTransactions);
 
-  exportTransactions.$inject = ['$q', '$log', 'isCordova', 'nodeWebkit', 'profileService', '$rootScope', 'ENV', '$timeout'];
+  exportTransactions.$inject = ['$q', '$log', 'Device', 'nodeWebkit', 'profileService', '$rootScope', 'ENV', '$timeout'];
 
-  function exportTransactions($q, $log, isCordova, nodeWebkit, profileService, $rootScope, ENV, $timeout) {
+  function exportTransactions($q, $log, Device, nodeWebkit, profileService, $rootScope, ENV, $timeout) {
     return {
       toCSV
     };
@@ -58,7 +58,7 @@
         return format;
       }
 
-      if (isCordova) {
+      if (Device.cordova) {
         $log.info('CSV generation not available in mobile');
         return;
       }

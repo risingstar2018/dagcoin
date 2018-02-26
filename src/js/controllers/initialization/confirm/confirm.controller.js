@@ -5,9 +5,10 @@
     .module('copayApp.controllers')
     .controller('IntroConfirmCtrl', IntroConfirmCtrl);
 
-  IntroConfirmCtrl.$inject = ['$scope', 'ngDialog', 'isCordova', 'gettextCatalog', '$timeout', 'storageService', 'go'];
+  IntroConfirmCtrl.$inject = ['$scope', 'ngDialog', 'Device', 'gettextCatalog', '$timeout', 'storageService', 'go'];
 
-  function IntroConfirmCtrl($scope, ngDialog, isCordova, gettextCatalog, $timeout, storageService, go) {
+  function IntroConfirmCtrl($scope, ngDialog, Device, gettextCatalog, $timeout, storageService, go) {
+    const isCordova = Device.isCordova();
     $scope.agree = () => {
       if (isCordova) {
         window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Loading...'), true);

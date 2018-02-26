@@ -5,11 +5,12 @@
     .module('copayApp.controllers')
     .controller('PreferencesLogsCtrl', PreferencesLogsCtrl);
 
-  PreferencesLogsCtrl.$inject = ['historicLog', 'gettextCatalog'];
+  PreferencesLogsCtrl.$inject = ['historicLog', 'gettextCatalog', 'Device'];
 
-  function PreferencesLogsCtrl(historicLog, gettextCatalog) {
+  function PreferencesLogsCtrl(historicLog, gettextCatalog, Device) {
     const vm = this;
     vm.logs = historicLog.get();
+    vm.isCordova = Device.cordova;
 
     vm.sendLogs = function () {
       let body = gettextCatalog.getString('Dagcoin Session Logs\n Be careful, this could contain sensitive private data\n\n');

@@ -15,7 +15,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 fingerprintService,
                 profileService,
                 configService,
-                isCordova,
+                Device,
                 storageService,
                 addressService,
                 gettextCatalog,
@@ -24,7 +24,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 addonManager,
                 txFormatService,
                 uxLanguage,
-                $state, isMobile,
+                $state,
                 addressbookService,
                 notification,
                 animationService,
@@ -46,18 +46,17 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         const ecdsaSig = require('byteballcore/signature.js');
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const Bitcore = require('bitcore-lib');
+        const isCordova = Device.cordova();
         const _ = require('lodash');
         breadcrumbs.add('index.js');
         const self = this;
-        self.isCordova = isCordova;
-        self.isSafari = isMobile.Safari();
+        self.isSafari = Device.isSafari();
         self.onGoingProcess = {};
         self.updatingTxHistory = true;
         self.bSwipeSuspended = false;
         self.$state = $state;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
-        constants.MIN_BYTE_FEE = 950;
 
         self.triggerUrl = (state) => {
           $state.go(state);
@@ -131,7 +130,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             return;
           }
           self.showErrorPopup(errorMessage, () => {
-            if (self.isCordova && navigator && navigator.app) {
+            if (isCordova && navigator && navigator.app) {
               // android
               navigator.app.exitApp();
             } else if (process.exit) {
@@ -1491,7 +1490,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/DeviceError', (event, err) => {
           self.showErrorPopup(err, () => {
-            if (self.isCordova && navigator && navigator.app) {
+            if (isCordova && navigator && navigator.app) {
               navigator.app.exitApp();
             }
           });

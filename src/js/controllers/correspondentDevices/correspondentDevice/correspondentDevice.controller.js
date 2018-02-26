@@ -14,13 +14,14 @@
     .module('copayApp.controllers')
     .controller('CorrespondentDeviceCtrl', CorrespondentDeviceCtrl);
 
-  CorrespondentDeviceCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$modal', 'configService', 'profileService', 'animationService', 'isCordova', 'go',
+  CorrespondentDeviceCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$modal', 'configService', 'profileService', 'animationService', 'Device', 'go',
     'correspondentListService', 'addressService', 'lodash', '$deepStateRedirect', '$state', 'backButton', 'connectionService', 'ENV', 'gettextCatalog'];
 
-  function CorrespondentDeviceCtrl($scope, $rootScope, $timeout, $modal, configService, profileService, animationService, isCordova, go,
+  function CorrespondentDeviceCtrl($scope, $rootScope, $timeout, $modal, configService, profileService, animationService, Device, go,
                                     correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) {
     const chatScope = $scope;
     const indexScope = $scope.index;
+    const isCordova = Device.isCordova();
     $scope.index.tab = 'chat';
     $rootScope.tab = $scope.index.tab;
     $scope.backgroundColor = profileService.focusedClient.backgroundColor;

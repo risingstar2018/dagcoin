@@ -6,10 +6,10 @@
     .controller('BackupCtrl', BackupCtrl);
 
   BackupCtrl.$inject = ['$rootScope', '$scope', '$timeout', 'profileService', 'go', 'gettextCatalog', 'confirmDialog',
-    'notification', '$log', 'isCordova', 'storageService', 'fileSystemService', 'isMobile'];
+    'notification', '$log', 'storageService', 'fileSystemService', 'Device'];
 
   function BackupCtrl($rootScope, $scope, $timeout, profileService, go, gettextCatalog, confirmDialog, notification, $log,
-                      isCordova, storageService, fileSystemService, isMobile) {
+                      storageService, fileSystemService, Device) {
     const vm = this;
     const fc = profileService.focusedClient;
     const async = require('async');
@@ -28,9 +28,9 @@
     vm.exporting = false;
     vm.bCompression = false;
     vm.connection = null;
-    vm.isCordova = isCordova;
+    vm.isCordova = Device.cordova;
 
-    if (isCordova) {
+    if (vm.isCordova) {
       const JSZip = require('jszip');
       jsZip = new JSZip();
       vm.text = gettextCatalog.getString(`To protect your funds, please use multisig wallets with redundancy, 
@@ -89,7 +89,7 @@
       vm.exporting = true;
       const db = require('byteballcore/db');
       db.takeConnectionFromPool((connection) => {
-        if (isCordova) {
+        if (vm.isCordova) {
           vm.walletExportCordova(connection);
         } else {
           vm.walletExportPC(connection);
@@ -226,7 +226,7 @@
           return cb(err);
         }
         const fileNameList = listFilenames.filter(name => (name === 'conf.json' || /\.sqlite/.test(name)));
-        if (isCordova) {
+        if (vm.isCordova) {
           return async.forEachSeries(fileNameList, (name, callback) => {
             fileSystemService.readFile(`${dbDirPath}/${name}`, (fileSystemServiceError, data) => {
               if (fileSystemServiceError) {
@@ -268,7 +268,7 @@
 
     function saveFile(file, cb) {
       const backupFilename = `Dagcoin${Date.now()}.encrypted`;
-      if (!isCordova) {
+      if (!vm.isCordova) {
         const inputFile = document.getElementById('nwExportInputFile');
         inputFile.setAttribute('nwsaveas', backupFilename);
         inputFile.click();
@@ -277,7 +277,7 @@
           cb(this.value);
         };
       } else {
-        fileSystemService.cordovaWriteFile((isMobile.iOS() ? window.cordova.file.documentsDirectory : window.cordova.file.externalRootDirectory), 'Byteball', backupFilename, file, (err) => {
+        fileSystemService.cordovaWriteFile((Device.iOS ? window.cordova.file.documentsDirectory : window.cordova.file.externalRootDirectory), 'Byteball', backupFilename, file, (err) => {
           cb(err);
         });
       }

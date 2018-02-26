@@ -9,9 +9,9 @@
     .module('copayApp.directives')
     .directive('svgIcon', svgIcon);
 
-  svgIcon.$inject = ['$sce', '$templateRequest', '$templateCache', 'isCordova'];
+  svgIcon.$inject = ['$sce', '$templateRequest', '$templateCache', 'Device'];
 
-  function svgIcon($sce, $templateRequest, $templateCache, isCordova) {
+  function svgIcon($sce, $templateRequest, $templateCache, Device) {
     return {
       restrict: 'E',
       scope: {
@@ -27,7 +27,7 @@
         let svgFile = `${$scope.name || $scope.title}.svg`;
 
         function loadTemplate() {
-          const svgPath = isCordova ? `css/svg/${svgFile}` : `/public/css/svg/${svgFile}`;
+          const svgPath = Device.cordova ? `css/svg/${svgFile}` : `/public/css/svg/${svgFile}`;
           const templateUrl = $sce.getTrustedResourceUrl(svgPath);
 
           $templateRequest(templateUrl).then((template) => {

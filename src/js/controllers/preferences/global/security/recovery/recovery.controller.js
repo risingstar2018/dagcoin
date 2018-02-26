@@ -23,10 +23,10 @@
   .controller('RecoveryCtrl', RecoveryCtrl);
 
   RecoveryCtrl.$inject = ['$rootScope', '$scope', '$state', '$log', '$timeout', 'profileService', 'gettextCatalog', 'fileSystemService',
-                          'configService', 'storageService', 'isCordova', 'isMobile'];
+                          'configService', 'storageService', 'Device'];
 
   function RecoveryCtrl($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService,
-                        configService, storageService, isCordova, isMobile) {
+                        configService, storageService, Device) {
     const self = this;
     const JSZip = require('jszip');
     const crypto = require('crypto');
@@ -35,10 +35,10 @@
     let unzip;
     self.imported = false;
     self.password = '';
-    self.iOs = isMobile.iOS();
-    self.android = isMobile.Android();
+    self.iOs = Device.iOS;
+    self.android = Device.android;
     self.arrBackupFiles = [];
-    self.androidVersion = isMobile.Android() ? parseFloat(userAgent.slice(userAgent.indexOf('Android') + 8)) : null;
+    self.androidVersion = self.android ? parseFloat(userAgent.slice(userAgent.indexOf('Android') + 8)) : null;
     self.oldAndroidFilePath = null;
     self.oldAndroidFileName = '';
     self.isInitial = $state.includes('initialRecovery');
@@ -49,7 +49,7 @@
     self.xPrivKey = '';
     self.assocIndexesToWallets = {};
     self.isInitial = $state.includes('initialRecovery');
-    if (isCordova) {
+    if (Device.cordova) {
       zip = new JSZip();
     } else {
       unzip = require('unzip');
@@ -113,7 +113,7 @@
     function walletImport() {
       self.imported = true;
       self.error = '';
-      if (isMobile.Android() && self.androidVersion < 5) {
+      if (self.android && self.androidVersion < 5) {
         fileSystemService.readFile(self.oldAndroidFilePath, (err, data) => {
           unzipAndWriteFiles(data, self.password);
         });
@@ -280,7 +280,7 @@
     }
 
     function unzipAndWriteFiles(data, password) {
-      if (isCordova) {
+      if (Device.cordova) {
         zip.loadAsync(decrypt(data, password)).then((zippedFile) => {
           if (!zippedFile.file('light')) {
             self.imported = false;
@@ -304,6 +304,7 @@
             });
           }
         }, (err) => {
+          $log.error(err);
           showError('Incorrect password or file');
         });
       } else {

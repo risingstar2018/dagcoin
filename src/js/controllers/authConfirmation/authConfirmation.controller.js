@@ -23,7 +23,7 @@
     .module('copayApp.controllers')
     .controller('AuthConfirmationCtrl', AuthConfirmationCtrl);
 
-  AuthConfirmationCtrl.$inject = ['addressbookService', '$timeout'];
+  AuthConfirmationCtrl.$inject = ['$scope', 'profileService', 'go', 'authService', 'lodash'];
 
   function AuthConfirmationCtrl($scope, profileService, go, authService, lodash) {
     const vm = this;

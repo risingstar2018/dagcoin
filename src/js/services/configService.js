@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('configService', (storageService, lodash, $log, isCordova, ENV) => {
+  angular.module('copayApp.services').factory('configService', (storageService, lodash, $log, Device, ENV) => {
     const root = {};
 
     const defaultConfig = {
@@ -12,11 +12,8 @@
 
       hub: ENV.hub,
 
-      // requires bluetooth permission on android
-      // deviceName: /*isCordova ? cordova.plugins.deviceName.name : */require('os').hostname(),
-
       getDeviceName() {
-        return isCordova ? cordova.plugins.deviceName.name : require('os').hostname();
+        return Device.cordova ? cordova.plugins.deviceName.name : require('os').hostname();
       },
 
       // wallet default config

@@ -11,7 +11,6 @@
                 $modal,
                 $log,
                 notification,
-                isCordova,
                 profileService,
                 lodash,
                 configService,
@@ -24,10 +23,10 @@
                 animationService,
                 addressbookService,
                 correspondentListService,
-                isMobile,
                 ENV,
                 moment,
-                exportTransactions) {
+                exportTransactions,
+                Device) {
         const eventBus = require('byteballcore/event_bus.js');
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const self = this;
@@ -37,6 +36,7 @@
         const config = configService.getSync();
         const configWallet = config.wallet;
         const indexScope = $scope.index;
+        const isCordova = Device.cordova;
         $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
 
         // INIT
@@ -44,13 +44,10 @@
         this.unitValue = walletSettings.unitValue;
         this.unitName = walletSettings.unitName;
         this.unitDecimals = walletSettings.unitDecimals;
-        this.isCordova = isCordova;
+
         this.addresses = [];
-        this.isMobile = isMobile.any();
-        this.isWindowsPhoneApp = isMobile.Windows() && isCordova;
+        this.isMobile = Device.any;
         this.blockUx = false;
-        this.showScanner = false;
-        this.isMobile = isMobile.any();
         this.addr = {};
         $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
         const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
@@ -411,9 +408,6 @@
 
         this.shareAddress = function (addr) {
           if (isCordova) {
-            if (isMobile.Android() || isMobile.Windows()) {
-              window.ignoreMobilePause = true;
-            }
             window.plugins.socialsharing.share(addr, null, null, null);
           }
         };
@@ -458,9 +452,6 @@
             };
 
             $scope.shareAddress = function (uri) {
-              if (isMobile.Android()) {
-                window.ignoreMobilePause = true;
-              }
               window.plugins.socialsharing.share(uri, null, null, null);
             };
 
@@ -545,10 +536,9 @@
         }, 100);
 
         this.formFocus = function (what) {
-          if (isCordova && !this.isWindowsPhoneApp) {
+          if (isCordova) {
             this.hideMenuBar(what);
           }
-          if (!this.isWindowsPhoneApp) return;
 
           if (!what) {
             this.hideAddress = false;
@@ -641,7 +631,7 @@
           const fc = profileService.focusedClient;
           const unitValue = this.unitValue;
 
-          if (isCordova && this.isWindowsPhoneApp) {
+          if (isCordova) {
             this.hideAddress = false;
             this.hideAmount = false;
           }
