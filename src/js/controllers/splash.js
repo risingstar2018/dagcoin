@@ -50,8 +50,7 @@
         const appDataDir = fileSystemService.getDatabaseDirPath();
         const userConfFile = `${appDataDir}/conf.json`;
         fileSystemService.writeFile(userConfFile, JSON.stringify({
-          bLight,
-          DATABASE_MIGRATION_TOOL: 'native-queries'
+          bLight
         }, null, '\t'), 'utf8', (err) => {
           if (err) {
             throw Error(`failed to write conf.json: ${err}`);

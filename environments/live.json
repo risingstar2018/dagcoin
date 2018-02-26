@@ -3,7 +3,6 @@
     "environment": "live",
     "explorerPrefix": "",
     "TIMESTAMPER_ADDRESS": "I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT",
-    "hub": "localhost:6611",
-    "DATABASE_MIGRATION_TOOL": "native-queries"
+    "hub": "localhost:6611"
   }
 }

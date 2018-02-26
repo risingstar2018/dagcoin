@@ -4,7 +4,6 @@
     "isTestnet": true,
     "explorerPrefix": "testnet",
     "TIMESTAMPER_ADDRESS": "OPNUXBRSSQQGHKQNEPD2GLWQYEUY5XLD",
-    "hub": "localhost:6611",
-    "DATABASE_MIGRATION_TOOL": "native-queries"
+    "hub": "localhost:6611"
   }
 }
