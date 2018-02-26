@@ -5,18 +5,16 @@
     .module('copayApp.services')
     .factory('sharedService', sharedService);
 
-  sharedService.$inject = ['$rootScope', 'ENV'];
+  sharedService.$inject = ['$rootScope'];
 
   /* @ngInject */
   function sharedService($rootScope) {
     const service = {};
-    const balanceStatuses = {
+    service.balanceStatuses = {
       total: 'total',
       pending: 'pending',
       stable: 'stable'
     };
-
-    service.balanceStatuses = balanceStatuses;
     service.hasBalance = hasBalance;
     service.hasBytes = hasBytes;
 
@@ -31,7 +29,11 @@
     }
 
     function hasBytes(status) {
-      const st = status || balanceStatuses.stable;
+      const st = status || {
+          total: 'total',
+          pending: 'pending',
+          stable: 'stable'
+        }.stable;
       return (currentBalance && currentBalance.base && currentBalance.base[st] > 0);
     }
 

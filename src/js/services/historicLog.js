@@ -5,18 +5,8 @@
   angular.module('copayApp.services')
   .factory('historicLog', () => {
     const root = {};
-
-    root.add = function (level, msg) {
-      logs.push({
-        level,
-        msg,
-      });
-    };
-
-    root.get = function () {
-      return logs;
-    };
-
+    root.add = (level, msg) => logs.push({ level, msg });
+    root.get = () => logs;
     return root;
   });
 }());

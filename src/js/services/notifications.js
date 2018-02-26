@@ -6,14 +6,6 @@
     function ($timeout) {
       let notifications = [];
 
-      /*
-       ls.getItem('notifications', function(err, data) {
-       if (data) {
-       notifications = JSON.parse(data);
-       }
-       });
-       */
-
       const queue = [];
       const settings = {
         info: {

@@ -22,18 +22,7 @@
         return window.plugins.uniqueDeviceID.get(uuid => cb(uuid), cb);
       };
 
-      const encryptOnMobile = function (text, cb) {
-        // UUID encryption is disabled.
-        return cb(null, text);
-        //
-        // getUUID(function(uuid) {
-        //   if (uuid) {
-        //     $log.debug('Encrypting profile');
-        //     text = sjcl.encrypt(uuid, text);
-        //   }
-        //   return cb(null, text);
-        // });
-      };
+      const encryptOnMobile = (text, cb) => cb(null, text);
 
       const decryptOnMobile = function (text, cb) {
         let json;
@@ -69,7 +58,6 @@
             $log.warn('Decrypt error: ', e);
             return cb('Could not decrypt storage: device ID mismatch');
           }
-          // return cb(null, text);
         });
       };
 

@@ -9,10 +9,7 @@
 
   function authService() {
     const root = {};
-
     root.objRequest = null;
-
-
     return root;
   }
 })();
