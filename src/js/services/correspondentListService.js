@@ -7,7 +7,6 @@ angular.module('copayApp.services').factory('correspondentListService',
     const root = {};
     const device = require('byteballcore/device.js');
     const chatStorage = require('byteballcore/chat_storage.js');
-    const deviceManager = require('dagcoin-core/lib/deviceManager.js').getInstance();
     $rootScope.newMessagesCount = {};
     $rootScope.newMsgCounterEnabled = false;
 
@@ -502,7 +501,19 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     function getCorrespondentsOrderedByMessageDate() {
-      return deviceManager.getCorrespondentList();
+      const db = require('byteballcore/db');
+      return new Promise((resolve, reject) => {
+        try {
+          db.query(`SELECT device_address, hub, name, my_record_pref, peer_record_pref, latest_message_date\n        
+          FROM correspondent_devices CD\n        
+          LEFT JOIN (SELECT correspondent_address, MAX(creation_date) AS latest_message_date \n        
+          FROM chat_messages GROUP BY correspondent_address) CM\n        
+          ON CM.correspondent_address = CD.device_address\n        
+          ORDER BY latest_message_date DESC, name ASC`, [], resolve);
+        } catch (e) {
+          reject(`getCorrespondentsOrderedByMessageDate: ${e.message}`);
+        }
+      });
     }
 
     function getPendingSharedAddresses() {

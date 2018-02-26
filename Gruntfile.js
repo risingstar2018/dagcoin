@@ -213,10 +213,6 @@ module.exports = function (grunt) {
         ],
         dest: 'public/dagcoin.js'
       },
-      migrations: {
-        src: ['migrations/migrations.json'],
-        dest: 'public/migrations/migrations.json'
-      },
       constants: {
         src: ['src/js/config.js'],
         dest: 'public/config.js'
