@@ -6,11 +6,12 @@
     .module('copayApp.controllers')
     .controller('CopayersCtrl', CopayersCtrl);
 
-  CopayersCtrl.$inject = ['$scope', '$timeout', '$log', '$modal', 'profileService', 'go', 'notification', 'isCordova',
+  CopayersCtrl.$inject = ['$scope', '$timeout', '$log', '$modal', 'profileService', 'go', 'notification', 'Device',
                           'gettextCatalog', 'animationService'];
 
-  function CopayersCtrl($scope, $timeout, $log, $modal, profileService, go, notification, isCordova, gettextCatalog, animationService) {
+  function CopayersCtrl($scope, $timeout, $log, $modal, profileService, go, notification, Device, gettextCatalog, animationService) {
     const self = this;
+    const isCordova = Device.cordova;
     const deleteMessage = gettextCatalog.getString('Are you sure you want to delete this wallet?');
     const acceptMessage = gettextCatalog.getString('Accept');
     const cancelMessage = gettextCatalog.getString('Cancel');

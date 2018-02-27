@@ -24,7 +24,7 @@
     vm.M = c.m;
     vm.N = c.n;
     vm.addrs = null;
-    vm.isCordova = Device.android;
+    vm.isCordova = Device.cordova;
 
     vm.hasListOfBalances = () => !!Object.keys(vm.assocListOfBalances || {}).length;
     vm.isSingleAddressWallet = () => fc.isSingleAddress;

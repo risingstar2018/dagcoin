@@ -46,11 +46,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         const ecdsaSig = require('byteballcore/signature.js');
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const Bitcore = require('bitcore-lib');
-        const isCordova = Device.cordova();
+        const isCordova = Device.cordova;
         const _ = require('lodash');
         breadcrumbs.add('index.js');
         const self = this;
-        self.isSafari = Device.isSafari();
+        self.isSafari = Device.safari;
         self.onGoingProcess = {};
         self.updatingTxHistory = true;
         self.bSwipeSuspended = false;

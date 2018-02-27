@@ -8,7 +8,7 @@
   IntroConfirmCtrl.$inject = ['$scope', 'ngDialog', 'Device', 'gettextCatalog', '$timeout', 'storageService', 'go'];
 
   function IntroConfirmCtrl($scope, ngDialog, Device, gettextCatalog, $timeout, storageService, go) {
-    const isCordova = Device.isCordova();
+    const isCordova = Device.cordova;
     $scope.agree = () => {
       if (isCordova) {
         window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Loading...'), true);

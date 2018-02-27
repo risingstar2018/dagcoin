@@ -21,7 +21,7 @@
       controllerAs: 'sidebar',
       controller() {
         const self = this;
-        self.isWindowsPhoneApp = Device.windows() && Device.cordova();
+        self.isWindowsPhoneApp = Device.windows && Device.cordova;
         self.walletSelection = false;
 
         $rootScope.$on('Local/WalletListUpdated', () => {

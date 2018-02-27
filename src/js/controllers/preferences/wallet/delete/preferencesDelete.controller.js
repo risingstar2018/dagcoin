@@ -5,9 +5,9 @@
     .module('copayApp.controllers')
     .controller('PreferencesDeleteWalletCtrl', PreferencesDeleteWalletCtrl);
 
-  PreferencesDeleteWalletCtrl.$inject = ['$rootScope', '$modal', 'notification', 'profileService', 'isCordova', 'gettextCatalog', 'animationService', 'sharedService'];
+  PreferencesDeleteWalletCtrl.$inject = ['$rootScope', '$modal', 'notification', 'profileService', 'Device', 'gettextCatalog', 'animationService', 'sharedService'];
 
-  function PreferencesDeleteWalletCtrl($rootScope, $modal, notification, profileService, isCordova, gettextCatalog, animationService, sharedService) {
+  function PreferencesDeleteWalletCtrl($rootScope, $modal, notification, profileService, Device, gettextCatalog, animationService, sharedService) {
     const vm = this;
     const balanceMessage = gettextCatalog.getString('This Wallet has positive balance.');
     const hasBalance = sharedService.hasBalance(sharedService.balanceStatuses.total);
@@ -25,7 +25,7 @@
       if (profileService.profile.credentials.length === 1 || profileService.getWallets().length === 1) {
         return $rootScope.$emit('Local/ShowErrorAlert', gettextCatalog.getString("Can't delete the last remaining wallet"));
       }
-      if (isCordova) {
+      if (Device.cordova) {
         return navigator.notification.confirm(
           deleteMessage,
           (buttonIndex) => {

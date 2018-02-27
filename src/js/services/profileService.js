@@ -13,7 +13,7 @@
                               configService,
                               fingerprintService,
                               pushNotificationsService,
-                              isCordova,
+                              Device,
                               gettext,
                               gettextCatalog,
                               nodeWebkit,
@@ -588,10 +588,6 @@
         $log.debug('Wallet encrypted');
         return cb();
       });
-      /* root.updateCredentialsFC(function() {
-       $log.debug('Wallet encrypted');
-       return cb();
-       }); */
     };
 
 
@@ -619,10 +615,6 @@
         $log.debug('Wallet encryption disabled');
         return cb();
       });
-      /* root.updateCredentialsFC(function() {
-       $log.debug('Wallet encryption disabled');
-       return cb();
-       }); */
     };
 
     root.lockFC = function () {

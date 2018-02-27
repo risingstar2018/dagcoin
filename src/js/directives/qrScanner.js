@@ -25,7 +25,7 @@
         beforeScan: '&',
       },
       controller: ($scope) => {
-        const isCordova = Device.isCordova();
+        const isCordova = Device.cordova;
         $scope.cordovaOpenScanner = function () {
           window.ignoreMobilePause = true;
           window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Preparing camera...'), true);

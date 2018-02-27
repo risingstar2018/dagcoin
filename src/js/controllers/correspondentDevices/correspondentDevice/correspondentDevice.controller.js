@@ -21,7 +21,7 @@
                                     correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) {
     const chatScope = $scope;
     const indexScope = $scope.index;
-    const isCordova = Device.isCordova();
+    const isCordova = Device.cordova;
     $scope.index.tab = 'chat';
     $rootScope.tab = $scope.index.tab;
     $scope.backgroundColor = profileService.focusedClient.backgroundColor;

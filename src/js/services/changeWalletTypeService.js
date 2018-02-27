@@ -6,9 +6,9 @@
     .module('copayApp.services')
     .factory('changeWalletTypeService', changeWalletTypeService);
 
-  changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova', 'gettextCatalog'];
+  changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'Device', 'gettextCatalog'];
 
-  function changeWalletTypeService($rootScope, fileSystemService, isCordova, gettextCatalog) {
+  function changeWalletTypeService($rootScope, fileSystemService, Device, gettextCatalog) {
     const service = {};
 
     service.change = change;
@@ -36,7 +36,7 @@
     }
 
     function canChange() {
-      return !isCordova;
+      return !Device.cordova;
     }
 
     function change(msg) {

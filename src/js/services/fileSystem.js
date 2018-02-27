@@ -2,8 +2,9 @@
   'use strict';
 
   angular.module('copayApp.services')
-  .factory('fileSystemService', ($log, isCordova) => {
+  .factory('fileSystemService', ($log, Device) => {
     const root = {};
+    const isCordova = Device.cordova;
     let bFsInitialized = false;
 
     const fs = require('fs');
