@@ -63,6 +63,28 @@
           }
         });
 
+        const disableMerchantPaymentRequestListener = $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName) => {
+          console.log(`paymentRequest event ${address}, ${amount}`);
+          $rootScope.$emit('Local/SetTab', 'send');
+          this.invoiceId = invoiceId;
+          this.validForSeconds = Math.floor(validForSeconds - 10); // 10 is a security threshold
+          self.setForm(address, amount, null, ENV.DAGCOIN_ASSET, null);
+
+          const form = $scope.sendForm;
+          if (form.address.$invalid && !self.blockUx) {
+            console.log('invalid address, resetting form');
+            self.resetForm();
+            self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
+          }
+
+          if (this.validForSeconds <= 0) {
+            self.resetForm();
+            self.error = gettextCatalog.getString('Merchant payment request expired');
+          }
+
+          self.countDown();
+        });
+
         const disablePaymentUriListener = $rootScope.$on('paymentUri', (event, uri) => {
           $timeout(() => {
             $rootScope.$emit('Local/SetTab', 'send');
@@ -82,6 +104,7 @@
         const disableResumeListener = $rootScope.$on('Local/Resume', () => {
           // This is needed then the apps go to sleep
           // looks like it already works ok without rebinding touch events after every resume
+          // self.bindTouchDown();
         });
 
         const disableTabListener = $rootScope.$on('Local/TabChanged', (e, tab) => {
@@ -132,6 +155,7 @@
           console.log('walletHome $destroy');
           disableAddrListener();
           disablePaymentRequestListener();
+          disableMerchantPaymentRequestListener();
           disablePaymentUriListener();
           disableTabListener();
           disableFocusListener();
@@ -140,6 +164,10 @@
           $rootScope.hideMenuBar = false;
           eventBus.removeListener('new_wallet_address', onNewWalletAddress);
         });
+
+        // const accept_msg = gettextCatalog.getString('Accept');
+        // const cancel_msg = gettextCatalog.getString('Cancel');
+        // const confirm_msg = gettextCatalog.getString('Confirm');
 
         $scope.formatSum = (sum) => {
           const string = sum.toString().split('.');
@@ -406,6 +434,26 @@
           }, 1000);
         };
 
+        this.countDown = function () {
+          const self = this;
+
+          if (this.validForSeconds == null) {
+            // Form has been reset
+            return;
+          }
+
+          if (this.validForSeconds <= 0) {
+            self.resetForm();
+            self.error = gettextCatalog.getString('Payment request expired');
+            return;
+          }
+
+          $timeout(() => {
+            self.validForSeconds -= 1;
+            self.countDown();
+          }, 1000);
+        };
+
         this.shareAddress = function (addr) {
           if (isCordova) {
             window.plugins.socialsharing.share(addr, null, null, null);
@@ -659,6 +707,8 @@
           const address = form.address.$modelValue;
           const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
           let amount = form.amount.$modelValue;
+          const invoiceId = this.invoiceId;
+          // const paymentId = 1;
           let merkleProof = '';
           if (form.merkle_proof && form.merkle_proof.$modelValue) {
             merkleProof = form.merkle_proof.$modelValue.trim();
@@ -811,55 +861,145 @@
                   recipientDeviceAddress,
                 };
 
-                fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
-                  let error = sendMultiPaymentError;
-                  // if multisig, it might take very long before the callback is called
-                  indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
-                  breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
-                  delete self.current_payment_key;
-                  profileService.bKeepUnlocked = false;
-                  if (sendMultiPaymentError) {
-                    if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
-                      error = gettextCatalog.getString('Not enough dagcoins');
-                    } else if (sendMultiPaymentError.match(/connection closed/) || sendMultiPaymentError.match(/connect to light vendor failed/)) {
-                      error = gettextCatalog.getString('Problems with connecting to the hub. Please try again later');
-                    }
-                    return self.setSendError(error);
-                  }
-                  const binding = self.binding;
-                  self.resetForm();
-                  $rootScope.$emit('NewOutgoingTx');
-                  if (recipientDeviceAddress) { // show payment in chat window
-                    eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset, indexScope.walletId, true, toAddress);
-                    if (binding && binding.reverseAmount) { // create a request for reverse payment
-                      if (!myAddress) {
-                        throw Error(gettextCatalog.getString('my address not known'));
-                      }
-                      const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
-                      const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
-                      device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
-                      correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
-                        bIncoming: false,
-                        message: correspondentListService.formatOutgoingMessage(paymentRequestText),
-                        timestamp: Math.floor(Date.now() / 1000)
-                      });
-                      // issue next address to avoid reusing the reverse payment address
-                      if (!fc.isSingleAddress) {
-                        walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
-                        });
-                      }
-                    }
-                  } else {
-                    indexScope.updateHistory((success) => {
-                      if (success) {
-                        $rootScope.$emit('Local/SetTab', 'walletHome');
-                        self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
-                      } else {
-                        console.error('updateTxHistory not executed');
+
+                let merchantPromise = null;
+
+                // Merchant Payment life cycle
+                if (self.invoiceId !== null) {
+                  merchantPromise = new Promise((resolve, reject) => {
+                    const merchantApiRequest = require('request');
+
+                    merchantApiRequest(`${ENV.MERCHANT_INTEGRATION_API}/${self.invoiceId}`, (error, response, body) => {
+                      try {
+                        const payload = JSON.parse(body).payload;
+
+                        if (error) {
+                          console.log(`error: ${error}`); // Print the error if one occurred
+                          reject(error);
+                        } else {
+                          if (payload.state === 'PENDING') {
+                            resolve();
+                          }
+
+                          reject(`Payment state is ${payload.state}`);
+                        }
+                      } catch (ex) {
+                        console.log(`error: ${ex}`); // Print the error if one occurred
                       }
                     });
+                  });
+                } else {
+                  merchantPromise = Promise.resolve();
+                }
+
+                merchantPromise.then(() => {
+                  if (invoiceId != null) {
+                    const objectHash = require('byteballcore/object_hash');
+                    const payload = JSON.stringify({ invoiceId });
+                    opts.messages = [{
+                      app: 'text',
+                      payload_location: 'inline',
+                      payload_hash: objectHash.getBase64Hash(payload),
+                      payload
+                    }];
                   }
+
+                  console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
+                  useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
+                    opts.change_address = addressInfo.address;
+                    fc.sendMultiPayment(opts, (sendMultiPaymentError, unit, assocMnemonics) => {
+                      let error = sendMultiPaymentError;
+                      // if multisig, it might take very long before the callback is called
+                      indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+                      breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
+                      delete self.current_payment_key;
+                      profileService.bKeepUnlocked = false;
+                      if (sendMultiPaymentError) {
+                        if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
+                          error = gettextCatalog.getString('Not enough dagcoins');
+                        } else if (sendMultiPaymentError.match(/connection closed/) || sendMultiPaymentError.match(/connect to light vendor failed/)) {
+                          error = gettextCatalog.getString('Problems with connecting to the hub. Please try again later');
+                        }
+                        return self.setSendError(error);
+                      }
+                      const binding = self.binding;
+
+                      if (unit != null && self.invoiceId != null) {
+                        const invoiceId = self.invoiceId;
+                        self.invoiceId = null;
+
+                        const options = {
+                          uri: `${ENV.MERCHANT_INTEGRATION_API}/payment-unit-updated`,
+                          method: 'POST',
+                          json: {
+                            invoiceId,
+                            paymentUnitId: unit
+                          }
+                        };
+
+                        if (invoiceId != null) {
+                          const request = require('request');
+                          request(options, (error, response, body) => {
+                            if (error) {
+                              console.log(`PAYMENT UNIT UPDATE ERROR: ${error}`);
+                            }
+                            console.log(`RESPONSE: ${JSON.stringify(response)}`);
+                            console.log(`BODY: ${JSON.stringify(body)}`);
+                          });
+                        }
+                      }
+
+                      self.resetForm();
+                      $rootScope.$emit('NewOutgoingTx');
+                      if (recipientDeviceAddress) { // show payment in chat window
+                        eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset, indexScope.walletId, true, toAddress);
+                        if (binding && binding.reverseAmount) { // create a request for reverse payment
+                          if (!myAddress) {
+                            throw Error(gettextCatalog.getString('my address not known'));
+                          }
+                          const paymentRequestCode = `dagcoin:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                          const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
+                          device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
+                          correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
+                            bIncoming: false,
+                            message: correspondentListService.formatOutgoingMessage(paymentRequestText),
+                            timestamp: Math.floor(Date.now() / 1000)
+                          });
+                          // issue next address to avoid reusing the reverse payment address
+                          if (!fc.isSingleAddress) {
+                            walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
+                            });
+                          }
+                        }
+                      } else {
+                        indexScope.updateHistory((success) => {
+                          if (success) {
+                            $rootScope.$emit('Local/SetTab', 'walletHome');
+                            self.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
+                          } else {
+                            console.error('updateTxHistory not executed');
+                          }
+                        });
+                      }
+                    });
+                  });
+                  $scope.sendForm.$setPristine();
+                }).catch((error) => {
+                  delete self.current_payment_key;
+                  indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+                  $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {
+                  });
                 });
+              }
+
+              function useOrIssueNextAddress(wallet, isChange, handleAddress) {
+                if (fc.isSingleAddress) {
+                  handleAddress({
+                    address: self.addr[fc.credentials.walletId]
+                  });
+                } else {
+                  walletDefinedByKeys.issueNextAddress(wallet, isChange, handleAddress);
+                }
               }
             });
           }, 100);
@@ -1015,6 +1155,8 @@
               // must be already paired
               assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
             }
+          } else {
+            this.lockAddress = false;
           }
 
           if (moneyAmount) {
@@ -1061,6 +1203,29 @@
           this.resetError();
           delete this.binding;
 
+          const invoiceId = this.invoiceId;
+
+          const options = {
+            uri: `${ENV.MERCHANT_INTEGRATION_API}/cancel`,
+            method: 'POST',
+            json: {
+              invoiceId
+            }
+          };
+
+          if (invoiceId !== null) {
+            const request = require('request');
+            request(options, (error, response, body) => {
+              if (error) {
+                console.log(`CANCEL ERROR: ${error}`);
+              }
+              console.log(`RESPONSE: ${JSON.stringify(response)}`);
+              console.log(`BODY: ${JSON.stringify(body)}`);
+            });
+          }
+
+          this.invoiceId = null;
+          this.validForSeconds = null;
           this.lockAsset = false;
           this.lockAddress = false;
           this.lockAmount = false;

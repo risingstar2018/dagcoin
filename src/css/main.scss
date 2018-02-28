@@ -2815,6 +2815,15 @@ canvas {
   overflow-y: auto;
 }
 
+.send {
+  height: 100%;
+  overflow: -webkit-paged-y;
+}
+
+.send-button {
+  margin-bottom: 25px;
+}
+
 .p-wrap_android {
   padding-top: 80px;
   padding-bottom: 20px;
@@ -3298,4 +3307,9 @@ p.color_red {
   padding: 15px;
   border-radius: 10px;
   border: 1px dashed #ddd;
+}
+
+.password {
+  -webkit-text-security: disc;
+  -moz-text-security: disc;
 }
