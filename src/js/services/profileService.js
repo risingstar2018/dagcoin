@@ -28,15 +28,12 @@
     root.formatAmount = function (amount) {
       const options = { dontRound: true };
       const config = configService.getSync().wallet.settings;
-      // if (config.unitCode == 'byte') return amount;
-
       // TODO : now only works for english, specify opts to change thousand separator and decimal separator
       return this.Utils.formatAmount(amount, config.unitCode, options);
     };
 
     root.setFocus = function (walletId, cb) {
       $log.debug('Set focus:', walletId);
-
       // Set local object
       if (walletId) {
         root.focusedClient = root.walletClients[walletId];
@@ -68,9 +65,7 @@
       if (root.walletClients[credentials.walletId] && root.walletClients[credentials.walletId].started) {
         return;
       }
-
       const client = bwcService.getClient(JSON.stringify(credentials));
-
       client.credentials.xPrivKey = root.profile.xPrivKey;
       client.credentials.mnemonic = root.profile.mnemonic;
       client.credentials.xPrivKeyEncrypted = root.profile.xPrivKeyEncrypted;
