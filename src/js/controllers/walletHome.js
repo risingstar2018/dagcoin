@@ -1247,6 +1247,8 @@
               // must be already paired
               assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
             }
+          } else {
+            this.lockAddress = false;
           }
 
           if (moneyAmount) {

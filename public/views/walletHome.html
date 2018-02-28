@@ -330,6 +330,7 @@
                   style="font-size: 12px;"
                   type="text" id="address"
                   name="address"
+                  ng-disabled="home.blockUx || home.lockAddress"
                   ng-attr-placeholder="{{home.canSendExternalPayment() ? ('DAG address' | translate) : ('DAG address of your other wallet &#8594;' | translate)}}"
                   ng-model="_address" valid-address required
                   ng-blur="home.formFocus(false)">
