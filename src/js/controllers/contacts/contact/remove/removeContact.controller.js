@@ -3,11 +3,11 @@
 
   angular
     .module('copayApp.controllers')
-    .controller('EditContactModalController', EditContactModalController);
+    .controller('RemoveContactModalCtrl', RemoveContactModalCtrl);
 
-  EditContactModalController.$inject = ['$scope', '$stateParams', 'addressbookService', '$state'];
+  RemoveContactModalCtrl.$inject = ['$scope', '$stateParams', 'addressbookService', '$state'];
 
-  function EditContactModalController($scope, $stateParams, addressbookService, $state) {
+  function RemoveContactModalCtrl($scope, $stateParams, addressbookService, $state) {
     const address = $stateParams.address;
 
     $scope.contact = { address };

@@ -11,7 +11,6 @@
     const vm = this;
     const isCordova = Device.cordova;
     vm.agree = () => {
-      debugger
       if (isCordova) {
         window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Loading...'), true);
       }
