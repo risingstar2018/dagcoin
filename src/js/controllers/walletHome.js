@@ -936,7 +936,37 @@
                   paymentPromise = Promise.resolve();
                 }
 
-                paymentPromise.then(() => new Promise((resolve, reject) => {
+                let merchantPromise = null;
+
+                // Merchant Payment life cycle
+                if (self.invoiceId != null) {
+                  merchantPromise = new Promise((resolve, reject) => {
+                    const merchantApiRequest = require('request');
+
+                    merchantApiRequest(`${ENV.MERCHANT_INTEGRATION_API}/${self.invoiceId}`, (error, response, body) => {
+                      try {
+                        const payload = JSON.parse(body).payload;
+
+                        if (error) {
+                          console.log(`error: ${error}`); // Print the error if one occurred
+                          reject(error);
+                        } else {
+                          if (payload.state === 'PENDING') {
+                            resolve();
+                          }
+
+                          reject(`Payment state is ${payload.state}`);
+                        }
+                      } catch (ex) {
+                        console.log(`error: ${ex}`); // Print the error if one occurred
+                      }
+                    });
+                  });
+                } else {
+                  merchantPromise = Promise.resolve();
+                }
+
+                paymentPromise.then(() => merchantPromise).then(() => {
                   if (invoiceId != null) {
                     const objectHash = require('byteballcore/object_hash');
                     const payload = JSON.stringify({ invoiceId });
@@ -1025,11 +1055,10 @@
                           }
                         });
                       }
-                      resolve();
                     });
                   });
                   $scope.sendForm.$setPristine();
-                })).catch((error) => {
+                }).catch((error) => {
                   delete self.current_payment_key;
                   indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
                   $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {
