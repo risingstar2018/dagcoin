@@ -8,12 +8,14 @@
   IntroConfirmCtrl.$inject = ['$scope', 'ngDialog', 'Device', 'gettextCatalog', '$timeout', 'storageService', 'go'];
 
   function IntroConfirmCtrl($scope, ngDialog, Device, gettextCatalog, $timeout, storageService, go) {
+    const vm = this;
     const isCordova = Device.cordova;
-    $scope.agree = () => {
+    vm.agree = () => {
+      debugger
       if (isCordova) {
         window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Loading...'), true);
       }
-      $scope.loading = true;
+      vm.loading = true;
       $timeout(() => {
         storageService.setDisclaimerFlag(() => {
           $timeout(() => {
@@ -26,7 +28,7 @@
       }, 100);
     };
 
-    $scope.showTermsOfUse = () => {
+    vm.showTermsOfUse = () => {
       ngDialog.open({
         template: `<div class="navbar-container invert">
                     <div class="navbar-container-triggers">
@@ -42,7 +44,7 @@
         className: 'terms_of_use_confirm',
         scope: $scope,
         preCloseCallback: () => {
-          $scope.finish = true;
+          vm.finish = true;
         }
       });
     };

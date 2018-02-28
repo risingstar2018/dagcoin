@@ -117,7 +117,7 @@
           views: {
             main: {
               templateUrl: 'controllers/initialization/confirm/confirm.template.html',
-              controller: 'IntroCtrl as confirm'
+              controller: 'IntroConfirmCtrl as confirm'
             }
           }
         })
@@ -514,6 +514,45 @@
           templateUrl: 'views/warning.html',
           needProfile: false,
         })
+        .state('send', {
+          url: '/',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/send/send.template.html',
+              controller: 'SendCtrl as send'
+            }
+          }
+        })
+        .state('receive', {
+          url: '/',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/receive/receive.template.html',
+              controller: 'ReceiveCtrl as receive'
+            }
+          }
+        })
+        .state('home', {
+          url: '/',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/home/home.template.html',
+              controller: 'HomeCtrl as receive'
+            }
+          }
+        })
         .state('cordova', { // never used
           url: '/cordova/:status/:isHome',
           views: {
@@ -540,7 +579,7 @@
           needProfile: false,
         });
     })
-    .run(($rootScope, $state, $stateParams, $log, uriHandler, isCordova, profileService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
+    .run(($rootScope, $state, $stateParams, $log, uriHandler, Device, profileService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
       if ('addEventListener' in document) {
         document.addEventListener('DOMContentLoaded', () => {
           FastClick.attach(document.body);
@@ -550,7 +589,7 @@
       uxLanguage.init();
 
       // Register URI handler, not for mobileApp
-      if (!isCordova) {
+      if (!Device.cordova) {
         uriHandler.register();
       }
 

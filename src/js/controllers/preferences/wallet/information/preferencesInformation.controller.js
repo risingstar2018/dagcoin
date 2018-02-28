@@ -5,11 +5,11 @@
     .module('copayApp.controllers')
     .controller('PreferencesInformationCtrl', PreferencesInformationCtrl);
 
-  PreferencesInformationCtrl.$inject = ['$scope', '$rootScope', '$log', 'configService', 'profileService', 'fundingExchangeClientService',
-    '$timeout', 'gettextCatalog', 'addressService', 'proofingService', 'dagcoinProtocolService', 'ENV', 'Device'];
+  PreferencesInformationCtrl.$inject = ['$scope', '$rootScope', '$log', 'configService', 'profileService', '$timeout',
+    'gettextCatalog', 'addressService', 'ENV', 'Device'];
 
-  function PreferencesInformationCtrl($scope, $rootScope, $log, configService, profileService, fundingExchangeClientService,
-                                      $timeout, gettextCatalog, addressService, proofingService, dagcoinProtocolService, ENV, Device) {
+  function PreferencesInformationCtrl($scope, $rootScope, $log, configService, profileService, $timeout, gettextCatalog,
+                                      addressService, ENV, Device) {
     const vm = this;
     const fc = profileService.focusedClient;
     const c = fc.credentials;
@@ -97,13 +97,6 @@
           $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('New Address successfully generated.'), 'fi-check', () => {
           });
           init();
-          proofingService.proofCurrentAddress().then((proof) => {
-            dagcoinProtocolService.sendRequest(
-              fundingExchangeClientService.bytesProviderDeviceAddress,
-              'link-address',
-              proof
-            );
-          });
         }
       });
     }
@@ -126,7 +119,7 @@
           if (row.asset === 'base' || row.asset === ENV.DAGCOIN_ASSET) {
             const assetName = row.asset !== 'base' ? 'DAG' : 'base';
             const unitName = row.asset !== 'base' ? config.dagUnitName : config.unitName;
-            row.amount = `${profileService.formatAmount(row.amount, assetName, {dontRound: true})} ${unitName}`;
+            row.amount = `${profileService.formatAmount(row.amount, assetName, { dontRound: true })} ${unitName}`;
             return row;
           }
           return row;

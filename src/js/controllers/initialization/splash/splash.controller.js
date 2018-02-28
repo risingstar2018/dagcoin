@@ -8,11 +8,11 @@
     .controller('SplashCtrl', SplashCtrl);
 
   SplashCtrl.$inject = ['$scope', '$timeout', '$log', 'configService', 'profileService', 'storageService', 'fileSystemService',
-    'go', 'isCordova'];
+    'go', 'Device'];
 
-  function SplashCtrl($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova) {
+  function SplashCtrl($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, Device) {
     const vm = this;
-    vm.step = isCordova ? 'device_name' : 'registration_type';
+    vm.step = Device.cordova ? 'device_name' : 'registration_type';
     vm.registration_type = 'default';
     vm.wallet_type = 'light';
 

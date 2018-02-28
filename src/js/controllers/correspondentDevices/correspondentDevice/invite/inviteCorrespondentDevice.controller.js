@@ -8,22 +8,22 @@
     .module('copayApp.controllers')
     .controller('InviteCorrespondentDeviceCtrl', InviteCorrespondentDeviceCtrl);
 
-  InviteCorrespondentDeviceCtrl.$inject = ['$scope', '$timeout', 'profileService', 'go', 'isCordova', 'correspondentListService',
+  InviteCorrespondentDeviceCtrl.$inject = ['$scope', '$timeout', 'profileService', 'go', 'Device', 'correspondentListService',
                                           'gettextCatalog', 'nodeWebkit', '$log'];
 
-  function InviteCorrespondentDeviceCtrl($scope, $timeout, profileService, go, isCordova, correspondentListService,
+  function InviteCorrespondentDeviceCtrl($scope, $timeout, profileService, go, Device, correspondentListService,
                                          gettextCatalog, nodeWebkit, $log) {
     const vm = this;
     const fc = profileService.focusedClient;
     vm.protocol = conf.program;
-    vm.isCordova = isCordova;
+    vm.isCordova = Device.cordova;
     vm.color = fc.backgroundColor;
     vm.error = null;
     vm.cancelAddCorrespondent = () => go.path('correspondentDevices');
     vm.onTextClick = $event => $event.target.select();
 
     vm.copyCode = function () {
-      if (isCordova) {
+      if (vm.isCordova) {
         window.cordova.plugins.clipboard.copy(vm.code);
         window.plugins.toast.showShortCenter(gettextCatalog.getString('Copied to clipboard'));
         showTooltipCopied();

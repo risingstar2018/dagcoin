@@ -6,13 +6,13 @@
 
         <ul class="animated fadeInDown">
             <li>
-                <input class="checkbox" ng-model="security" type="checkbox" id="security">
+                <input class="checkbox" ng-model="confirm.security" type="checkbox" id="security">
                 <label for="security">
                     I understand that my funds are held securely on this device, not by a company.
                 </label>
             </li>
             <li>
-                <input class="checkbox" ng-model="backup" type="checkbox" id="backup">
+                <input class="checkbox" ng-model="confirm.backup" type="checkbox" id="backup">
                 <label for="backup">
                     I understand that if this app is moved to another device or deleted, my dagcoin can only be
                     recovered with the backup phrase.
@@ -21,13 +21,13 @@
         </ul>
     </div>
 
-    <div ng-show="backup && security" ng-class="{'animated': backup && security}"
+    <div ng-show="confirm.backup && confirm.security" ng-class="{'animated': confirm.backup && confirm.security}"
          class="intro_confirm_content_trigger fasten slideInUp">
-        <input class="checkbox" ng-model="finish" type="checkbox" id="finish">
+        <input class="checkbox" ng-model="confirm.finish" type="checkbox" id="finish">
         <label for="finish">
-            I have read, understood and agree to <span ng-click="showTermsOfUse()">Terms Of Use</span>.
+            I have read, understood and agree to <span ng-click="confirm.showTermsOfUse()">Terms Of Use</span>.
         </label>
-        <button ng-disabled="!finish" class="btn btn_red-full" ng-click="agree()">Confirm & Finish</button>
+        <button ng-disabled="!confirm.finish" class="btn btn_red-full" ng-click="confirm.agree()">Confirm & Finish</button>
     </div>
 
 </div>

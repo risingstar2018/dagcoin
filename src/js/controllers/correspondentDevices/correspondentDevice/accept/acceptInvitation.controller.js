@@ -5,10 +5,10 @@
     .module('copayApp.controllers')
     .controller('AcceptCorrespondentInvitationCtrl', AcceptCorrespondentInvitationCtrl);
 
-  AcceptCorrespondentInvitationCtrl.$inject = ['$rootScope', '$timeout', 'profileService', 'isCordova',
+  AcceptCorrespondentInvitationCtrl.$inject = ['$rootScope', '$timeout', 'profileService', 'Device',
                                                       'correspondentListService', 'gettextCatalog', '$log'];
 
-  function AcceptCorrespondentInvitationCtrl($rootScope, $timeout, profileService, isCordova, correspondentListService,
+  function AcceptCorrespondentInvitationCtrl($rootScope, $timeout, profileService, Device, correspondentListService,
                                                    gettextCatalog, $log) {
     const vm = this;
     const fc = profileService.focusedClient;
@@ -29,7 +29,7 @@
     };
 
     vm.setOngoingProcess = function (name) {
-      if (isCordova) {
+      if (Device.cordova) {
         if (name) {
           window.plugins.spinnerDialog.hide();
           window.plugins.spinnerDialog.show(null, `${name}...`, true);
