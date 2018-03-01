@@ -74,26 +74,54 @@
           }
         });
 
-        const disableMerchantPaymentRequestListener = $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName) => {
+        const disableMerchantPaymentRequestListener = $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
           $rootScope.$emit('Local/SetTab', 'send');
           this.invoiceId = invoiceId;
           this.validForSeconds = Math.floor(validForSeconds - 10); // 10 is a security threshold
-          self.setForm(address, amount, null, ENV.DAGCOIN_ASSET, null);
 
-          const form = $scope.sendForm;
-          if (form.address.$invalid && !self.blockUx) {
-            console.log('invalid address, resetting form');
+          const processNonPendingStates = (state) => {
+            let errorMessage = '';
+
+            switch (state) {
+              case 'EXPIRED':
+                errorMessage = gettextCatalog.getString('Merchant payment request expired');
+                break;
+              case 'CANCELLED':
+                errorMessage = gettextCatalog.getString('Merchant payment request has been cancelled');
+                break;
+              case 'FAILED':
+                errorMessage = gettextCatalog.getString('Merchant payment request failed');
+                break;
+              default:
+                errorMessage = gettextCatalog.getString('An error occurred during merchant request processing');
+                break;
+            }
+
             self.resetForm();
-            self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
-          }
+            self.error = errorMessage;
+          };
 
-          if (this.validForSeconds <= 0) {
-            self.resetForm();
-            self.error = gettextCatalog.getString('Merchant payment request expired');
-          }
+          if (state === 'PENDING') {
+            self.setForm(address, amount, null, ENV.DAGCOIN_ASSET, null);
 
-          self.countDown();
+            const form = $scope.sendForm;
+
+            if (form.address.$invalid && !self.blockUx) {
+              console.log('invalid address, resetting form');
+              self.resetForm();
+              self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
+            }
+
+            if (this.validForSeconds <= 0) {
+              self.resetForm();
+              self.error = gettextCatalog.getString('Merchant payment request expired');
+            }
+
+            self.countDown();
+          } else {
+            processNonPendingStates(state);
+          }
         });
 
         const disablePaymentUriListener = $rootScope.$on('paymentUri', (event, uri) => {
