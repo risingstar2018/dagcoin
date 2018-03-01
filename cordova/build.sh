@@ -152,7 +152,7 @@ if [ ! -d $PROJECT ]; then
 	checkOK
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
-	cordova plugin add https://github.com/phonegap/phonegap-plugin-push
+	#cordova plugin add https://github.com/phonegap/phonegap-plugin-push
 	checkOK
 	fi
 
