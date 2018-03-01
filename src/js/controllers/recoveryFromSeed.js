@@ -106,7 +106,17 @@
         db.addQuery(arrQueries, 'DELETE FROM wallet_signing_paths');
         db.addQuery(arrQueries, 'DELETE FROM extended_pubkeys');
         db.addQuery(arrQueries, 'DELETE FROM wallets');
-        db.addQuery(arrQueries, 'DELETE FROM correspondent_devices');
+
+        /**
+         * In recover phase some devices are read from extended_pubkeys and trying to send message if the address is not
+         * equals to device address. While sending, correspondent_devices table is queried. If no device found, the
+         * "correspondent not found" error is thrown by device.js
+         * Somehow, 'Dagcoin-Funding-Node' device address exists in extended_pubkeys table. Because of this reason
+         * the WHERE clause added.
+         *
+         * // TODO better way instead of name comparing, compare device_address
+         */
+        db.addQuery(arrQueries, 'DELETE FROM correspondent_devices WHERE name != \'Dagcoin-Funding-Node\'');
 
         async.series(arrQueries, cb);
       }
@@ -240,7 +250,7 @@
                 checkAndAddCurrentAddresses(1);
               }
             });
-          });
+          }, 'wait');
         }
 
         function setCurrentWallet() {
