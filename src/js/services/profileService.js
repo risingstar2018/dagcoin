@@ -760,6 +760,30 @@
       });
     };
 
+    root.updatePublicKeyRing = (walletClient, onDone) => {
+      const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+      walletDefinedByKeys.readCosigners(walletClient.credentials.walletId, (arrCosigners) => {
+        const arrApprovedDevices = arrCosigners
+          .filter(cosigner => cosigner.approval_date)
+          .map(cosigner => cosigner.device_address);
+        console.log(`approved devices: ${arrApprovedDevices.join(', ')}`);
+        walletClient.credentials.addPublicKeyRing(arrApprovedDevices);
+
+        // save it to profile
+        const credentialsIndex = lodash.findIndex(root.profile.credentials, { walletId: walletClient.credentials.walletId });
+        if (credentialsIndex < 0) {
+          throw Error('failed to find our credentials in profile');
+        }
+        root.profile.credentials[credentialsIndex] = JSON.parse(walletClient.export());
+        console.log(`saving profile: ${JSON.stringify(root.profile)}`);
+        storageService.storeProfile(root.profile, () => {
+          if (onDone) {
+            onDone();
+          }
+        });
+      });
+    };
+
     return root;
   });
 }());
