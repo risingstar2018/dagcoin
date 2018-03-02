@@ -94,7 +94,7 @@
     vm.init = () => {
       storageService.getDisclaimerFlag((err, val) => {
         if (!val) {
-          go.path('disclaimer');
+          go.path('intro_confirm');
         }
         if (profileService.profile) {
           go.walletHome();

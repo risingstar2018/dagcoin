@@ -37,8 +37,8 @@
                     </div>
                     <div class="navbar-container-title" translate>Terms of Use</div>
                    </div>
-                   <div ng-include="'views/includes/terms_of_use.html'"></div>
-                   <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>`,
+                   <dag-terms></dag-terms>
+                   <dag-background></dag-background>`,
         plain: true,
         className: 'terms_of_use_confirm',
         scope: $scope,

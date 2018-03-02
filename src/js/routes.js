@@ -121,16 +121,6 @@
             }
           }
         })
-        .state('disclaimer', {
-          url: '/disclaimer',
-          needProfile: false,
-          views: {
-            main: {
-              templateUrl: 'controllers/disclaimer/disclaimer.template.html',
-              controller: 'DisclaimerCtrl as disclaimer'
-            }
-          }
-        })
         .state('walletHome', {
           url: '/',
           walletShouldBeComplete: true,
