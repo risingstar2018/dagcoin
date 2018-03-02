@@ -67,30 +67,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.isOffline = !isOnline;
         });
 
-        function updatePublicKeyRing(walletClient, onDone) {
-          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
-          walletDefinedByKeys.readCosigners(walletClient.credentials.walletId, (arrCosigners) => {
-            const arrApprovedDevices = arrCosigners
-              .filter(cosigner => cosigner.approval_date)
-              .map(cosigner => cosigner.device_address);
-            console.log(`approved devices: ${arrApprovedDevices.join(', ')}`);
-            walletClient.credentials.addPublicKeyRing(arrApprovedDevices);
-
-            // save it to profile
-            const credentialsIndex = lodash.findIndex(profileService.profile.credentials, { walletId: walletClient.credentials.walletId });
-            if (credentialsIndex < 0) {
-              throw Error('failed to find our credentials in profile');
-            }
-            profileService.profile.credentials[credentialsIndex] = JSON.parse(walletClient.export());
-            console.log(`saving profile: ${JSON.stringify(profileService.profile)}`);
-            storageService.storeProfile(profileService.profile, () => {
-              if (onDone) {
-                onDone();
-              }
-            });
-          });
-        }
-
         if (isCordova && constants.version === '1.0') {
           const db = require('byteballcore/db.js');
           db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
@@ -106,71 +82,69 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         }
 
-        eventBus.on('nonfatal_error', (errorMessage, errorObject) => {
-          console.log('nonfatal error stack', errorObject.stack);
-          Raven.captureException(`nonfatal error stack ${errorMessage}`);
-          errorObject.bIgnore = true;
-        });
 
-        eventBus.on('uncaught_error', (errorMessage, errorObject) => {
-          Raven.captureException(errorMessage);
-          if (errorMessage.indexOf('ECONNREFUSED') >= 0 || errorMessage.indexOf('host is unreachable') >= 0) {
-            $rootScope.$emit('Local/ShowAlert', 'Error connecting to TOR', 'fi-alert', () => {
-              go.path('preferencesTor');
-            });
-            return;
-          }
-          if (errorMessage.indexOf('ttl expired') >= 0 || errorMessage.indexOf('general SOCKS server failure') >= 0) {
-            // TOR error after wakeup from sleep
-            return;
+        self.showPopup = function (msg, msgIcon, cb) {
+          $log.warn(`Showing ${msgIcon} popup:${msg}`);
+
+          if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
+            return false;
           }
 
-          const handled = changeWalletTypeService.tryHandleError(errorObject);
-          if (errorObject && (errorObject.bIgnore || handled)) {
-            return;
-          }
-          self.showErrorPopup(errorMessage, () => {
-            if (isCordova && navigator && navigator.app) {
-              // android
-              navigator.app.exitApp();
-            } else if (process.exit) {
-              // nwjs
-              process.exit();
+          self.showAlert = {
+            msg: msg.toString(),
+            msg_icon: msgIcon,
+            close(err) {
+              self.showAlert = null;
+              if (cb) return cb(err);
             }
-            // ios doesn't exit
-          });
-        });
-
-        let catchupBallsAtStart = -1;
-        eventBus.on('catching_up_started', () => {
-          self.setOngoingProcess('Syncing', true);
-          self.syncProgress = '0% of new units';
-        });
-        eventBus.on('catchup_balls_left', (countLeft) => {
-          self.setOngoingProcess('Syncing', true);
-          if (catchupBallsAtStart === -1) {
-            catchupBallsAtStart = countLeft;
-          }
-          const percent = Math.round(((catchupBallsAtStart - countLeft) / catchupBallsAtStart) * 100);
-          self.syncProgress = `${percent}% of new units`;
+          };
           $timeout(() => {
             $rootScope.$apply();
           });
-        });
-        eventBus.on('catching_up_done', () => {
-          catchupBallsAtStart = -1;
-          self.setOngoingProcess('Syncing', false);
-          self.syncProgress = '';
-        });
-        eventBus.on('refresh_light_started', () => {
-          console.log('refresh_light_started');
-          self.setOngoingProcess('Syncing', true);
-        });
-        eventBus.on('refresh_light_done', () => {
-          console.log('refresh_light_done');
-          self.setOngoingProcess('Syncing', false);
-          newVersion.askForVersion();
-        });
+        };
+
+        self.showErrorPopup = function (msg, cb) {
+          $log.warn(`Showing err popup:${msg}`);
+          self.showPopup(msg, 'fi-alert', cb);
+        };
+
+        self.setOngoingProcess = function (processName, isOn) {
+          $log.debug('onGoingProcess', processName, isOn);
+          self[processName] = isOn;
+          self.onGoingProcess[processName] = isOn;
+
+          let name;
+          self.anyOnGoingProcess = lodash.any(self.onGoingProcess, (isOn, processName) => {
+            if (isOn) {
+              name = name || processName;
+            }
+            return isOn;
+          });
+          // The first one
+          self.onGoingProcessName = name;
+          $timeout(() => {
+            $rootScope.$apply();
+          });
+        };
+
+        const indexEventsSupport = new IndexEventsSupport(args);
+        indexEventsSupport.initNotFatalError();
+        indexEventsSupport.initUncaughtError();
+
+        self.catchupBallsAtStart = -1;
+        indexEventsSupport.initCatchingUpStarted();
+        indexEventsSupport.initCatchupBallsLeft();
+        indexEventsSupport.initCatchingUpDone();
+        indexEventsSupport.initRefreshLightStarted();
+        indexEventsSupport.initRefreshLightDone();
+        indexEventsSupport.initRefusedToSign();
+        indexEventsSupport.initNewMyTransactions();
+        indexEventsSupport.initMyTransactionsBecameStable();
+        indexEventsSupport.initMciBecameStable();
+        indexEventsSupport.initMaybeNewTransactions();
+        indexEventsSupport.initWalletApproved();
+        indexEventsSupport.initWalletDeclined();
+        indexEventsSupport.initWalletCompleted();
 
         // eventBus.on('confirm_on_other_devices', () => {
         // // todo: originally the mesage was: 'Transaction created. \nPlease approve it on the other devices.'. we have to bring this back and think about better solution.
@@ -179,12 +153,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         // });
         // });
 
-        eventBus.on('refused_to_sign', (deviceAddress) => {
-          const device = require('byteballcore/device.js');
-          device.readCorrespondent(deviceAddress, (correspondent) => {
-            notification.success(gettextCatalog.getString('Refused'), gettextCatalog.getString(`${correspondent.name} refused to sign the transaction`));
-          });
-        });
 
         /*
          eventBus.on("transaction_sent", function(){
@@ -192,79 +160,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
          self.updateTxHistory();
          });
         */
-
-        eventBus.on('new_my_transactions', () => {
-          breadcrumbs.add('new_my_transactions');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('my_transactions_became_stable', () => {
-          breadcrumbs.add('my_transactions_became_stable');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('mci_became_stable', () => {
-          breadcrumbs.add('mci_became_stable');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('maybe_new_transactions', () => {
-          breadcrumbs.add('maybe_new_transactions');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('wallet_approved', (walletId, deviceAddress) => {
-          console.log(`wallet_approved ${walletId} by ${deviceAddress}`);
-          const client = profileService.walletClients[walletId];
-          // already deleted (maybe declined by another device) or not present yet
-          if (!client) {
-            return;
-          }
-          const walletName = client.credentials.walletName;
-          updatePublicKeyRing(client);
-          const device = require('byteballcore/device.js');
-          device.readCorrespondent(deviceAddress, (correspondent) => {
-            notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(`Wallet ${walletName} approved by ${correspondent.name}`));
-          });
-        });
-
-        eventBus.on('wallet_declined', (walletId, deviceAddress) => {
-          const client = profileService.walletClients[walletId];
-          // already deleted (maybe declined by another device)
-          if (!client) {
-            return;
-          }
-          const walletName = client.credentials.walletName;
-          const device = require('byteballcore/device.js');
-          device.readCorrespondent(deviceAddress, (correspondent) => {
-            notification.info(gettextCatalog.getString('Declined'), gettextCatalog.getString(`Wallet ${walletName} declined by ${correspondent.name}`));
-          });
-          profileService.deleteWallet({ client }, (err) => {
-            if (err) {
-              console.log(err);
-            }
-          });
-        });
-
-        eventBus.on('wallet_completed', (walletId) => {
-          console.log(`wallet_completed ${walletId}`);
-          const client = profileService.walletClients[walletId];
-          if (!client) {
-            return;
-          } // impossible
-          const walletName = client.credentials.walletName;
-          updatePublicKeyRing(client, () => {
-            if (!client.isComplete()) {
-              throw Error('not complete');
-            }
-            notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(`Wallet ${walletName} is ready`));
-            $rootScope.$emit('Local/WalletCompleted');
-          });
-        });
 
         const acceptMessage = gettextCatalog.getString('Yes');
         const cancelMessage = gettextCatalog.getString('No');
@@ -320,6 +215,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
         };
 
+        // TODO sinan, it uses requestApproval->modal methods, after merging move this into index.events.support.js
         // in arrOtherCosigners, 'other' is relative to the initiator
         eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
           const device = require('byteballcore/device.js');
@@ -351,7 +247,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                         const n = arrDeviceAddresses.length;
                         const m = arrWalletDefinitionTemplate[1].required || n;
                         walletClient.credentials.addWalletInfo(walletName, m, n);
-                        updatePublicKeyRing(walletClient);
+                        profileService.updatePublicKeyRing(walletClient);
                         profileService.addWalletClient(walletClient, {}, () => {
                           if (isSingleAddress) {
                             profileService.setSingleAddressFlag(true);
@@ -381,6 +277,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         // instead we'll use the already obtained approval
         const assocChoicesByUnit = {};
 
+        // TODO sinan, it uses requestApproval->modal methods, after merging move this into index.events.support.js
         // objAddress is local wallet address, top_address is the address that requested the signature,
         // it may be different from objAddress if it is a shared address
         eventBus.on('signing_request', (objAddress, topAddress, objUnit, assocPrivatePayloads, fromAddress, signingPath) => {
@@ -613,25 +510,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.txTemplateUrl = addonManager.txTemplateUrl() || 'views/includes/transaction.html';
 
         self.tab = 'walletHome';
-
-        self.setOngoingProcess = function (processName, isOn) {
-          $log.debug('onGoingProcess', processName, isOn);
-          self[processName] = isOn;
-          self.onGoingProcess[processName] = isOn;
-
-          let name;
-          self.anyOnGoingProcess = lodash.any(self.onGoingProcess, (isOn, processName) => {
-            if (isOn) {
-              name = name || processName;
-            }
-            return isOn;
-          });
-          // The first one
-          self.onGoingProcessName = name;
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        };
 
         self.setFocusedWallet = function () {
           const fc = profileService.focusedClient;
@@ -1239,31 +1117,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             lightWallet.refreshLightClientHistory();
           }, 500);
         }, 5000);
-
-        self.showPopup = function (msg, msgIcon, cb) {
-          $log.warn(`Showing ${msgIcon} popup:${msg}`);
-
-          if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
-            return false;
-          }
-
-          self.showAlert = {
-            msg: msg.toString(),
-            msg_icon: msgIcon,
-            close(err) {
-              self.showAlert = null;
-              if (cb) return cb(err);
-            }
-          };
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        };
-
-        self.showErrorPopup = function (msg, cb) {
-          $log.warn(`Showing err popup:${msg}`);
-          self.showPopup(msg, 'fi-alert', cb);
-        };
 
         self.recreate = function () {
           const fc = profileService.focusedClient;
