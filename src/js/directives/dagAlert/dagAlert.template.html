@@ -1,0 +1,15 @@
+<div ng-if="alert.show">
+  <div class="passModalMask"></div>
+  <div class="alertModal">
+    <div class="columns m20t">
+      <div class="m20t  size-14 text-center enable_text_select">
+        <i ng-class="alert.show.msg_icon"></i>
+        {{alert.show.msg|translate}}
+      </div>
+      <div class="text-center m20t" ng-click="alert.show.close()">
+        <a class="button outline light-gray round tiny small-4" translate>OK</a>
+      </div>
+    </div>
+  </div>
+</div>
+

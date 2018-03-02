@@ -26,7 +26,7 @@
         <div dag-notifications="right top"></div>
         <dag-left-side-bar ng-if="index.hasProfile"></dag-left-side-bar>
         <dag-password></dag-password>
-        <div ng-include="'views/includes/alert.html'" ng-if="index.showAlert"></div>
+        <dag-alert></dag-alert>
         <div id="sectionContainer">
           <div id="mainSection">
             <section ui-view="main" class="section {{viewTransition}}" ng-class="{'main': index.hasProfile}"></section>

@@ -95,7 +95,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           const db = require('byteballcore/db.js');
           db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
             if (rows.length > 0) {
-              self.showErrorPopup('Looks like you have testnet data.  Please remove the app and reinstall.', () => {
+              $rootScope.$emit('Local/ShowErrorAlert', 'Looks like you have testnet data.  Please remove the app and reinstall.', () => {
                 if (navigator && navigator.app) {
                   // android
                   navigator.app.exitApp();
@@ -129,7 +129,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           if (errorObject && (errorObject.bIgnore || handled)) {
             return;
           }
-          self.showErrorPopup(errorMessage, () => {
+
+          $rootScope.$emit('Local/ShowErrorAlert', errorMessage, () => {
             if (isCordova && navigator && navigator.app) {
               // android
               navigator.app.exitApp();
@@ -1240,31 +1241,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }, 500);
         }, 5000);
 
-        self.showPopup = function (msg, msgIcon, cb) {
-          $log.warn(`Showing ${msgIcon} popup:${msg}`);
-
-          if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
-            return false;
-          }
-
-          self.showAlert = {
-            msg: msg.toString(),
-            msg_icon: msgIcon,
-            close(err) {
-              self.showAlert = null;
-              if (cb) return cb(err);
-            }
-          };
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        };
-
-        self.showErrorPopup = function (msg, cb) {
-          $log.warn(`Showing err popup:${msg}`);
-          self.showPopup(msg, 'fi-alert', cb);
-        };
-
         self.recreate = function () {
           const fc = profileService.focusedClient;
           self.setOngoingProcess('recreating', true);
@@ -1491,14 +1467,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        $rootScope.$on('Local/DeviceError', (event, err) => {
-          self.showErrorPopup(err, () => {
-            if (isCordova && navigator && navigator.app) {
-              navigator.app.exitApp();
-            }
-          });
-        });
-
         $rootScope.$on('Local/WalletImported', (event, walletId) => {
           self.needsBackup = false;
           storageService.setBackupFlag(walletId, () => {
@@ -1576,14 +1544,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/RequestTouchid', (event, client, cb) => {
           fingerprintService.check(client, cb);
-        });
-
-        $rootScope.$on('Local/ShowAlert', (event, msg, msgIcon, cb) => {
-          self.showPopup(msg, msgIcon, cb);
-        });
-
-        $rootScope.$on('Local/ShowErrorAlert', (event, msg, cb) => {
-          self.showErrorPopup(msg, cb);
         });
 
         lodash.each(['NewCopayer', 'CopayerUpdated'], (eventName) => {
