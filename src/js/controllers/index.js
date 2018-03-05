@@ -127,10 +127,24 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        const indexEventsSupport = new IndexEventsSupport(args);
+        const indexEventsSupport = new IndexEventsSupport({
+          Device: Device,
+          Raven: params.Raven,
+          go: params.go,
+          $rootScope: $rootScope,
+          changeWalletTypeService: changeWalletTypeService,
+          self: self,
+          $timeout: $timeout,
+          profileService: profileService,
+          notification: notification,
+          gettextCatalog: gettextCatalog,
+          newVersion: params.newVersion
+        });
         indexEventsSupport.initNotFatalError();
         indexEventsSupport.initUncaughtError();
 
+        // catchupBallsAtStart variable is used in eventBus event.
+        // TODO sinan move this variable into indexEventsSupport class
         self.catchupBallsAtStart = -1;
         indexEventsSupport.initCatchingUpStarted();
         indexEventsSupport.initCatchupBallsLeft();
