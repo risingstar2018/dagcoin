@@ -127,18 +127,17 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        const indexEventsSupport = new IndexEventsSupport({
-          Device: Device,
-          Raven: params.Raven,
-          go: params.go,
-          $rootScope: $rootScope,
-          changeWalletTypeService: changeWalletTypeService,
-          self: self,
-          $timeout: $timeout,
-          profileService: profileService,
-          notification: notification,
-          gettextCatalog: gettextCatalog,
-          newVersion: params.newVersion
+        const indexEventsSupport = new IndexEventsSupport({Device,
+          Raven,
+          go,
+          $rootScope,
+          changeWalletTypeService,
+          self,
+          $timeout,
+          profileService,
+          notification,
+          gettextCatalog,
+          newVersion
         });
         indexEventsSupport.initNotFatalError();
         indexEventsSupport.initUncaughtError();
