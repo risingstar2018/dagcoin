@@ -5,9 +5,9 @@
     .module('copayApp.controllers')
     .controller('PreferencesSecurityCtrl', PreferencesSecurityCtrl);
 
-  PreferencesSecurityCtrl.$inject = ['$scope', '$rootScope', '$log', '$timeout', 'configService', 'profileService', 'fingerprintService', 'gettextCatalog'];
+  PreferencesSecurityCtrl.$inject = ['$scope', '$rootScope', '$log', '$timeout', 'configService', 'profileService', 'fingerprintService', 'gettextCatalog', '$q'];
 
-  function PreferencesSecurityCtrl($scope, $rootScope, $log, $timeout, configService, profileService, fingerprintService, gettextCatalog) {
+  function PreferencesSecurityCtrl($scope, $rootScope, $log, $timeout, configService, profileService, fingerprintService, gettextCatalog, $q) {
     const vm = this;
     const config = configService.getSync();
     config.touchIdFor = config.touchIdFor || {};
@@ -23,7 +23,6 @@
       }
 
       if (val && !fc.hasPrivKeyEncrypted()) {
-        vm.touchid = false;
         lock();
       } else if (!val && fc.hasPrivKeyEncrypted()) {
         unlock();
@@ -50,12 +49,19 @@
             vm.touchid = oldVal;
           }, 100);
         }
-        vm.encrypt = false;
         configService.set(opts, (configServiceError) => {
           if (configServiceError) {
             $log.debug(configServiceError);
             vm.touchidError = true;
             vm.touchid = oldVal;
+          }
+          if (vm.encrypt && !oldVal) {
+            vm.touchid = false;
+            unlock().then((locked) => {
+              if (!locked) {
+                vm.touchid = true;
+              }
+            });
           }
         });
       });
@@ -64,7 +70,6 @@
 
     function lock() {
       $rootScope.$emit('Local/NeedsPassword', true, null, (err, password) => {
-        debugger
         if (err && !password) {
           vm.encrypt = false;
           return;
@@ -72,18 +77,25 @@
         profileService.setPrivateKeyEncryptionFC(password, () => {
           $rootScope.$emit('Local/NewEncryptionSetting');
           vm.encrypt = true;
+          if (vm.touchid) {
+            vm.touchid = false;
+          }
         });
       });
     }
 
     function unlock(error) {
+      const def = $q.defer();
       profileService.unlockFC(error, (err) => {
         if (err) {
           vm.encrypt = true;
 
           if (err.message !== gettextCatalog.getString('Password needed')) {
-            return unlock(err.message);
+            return unlock(err.message).then((locked) => {
+              def.resolve(locked);
+            });
           }
+          def.resolve(true);
           return;
         }
         profileService.disablePrivateKeyEncryptionFC((disablePrivateKeyEncryptionFCError) => {
@@ -94,8 +106,10 @@
             return;
           }
           vm.encrypt = false;
+          def.resolve(false);
         });
       });
+      return def.promise;
     }
 
     $scope.$on('$destroy', () => {
