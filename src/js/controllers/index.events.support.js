@@ -120,7 +120,6 @@ function IndexEventsSupport(params) {
       self.updateTxHistory();
       if (cb) cb();
     });
-
   };
   this.initMyTransactionsBecameStable = (cb) => {
     eventBus.on('my_transactions_became_stable', () => {

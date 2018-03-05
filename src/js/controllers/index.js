@@ -35,6 +35,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 changeWalletTypeService,
                 autoRefreshClientService,
                 connectionService,
+                sharedService,
                 newVersion,
                 ENV,
                 moment) {
@@ -127,7 +128,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        const indexEventsSupport = new IndexEventsSupport({Device,
+        const indexEventsSupport = new IndexEventsSupport({
+          Device,
           Raven,
           go,
           $rootScope,
@@ -599,6 +601,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             }
             self.openWallet();
             self.updateSingleAddressFlag();
+            sharedService.setCurrentWallet({
+              walletId: self.walletId,
+              walletName: self.walletName,
+              alias: self.alias,
+              shared_address: self.shared_address
+            });
           });
         };
 
@@ -860,137 +868,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
           $timeout(() => {
             $rootScope.$apply();
-          });
-        };
-
-        this.csvHistory = function () {
-          const CSV_CONTENT_ID = '__csv_content';
-
-          function setCvsContent(data) {
-            const csvElement = document.getElementById(CSV_CONTENT_ID);
-            if (csvElement != null) {
-              csvElement.value = data;
-            } else {
-              $log.error(`Textarea element with id=${CSV_CONTENT_ID} not exits in DOM`);
-            }
-          }
-
-          function saveFile(name, data) {
-            const chooser = document.querySelector(name);
-            setCvsContent(data);
-            chooser.removeEventListener('change', () => {
-            });
-            chooser.addEventListener('change', function (evt) {
-              const fs = require('fs');
-              const csvElement = document.getElementById(CSV_CONTENT_ID);
-              const csvContent = csvElement !== null
-                ? document.getElementById(CSV_CONTENT_ID).value
-                : `Textarea element with id=${CSV_CONTENT_ID} not exits in DOM`;
-              fs.writeFile(this.value, csvContent, (err) => {
-                if (err) {
-                  $log.debug(evt, err);
-                }
-              });
-              this.value = '';
-            }, false);
-            chooser.click();
-          }
-
-          function formatDate(date) {
-            const dateObj = new Date(date);
-            if (!dateObj) {
-              $log.debug('Error formating a date');
-              return 'DateError';
-            }
-            if (!dateObj.toJSON()) {
-              return '';
-            }
-
-            return dateObj.toJSON();
-          }
-
-          function formatString(str) {
-            let formatString = str;
-            if (!formatString) {
-              return '';
-            }
-
-            if (formatString.indexOf('"') !== -1) {
-              // replace all
-              formatString = formatString.replace(new RegExp('"', 'g'), '\'');
-            }
-
-            // escaping commas
-            formatString = `\"${formatString}\"`;
-
-            return formatString;
-          }
-
-          const step = 6;
-          // const unique = {};
-
-          if (isCordova) {
-            $log.info('CSV generation not available in mobile');
-            return;
-          }
-          const isNode = nodeWebkit.isDefined();
-          const fc = profileService.focusedClient;
-          const c = fc.credentials;
-          if (!fc.isComplete()) return;
-          const self = this;
-          const allTxs = [];
-
-          $log.debug('Generating CSV from History');
-          self.setOngoingProcess('generatingCSV', true);
-
-          const config = configService.getSync();
-          const dagUnitValue = config.wallet.settings.dagUnitValue;
-
-          $timeout(() => {
-            fc.getTxHistory('base', self.shared_address, (txs) => {
-              self.setOngoingProcess('generatingCSV', false);
-              $log.debug('Wallet Transaction History:', txs);
-
-              const data = txs;
-              const filename = `Dagcoin-${self.alias || self.walletName}.csv`;
-              let csvContent = '';
-
-              if (!isNode) csvContent = 'data:text/csv;charset=utf-8,';
-              csvContent += 'Date,Destination,Note,Amount,Currency\n';
-
-              let amount;
-              let note;
-              let dataString;
-              data.forEach((it, index) => {
-                console.log('Processing transactions number', index);
-                let amount = it.amount;
-
-                if (it.action === 'moved') {
-                  amount = 0;
-                }
-
-                amount = (it.action === 'sent' ? '-' : '') + amount;
-                note = formatString(`${it.message ? it.message : ''} unit: ${it.unit}`);
-
-                if (it.action === 'moved') {
-                  note += ` Moved:${it.amount}`;
-                }
-
-                dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${formatString((amount / dagUnitValue).toString())},dag`;
-                csvContent += `${dataString}\n`;
-              });
-
-              if (isNode) {
-                saveFile('#export_file', csvContent);
-              } else {
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement('a');
-                link.setAttribute('href', encodedUri);
-                link.setAttribute('download', filename);
-                link.click();
-              }
-              $rootScope.$apply();
-            });
           });
         };
 
