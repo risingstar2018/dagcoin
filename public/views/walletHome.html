@@ -140,16 +140,7 @@
             <div class="dag_transactions_list_triggers">
               <h4 translate>Transactions History</h4>
               <!-- EXPORT TO CVS: START -->
-              <div ng-if="!index.isCordova">
-                <input id="export_file" type="file" nwsaveas="Dagcoin-{{index.alias || index.walletName}}.csv"
-                       accept=".csv" style="display:none">
-                <button ng-disabled="exporting" class="transactions_export_button btn btn_red"
-                        ng-click="index.csvHistory();">
-                  <svg-icon name="content_copy"></svg-icon>
-                  <span translate>Export To CSV</span>
-                </button>
-                <textarea id="__csv_content" ng-hide="true"></textarea>
-              </div>
+              <dag-csv-history></dag-csv-history>
               <!-- EXPORT TO CVS: END -->
             </div>
 

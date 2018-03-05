@@ -15,8 +15,11 @@
       pending: 'pending',
       stable: 'stable'
     };
+    service.currentWallet = null;
     service.hasBalance = hasBalance;
     service.hasBytes = hasBytes;
+    service.getCurrentWallet = getCurrentWallet;
+    service.setCurrentWallet = setCurrentWallet;
 
     let currentBalance = null;
 
@@ -35,6 +38,22 @@
           stable: 'stable'
         }.stable;
       return (currentBalance && currentBalance.base && currentBalance.base[st] > 0);
+    }
+
+    /**
+     *
+     * @return {null|*} currently selected wallet
+     */
+    function getCurrentWallet() {
+      return service.currentWallet;
+    }
+
+    /**
+     *
+     * @param wallet {walletId, walletName, alias, shared_address}
+     */
+    function setCurrentWallet(wallet) {
+      service.currentWallet = wallet;
     }
 
     return service;
