@@ -1,10 +1,12 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('utilityService', (lodash) => {
+  angular.module('copayApp.services').factory('utilityService', (lodash, Device) => {
     const root = {};
     const regexStartWithPunctuationMark = /^[!@#$%^&*()-=_+|;'`:",.<>?']/i;
-
+    root.isCordova = () => {
+      return Device.cordova;
+    };
     root.sortWalletsByName = function (wallets) {
       return lodash.sortBy(wallets, (wallet) => {
         const name = wallet.name.toUpperCase();
