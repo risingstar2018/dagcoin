@@ -746,27 +746,6 @@
       });
     };
 
-    root.setSingleAddressFlag = function (newValue) {
-      const fc = root.focusedClient;
-      fc.isSingleAddress = newValue;
-      const walletId = fc.credentials.walletId;
-      const config = configService.getSync();
-      const oldValue = config.isSingleAddress || false;
-
-      const opts = {
-        isSingleAddress: {}
-      };
-      opts.isSingleAddress[walletId] = newValue;
-      configService.set(opts, (err) => {
-        if (err) {
-          fc.isSingleAddress = oldValue;
-          $rootScope.$emit('Local/DeviceError', err);
-          return;
-        }
-        $rootScope.$emit('Local/SingleAddressFlagUpdated');
-      });
-    };
-
     root.replaceProfile = function (xPrivKey, mnemonic, myDeviceAddress, cb) {
       const device = require('byteballcore/device.js');
 

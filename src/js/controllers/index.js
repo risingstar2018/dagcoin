@@ -1083,6 +1083,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           $log.debug('Generating CSV from History');
           self.setOngoingProcess('generatingCSV', true);
 
+          const config = configService.getSync();
+          const dagUnitValue = config.wallet.settings.dagUnitValue;
+
           $timeout(() => {
             fc.getTxHistory(ENV.DAGCOIN_ASSET, self.shared_address, (txs) => {
               self.setOngoingProcess('generatingCSV', false);
@@ -1113,7 +1116,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                   note += ` Moved:${it.amount}`;
                 }
 
-                dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${amount},dag`;
+                dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${formatString((amount / dagUnitValue).toString())},dag`;
                 csvContent += `${dataString}\n`;
               });
 
@@ -1652,6 +1655,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/NeedsPassword', (event, isSetup, errorMessage, cb) => {
           console.log('NeedsPassword');
+
+          // needsUnlock used for controlling initial display of wallet information in case of enabled password protection
+          if (!self.needsUnlock) {
+            self.needsUnlock = {};
+          }
           self.askPassword = {
             isSetup,
             error: errorMessage,
@@ -1685,6 +1693,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           $timeout(() => {
             $rootScope.$apply();
           });
+        });
+
+        $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
+          // needsUnlock used for controlling initial display of wallet information in case of enabled password protection
+          self.needsUnlock = { success: true };
         });
 
         if (autoRefreshClientService) {

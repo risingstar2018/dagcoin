@@ -158,7 +158,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       if (walletId && walletId !== indexScope.walletId) {
         return profileService.setAndStoreFocus(walletId, () => {
           $timeout(() => {
-            go.history();
+            go.walletHome();
           }, 500);
         });
       }
@@ -168,14 +168,14 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           if (wallet) {
             return profileService.setAndStoreFocus(wallet, () => {
               $timeout(() => {
-                go.history();
+                go.walletHome();
               }, 500);
             });
           }
         });
       }
 
-      go.history();
+      go.walletHome();
     };
 
 
@@ -826,21 +826,24 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       } */
 
     function appendText(text) {
-      if (!$scope.message) {
-        $scope.message = '';
-      }
+      const msgField = document.getElementById('message');
+
+      let messageText = !$scope.message ? '' : $scope.message;
       if ($scope.message && $scope.message.charAt($scope.message.length - 1) !== ' ') {
-        $scope.message += ' ';
+        messageText += ' ';
       }
-      $scope.message += text;
-      $scope.message += ' ';
-      if (!document.chatForm || !document.chatForm.message) { // already gone
+      messageText += text;
+      messageText += ' ';
+      $scope.message = messageText;
+
+      if (!msgField) { // already gone
         return;
       }
-      const msgField = document.chatForm.message;
+
       msgField.focus();
       msgField.selectionEnd = msgField.value.length;
       msgField.selectionStart = msgField.selectionEnd;
+      msgField.value = messageText;
     }
 
     function appendMyPaymentAddress(myPaymentAddress) {
