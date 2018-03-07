@@ -15,7 +15,15 @@
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const conf = require('byteballcore/conf.js');
+    const config = configService.getSync();
+    const configWallet = config.wallet;
     const vm = this;
+
+    // INIT
+    const walletSettings = configWallet.settings;
+    vm.unitValue = walletSettings.unitValue;
+    vm.unitName = walletSettings.unitName;
+    vm.unitDecimals = walletSettings.unitDecimals;
 
     vm.copyAddress = function (address) {
       utilityService.copyAddress($scope, address);
