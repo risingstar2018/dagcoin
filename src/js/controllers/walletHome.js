@@ -50,7 +50,8 @@
         this.isMobile = Device.any;
         this.blockUx = false;
         this.addr = {};
-        $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
+        // TODO sinan remove later
+        // $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
         const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
           $rootScope.$emit('Local/SetTab', 'send');
@@ -99,7 +100,7 @@
 
             if (form.address.$invalid && !self.blockUx) {
               console.log('invalid address, resetting form');
-              self.resetForm();
+              seelf.resetForm();
               self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
             }
 
@@ -321,6 +322,7 @@
           // actually, nothing to display here that was not already shown
         };
 
+        // TODO sinan find setAddress usages
         this.setAddress = function (forceNew) {
           self.addrError = null;
           const fc = profileService.focusedClient;

@@ -35,7 +35,7 @@
   <div ng-show="!index.noFocusedWallet">
     <div ui-view></div> <!-- tabs are rendered into this div -->
   </div>
-  {{index.addonViews}}
+  {{index.addonViews && index.addonViews.length > 0 ? index.addonViews : ''}}
   <div id="{{view.id}}" class="{{view.class}} tab-view" ng-repeat="view in index.addonViews" style="display: none;"
        ng-include="view.template">
   </div>

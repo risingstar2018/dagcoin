@@ -363,7 +363,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/preferences/global/system/preferencesSystem.html',
+              templateUrl: 'controllers/preferences/global/system/preferencesSystem.template.html',
               controller: 'PreferencesSystemCtrl as system'
             },
           },

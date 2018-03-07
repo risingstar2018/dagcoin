@@ -7,11 +7,11 @@
 
   ReceiveCtrl.$inject = ['$scope', '$rootScope', '$location', '$anchorScroll', '$timeout', '$log', 'lodash', 'go', 'profileService',
     'configService', 'gettextCatalog', 'derivationPathHelper', 'correspondentListService', 'utilityService',
-    'nodeWebkit', '$modal', 'animationService'];
+    'nodeWebkit', '$modal', 'animationService', 'addressService'];
 
   function ReceiveCtrl($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService,
                        configService, gettextCatalog, derivationPathHelper, correspondentListService, utilityService,
-                       nodeWebkit, $modal, animationService) {
+                       nodeWebkit, $modal, animationService, addressService) {
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const conf = require('byteballcore/conf.js');
@@ -25,7 +25,11 @@
     vm.unitName = walletSettings.unitName;
     vm.unitDecimals = walletSettings.unitDecimals;
 
+    // TODO indexScope is called just for getting available amount. This should not be done like that.
+    const indexScope = $scope.index;
+
     const viewContentLoaded = function () {
+      vm.addr = {};
       vm.setAddress();
     };
 
@@ -44,9 +48,9 @@
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.addr = addr;
         $scope.color = fc.backgroundColor;
-        $scope.unitName = self.unitName;
-        $scope.unitValue = self.unitValue;
-        $scope.unitDecimals = self.unitDecimals;
+        $scope.unitName = vm.unitName;
+        $scope.unitValue = vm.unitValue;
+        $scope.unitDecimals = vm.unitDecimals;
         $scope.isCordova = isCordova;
         $scope.buttonLabel = gettextCatalog.getString('Generate QR Code');
         $scope.protocol = conf.program;
@@ -106,6 +110,45 @@
         m.addClass(animationService.modalAnimated.slideOutDown);
       });
     };
+
+    vm.setAddress = function (forceNew) {
+      vm.addrError = null;
+      const fc = profileService.focusedClient;
+      if (!fc) {
+        return;
+      }
+
+      // Address already set?
+      if (!forceNew && vm.addr[fc.credentials.walletId]) {
+        return;
+      }
+
+      if (indexScope.shared_address && forceNew) {
+        throw Error('attempt to generate for shared address');
+      }
+
+      if (fc.isSingleAddress && forceNew) {
+        throw Error('attempt to generate for single address wallets');
+      }
+
+      vm.generatingAddress = true;
+      $timeout(() => {
+        addressService.getAddress(fc.credentials.walletId, forceNew, (err, addr) => {
+          vm.generatingAddress = false;
+
+          if (err) {
+            vm.addrError = err;
+          } else if (addr) {
+            vm.addr[fc.credentials.walletId] = addr;
+          }
+
+          $timeout(() => {
+            $scope.$digest();
+          });
+        });
+      });
+    };
+
 
     $scope.$on('$viewContentLoaded', viewContentLoaded);
     $scope.$on('$destroy', destroy);
