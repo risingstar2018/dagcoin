@@ -42,6 +42,8 @@
         };
 
         self.switchWallet = (selectedWalletId, currentWalletId, state) => {
+
+          debugger;
           if (profileService.focusedClient && !profileService.focusedClient.isComplete()) {
             $state.go('copayers');
             return;

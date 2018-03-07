@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('utilityService', (lodash, Device) => {
+  angular.module('copayApp.services').factory('utilityService', (lodash, Device, $timeout, nodeWebkit) => {
     const root = {};
     const regexStartWithPunctuationMark = /^[!@#$%^&*()-=_+|;'`:",.<>?']/i;
     root.isCordova = Device.cordova;
@@ -40,6 +40,28 @@
         return string;
       }
       return [string.slice(0, position), replace, string.slice(position)].join('');
+    };
+
+    /**
+     * @param scope scope of the dom
+     * @param address the address to be copied, if empty nothing happens
+     */
+    root.copyAddress = function(scope, address) {
+      if (lodash.isEmpty(address)) {
+        return;
+      }
+      if (root.isCordova) {
+        window.cordova.plugins.clipboard.copy(address);
+        window.plugins.toast.showShortCenter(gettextCatalog.getString('Copied to clipboard'));
+      } else if (nodeWebkit.isDefined()) {
+        nodeWebkit.writeToClipboard(address);
+      }
+
+      scope.tooltipCopiedShown = true;
+
+      $timeout(() => {
+        scope.tooltipCopiedShown = false;
+      }, 1000);
     };
 
     return root;

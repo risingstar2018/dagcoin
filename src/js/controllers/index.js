@@ -499,20 +499,20 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.menu = [{
           title: gettextCatalog.getString('Home'),
           icon: 'icon-home',
-          link: 'walletHome'
+          link: 'walletHome.home'
         }, {
           title: gettextCatalog.getString('Receive'),
           icon: 'icon-recieve',
-          link: 'receive'
+          link: 'walletHome.receive'
         }, {
           title: gettextCatalog.getString('Send'),
           icon: 'icon-send',
-          link: 'send'
+          link: 'walletHome.send'
         }, {
           title: gettextCatalog.getString('Chat'),
           icon: 'icon-chat',
           new_state: 'correspondentDevices',
-          link: 'chat'
+          link: 'correspondentDevices'
         }];
 
         self.getSvgSrc = function (id) {
@@ -614,7 +614,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           console.log('setTab', tab, reset, tries, switchState);
           let setTabTries = tries || 0;
 
+          $rootScope.tab = tab;
+          self.tab = tab;
+
           const changeTab = function (tab) {
+            /*
             if (document.querySelector('.tab-in.tab-view')) {
               const el = angular.element(document.querySelector('.tab-in.tab-view'));
               el.removeClass('tab-in').addClass('tab-out');
@@ -632,6 +636,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 newe.className = 'active';
               }
             }
+            */
 
             $rootScope.tab = tab;
             self.tab = tab;
@@ -661,6 +666,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           if (self.tab === tab && !reset) {
             return;
           }
+          /*
           setTabTries += 1;
           if (!document.getElementById(`menu-${tab}`) && setTabTries < 5) {
             console.log('will retry setTab later:', tab, reset, setTabTries, switchState);
@@ -669,17 +675,18 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             }, (setTabTries === 1) ? 10 : 300);
           }
 
-          if (!self.tab || !$state.is('walletHome')) {
-            $rootScope.tab = 'walletHome';
-            self.tab = 'walletHome';
+          if (!self.tab || !$state.is('walletHome.home')) {
+            $rootScope.tab = 'walletHome.home';
+            self.tab = 'walletHome.home';
           }
 
-          if (switchState && !$state.is('walletHome')) {
-            go.path('walletHome', () => {
+          if (switchState && !$state.is('walletHome.home')) {
+            go.path('walletHome.home', () => {
               changeTab(tab);
             });
             return;
           }
+          */
 
           changeTab(tab);
         };

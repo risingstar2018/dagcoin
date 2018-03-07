@@ -1,12 +1,11 @@
 <div class="navbar-wrap" style="z-index: 12">
   <ul>
-    <li ng-repeat="item in index.menu" ng-class="{'active': tab == item.link}">
-      <a ng-click="index.setTab(item, false, 0, true)" id="menu-{{item.link}}">
+    <li ng-repeat="item in index.menu" ng-class="{'active': index.tab === item.link}">
+      <a id="menu-{{item.link}}" ui-sref="{{item.link}}">
         <svg class="icon {{item.icon}}" style="width: 24px;">
           <use xlink:href="{{index.getSvgSrc(item.icon)}}"></use>
         </svg>
         <span>{{ item.title|translate }}</span>
-
       </a>
     </li>
   </ul>

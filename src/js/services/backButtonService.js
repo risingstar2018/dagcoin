@@ -12,12 +12,15 @@
     let shownExitMessage = false;
 
     $rootScope.$on('$stateChangeSuccess', (event, to, toParams, from, fromParams) => {
+      debugger;
       const lastState = arrHistory.length ? arrHistory[arrHistory.length - 1] : null;
       if (from.name === '' || (lastState && !(to.name === lastState.to && lodash.isEqual(toParams, lastState.toParams)))) {
         arrHistory.push({ to: to.name, toParams, from: from.name, fromParams });
       }
       if (to.name === 'walletHome') {
-        $rootScope.$emit('Local/SetTab', 'walletHome', true);
+        $state.go('walletHome.home');
+      } else {
+        $rootScope.$emit('Local/SetTab', to.name, true);
       }
       root.menuOpened = false;
     });

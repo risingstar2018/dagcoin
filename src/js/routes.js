@@ -131,8 +131,47 @@
             main: {
               templateUrl: 'views/walletHome.html',
               controller: 'walletHomeController as home'
-            },
-          },
+            }
+          }
+        })
+        .state('walletHome.home', {
+          url: '/home',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            '': {
+              templateUrl: 'controllers/wallet/home/home.template.html',
+              controller: 'HomeCtrl as homeCtrl'
+            }
+          }
+        })
+        .state('walletHome.receive', {
+          url: '/receive',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            '': {
+              templateUrl: 'controllers/wallet/receive/receive.template.html',
+              controller: 'ReceiveCtrl as receive'
+            }
+          }
+        })
+        .state('walletHome.send', {
+          url: '/send',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            '': {
+              templateUrl: 'controllers/wallet/send/send.template.html',
+              controller: 'SendCtrl as send'
+            }
+          }
         })
         .state('payment', {
           url: '/uri-payment/:data',
@@ -504,6 +543,7 @@
           templateUrl: 'views/warning.html',
           needProfile: false,
         })
+        /*
         .state('send', {
           url: '/',
           walletShouldBeComplete: true,
@@ -511,38 +551,39 @@
           deepStateRedirect: true,
           sticky: true,
           views: {
-            main: {
-              templateUrl: 'controllers/send/send.template.html',
+            tab: {
+              templateUrl: 'controllers/wallet/send/send.template.html',
               controller: 'SendCtrl as send'
             }
           }
         })
         .state('receive', {
-          url: '/',
+          url: '/receive',
           walletShouldBeComplete: true,
           needProfile: true,
           deepStateRedirect: true,
           sticky: true,
           views: {
-            main: {
+            tab: {
               templateUrl: 'controllers/receive/receive.template.html',
               controller: 'ReceiveCtrl as receive'
             }
           }
         })
         .state('home', {
-          url: '/',
+          url: '/home',
           walletShouldBeComplete: true,
           needProfile: true,
           deepStateRedirect: true,
           sticky: true,
           views: {
-            main: {
-              templateUrl: 'controllers/home/home.template.html',
-              controller: 'HomeCtrl as receive'
+            tab: {
+              templateUrl: 'controllers/wallet/home/home.template.html',
+              controller: 'HomeCtrl as homeCtrl'
             }
           }
         })
+        */
         .state('cordova', { // never used
           url: '/cordova/:status/:isHome',
           views: {

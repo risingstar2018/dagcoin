@@ -26,7 +26,8 @@
                 ENV,
                 moment,
                 exportTransactions,
-                Device) {
+                Device,
+                $state) {
         const eventBus = require('byteballcore/event_bus.js');
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const self = this;
@@ -139,15 +140,17 @@
           // This will slow down switch, do not add things here!
           console.log(`tab changed ${tab}`);
           switch (tab) {
-            case 'receive':
+            case 'walletHome.receive':
               // just to be sure we have an address
               self.setAddress();
               break;
-            case 'walletHome':
-              $scope.sendForm.$setPristine();
+            case 'walletHome.home':
+              // sinan $scope.sendForm.$setPristine();
               self.resetForm();
               break;
-            case 'send':
+            case 'walletHome.send':
+              // TODO sinan moved to send.controller
+              /*
               $scope.sendForm.$setPristine();
               self.resetForm(() => {
                 if ($rootScope.sendParams) {
@@ -160,6 +163,7 @@
                   delete $rootScope.sendParams;
                 }
               });
+              */
 
               break;
             default:
@@ -488,75 +492,6 @@
           }
         };
 
-        this.openCustomizedAmountModal = function (addr) {
-          $rootScope.modalOpened = true;
-          const self = this;
-          const fc = profileService.focusedClient;
-          const ModalInstanceCtrl = function ($scope, $modalInstance) {
-            $scope.addr = addr;
-            $scope.color = fc.backgroundColor;
-            $scope.unitName = self.unitName;
-            $scope.unitValue = self.unitValue;
-            $scope.unitDecimals = self.unitDecimals;
-            $scope.isCordova = isCordova;
-            $scope.buttonLabel = gettextCatalog.getString('Generate QR Code');
-            $scope.protocol = conf.program;
-
-            Object.defineProperty($scope, '_customAmount', {
-              get() {
-                return $scope.customAmount;
-              },
-              set(newValue) {
-                $scope.customAmount = newValue;
-              },
-              enumerable: true,
-              configurable: true,
-            });
-
-            $scope.submitForm = function (form) {
-              if ($scope.index.arrBalances.length === 0) {
-                return console.log('openCustomizedAmountModal: no balances yet');
-              }
-              const amount = form.amount.$modelValue;
-              const amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
-
-              return $timeout(() => {
-                $scope.customizedAmountUnit = `${amount} ${$scope.unitName}`;
-                $scope.amountInSmallestUnits = amountInSmallestUnits;
-                $scope.asset_param = '';
-              }, 1);
-            };
-
-            $scope.shareAddress = function (uri) {
-              window.plugins.socialsharing.share(uri, null, null, null);
-            };
-
-            $scope.cancel = function () {
-              breadcrumbs.add('openCustomizedAmountModal: cancel');
-              $modalInstance.dismiss('cancel');
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/customized-amount.html',
-            windowClass: animationService.modalAnimated.slideUp,
-            controller: ModalInstanceCtrl,
-            scope: $scope,
-          });
-
-          const disableCloseModal = $rootScope.$on('closeModal', () => {
-            breadcrumbs.add('openCustomizedAmountModal: on closeModal');
-            modalInstance.dismiss('cancel');
-          });
-
-          modalInstance.result.finally(() => {
-            $rootScope.modalOpened = false;
-            disableCloseModal();
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutDown);
-          });
-        };
-
         // Send
 
         const unwatchSpendUnconfirmed = $scope.$watch('currentSpendUnconfirmed', (newVal, oldVal) => {
@@ -567,11 +502,6 @@
         $scope.$on('$destroy', () => {
           unwatchSpendUnconfirmed();
         });
-
-        this.resetError = function () {
-          this.error = null;
-          this.success = null;
-        };
 
         this.bindTouchDown = function (tries) {
           const self = this;
@@ -628,44 +558,6 @@
           $timeout(() => {
             $rootScope.$digest();
           }, 1);
-        };
-
-        this.setSendFormInputs = function () {
-          /**
-           * Setting the two related amounts as properties prevents an infinite
-           * recursion for watches while preserving the original angular updates
-           *
-           */
-          Object.defineProperty($scope,
-            '_amount', {
-              get() {
-                return $scope.__amount;
-              },
-              set(newValue) {
-                $scope.__amount = newValue;
-                self.resetError();
-              },
-              enumerable: true,
-              configurable: true,
-            });
-
-          Object.defineProperty($scope,
-            '_address', {
-              get() {
-                return $scope.__address;
-              },
-              set(newValue) {
-                $scope.__address = self.onAddressChange(newValue);
-                if ($scope.sendForm && $scope.sendForm.address.$valid) {
-                  self.lockAddress = true;
-                }
-              },
-              enumerable: true,
-              configurable: true,
-            });
-
-          // ToDo: use a credential's (or fc's) function for this
-          this.hideNote = true;
         };
 
         this.setSendError = function (err) {
@@ -1227,85 +1119,10 @@
           }
         };
 
-        this.resetForm = function (cb) {
-          this.resetError();
-          delete this.binding;
+        // TODO sinan there are lots of resetForm invoking in walletHome.js, so that this dummy method created
+        // remove later
+        this.resetForm = (cb) => {
 
-          const invoiceId = this.invoiceId;
-
-          const options = {
-            uri: `${ENV.MERCHANT_INTEGRATION_API}/cancel`,
-            method: 'POST',
-            json: {
-              invoiceId
-            }
-          };
-
-          if (invoiceId !== null) {
-            const request = require('request');
-            request(options, (error, response, body) => {
-              if (error) {
-                console.log(`CANCEL ERROR: ${error}`);
-              }
-              console.log(`RESPONSE: ${JSON.stringify(response)}`);
-              console.log(`BODY: ${JSON.stringify(body)}`);
-            });
-          }
-
-          this.invoiceId = null;
-          this.validForSeconds = null;
-          this.lockAsset = false;
-          this.lockAddress = false;
-          this.lockAmount = false;
-          this.hideAdvSend = true;
-          $scope.currentSpendUnconfirmed = configService.getSync().wallet.spendUnconfirmed;
-
-          this._amount = null;
-          this._address = null;
-          this.bSendAll = false;
-
-          const form = $scope.sendForm;
-
-          if (form && form.amount) {
-            form.amount.$pristine = true;
-            form.amount.$setViewValue('');
-            if (form.amount) {
-              form.amount.$render();
-            }
-
-            if (form.merkle_proof) {
-              form.merkle_proof.$setViewValue('');
-              form.merkle_proof.$render();
-            }
-            if (form.comment) {
-              form.comment.$setViewValue('');
-              form.comment.$render();
-            }
-            form.$setPristine();
-
-            if (form.address) {
-              form.address.$pristine = true;
-              form.address.$setViewValue('');
-              form.address.$render();
-            }
-          }
-          $timeout(() => {
-            if (cb) {
-              cb();
-            }
-            $rootScope.$digest();
-          }, 1);
-        };
-
-        this.setSendAll = function () {
-          const form = $scope.sendForm;
-          if (!form || !form.amount || indexScope.arrBalances.length === 0) {
-            return;
-          }
-          let available = indexScope.baseBalance.stable;
-          available /= this.unitValue;
-          form.amount.$setViewValue(`${available}`);
-          form.amount.$render();
         };
 
         this.setFromUri = function (uri) {
@@ -1327,13 +1144,6 @@
             this.setForm(objRequest.address, objRequest.amount);
           }
           return objRequest.address;
-        };
-
-        this.onAddressChange = function (value) {
-          this.resetError();
-          if (!value) return '';
-
-          return value;
         };
 
         // History
@@ -1377,9 +1187,8 @@
               }
             };
 
-            $scope.copyAddress = function (addr) {
-              if (!addr) return;
-              self.copyAddress(addr);
+            $scope.copyAddress = function (address) {
+              utilityService.copyAddress($scope, address);
             };
 
             $scope.showCorrespondentList = function () {
@@ -1499,7 +1308,10 @@
         this.bindTouchDown();
         if (profileService.focusedClient) {
           this.setAddress();
-          this.setSendFormInputs();
+
+          // TODO sinan moved to send.controller, remove this line later
+          // this.setSendFormInputs();
         }
+
       });
 }());
