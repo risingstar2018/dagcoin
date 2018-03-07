@@ -25,6 +25,14 @@
     vm.unitName = walletSettings.unitName;
     vm.unitDecimals = walletSettings.unitDecimals;
 
+    const viewContentLoaded = function () {
+      vm.setAddress();
+    };
+
+    const destroy = function () {
+      console.log('receive controller $destroy');
+    };
+
     vm.copyAddress = function (address) {
       utilityService.copyAddress($scope, address);
     };
@@ -98,6 +106,9 @@
         m.addClass(animationService.modalAnimated.slideOutDown);
       });
     };
+
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
+    $scope.$on('$destroy', destroy);
 
   }
 })();

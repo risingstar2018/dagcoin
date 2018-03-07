@@ -6,11 +6,15 @@
     .controller('SendCtrl', SendCtrl);
 
   SendCtrl.$inject = ['$scope', '$rootScope', '$location', '$anchorScroll', '$timeout', '$log', 'lodash', 'go', 'profileService',
-    'configService', 'gettextCatalog', 'derivationPathHelper', 'correspondentListService', 'utilityService',
-    'ENV'];
+    'configService', 'addressService', 'addressbookService', 'animationService', 'gettextCatalog', 'derivationPathHelper',
+    'correspondentListService', 'utilityService', 'ENV', '$modal'];
 
   function SendCtrl($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService,
-                    configService, gettextCatalog, derivationPathHelper, correspondentListService, utilityService, ENV) {
+                    configService, addressService, addressbookService, animationService, gettextCatalog, derivationPathHelper,
+                    correspondentListService, utilityService, ENV, $modal) {
+    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const eventBus = require('byteballcore/event_bus.js');
+
     // TODO indexScope is called just for getting available amount. This should not be done like that.
     const indexScope = $scope.index;
     const config = configService.getSync();
@@ -22,6 +26,8 @@
     vm.unitValue = walletSettings.unitValue;
     vm.unitName = walletSettings.unitName;
     vm.unitDecimals = walletSettings.unitDecimals;
+
+    let assocDeviceAddressesByPaymentAddress = {};
 
     $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
 
@@ -41,6 +47,11 @@
       if (profileService.focusedClient) {
         vm.setSendFormInputs();
       }
+    };
+
+    const destroy = () => {
+      console.log('send controller $destroy');
+      $rootScope.hideMenuBar = false;
     };
 
     vm.resetError = function () {
@@ -172,6 +183,494 @@
       form.amount.$render();
     };
 
+    vm.openDestinationAddressModal = function (wallets, address) {
+      $rootScope.modalOpened = true;
+      const fc = profileService.focusedClient;
+
+      const ModalInstanceCtrl = function ($scope, $modalInstance) {
+        $scope.wallets = wallets;
+        $scope.isMultiWallet = wallets.length > 0;
+        $scope.selectedAddressbook = {};
+        $scope.newAddress = address;
+        $scope.addressbook = {
+          address: ($scope.newAddress || ''),
+          label: '',
+        };
+        $scope.color = fc.backgroundColor;
+        $scope.bAllowAddressbook = vm.canSendExternalPayment();
+        $scope.selectedWalletsOpt = !!(wallets[0] || !$scope.bAllowAddressbook);
+
+        $scope.selectAddressbook = function (addr) {
+          $modalInstance.close(addr);
+        };
+
+        $scope.setWalletsOpt = function () {
+          $scope.selectedWalletsOpt = !$scope.selectedWalletsOpt;
+        };
+
+        $scope.listEntries = function () {
+          $scope.error = null;
+          addressbookService.list((ab) => {
+            const sortedContactArray = lodash.sortBy(ab, (contact) => {
+              const favoriteCharacter = contact.favorite === true ? '!' : '';
+              const fullName = `${contact.first_name}${contact.last_name}`.toUpperCase();
+              return `${favoriteCharacter}${fullName}`;
+            });
+            $scope.list = {};
+            lodash.forEach(sortedContactArray, (contact) => {
+              $scope.list[contact.address] = contact;
+            });
+          });
+        };
+
+        $scope.$watch('addressbook.label', (value) => {
+          if (value && value.length > 16) {
+            $scope.addressbook.label = value.substr(0, 16);
+          }
+        });
+
+        $scope.cancel = function () {
+          breadcrumbs.add('openDestinationAddressModal cancel');
+          $modalInstance.dismiss('cancel');
+        };
+
+        $scope.selectWallet = function (walletId, walletName) {
+          $scope.selectedWalletName = walletName;
+          addressService.getAddress(walletId, false, (err, addr) => {
+            $scope.gettingAddress = false;
+
+            if (err) {
+              vm.error = err;
+              breadcrumbs.add(`openDestinationAddressModal getAddress err: ${err}`);
+              $modalInstance.dismiss('cancel');
+              return;
+            }
+
+            $modalInstance.close(addr);
+          });
+        };
+      };
+
+      const modalInstance = $modal.open({
+        templateUrl: 'views/modals/destination-address.html',
+        windowClass: animationService.modalAnimated.slideUp,
+        controller: ModalInstanceCtrl,
+      });
+
+      const disableCloseModal = $rootScope.$on('closeModal', () => {
+        breadcrumbs.add('openDestinationAddressModal on closeModal');
+        modalInstance.dismiss('cancel');
+      });
+
+      modalInstance.result.finally(() => {
+        $rootScope.modalOpened = false;
+        disableCloseModal();
+        const m = angular.element(document.getElementsByClassName('reveal-modal'));
+        m.addClass(animationService.modalAnimated.slideOutDown);
+      });
+
+      modalInstance.result.then((addr) => {
+        if (addr) {
+          vm.setToAddress(addr);
+        }
+      });
+    };
+
+    vm.canSendExternalPayment = function () {
+      if ($scope.index.arrBalances.length === 0) {
+        // no balances yet, assume can send
+        return true;
+      }
+      if (!$scope.index.arrBalances[$scope.index.assetIndex].is_private) {
+        return true;
+      }
+      const form = $scope.sendForm;
+      if (!form || !form.address) {
+        // disappeared
+        return true;
+      }
+      const address = form.address.$modelValue;
+      const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
+      return !!recipientDeviceAddress;
+    };
+
+    vm.deviceAddressIsKnown = function () {
+      if ($scope.index.arrBalances.length === 0) {
+        // no balances yet
+        return false;
+      }
+      const form = $scope.sendForm;
+      if (!form || !form.address) {
+        // disappeared
+        return false;
+      }
+      const address = form.address.$modelValue;
+      const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
+      return !!recipientDeviceAddress;
+    };
+
+    vm.setToAddress = function (to) {
+      const form = $scope.sendForm;
+      if (!form || !form.address) {
+        // disappeared?
+        return console.log('form.address has disappeared');
+      }
+      form.address.$setViewValue(to);
+      form.address.$isValid = true;
+      form.address.$render();
+      vm.lockAddress = true;
+    };
+
+    vm.setSendError = function (err) {
+      const fc = profileService.focusedClient;
+      const prefix = fc.credentials.m > 1 ?
+        gettextCatalog.getString('Could not create payment proposal') :
+        gettextCatalog.getString('Could not send payment');
+
+      vm.error = `${prefix}: ${err}`;
+      console.log(this.error);
+
+      $timeout(() => {
+        $scope.$digest();
+      }, 1);
+    };
+
+    vm.submitForm = function () {
+      if ($scope.index.arrBalances.length === 0) {
+        vm.setSendError(gettextCatalog('no balances yet'));
+        return console.log('send payment: no balances yet');
+      }
+      const fc = profileService.focusedClient;
+      const unitValue = vm.unitValue;
+
+      if (utilityService.isCordova) {
+        this.hideAddress = false;
+        this.hideAmount = false;
+      }
+
+      const form = $scope.sendForm;
+      if (!form) {
+        return console.log('form is gone');
+      }
+      if (form.$invalid) {
+        // TODO sinan why setSendError not used
+        vm.error = gettextCatalog.getString('Unable to send transaction proposal');
+        return;
+      }
+      if (fc.isPrivKeyEncrypted()) {
+        profileService.unlockFC(null, (err) => {
+          if (err) {
+            return vm.setSendError(err.message);
+          }
+          return vm.submitForm();
+        });
+        return;
+      }
+
+      const asset = 'base';
+      console.log(`asset ${asset}`);
+      const address = form.address.$modelValue;
+      const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
+      let amount = form.amount.$modelValue;
+      const invoiceId = vm.invoiceId;
+      // const paymentId = 1;
+      let merkleProof = '';
+      if (form.merkle_proof && form.merkle_proof.$modelValue) {
+        merkleProof = form.merkle_proof.$modelValue.trim();
+      }
+      amount *= unitValue;
+      amount = Math.round(amount);
+
+      const currentPaymentKey = `${asset}${address}${amount}`;
+      if (currentPaymentKey === vm.current_payment_key) {
+        return $rootScope.$emit('Local/ShowErrorAlert', 'This payment is being processed');
+      }
+      vm.current_payment_key = currentPaymentKey;
+
+      indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
+      $timeout(() => {
+        profileService.requestTouchid(null, (err) => {
+          if (err) {
+            profileService.lockFC();
+            indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+            vm.error = err;
+            $timeout(() => {
+              delete vm.current_payment_key;
+              $scope.$digest();
+            }, 1);
+            return;
+          }
+          let myAddress;
+          const device = require('byteballcore/device.js');
+          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+          if (vm.binding) {
+            if (!recipientDeviceAddress) {
+              throw Error(gettextCatalog.getString('recipient device address not known'));
+            }
+            const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+
+            // never reuse addresses as the required output could be already present
+            walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
+              myAddress = addressInfo.address;
+              let arrDefinition;
+              let assocSignersByPath;
+              if (vm.binding.type === 'reverse_payment') {
+                const arrSeenCondition = ['seen', {
+                  what: 'output',
+                  address: myAddress,
+                  asset: 'base',
+                  amount: vm.binding.reverseAmount,
+                }];
+                arrDefinition = ['or', [
+                  ['and', [
+                    ['address', address],
+                    arrSeenCondition,
+                  ]],
+                  ['and', [
+                    ['address', myAddress],
+                    ['not', arrSeenCondition],
+                    ['in data feed', [[ENV.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(vm.binding.timeout * 3600 * 1000)]],
+                  ]],
+                ]];
+                assocSignersByPath = {
+                  'r.0.0': {
+                    address,
+                    member_signing_path: 'r',
+                    device_address: recipientDeviceAddress,
+                  },
+                  'r.1.0': {
+                    address: myAddress,
+                    member_signing_path: 'r',
+                    device_address: device.getMyDeviceAddress(),
+                  },
+                };
+              } else {
+                const arrExplicitEventCondition = ['in data feed', [[vm.binding.oracle_address], vm.binding.feed_name, '=', vm.binding.feed_value]];
+                const arrMerkleEventCondition = ['in merkle', [[vm.binding.oracle_address], vm.binding.feed_name, vm.binding.feed_value]];
+                let arrEventCondition;
+                if (vm.binding.feed_type === 'explicit') {
+                  arrEventCondition = arrExplicitEventCondition;
+                } else if (vm.binding.feed_type === 'merkle') {
+                  arrEventCondition = arrMerkleEventCondition;
+                } else if (vm.binding.feed_type === 'either') {
+                  arrEventCondition = ['or', [arrMerkleEventCondition, arrExplicitEventCondition]];
+                } else {
+                  throw Error(`unknown feed type: ${vm.binding.feed_type}`);
+                }
+                arrDefinition = ['or', [
+                  ['and', [['address', address], arrEventCondition]],
+                  ['and', [
+                    ['address', myAddress], ['in data feed', [[ENV.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(vm.binding.timeout * 3600 * 1000)]]
+                  ]]
+                ]];
+                assocSignersByPath = {
+                  'r.0.0': {
+                    address,
+                    member_signing_path: 'r',
+                    device_address: recipientDeviceAddress,
+                  },
+                  'r.1.0': {
+                    address: myAddress,
+                    member_signing_path: 'r',
+                    device_address: device.getMyDeviceAddress(),
+                  },
+                };
+                if (vm.binding.feed_type === 'merkle' || vm.binding.feed_type === 'either') {
+                  assocSignersByPath[(vm.binding.feed_type === 'merkle') ? 'r.0.1' : 'r.0.1.0'] = {
+                    address: '',
+                    member_signing_path: 'r',
+                    device_address: recipientDeviceAddress,
+                  };
+                }
+              }
+              walletDefinedByAddresses.createNewSharedAddress(arrDefinition, assocSignersByPath, {
+                ifError(err) {
+                  delete vm.current_payment_key;
+                  indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+                  vm.setSendError(err);
+                },
+                ifOk(sharedAddress) {
+                  composeAndSend(sharedAddress);
+                },
+              });
+            });
+          } else {
+            composeAndSend(address);
+          }
+
+          // compose and send
+          function composeAndSend(toAddress) {
+            let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
+            let opts = {};
+            if (fc.credentials.m < fc.credentials.n) {
+              $scope.index.copayers.forEach((copayer) => {
+                if (copayer.me || copayer.signs) {
+                  arrSigningDeviceAddresses.push(copayer.device_address);
+                }
+              });
+            } else if (indexScope.shared_address) {
+              arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address);
+            }
+
+            breadcrumbs.add(`sending payment in ${asset}`);
+            profileService.bKeepUnlocked = true;
+
+            opts = {
+              shared_address: indexScope.shared_address,
+              merkleProof,
+              asset,
+              to_address: toAddress,
+              amount,
+              send_all: false,
+              arrSigningDeviceAddresses,
+              recipientDeviceAddress,
+            };
+
+
+            let merchantPromise = null;
+
+            // Merchant Payment life cycle
+            if (vm.invoiceId !== null) {
+              merchantPromise = new Promise((resolve, reject) => {
+                const merchantApiRequest = require('request');
+
+                merchantApiRequest(`${ENV.MERCHANT_INTEGRATION_API}/${vm.invoiceId}`, (error, response, body) => {
+                  try {
+                    const payload = JSON.parse(body).payload;
+
+                    if (error) {
+                      console.log(`error: ${error}`); // Print the error if one occurred
+                      reject(error);
+                    } else {
+                      if (payload.state === 'PENDING') {
+                        resolve();
+                      }
+
+                      reject(`Payment state is ${payload.state}`);
+                    }
+                  } catch (ex) {
+                    console.log(`error: ${ex}`); // Print the error if one occurred
+                  }
+                });
+              });
+            } else {
+              merchantPromise = Promise.resolve();
+            }
+
+            merchantPromise.then(() => {
+              if (invoiceId != null) {
+                const objectHash = require('byteballcore/object_hash');
+                const payload = JSON.stringify({ invoiceId });
+                opts.messages = [{
+                  app: 'text',
+                  payload_location: 'inline',
+                  payload_hash: objectHash.getBase64Hash(payload),
+                  payload
+                }];
+              }
+
+              console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
+              useOrIssueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
+                opts.change_address = addressInfo.address;
+                fc.sendMultiPayment(opts, (sendMultiPaymentError, unit, assocMnemonics) => {
+                  let error = sendMultiPaymentError;
+                  // if multisig, it might take very long before the callback is called
+                  indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+                  breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
+                  delete vm.current_payment_key;
+                  profileService.bKeepUnlocked = false;
+                  if (sendMultiPaymentError) {
+                    if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
+                      error = gettextCatalog.getString('Not enough dagcoins');
+                    } else if (sendMultiPaymentError.match(/connection closed/) || sendMultiPaymentError.match(/connect to light vendor failed/)) {
+                      error = gettextCatalog.getString('Problems with connecting to the hub. Please try again later');
+                    }
+                    return vm.setSendError(error);
+                  }
+                  const binding = vm.binding;
+
+                  if (unit != null && vm.invoiceId != null) {
+                    const invoiceId = vm.invoiceId;
+                    vm.invoiceId = null;
+
+                    const options = {
+                      uri: `${ENV.MERCHANT_INTEGRATION_API}/payment-unit-updated`,
+                      method: 'POST',
+                      json: {
+                        invoiceId,
+                        paymentUnitId: unit
+                      }
+                    };
+
+                    if (invoiceId != null) {
+                      const request = require('request');
+                      request(options, (error, response, body) => {
+                        if (error) {
+                          console.log(`PAYMENT UNIT UPDATE ERROR: ${error}`);
+                        }
+                        console.log(`RESPONSE: ${JSON.stringify(response)}`);
+                        console.log(`BODY: ${JSON.stringify(body)}`);
+                      });
+                    }
+                  }
+
+                  vm.resetForm();
+                  $rootScope.$emit('NewOutgoingTx');
+                  if (recipientDeviceAddress) { // show payment in chat window
+                    eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset, indexScope.walletId, true, toAddress);
+                    if (binding && binding.reverseAmount) { // create a request for reverse payment
+                      if (!myAddress) {
+                        throw Error(gettextCatalog.getString('my address not known'));
+                      }
+                      const paymentRequestCode = `dagcoin:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                      const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
+                      device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
+                      correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
+                        bIncoming: false,
+                        message: correspondentListService.formatOutgoingMessage(paymentRequestText),
+                        timestamp: Math.floor(Date.now() / 1000)
+                      });
+                      // issue next address to avoid reusing the reverse payment address
+                      if (!fc.isSingleAddress) {
+                        walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
+                        });
+                      }
+                    }
+                  } else {
+                    indexScope.updateHistory((success) => {
+                      if (success) {
+                        $rootScope.$emit('Local/SetTab', 'walletHome');
+                        vm.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
+                      } else {
+                        console.error('updateTxHistory not executed');
+                      }
+                    });
+                  }
+                });
+              });
+              $scope.sendForm.$setPristine();
+            }).catch((error) => {
+              delete vm.current_payment_key;
+              indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+              $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {
+              });
+            });
+          }
+
+          function useOrIssueNextAddress(wallet, isChange, handleAddress) {
+            if (fc.isSingleAddress) {
+              handleAddress({
+                address: vm.addr[fc.credentials.walletId]
+              });
+            } else {
+              walletDefinedByKeys.issueNextAddress(wallet, isChange, handleAddress);
+            }
+          }
+        });
+      }, 100);
+    };
+
     $scope.$on('$viewContentLoaded', viewContentLoaded);
+    $scope.$on('$destroy', destroy);
   }
 })();

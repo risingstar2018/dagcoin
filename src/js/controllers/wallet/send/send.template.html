@@ -3,23 +3,23 @@
   <div class="p-share js-introduction">
     <div class="p-wrap" style="width: 300px; margin: 0 auto; overflow: unset;">
       <form class="page-form" name="sendForm" novalidate>
-        <div class="box-notification" ng-show="home.error" ng-click="receive.resetError()">
+        <div class="box-notification" ng-show="send.error" ng-click="receive.resetError()">
               <span class="text-warning">
-                {{home.error|translate}}
+                {{send.error|translate}}
               </span>
         </div>
         <div class="form-group">
-          <div ng-if="home.deviceAddressIsKnown()"
+          <div ng-if="send.deviceAddressIsKnown()"
                style="font-size: 11px; font-weight: bold; margin-top: -1.5rem; margin-bottom: 1.5rem">
           </div>
-          <div ng-if="!home.deviceAddressIsKnown()"
+          <div ng-if="!send.deviceAddressIsKnown()"
                style="font-size: 11px; font-weight: bold; margin-top: -1.5rem; margin-bottom: 1.5rem">
             <a dropdown-toggle="#binding-drop" data-options="align:top"></a>
           </div>
           <div class="title clearfix">
             <span class="name" translate>Amount</span>
             <span class="available" translate>Available <span>{{index.baseBalance.stable / 1e6}}</span></span>
-            <a ng-click="send.setSendAll()" ng-show="!home.lockAmount"
+            <a ng-click="send.setSendAll()" ng-show="!send.lockAmount"
                style="text-transform: none; margin-left: 10px" translate>Send all</a>
           </div>
 
@@ -56,17 +56,17 @@
               type="text" id="address"
               name="address"
               ng-disabled="home.blockUx || home.lockAddress"
-              ng-attr-placeholder="{{home.canSendExternalPayment() ? ('DAG address' | translate) : ('DAG address of your other wallet &#8594;' | translate)}}"
+              ng-attr-placeholder="{{send.canSendExternalPayment() ? ('DAG address' | translate) : ('DAG address of your other wallet &#8594;' | translate)}}"
               ng-model="_address" valid-address required
               ng-blur="home.formFocus(false)">
 
-            <a ng-click="openDestinationAddressModal(index.otherWallets, _address)">
+            <a ng-click="send.openDestinationAddressModal(index.otherWallets, _address)">
               <i class="icon icon-d icon-wallet"></i>
             </a>
           </div>
 
           <div class="title clearfix" style="margin-left: 0;" ng-if="index.baseBalance.stable > 0">
-            <div ng-if="home.deviceAddressIsKnown()">
+            <div ng-if="send.deviceAddressIsKnown()">
               <a ng-click="home.openBindModal()">
                 <span ng-if="!home.binding" translate>Bind the payment to a condition</span>
                 <span ng-if="home.binding" translate>This payment is bound to a condition</span>
@@ -76,7 +76,7 @@
                  data-dropdown-content translate>
               To bind the payment to a condition, please click the peer's address in chat
             </div>
-            <div ng-if="!home.deviceAddressIsKnown()">
+            <div ng-if="!send.deviceAddressIsKnown()">
               <a dropdown-toggle="#binding-drop" data-options="align:top">
                 <span translate class="name">Bind the payment to a condition</span>
               </a>
@@ -86,9 +86,9 @@
         </div>
         <div class="page-action">
           <button ng-disabled="sendForm.$invalid || index.onGoingProcessName == 'sending'" class="btn btn_red-full send-button"
-                  ng-click="home.submitForm()" translate>Send <i ng-if="home.validForSeconds > 0">({{home.validForSeconds}})</i>
+                  ng-click="send.submitForm()" translate>Send <i ng-if="home.validForSeconds > 0">({{home.validForSeconds}})</i>
           </button>
-          <button ng-if="home.validForSeconds > 0" class="btn btn_red-full" ng-click="home.resetForm()" translate>Cancel
+          <button ng-if="home.validForSeconds > 0" class="btn btn_red-full" ng-click="send.resetForm()" translate>Cancel
           </button>
         </div>
       </form>
