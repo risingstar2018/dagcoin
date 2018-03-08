@@ -7,11 +7,11 @@
 
   ReceiveCtrl.$inject = ['$scope', '$rootScope', '$location', '$anchorScroll', '$timeout', '$log', 'lodash', 'go', 'profileService',
     'configService', 'gettextCatalog', 'derivationPathHelper', 'correspondentListService', 'utilityService',
-    'nodeWebkit', '$modal', 'animationService', 'addressService'];
+    'nodeWebkit', '$modal', 'animationService', 'addressService', 'ENV'];
 
   function ReceiveCtrl($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService,
                        configService, gettextCatalog, derivationPathHelper, correspondentListService, utilityService,
-                       nodeWebkit, $modal, animationService, addressService) {
+                       nodeWebkit, $modal, animationService, addressService, ENV) {
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const conf = require('byteballcore/conf.js');
@@ -19,16 +19,19 @@
     const configWallet = config.wallet;
     const vm = this;
 
+
     // INIT
     const walletSettings = configWallet.settings;
     vm.unitValue = walletSettings.unitValue;
     vm.unitName = walletSettings.unitName;
     vm.unitDecimals = walletSettings.unitDecimals;
+    vm.protocol = ENV.protocolPrefix;
 
     // TODO indexScope is called just for getting available amount. This should not be done like that.
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
+      console.log('receive controller content loaded');
       vm.addr = {};
       vm.setAddress();
     };
@@ -43,7 +46,6 @@
 
     vm.openCustomizedAmountModal = function (addr) {
       $rootScope.modalOpened = true;
-      const self = this;
       const fc = profileService.focusedClient;
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.addr = addr;
@@ -149,9 +151,7 @@
       });
     };
 
-
     $scope.$on('$viewContentLoaded', viewContentLoaded);
     $scope.$on('$destroy', destroy);
-
   }
 })();

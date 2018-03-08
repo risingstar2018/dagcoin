@@ -102,6 +102,68 @@
       vm.hideNote = true;
     };
 
+    vm.setForm = function (to, amount, comment, asset, recipientDeviceAddress) {
+      vm.resetError();
+      delete vm.binding;
+      const form = $scope.sendForm;
+      let moneyAmount = amount;
+      if (!form || !form.address) {
+        // disappeared?
+        return console.log('form.address has disappeared');
+      }
+      if (to) {
+        form.address.$setViewValue(to);
+        form.address.$isValid = true;
+        form.address.$render();
+        this.lockAddress = true;
+        if (recipientDeviceAddress) {
+          // must be already paired
+          assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
+        }
+      } else {
+        this.lockAddress = false;
+      }
+
+      if (moneyAmount) {
+        moneyAmount /= this.unitValue;
+        this.lockAmount = true;
+        $timeout(() => {
+          form.amount.$setViewValue(`${moneyAmount}`);
+          form.amount.$isValid = true;
+          form.amount.$render();
+
+          form.address.$setViewValue(to);
+          form.address.$isValid = true;
+          form.address.$render();
+        }, 300);
+      } else {
+        this.lockAmount = false;
+        form.amount.$pristine = true;
+        form.amount.$render();
+      }
+
+      if (form.merkle_proof) {
+        form.merkle_proof.$setViewValue('');
+        form.merkle_proof.$render();
+      }
+      if (comment) {
+        form.comment.$setViewValue(comment);
+        form.comment.$isValid = true;
+        form.comment.$render();
+      }
+
+      if (asset) {
+        const assetIndex = lodash.findIndex($scope.index.arrBalances, { asset });
+        if (assetIndex < 0) {
+          throw Error(gettextCatalog.getString(`failed to find asset index of asset ${asset}`));
+        }
+        $scope.index.assetIndex = assetIndex;
+        this.lockAsset = true;
+      } else {
+        this.lockAsset = false;
+      }
+    };
+
     vm.resetForm = function (cb) {
       vm.resetError();
       delete vm.binding;
@@ -336,6 +398,7 @@
     };
 
     vm.submitForm = function () {
+      debugger;
       if ($scope.index.arrBalances.length === 0) {
         vm.setSendError(gettextCatalog('no balances yet'));
         return console.log('send payment: no balances yet');
@@ -343,6 +406,7 @@
       const fc = profileService.focusedClient;
       const unitValue = vm.unitValue;
 
+      // TODO sinan ?? should be removed?
       if (utilityService.isCordova) {
         this.hideAddress = false;
         this.hideAmount = false;
@@ -370,6 +434,7 @@
       const asset = 'base';
       console.log(`asset ${asset}`);
       const address = form.address.$modelValue;
+      debugger;
       const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
       let amount = form.amount.$modelValue;
       const invoiceId = vm.invoiceId;
@@ -668,6 +733,85 @@
           }
         });
       }, 100);
+    };
+
+    vm.openBindModal = function () {
+      $rootScope.modalOpened = true;
+      const fc = profileService.focusedClient;
+      const form = $scope.sendForm;
+      if (!form || !form.address) {
+        // disappeared
+        return;
+      }
+
+      const ModalInstanceCtrl = function ($scope, $modalInstance) {
+        $scope.color = fc.backgroundColor;
+        $scope.arrPublicAssetInfos = indexScope.arrBalances.filter(b => !b.is_private).map((b) => {
+          const r = { asset: b.asset, displayName: vm.unitName };
+          return r;
+        });
+        $scope.binding = { // defaults
+          type: 'reverse_payment',
+          timeout: 4,
+          reverseAsset: 'base',
+          feed_type: 'either',
+          oracle_address: ''
+        };
+        if (vm.binding) {
+          $scope.binding.type = vm.binding.type;
+          $scope.binding.timeout = vm.binding.timeout;
+          if (vm.binding.type === 'reverse_payment') {
+            $scope.binding.reverseAsset = vm.binding.reverseAsset;
+            $scope.binding.reverseAmount = utilityService.getAmountInDisplayUnits(vm.binding.reverseAmount,
+              vm.binding.reverseAsset,
+              vm.unitValue);
+          } else {
+            $scope.binding.oracle_address = vm.binding.oracle_address;
+            $scope.binding.feed_name = vm.binding.feed_name;
+            $scope.binding.feed_value = vm.binding.feed_value;
+            $scope.binding.feed_type = vm.binding.feed_type;
+          }
+        }
+
+        $scope.cancel = function () {
+          $modalInstance.dismiss('cancel');
+        };
+
+        $scope.bind = function () {
+          const binding = { type: $scope.binding.type };
+          if (binding.type === 'reverse_payment') {
+            binding.reverseAsset = $scope.binding.reverseAsset;
+            binding.reverseAmount = utilityService.getAmountInSmallestUnits($scope.binding.reverseAmount,
+              $scope.binding.reverseAsset,
+              vm.unitValue);
+          } else {
+            binding.oracle_address = $scope.binding.oracle_address;
+            binding.feed_name = $scope.binding.feed_name;
+            binding.feed_value = $scope.binding.feed_value;
+            binding.feed_type = $scope.binding.feed_type;
+          }
+          binding.timeout = $scope.binding.timeout;
+          vm.binding = binding;
+          $modalInstance.dismiss('done');
+        };
+      };
+
+      const modalInstance = $modal.open({
+        templateUrl: 'views/modals/bind.html',
+        windowClass: animationService.modalAnimated.slideUp,
+        controller: ModalInstanceCtrl
+      });
+
+      const disableCloseModal = $rootScope.$on('closeModal', () => {
+        modalInstance.dismiss('cancel');
+      });
+
+      modalInstance.result.finally(() => {
+        $rootScope.modalOpened = false;
+        disableCloseModal();
+        const m = angular.element(document.getElementsByClassName('reveal-modal'));
+        m.addClass(animationService.modalAnimated.slideOutDown);
+      });
     };
 
     $scope.$on('$viewContentLoaded', viewContentLoaded);

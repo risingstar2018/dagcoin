@@ -49,7 +49,9 @@
         this.addresses = [];
         this.isMobile = Device.any;
         this.blockUx = false;
-        this.addr = {};
+
+        // TODO sinan remove later
+        //this.addr = {};
         // TODO sinan remove later
         // $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
         const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
@@ -100,7 +102,7 @@
 
             if (form.address.$invalid && !self.blockUx) {
               console.log('invalid address, resetting form');
-              seelf.resetForm();
+              self.resetForm();
               self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
             }
 
@@ -126,10 +128,14 @@
           self.setAddress(true);
         });
 
+        // TODO sinan Local/NewFocusedWallet is used for receive.controller.
+        // in receive.controller these rows already written in viewContentLoaded method
+        /**
         const disableFocusListener = $rootScope.$on('Local/NewFocusedWallet', () => {
           self.addr = {};
           self.resetForm();
         });
+         */
 
         const disableResumeListener = $rootScope.$on('Local/Resume', () => {
           // This is needed then the apps go to sleep
@@ -137,6 +143,7 @@
           // self.bindTouchDown();
         });
 
+        // TODO sinan remove later after testing
         const disableTabListener = $rootScope.$on('Local/TabChanged', (e, tab) => {
           // This will slow down switch, do not add things here!
           console.log(`tab changed ${tab}`);
@@ -144,7 +151,7 @@
             case 'walletHome.receive':
               // TODO sinan moved to receive.controller
               // just to be sure we have an address
-              self.setAddress();
+              // self.setAddress();
               break;
             case 'walletHome.home':
               // TODO sinan $scope.sendForm.$setPristine(); why this method is called. will be removed.
@@ -183,7 +190,8 @@
           self.setAddress();
         }
 
-        eventBus.on('new_wallet_address', onNewWalletAddress);
+        // TODO sinan in new wallet address event
+        // eventBus.on('new_wallet_address', onNewWalletAddress);
 
         $scope.$on('$destroy', () => {
           console.log('walletHome $destroy');
@@ -192,7 +200,7 @@
           disableMerchantPaymentRequestListener();
           disablePaymentUriListener();
           disableTabListener();
-          disableFocusListener();
+          // disableFocusListener();
           disableResumeListener();
           disableOngoingProcessListener();
           $rootScope.hideMenuBar = false;
@@ -323,6 +331,7 @@
         };
 
         // TODO sinan find setAddress usages
+        /*
         this.setAddress = function (forceNew) {
           self.addrError = null;
           const fc = profileService.focusedClient;
@@ -359,23 +368,6 @@
               });
             });
           });
-        };
-
-        // TODO sinan delete after testing
-        /*
-        this.copyAddress = function (addr) {
-          if (isCordova) {
-            window.cordova.plugins.clipboard.copy(addr);
-            window.plugins.toast.showShortCenter(gettextCatalog.getString('Copied to clipboard'));
-          } else if (nodeWebkit.isDefined()) {
-            nodeWebkit.writeToClipboard(addr);
-          }
-
-          $scope.tooltipCopiedShown = true;
-
-          $timeout(() => {
-            $scope.tooltipCopiedShown = false;
-          }, 1000);
         };
         */
 
@@ -492,91 +484,6 @@
           }
         };
 
-        this.openBindModal = function () {
-          $rootScope.modalOpened = true;
-          const fc = profileService.focusedClient;
-          const form = $scope.sendForm;
-          if (!form || !form.address) {
-            // disappeared
-            return;
-          }
-
-          const ModalInstanceCtrl = function ($scope, $modalInstance) {
-            $scope.color = fc.backgroundColor;
-            $scope.arrPublicAssetInfos = indexScope.arrBalances.filter(b => !b.is_private).map((b) => {
-              const r = { asset: b.asset, displayName: self.unitName };
-              return r;
-            });
-            $scope.binding = { // defaults
-              type: 'reverse_payment',
-              timeout: 4,
-              reverseAsset: 'base',
-              feed_type: 'either',
-              oracle_address: ''
-            };
-            if (self.binding) {
-              $scope.binding.type = self.binding.type;
-              $scope.binding.timeout = self.binding.timeout;
-              if (self.binding.type === 'reverse_payment') {
-                $scope.binding.reverseAsset = self.binding.reverseAsset;
-                $scope.binding.reverseAmount = getAmountInDisplayUnits(self.binding.reverseAmount, self.binding.reverseAsset);
-              } else {
-                $scope.binding.oracle_address = self.binding.oracle_address;
-                $scope.binding.feed_name = self.binding.feed_name;
-                $scope.binding.feed_value = self.binding.feed_value;
-                $scope.binding.feed_type = self.binding.feed_type;
-              }
-            }
-
-            $scope.cancel = function () {
-              $modalInstance.dismiss('cancel');
-            };
-
-            $scope.bind = function () {
-              const binding = { type: $scope.binding.type };
-              if (binding.type === 'reverse_payment') {
-                binding.reverseAsset = $scope.binding.reverseAsset;
-                binding.reverseAmount = getAmountInSmallestUnits($scope.binding.reverseAmount, $scope.binding.reverseAsset);
-              } else {
-                binding.oracle_address = $scope.binding.oracle_address;
-                binding.feed_name = $scope.binding.feed_name;
-                binding.feed_value = $scope.binding.feed_value;
-                binding.feed_type = $scope.binding.feed_type;
-              }
-              binding.timeout = $scope.binding.timeout;
-              self.binding = binding;
-              $modalInstance.dismiss('done');
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/bind.html',
-            windowClass: animationService.modalAnimated.slideUp,
-            controller: ModalInstanceCtrl,
-          });
-
-          const disableCloseModal = $rootScope.$on('closeModal', () => {
-            modalInstance.dismiss('cancel');
-          });
-
-          modalInstance.result.finally(() => {
-            $rootScope.modalOpened = false;
-            disableCloseModal();
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutDown);
-          });
-        };
-
-        function getAmountInSmallestUnits(amount, asset) {
-          console.log(amount, asset, self.unitValue);
-          const moneyAmount = amount * self.unitValue;
-          return Math.round(moneyAmount);
-        }
-
-        function getAmountInDisplayUnits(amount) {
-          return amount / self.unitValue;
-        }
-
         this.setForm = function (to, amount, comment, asset, recipientDeviceAddress) {
           this.resetError();
           delete this.binding;
@@ -676,6 +583,7 @@
           return this.unitName;
         };
 
+        // TODO sinan this should be considered in tx modal converting
         this.openTxModal = function (btx, txHistory) {
           console.log(btx);
           $rootScope.modalOpened = true;
@@ -827,7 +735,7 @@
 
         this.bindTouchDown();
         if (profileService.focusedClient) {
-          this.setAddress();
+          // this.setAddress();
 
           // TODO sinan moved to send.controller, remove this line later
           // this.setSendFormInputs();

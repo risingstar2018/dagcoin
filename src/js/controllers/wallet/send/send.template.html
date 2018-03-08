@@ -67,9 +67,9 @@
 
           <div class="title clearfix" style="margin-left: 0;" ng-if="index.baseBalance.stable > 0">
             <div ng-if="send.deviceAddressIsKnown()">
-              <a ng-click="home.openBindModal()">
-                <span ng-if="!home.binding" translate>Bind the payment to a condition</span>
-                <span ng-if="home.binding" translate>This payment is bound to a condition</span>
+              <a ng-click="send.openBindModal()">
+                <span ng-if="!send.binding" translate>Bind the payment to a condition</span>
+                <span ng-if="send.binding" translate>This payment is bound to a condition</span>
               </a>
             </div>
             <div id="binding-drop" class="f-dropdown title clearfix" style="padding: 10px; margin:15px;"

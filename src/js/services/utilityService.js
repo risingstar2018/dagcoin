@@ -64,6 +64,16 @@
       }, 1000);
     };
 
+    root.getAmountInSmallestUnits = function(amount, asset, unitValue) {
+      console.log(amount, asset, unitValue);
+      const moneyAmount = amount * self.unitValue;
+      return Math.round(moneyAmount);
+    };
+
+    root.getAmountInDisplayUnits = function(amount, unitValue) {
+      return amount / unitValue;
+    };
+
     return root;
   });
 }());

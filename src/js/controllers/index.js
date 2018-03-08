@@ -611,35 +611,16 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         };
 
         self.setTab = function (tab, reset, tries, switchState) {
-          console.log('setTab', tab, reset, tries, switchState);
+          console.log('index controller setTab', tab, reset, tries, switchState);
           let setTabTries = tries || 0;
 
-          $rootScope.tab = tab;
-          self.tab = tab;
+          // TODO sinan when walletHome removed, fix here. below code is bad
+          const normalizedTab = tab === 'walletHome' ? 'walletHome.home' : tab;
+          $rootScope.tab = normalizedTab;
+          self.tab = normalizedTab;
 
           const changeTab = function (tab) {
-            /*
-            if (document.querySelector('.tab-in.tab-view')) {
-              const el = angular.element(document.querySelector('.tab-in.tab-view'));
-              el.removeClass('tab-in').addClass('tab-out');
-              const old = document.getElementById(`menu-${self.tab}`);
-              if (old) {
-                old.className = '';
-              }
-            }
-
-            if (document.getElementById(tab)) {
-              const el = angular.element(document.getElementById(tab));
-              el.removeClass('tab-out').addClass('tab-in');
-              const newe = document.getElementById(`menu-${tab}`);
-              if (newe) {
-                newe.className = 'active';
-              }
-            }
-            */
-
-            $rootScope.tab = tab;
-            self.tab = tab;
+            // TODO sinan no effect, after testing remove 'Local/TabChanged'
             $rootScope.$emit('Local/TabChanged', tab);
           };
 
@@ -666,28 +647,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           if (self.tab === tab && !reset) {
             return;
           }
-          /*
-          setTabTries += 1;
-          if (!document.getElementById(`menu-${tab}`) && setTabTries < 5) {
-            console.log('will retry setTab later:', tab, reset, setTabTries, switchState);
-            return $timeout(() => {
-              self.setTab(tab, reset, setTabTries, switchState);
-            }, (setTabTries === 1) ? 10 : 300);
-          }
-
-          if (!self.tab || !$state.is('walletHome.home')) {
-            $rootScope.tab = 'walletHome.home';
-            self.tab = 'walletHome.home';
-          }
-
-          if (switchState && !$state.is('walletHome.home')) {
-            go.path('walletHome.home', () => {
-              changeTab(tab);
-            });
-            return;
-          }
-          */
-
           changeTab(tab);
         };
 
