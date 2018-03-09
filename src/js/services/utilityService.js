@@ -1,9 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('utilityService', (lodash, Device, $timeout, nodeWebkit) => {
+  angular.module('copayApp.services').factory('utilityService', (lodash, Device, $timeout, nodeWebkit, gettextCatalog) => {
     const root = {};
     const regexStartWithPunctuationMark = /^[!@#$%^&*()-=_+|;'`:",.<>?']/i;
+
     root.isCordova = Device.cordova;
     root.sortWalletsByName = function (wallets) {
       return lodash.sortBy(wallets, (wallet) => {
@@ -46,7 +47,7 @@
      * @param scope scope of the dom
      * @param address the address to be copied, if empty nothing happens
      */
-    root.copyAddress = function(scope, address) {
+    root.copyAddress = function (scope, address) {
       if (lodash.isEmpty(address)) {
         return;
       }
@@ -64,13 +65,13 @@
       }, 1000);
     };
 
-    root.getAmountInSmallestUnits = function(amount, asset, unitValue) {
+    root.getAmountInSmallestUnits = function (amount, asset, unitValue) {
       console.log(amount, asset, unitValue);
       const moneyAmount = amount * self.unitValue;
       return Math.round(moneyAmount);
     };
 
-    root.getAmountInDisplayUnits = function(amount, unitValue) {
+    root.getAmountInDisplayUnits = function (amount, unitValue) {
       return amount / unitValue;
     };
 

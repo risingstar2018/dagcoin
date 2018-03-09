@@ -42,8 +42,6 @@
         };
 
         self.switchWallet = (selectedWalletId, currentWalletId, state) => {
-
-          debugger;
           if (profileService.focusedClient && !profileService.focusedClient.isComplete()) {
             $state.go('copayers');
             return;
@@ -55,7 +53,7 @@
           }
           self.walletSelection = false;
           return profileService.setAndStoreFocus(selectedWalletId, () => {
-            $state.go(state)
+            $state.go(state);
             $rootScope.$emit('Local/SetTab', state, true);
           });
         };

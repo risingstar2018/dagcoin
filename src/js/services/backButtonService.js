@@ -12,7 +12,6 @@
     let shownExitMessage = false;
 
     $rootScope.$on('$stateChangeSuccess', (event, to, toParams, from, fromParams) => {
-      debugger;
       const lastState = arrHistory.length ? arrHistory[arrHistory.length - 1] : null;
       if (from.name === '' || (lastState && !(to.name === lastState.to && lodash.isEqual(toParams, lastState.toParams)))) {
         arrHistory.push({ to: to.name, toParams, from: from.name, fromParams });

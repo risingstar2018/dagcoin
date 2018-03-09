@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 (() => {
   'use strict';
 
@@ -12,5 +13,6 @@
                        configService, gettextCatalog, derivationPathHelper, correspondentListService, utilityService) {
     const vm = this;
 
+    // TODO sinan home methods will be written into this class
   }
 })();

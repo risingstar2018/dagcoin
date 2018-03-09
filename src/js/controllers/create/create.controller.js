@@ -201,7 +201,7 @@
       setMultisig();
       vm.multisigSelected = true;
     }
-    //setTotalCosigners(1);
+    // setTotalCosigners(1);
     updateSeedSourceSelect(1);
     setSeedSource('new');
     loadExistingWallets();

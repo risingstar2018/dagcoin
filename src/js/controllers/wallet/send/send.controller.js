@@ -1,3 +1,4 @@
+/* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-unused-vars,no-use-before-define,comma-dangle */
 (() => {
   'use strict';
 
@@ -7,11 +8,11 @@
 
   SendCtrl.$inject = ['$scope', '$rootScope', '$location', '$anchorScroll', '$timeout', '$log', 'lodash', 'go', 'profileService',
     'configService', 'addressService', 'addressbookService', 'animationService', 'gettextCatalog', 'derivationPathHelper',
-    'correspondentListService', 'utilityService', 'ENV', '$modal'];
+    'correspondentListService', 'utilityService', 'transactionsService', 'ENV', '$modal', '$state'];
 
   function SendCtrl($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService,
                     configService, addressService, addressbookService, animationService, gettextCatalog, derivationPathHelper,
-                    correspondentListService, utilityService, ENV, $modal) {
+                    correspondentListService, utilityService, transactionsService, ENV, $modal, $state) {
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const eventBus = require('byteballcore/event_bus.js');
 
@@ -27,7 +28,7 @@
     vm.unitName = walletSettings.unitName;
     vm.unitDecimals = walletSettings.unitDecimals;
 
-    let assocDeviceAddressesByPaymentAddress = {};
+    const assocDeviceAddressesByPaymentAddress = {};
 
     $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
 
@@ -397,8 +398,11 @@
       }, 1);
     };
 
+    /**
+     * Invoked when SEND button clicked
+     * @return {*}
+     */
     vm.submitForm = function () {
-      debugger;
       if ($scope.index.arrBalances.length === 0) {
         vm.setSendError(gettextCatalog('no balances yet'));
         return console.log('send payment: no balances yet');
@@ -406,7 +410,7 @@
       const fc = profileService.focusedClient;
       const unitValue = vm.unitValue;
 
-      // TODO sinan ?? should be removed?
+      // TODO sinan ?? should be removed? used neither in class nor in html files
       if (utilityService.isCordova) {
         this.hideAddress = false;
         this.hideAmount = false;
@@ -434,7 +438,6 @@
       const asset = 'base';
       console.log(`asset ${asset}`);
       const address = form.address.$modelValue;
-      debugger;
       const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
       let amount = form.amount.$modelValue;
       const invoiceId = vm.invoiceId;
@@ -591,7 +594,6 @@
               recipientDeviceAddress,
             };
 
-
             let merchantPromise = null;
 
             // Merchant Payment life cycle
@@ -704,6 +706,7 @@
                   } else {
                     indexScope.updateHistory((success) => {
                       if (success) {
+                        $state.go('walletHome.home');
                         $rootScope.$emit('Local/SetTab', 'walletHome');
                         vm.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
                       } else {
@@ -811,6 +814,24 @@
         disableCloseModal();
         const m = angular.element(document.getElementsByClassName('reveal-modal'));
         m.addClass(animationService.modalAnimated.slideOutDown);
+      });
+    };
+
+    /**
+     * Invoked when transaction is sent
+     * @param btx
+     */
+    vm.openTxModal = function (btx) {
+      const assetIndex = lodash.findIndex(indexScope.arrBalances, { asset: btx.asset });
+      const isPrivate = indexScope.arrBalances[assetIndex].is_private;
+      const unitName = vm.unitName;
+
+      transactionsService.openTxModal({
+        btx,
+        isPrivate,
+        walletSettings,
+        unitName,
+        $rootScope
       });
     };
 

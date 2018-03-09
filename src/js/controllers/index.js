@@ -612,7 +612,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         self.setTab = function (tab, reset, tries, switchState) {
           console.log('index controller setTab', tab, reset, tries, switchState);
-          let setTabTries = tries || 0;
+          const setTabTries = tries || 0;
 
           // TODO sinan when walletHome removed, fix here. below code is bad
           const normalizedTab = tab === 'walletHome' ? 'walletHome.home' : tab;

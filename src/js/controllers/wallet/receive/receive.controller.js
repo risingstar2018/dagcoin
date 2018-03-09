@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 (() => {
   'use strict';
 
@@ -69,12 +70,11 @@
         });
 
         $scope.submitForm = function (form) {
-          debugger;
           if ($scope.index.arrBalances.length === 0) {
             return console.log('openCustomizedAmountModal: no balances yet');
           }
           const amount = form.amount.$modelValue;
-          const amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
+          const amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0), 10);
 
           return $timeout(() => {
             $scope.customizedAmountUnit = `${amount} ${$scope.unitName}`;

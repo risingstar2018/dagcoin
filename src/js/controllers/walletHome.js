@@ -23,11 +23,11 @@
                 animationService,
                 addressbookService,
                 correspondentListService,
+                transactionsService,
                 ENV,
                 moment,
                 exportTransactions,
-                Device,
-                $state) {
+                Device) {
         const eventBus = require('byteballcore/event_bus.js');
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const self = this;
@@ -50,10 +50,7 @@
         this.isMobile = Device.any;
         this.blockUx = false;
 
-        // TODO sinan remove later
-        //this.addr = {};
-        // TODO sinan remove later
-        // $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
+        // TODO sinan will be test after find out how 'paymentRequest' event is produced
         const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
           $rootScope.$emit('Local/SetTab', 'send');
@@ -236,32 +233,14 @@
           return value;
         };
 
-        self.transactionAddress = (address) => {
-          if (!address) {
-            return { fullName: gettextCatalog.getString('Incoming transaction') };
-          }
-
-          let fullName = address;
-          const contact = addressbookService.getContact(address);
-
-          if (contact) {
-            fullName = `${contact.first_name} ${contact.last_name || ''}`;
-          }
-
-          return { fullName, address };
+        // TODO sinan should be removed after converting tx history into directive
+        self.transactionAddress = function (address) {
+          return transactionsService.getTransactionAddress(address);
         };
 
-        $scope.transactionStatus = (transaction) => {
-          if (!transaction.confirmations) {
-            return { icon: 'autorenew', title: gettextCatalog.getString('Pending') };
-          }
-
-          if (transaction.action === 'received') {
-            return { icon: 'call_received', title: gettextCatalog.getString('Received') };
-          } else if (transaction.action === 'moved') {
-            return { icon: 'code', title: gettextCatalog.getString('Moved') };
-          }
-          return { icon: 'call_made', title: gettextCatalog.getString('Sent') };
+        // TODO sinan should be removed after converting tx history into directive
+        $scope.transactionStatus = function (transaction) {
+          return transactionsService.getTransactionStatus(transaction);
         };
 
         $scope.openSharedAddressDefinitionModal = function (address) {
@@ -329,47 +308,6 @@
           // deleted, maybe restore from copay sometime later
           // actually, nothing to display here that was not already shown
         };
-
-        // TODO sinan find setAddress usages
-        /*
-        this.setAddress = function (forceNew) {
-          self.addrError = null;
-          const fc = profileService.focusedClient;
-          if (!fc) {
-            return;
-          }
-
-          // Address already set?
-          if (!forceNew && self.addr[fc.credentials.walletId]) {
-            return;
-          }
-
-          if (indexScope.shared_address && forceNew) {
-            throw Error('attempt to generate for shared address');
-          }
-
-          if (fc.isSingleAddress && forceNew) {
-            throw Error('attempt to generate for single address wallets');
-          }
-
-          self.generatingAddress = true;
-          $timeout(() => {
-            addressService.getAddress(fc.credentials.walletId, forceNew, (err, addr) => {
-              self.generatingAddress = false;
-
-              if (err) {
-                self.addrError = err;
-              } else if (addr) {
-                self.addr[fc.credentials.walletId] = addr;
-              }
-
-              $timeout(() => {
-                $scope.$digest();
-              });
-            });
-          });
-        };
-        */
 
         this.countDown = function () {
           const self = this;
@@ -484,6 +422,7 @@
           }
         };
 
+        // TODO sinan must be deleted after testing disablePaymentRequestListener and disableMerchantPaymentRequestListener
         this.setForm = function (to, amount, comment, asset, recipientDeviceAddress) {
           this.resetError();
           delete this.binding;
@@ -500,7 +439,8 @@
             this.lockAddress = true;
             if (recipientDeviceAddress) {
               // must be already paired
-              assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
+              // TODO sinan eslint issue, will be already remove with this.setForm method
+              // assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
             }
           } else {
             this.lockAddress = false;
@@ -547,7 +487,7 @@
         };
 
         // TODO sinan there are lots of resetForm invoking in walletHome.js, so that this dummy method created
-        // remove later
+        // TODO remove later
         this.resetForm = (cb) => {
 
         };
@@ -583,135 +523,24 @@
           return this.unitName;
         };
 
-        // TODO sinan this should be considered in tx modal converting
-        this.openTxModal = function (btx, txHistory) {
-          console.log(btx);
-          $rootScope.modalOpened = true;
-          const self = this;
-          const fc = profileService.focusedClient;
-          const ModalInstanceCtrl = function ($scope, $modalInstance) {
-            $scope.btx = btx;
-            const assetIndex = lodash.findIndex(indexScope.arrBalances, { asset: btx.asset });
-            $scope.isPrivate = indexScope.arrBalances[assetIndex].is_private;
-            $scope.settings = walletSettings;
-            $scope.color = fc.backgroundColor;
+        this.openTxModal = function (btx) {
+          const assetIndex = lodash.findIndex(indexScope.arrBalances, { asset: btx.asset });
+          const isPrivate = indexScope.arrBalances[assetIndex].is_private;
+          const unitName = self.getUnitName();
+          const transactionAddress = self.transactionAddress;
 
-            $scope.getAmount = function (amount) {
-              return self.getAmount(amount);
-            };
-
-            $scope.getUnitName = function () {
-              return self.getUnitName();
-            };
-
-            $scope.transactionAddress = self.transactionAddress;
-
-            $scope.openInExplorer = function () {
-              const url = `https://${ENV.explorerPrefix}explorer.dagcoin.org/#${btx.unit}`;
-              if (typeof nw !== 'undefined') {
-                nw.Shell.openExternal(url);
-              } else if (isCordova) {
-                cordova.InAppBrowser.open(url, '_system');
-              }
-            };
-
-            $scope.copyAddress = function (address) {
-              utilityService.copyAddress($scope, address);
-            };
-
-            $scope.showCorrespondentList = function () {
-              self.showCorrespondentListToReSendPrivPayloads(btx);
-            };
-
-            $scope.cancel = function () {
-              breadcrumbs.add('dismiss tx details');
-              try {
-                $modalInstance.dismiss('cancel');
-              } catch (e) {
-                // continue regardless of error
-              }
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/tx-details.html',
-            windowClass: 'modal-transaction-detail',
-            controller: ModalInstanceCtrl,
-          });
-
-          const disableCloseModal = $rootScope.$on('closeModal', () => {
-            breadcrumbs.add('on closeModal tx details');
-            modalInstance.dismiss('cancel');
-          });
-
-          modalInstance.result.finally(() => {
-            $rootScope.modalOpened = false;
-            disableCloseModal();
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutRight);
+          transactionsService.openTxModal({
+            btx,
+            isPrivate,
+            walletSettings,
+            unitName,
+            transactionAddress,
+            $rootScope
           });
         };
 
         $rootScope.openTxModal = (transaction, rows) => {
           this.openTxModal(transaction, rows);
-        };
-
-        this.showCorrespondentListToReSendPrivPayloads = function (btx) {
-          $rootScope.modalOpened = true;
-          const self = this;
-          const fc = profileService.focusedClient;
-          const ModalInstanceCtrl = function ($scope, $modalInstance, $timeout, go, notification) {
-            $scope.btx = btx;
-            $scope.settings = walletSettings;
-            $scope.color = fc.backgroundColor;
-
-            $scope.readList = function () {
-              $scope.error = null;
-              correspondentListService.list((err, ab) => {
-                if (err) {
-                  $scope.error = err;
-                  return;
-                }
-                $scope.list = ab;
-                $scope.$digest();
-              });
-            };
-
-            $scope.sendPrivatePayments = function (correspondent) {
-              const indivisibleAsset = require('byteballcore/indivisible_asset');
-              const walletGeneral = require('byteballcore/wallet_general');
-              indivisibleAsset.restorePrivateChains(btx.asset, btx.unit, btx.addressTo, (arrRecipientChains) => {
-                walletGeneral.sendPrivatePayments(correspondent.device_address, arrRecipientChains, true, null, () => {
-                  modalInstance.dismiss('cancel');
-                  go.history();
-                  $timeout(() => {
-                    notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString('Private payloads sent', {}));
-                  });
-                });
-              });
-            };
-
-            $scope.back = function () {
-              self.openTxModal(btx);
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/correspondentListToReSendPrivPayloads.html',
-            windowClass: animationService.modalAnimated.slideRight,
-            controller: ModalInstanceCtrl,
-          });
-
-          const disableCloseModal = $rootScope.$on('closeModal', () => {
-            modalInstance.dismiss('cancel');
-          });
-
-          modalInstance.result.finally(() => {
-            $rootScope.modalOpened = false;
-            disableCloseModal();
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutRight);
-          });
         };
 
         this.hasAction = function (actions) {
@@ -734,12 +563,13 @@
         };
 
         this.bindTouchDown();
+
+        // TODO sinan remove tests are finished
         if (profileService.focusedClient) {
           // this.setAddress();
 
           // TODO sinan moved to send.controller, remove this line later
           // this.setSendFormInputs();
         }
-
       });
 }());
