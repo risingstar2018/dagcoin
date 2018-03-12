@@ -414,7 +414,7 @@
       root.setWalletClients();
 
       // assign wallet color based on first character of walletId
-      const color = configService.colorOpts[walletId.charCodeAt(0) % configService.colorOpts.length];
+      const color = configService.getWalletColor(walletId.charCodeAt(0));
       const configOpts = { colorFor: {} };
       configOpts.colorFor[walletId] = color;
       return configService.set(configOpts, configServiceError => root.setAndStoreFocus(walletId, () => {

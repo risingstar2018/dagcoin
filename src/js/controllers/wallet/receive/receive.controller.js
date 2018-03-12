@@ -15,11 +15,9 @@
                        nodeWebkit, $modal, animationService, addressService, ENV) {
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
-    const conf = require('byteballcore/conf.js');
     const config = configService.getSync();
     const configWallet = config.wallet;
     const vm = this;
-
 
     // INIT
     const walletSettings = configWallet.settings;
@@ -49,6 +47,7 @@
       $rootScope.modalOpened = true;
       const fc = profileService.focusedClient;
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
+        const conf = require('byteballcore/conf.js');
         $scope.addr = addr;
         $scope.color = fc.backgroundColor;
         $scope.unitName = vm.unitName;

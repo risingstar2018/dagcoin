@@ -1,8 +1,6 @@
 (() => {
   'use strict';
 
-  const fs = require('fs');
-
   angular
     .module('copayApp.services')
     .factory('exportTransactions', exportTransactions);
@@ -10,6 +8,8 @@
   exportTransactions.$inject = ['$q', '$log', 'Device', 'nodeWebkit', 'profileService', '$rootScope', 'ENV', '$timeout'];
 
   function exportTransactions($q, $log, Device, nodeWebkit, profileService, $rootScope, ENV, $timeout) {
+    const fs = require('fs');
+
     return {
       toCSV
     };

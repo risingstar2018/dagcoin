@@ -22,7 +22,7 @@
               window.plugins.spinnerDialog.hide();
             }
             go.walletHome();
-          }, 1000);
+          }, 100);
         });
       }, 100);
     };

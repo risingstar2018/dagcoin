@@ -1,10 +1,9 @@
 (function () {
   'use strict';
 
-  const eventBus = require('byteballcore/event_bus.js');
-
   angular.module('copayApp.services')
   .factory('newVersion', ($modal, $timeout, $rootScope, $q, configService) => {
+    const eventBus = require('byteballcore/event_bus.js');
     const root = {};
     root.shown = false;
     root.timerNextShow = false;

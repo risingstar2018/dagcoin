@@ -1,23 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
 (function () {
-  'use strinct';
+  'use strict';
 
-  const eventBus = require('byteballcore/event_bus.js');
-  angular.module('copayApp.services')
-  .factory('go',
-    ($window,
-     $rootScope,
-     $location,
-     $state,
-     profileService,
-     nodeWebkit,
-     notification,
-     gettextCatalog,
-     authService,
-     $deepStateRedirect,
-     $stickyState,
-     ENV) => {
-      const root = {};
+  angular.module('copayApp.services').factory('go', ($window, $rootScope, $location, $state, profileService, nodeWebkit,
+                                                     notification, gettextCatalog, authService, $deepStateRedirect,
+                                                     $stickyState,ENV) => {
+    const root = {};
       let removeListener;
       const hideSidebars = function () {
         if (typeof document === 'undefined') {
@@ -351,13 +339,15 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
-      const exHandler = (exception, cause) => {
+    const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
         eventBus.emit('uncaught_error', `An e xception occurred: ${exception}; cause: ${cause}`, exception);
       };
       return exHandler;
     });
+
+  const eventBus = require('byteballcore/event_bus.js');
 
   function tempHandleUri(url) {
     console.log(`saving open url ${url}`);
@@ -376,8 +366,10 @@
     eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
   };
 
+  /*
   process.on('uncaughtException', (e) => {
     console.log('uncaughtException');
     eventBus.emit('uncaught_error', `Uncaught exception: ${e}`, e);
   });
+  */
 }());

@@ -1,8 +1,6 @@
 (() => {
   'use strict';
 
-  const wallet = require('byteballcore/wallet.js');
-
   angular
     .module('copayApp.controllers')
     .controller('CorrespondentDevicesCtrl', CorrespondentDevicesCtrl);
@@ -10,6 +8,7 @@
   CorrespondentDevicesCtrl.$inject = ['$scope', 'profileService', 'go', 'correspondentListService', '$state', '$rootScope', '$log'];
 
   function CorrespondentDevicesCtrl($scope, profileService, go, correspondentListService, $state, $rootScope, $log) {
+    const wallet = require('byteballcore/wallet.js');
     const vm = this;
     vm.editCorrespondentList = false;
     vm.selectedCorrespondentList = {};

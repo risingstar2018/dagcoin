@@ -4,6 +4,22 @@
   angular.module('copayApp.services').factory('configService', (storageService, lodash, $log, Device, ENV) => {
     const root = {};
 
+    const colorOpts = [
+      '#DD4B39',
+      '#F38F12',
+      '#FAA77F',
+      '#FADA58',
+      '#9EDD72',
+      '#77DADA',
+      '#4A90E2',
+      '#484ED3',
+      '#9B59B6',
+      '#E856EF',
+      '#FF599E',
+      '#7A8C9E',
+    ];
+    const colorOptsLength = colorOpts.length;
+
     const defaultConfig = {
       // wallet limits
       limits: {
@@ -142,6 +158,10 @@
 
     root.getDefaults = function () {
       return lodash.clone(defaultConfig);
+    };
+
+    root.getWalletColor = function (firstCharacterOfWallet) {
+      return colorOpts[firstCharacterOfWallet % colorOptsLength];
     };
 
     return root;

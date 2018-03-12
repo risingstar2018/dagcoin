@@ -2,22 +2,6 @@
 (() => {
   'use strict';
 
-  const async = require('async');
-  const conf = require('byteballcore/conf.js');
-  const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
-  const objectHash = require('byteballcore/object_hash.js');
-  let ecdsa;
-  try {
-    ecdsa = require('secp256k1');
-  } catch (e) {
-    ecdsa = require('byteballcore/node_modules/secp256k1' + '');
-  }
-  const Mnemonic = require('bitcore-mnemonic');
-  const Bitcore = require('bitcore-lib');
-  const db = require('byteballcore/db.js');
-  const network = require('byteballcore/network');
-  const myWitnesses = require('byteballcore/my_witnesses');
-
   angular
   .module('copayApp.controllers')
   .controller('RecoveryCtrl', RecoveryCtrl);
@@ -27,6 +11,22 @@
 
   function RecoveryCtrl($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService,
                         configService, storageService, Device) {
+    const async = require('async');
+    const conf = require('byteballcore/conf.js');
+    const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+    const objectHash = require('byteballcore/object_hash.js');
+    let ecdsa;
+    try {
+      ecdsa = require('secp256k1');
+    } catch (e) {
+      ecdsa = require('byteballcore/node_modules/secp256k1' + '');
+    }
+    const Mnemonic = require('bitcore-mnemonic');
+    const Bitcore = require('bitcore-lib');
+    const db = require('byteballcore/db.js');
+    const network = require('byteballcore/network');
+    const myWitnesses = require('byteballcore/my_witnesses');
+
     const self = this;
     const JSZip = require('jszip');
     const crypto = require('crypto');

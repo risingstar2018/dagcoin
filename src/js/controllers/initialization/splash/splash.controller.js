@@ -1,8 +1,6 @@
 (() => {
   'use strict';
 
-  const device = require('byteballcore/device.js');
-
   angular
     .module('copayApp.controllers')
     .controller('SplashCtrl', SplashCtrl);
@@ -18,6 +16,7 @@
 
     vm.saveDeviceName = () => {
       $log.debug(`saveDeviceName: ${vm.deviceName}`);
+      const device = require('byteballcore/device.js');
       device.setDeviceName(vm.deviceName);
       const opts = { deviceName: vm.deviceName };
       configService.set(opts, (err) => {

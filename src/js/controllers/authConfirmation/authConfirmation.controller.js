@@ -15,10 +15,6 @@
    - send the chain of key changes with the response
    */
 
-  const Bitcore = require('bitcore-lib');
-  const ecdsaSig = require('byteballcore/signature.js');
-  const bbWallet = require('byteballcore/wallet.js');
-
   angular
     .module('copayApp.controllers')
     .controller('AuthConfirmationCtrl', AuthConfirmationCtrl);
@@ -26,6 +22,11 @@
   AuthConfirmationCtrl.$inject = ['$scope', 'profileService', 'go', 'authService', 'lodash'];
 
   function AuthConfirmationCtrl($scope, profileService, go, authService, lodash) {
+
+    const Bitcore = require('bitcore-lib');
+    const ecdsaSig = require('byteballcore/signature.js');
+    const bbWallet = require('byteballcore/wallet.js');
+
     const vm = this;
     const objRequest = authService.objRequest;
     // todo allow to choose the devices that are to sign

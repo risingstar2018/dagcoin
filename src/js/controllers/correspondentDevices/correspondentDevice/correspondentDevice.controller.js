@@ -1,15 +1,6 @@
 (() => {
   'use strict';
 
-  const chatStorage = require('byteballcore/chat_storage.js');
-  const device = require('byteballcore/device.js');
-  const eventBus = require('byteballcore/event_bus.js');
-  const conf = require('byteballcore/conf.js');
-  const storage = require('byteballcore/storage.js');
-  const breadcrumbs = require('byteballcore/breadcrumbs.js');
-  const network = require('byteballcore/network.js');
-  const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
-
   angular
     .module('copayApp.controllers')
     .controller('CorrespondentDeviceCtrl', CorrespondentDeviceCtrl);
@@ -19,6 +10,14 @@
 
   function CorrespondentDeviceCtrl($scope, $rootScope, $timeout, $modal, configService, profileService, animationService, Device, go,
                                     correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) {
+    const chatStorage = require('byteballcore/chat_storage.js');
+    const device = require('byteballcore/device.js');
+    const eventBus = require('byteballcore/event_bus.js');
+    const storage = require('byteballcore/storage.js');
+    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const network = require('byteballcore/network.js');
+    const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+
     const chatScope = $scope;
     const indexScope = $scope.index;
     const isCordova = Device.cordova;
@@ -736,6 +735,7 @@
     }
 
     function readLastMainChainIndex(cb) {
+      const conf = require('byteballcore/conf.js');
       if (conf.bLight) {
         network.requestFromLightVendor('get_last_mci', null, (ws, request, responseFlv) => {
           if (responseFlv.error) {
