@@ -4,7 +4,7 @@
 
   angular.module('copayApp.services').factory('go', ($window, $rootScope, $location, $state, profileService, nodeWebkit,
                                                      notification, gettextCatalog, authService, $deepStateRedirect,
-                                                     $stickyState,ENV) => {
+                                                     $stickyState, ENV) => {
     const root = {};
       let removeListener;
       const hideSidebars = function () {
@@ -339,6 +339,7 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
+    const eventBus = require('byteballcore/event_bus.js');
     const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
@@ -346,8 +347,6 @@
       };
       return exHandler;
     });
-
-  const eventBus = require('byteballcore/event_bus.js');
 
   function tempHandleUri(url) {
     console.log(`saving open url ${url}`);
@@ -362,6 +361,7 @@
   }
 
   window.onerror = function (msg, url, line, col, error) {
+    const eventBus = require('byteballcore/event_bus.js');
     console.log(`Javascript error: ${msg}`, error);
     eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
   };
