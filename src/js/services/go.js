@@ -67,7 +67,7 @@
           root.path('copayers');
         } else {
           root.path('walletHome', () => {
-            $rootScope.$emit('Local/SetTab', 'walletHome', true);
+            $rootScope.$emit('Local/SetTab', 'walletHome.home', true);
           });
         }
       };
@@ -75,7 +75,7 @@
       root.send = function (cb) {
         $stickyState.reset('walletHome');
         root.path('walletHome', () => {
-          $rootScope.$emit('Local/SetTab', 'send');
+          $rootScope.$emit('Local/SetTab', 'walletHome.send');
           if (cb) {
             cb();
           }
@@ -84,6 +84,7 @@
 
       root.history = function (cb) {
         root.path('walletHome', () => {
+          // todo: inherited code??
           $rootScope.$emit('Local/SetTab', 'history');
           if (cb) {
             cb();

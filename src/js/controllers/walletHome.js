@@ -52,7 +52,7 @@
         // TODO sinan will be test after find out how 'paymentRequest' event is produced
         const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
-          $rootScope.$emit('Local/SetTab', 'send');
+          $rootScope.$emit('Local/SetTab', 'walletHome.send');
           self.setForm(address, amount, null, asset, recipientDeviceAddress);
 
           const form = $scope.sendForm;
@@ -65,7 +65,7 @@
 
         const disableMerchantPaymentRequestListener = $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
-          $rootScope.$emit('Local/SetTab', 'send');
+          $rootScope.$emit('Local/SetTab', 'walletHome.send');
           this.invoiceId = invoiceId;
           this.validForSeconds = Math.floor(validForSeconds - 10); // 10 is a security threshold
 
@@ -115,7 +115,7 @@
 
         const disablePaymentUriListener = $rootScope.$on('paymentUri', (event, uri) => {
           $timeout(() => {
-            $rootScope.$emit('Local/SetTab', 'send');
+            $rootScope.$emit('Local/SetTab', 'walletHome.send');
             self.setForm(uri);
           }, 100);
         });

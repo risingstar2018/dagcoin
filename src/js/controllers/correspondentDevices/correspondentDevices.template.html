@@ -9,7 +9,7 @@
 
 <div class="content chats">
     <ul class="correspondentList">
-
+      <dag-background></dag-background>
         <li ng-repeat="correspondent in correspondentDevices.list" ng-class="{'noclick': !correspondent.clickable}">
 
             <a ng-show="correspondentDevices.selectedCorrespondentList[correspondent.device_address]"
@@ -42,5 +42,4 @@
         <span translate>Remove a device</span>
     </button>
 </div>
-
-<div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>
+<dag-bottom-bar></dag-bottom-bar>

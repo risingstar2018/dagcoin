@@ -9,12 +9,6 @@
           <button class=" btn_red tiny round" translate>Tap to retry</button>
         </div>
 
-        <div class="text-gray text-center size-12 p10t" ng-show="index.walletScanStatus == 'error'"
-             ng-click='index.retryScan()'>
-          <span class="size-12 db m10b" translate>Scan status finished with error</span>
-          <button class=" btn_red tiny round" translate>Tap to retry</button>
-        </div>
-
         <div ng-show="!index.updateError && index.walletScanStatus != 'error'"
              ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
 
@@ -135,25 +129,6 @@
             </ul>
           </div>
         </div>
-        <div class="page-action">
-          <a href="#" ng-show="index.historyShowShowAll" ng-click="index.showAllHistory()" class="btn btn_red">Show
-            all</a>
-        </div>
-      </div>
-
-    </div>
-
-    <div ng-if="index.txps[0]">
-      <h4 ng-show="index.requiresMultipleSignatures" class="title m0" translate>Payment Proposals</h4>
-      <h4 ng-show="!index.requiresMultipleSignatures" class="title m0" translate>Unsent transactions</h4>
-      <div class="last-transactions pr" ng-repeat="tx in index.txps"
-           ng-include="index.txTemplateUrl">
-      </div>
-
-      <div class="text-gray text-center size-12 p10t"
-           ng-show="index.lockedBalanceBytes && !index.updatingStatus">
-        <span translate>Total Locked Balance</span>:
-        <b>{{index.lockedBalanceStr}} </b>
       </div>
     </div>
   </div> <!-- END WalletHome -->

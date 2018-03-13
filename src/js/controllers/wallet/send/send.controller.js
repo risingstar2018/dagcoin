@@ -707,7 +707,7 @@
                     indexScope.updateHistory((success) => {
                       if (success) {
                         $state.go('walletHome.home');
-                        $rootScope.$emit('Local/SetTab', 'walletHome');
+                        $rootScope.$emit('Local/SetTab', 'walletHome.home');
                         vm.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
                       } else {
                         console.error('updateTxHistory not executed');

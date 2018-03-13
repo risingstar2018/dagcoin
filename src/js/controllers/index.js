@@ -21,7 +21,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 gettextCatalog,
                 amMoment,
                 nodeWebkit,
-                addonManager,
                 txFormatService,
                 uxLanguage,
                 $state,
@@ -496,35 +495,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           go.walletHome();
         };
 
-        self.menu = [{
-          title: gettextCatalog.getString('Home'),
-          icon: 'icon-home',
-          link: 'walletHome.home'
-        }, {
-          title: gettextCatalog.getString('Receive'),
-          icon: 'icon-recieve',
-          link: 'walletHome.receive'
-        }, {
-          title: gettextCatalog.getString('Send'),
-          icon: 'icon-send',
-          link: 'walletHome.send'
-        }, {
-          title: gettextCatalog.getString('Chat'),
-          icon: 'icon-chat',
-          new_state: 'correspondentDevices',
-          link: 'correspondentDevices'
-        }];
-
-        self.getSvgSrc = function (id) {
-          return `img/svg/symbol-defs.svg#${id}`;
-        };
-
-        self.addonViews = addonManager.addonViews();
-        self.menu = self.menu.concat(addonManager.addonMenuItems());
-        self.menuItemSize = self.menu.length > 5 ? 2 : 3;
-        self.txTemplateUrl = addonManager.txTemplateUrl() || 'views/includes/transaction.html';
-
-        self.tab = 'walletHome';
+        self.tab = 'walletHome.home';
 
         self.setFocusedWallet = function () {
           const fc = profileService.focusedClient;
@@ -615,7 +586,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           const setTabTries = tries || 0;
 
           // TODO sinan when walletHome removed, fix here. below code is bad
-          const normalizedTab = tab === 'walletHome' ? 'walletHome.home' : tab;
+          const normalizedTab = tab;
           $rootScope.tab = normalizedTab;
           self.tab = normalizedTab;
 
@@ -1029,39 +1000,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }, 100);
         };
 
-        self.retryScan = function () {
-          const self = this;
-          self.startScan(self.walletId);
-        };
         self.onQrCodeScanned = function (data) {
           go.handleUri(data);
-          // $rootScope.$emit('dataScanned', data);
         };
 
         self.openSendScreen = function () {
           go.send();
-        };
-
-        self.startScan = function (walletId) {
-          $log.debug(`Scanning wallet ${walletId}`);
-          // const c = profileService.walletClients[walletId];
-          // if (!c.isComplete()) {
-          //   return;
-          // }
-          /*
-           if (self.walletId == walletId)
-           self.setOngoingProcess('scanning', true);
-
-           c.startScan({
-           includeCopayerBranches: true,
-           }, function(err) {
-           if (err && self.walletId == walletId) {
-           self.setOngoingProcess('scanning', false);
-           self.handleError(err);
-           $rootScope.$apply();
-           }
-           });
-           */
         };
 
         self.setUxLanguage = function () {
@@ -1170,16 +1114,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         $rootScope.$on('Local/InitialRecoveryInProgress', () => {
           self.setOngoingProcess('recoveringFromSeed', true);
         });
-
-//  self.debouncedUpdate = lodash.throttle(function() {
-//    self.updateAll({
-//      quiet: true
-//    });
-//    self.updateTxHistory();
-//  }, 4000, {
-//    leading: false,
-//    trailing: true
-//  });
 
         $rootScope.$on('Local/Resume', () => {
           $log.debug('### Resume event');

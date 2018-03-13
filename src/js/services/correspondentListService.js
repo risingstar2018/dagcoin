@@ -453,39 +453,6 @@ angular.module('copayApp.services').factory('correspondentListService',
       });
     }
 
-    /**
-     * Process a message considering the possibility it is a Dagcoin message.
-     * It tries to parse it, if it succeeds and if a protocol property is present (and set to dagcoin) then it
-     * emits the appropriate event.
-     * @param correspondent The message sender record in the local database
-     * @param fromAddress The message sender address
-     * @param body The message body as pure text
-     * @returns {Promise}
-     */
-    function processAsDagcoinMessage(correspondent, fromAddress, body) {
-      return new Promise(() => {
-        let message = null;
-
-        try {
-          message = JSON.parse(body);
-        } catch (err) {
-          console.log(`NEW MESSAGE FROM ${fromAddress}: ${body} NOT A JSON MESSAGE: ${err}`);
-        }
-
-        if (message !== null) {
-          if (message.protocol === 'dagcoin') {
-            console.log(`DAGCOIN MESSAGE RECEIVED FROM ${fromAddress} WITH TITLE ${message.title} AND BODY ${JSON.stringify(message)}`);
-            eventBus.emit(`dagcoin.${message.title}`, message, fromAddress);
-            return Promise.resolve(true);
-          }
-
-          console.log(`JSON MESSAGE RECEIVED FROM ${fromAddress} WITH UNEXPECTED PROTOCOL: ${message.protocol}`);
-        }
-
-        return sendMessageToCorrespondentChat(correspondent, fromAddress, body);
-      });
-    }
-
     function readCorrespondentAndForwardMessage(fromAddress, body) {
       return new Promise((resolve) => {
         device.readCorrespondent(fromAddress, (correspondent) => {
@@ -496,7 +463,7 @@ angular.module('copayApp.services').factory('correspondentListService',
           return Promise.reject(`CORRESPONDENT WITH ADDRESS ${fromAddress} NOT FOUND`);
         }
 
-        return processAsDagcoinMessage(correspondent, fromAddress, body);
+        return sendMessageToCorrespondentChat(correspondent, fromAddress, body);
       });
     }
 
