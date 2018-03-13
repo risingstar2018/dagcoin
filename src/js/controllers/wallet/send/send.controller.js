@@ -1,4 +1,4 @@
-/* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-unused-vars,no-use-before-define,comma-dangle */
+/* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-unused-vars,no-use-before-define,comma-dangle,no-undef */
 (() => {
   'use strict';
 
@@ -8,11 +8,11 @@
 
   SendCtrl.$inject = ['$scope', '$rootScope', '$location', '$anchorScroll', '$timeout', '$log', 'lodash', 'go', 'profileService',
     'configService', 'addressService', 'addressbookService', 'animationService', 'gettextCatalog', 'derivationPathHelper',
-    'correspondentListService', 'utilityService', 'transactionsService', 'ENV', '$modal', '$state'];
+    'correspondentListService', 'utilityService', 'transactionsService', 'walletService', 'ENV', '$modal', '$state'];
 
   function SendCtrl($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService,
                     configService, addressService, addressbookService, animationService, gettextCatalog, derivationPathHelper,
-                    correspondentListService, utilityService, transactionsService, ENV, $modal, $state) {
+                    correspondentListService, utilityService, transactionsService, walletService, ENV, $modal, $state) {
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const eventBus = require('byteballcore/event_bus.js');
 
@@ -457,8 +457,18 @@
 
       indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
       $timeout(() => {
-        profileService.requestTouchid(null, (err) => {
-          if (err) {
+        const device = require('byteballcore/device.js');
+        const sendCoinRequest = new SendCoinRequestBuilder()
+          .binding(vm.binding)
+          .recipientDeviceAddress(recipientDeviceAddress)
+          .myDeviceAddress(device.getMyDeviceAddress())
+          .sharedAddress(indexScope.shared_address)
+          .copayers($scope.index.copayers)
+          .invoiceId(invoiceId)
+          .address(address)
+          .merkleProof(merkleProof)
+          .amount(amount)
+          .requestTouchidCb((err) => {
             profileService.lockFC();
             indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
             vm.error = err;
@@ -735,6 +745,49 @@
             }
           }
         });
+          })
+          .createNewSharedAddressCb((err) => {
+            delete vm.current_payment_key;
+            indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+            vm.setSendError(err);
+          })
+          .sendMultiPaymentDoneBeforeCb((sendMultiPaymentError) => {
+            // if multisig, it might take very long before the callback is called
+            indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+            breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
+            delete vm.current_payment_key;
+            profileService.bKeepUnlocked = false;
+          })
+          .sendMultiPaymentDoneErrorCb((err) => {
+            vm.setSendError(err);
+          })
+          .sendMultiPaymentDoneAfter((rcptDeviceAddress, toAddress, rAsset) => {
+            vm.resetForm();
+            $rootScope.$emit('NewOutgoingTx');
+            if (rcptDeviceAddress) {
+              eventBus.emit('sent_payment', rcptDeviceAddress, amount || 'all', rAsset, indexScope.walletId, true, toAddress);
+            } else {
+              indexScope.updateHistory((success) => {
+                if (success) {
+                  $state.go('walletHome.home');
+                  $rootScope.$emit('Local/SetTab', 'walletHome');
+                  vm.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
+                } else {
+                  console.error('updateTxHistory not executed');
+                }
+              });
+            }
+          })
+          .composeAndSendDoneCb(() => {
+            $scope.sendForm.$setPristine();
+          })
+          .composeAndSendErrorCb((error) => {
+            delete vm.current_payment_key;
+            indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
+            $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => { });
+          })
+          .build();
+        walletService.sendCoin(sendCoinRequest);
       }, 100);
     };
 
