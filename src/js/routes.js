@@ -161,7 +161,7 @@
           }
         })
         .state('wallet.send', {
-          url: '/send/:type/:recipientDeviceAddress/:address/:asset/:invoiceId/:validForSeconds/:merchantName/:state/:amount',
+          url: '/send/:type/:recipientDeviceAddress/:address/:asset/:invoiceId/:validForSeconds/:merchantName/:state/:amount/:uri',
           walletShouldBeComplete: true,
           needProfile: true,
           deepStateRedirect: true,

@@ -51,7 +51,7 @@
         if (PaymentRequest.PAYMENT_REQUEST === request.type) {
           vm.setForm(request.address, request.amount, request.comment, request.asset, request.recipientDeviceAddress);
           if (form.address.$invalid && !vm.blockUx) { // TODO sinan ?? blockUx
-            console.log('Payment Request :: invalid address, resetting form');
+            console.error('Payment Request :: invalid address, resetting form');
             vm.resetForm();
             vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
           }
@@ -61,21 +61,21 @@
           if (request.state === 'PENDING') {
             vm.setForm(request.address, request.amount, null, ENV.DAGCOIN_ASSET, null);
             if (form.address.$invalid && !vm.blockUx) { // TODO sinan ?? blockUx
-              console.log('Merchant Payment Request :: invalid address, resetting form');
+              console.error('Merchant Payment Request :: invalid address, resetting form');
               vm.resetForm();
               vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
             }
-
             if (vm.validForSeconds <= 0) { // TODO sinan bunları walletHome'dan sil
               vm.resetForm();
               vm.error = gettextCatalog.getString('Merchant payment request expired');
             }
-
             vm.countDown();
           } else {
             vm.resetForm();
             vm.error = walletService.getStateErrorMessageForMerchantPayment(state);
           }
+        } else if (PaymentRequest.URI === request.type) {
+          vm.setFromUri(request.uri);
         }
       }
     };
@@ -208,6 +208,28 @@
         vm.lockAsset = false;
       }
     };
+
+    vm.setFromUri = function (uri) {
+      let objRequest = {};
+      require('byteballcore/uri.js').parseUri(uri, {
+        ifError() {
+        },
+        ifOk(_objRequest) {
+          objRequest = _objRequest; // the callback is called synchronously
+        },
+      });
+
+      if (!objRequest) {
+        // failed to parse
+        return uri;
+      }
+      if (objRequest.amount) {
+        // setForm() cares about units conversion
+        this.setForm(objRequest.address, objRequest.amount);
+      }
+      return objRequest.address;
+    };
+
 
     vm.resetForm = function (cb) {
       vm.resetError();
