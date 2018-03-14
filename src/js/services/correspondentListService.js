@@ -552,7 +552,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     });
 
     eventBus.on('paired', (deviceAddress) => {
-      if ($state.is('correspondentDevices')) {
+      if ($state.is('wallet.correspondentDevices')) {
         return $state.reload();
       } // refresh the list
       if (!$state.is('correspondentDevice')) {
@@ -575,7 +575,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     });
 
     eventBus.on('removed_paired_device', (deviceAddress) => {
-      if ($state.is('correspondentDevices')) {
+      if ($state.is('wallet.correspondentDevices')) {
         return $state.reload();
       } // todo show popup after refreshing the list
       if (!$state.is('correspondentDevice')) {
@@ -591,8 +591,8 @@ angular.module('copayApp.services').factory('correspondentListService',
       // go back to list of correspondentDevices
       // todo show popup message
       // todo return to correspondentDevices when in edit-mode, too
-      $deepStateRedirect.reset('correspondentDevices');
-      go.path('correspondentDevices');
+      $deepStateRedirect.reset('wallet.correspondentDevices');
+      go.path('wallet.correspondentDevices');
       $timeout(() => {
         $rootScope.$digest();
       });

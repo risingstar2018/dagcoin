@@ -878,8 +878,8 @@
       if ($rootScope.goBackState) {
         go.path($rootScope.goBackState);
       } else {
-        $deepStateRedirect.reset('correspondentDevices');
-        go.path('correspondentDevices');
+        $deepStateRedirect.reset('wallet.correspondentDevices');
+        go.path('wallet.correspondentDevices');
       }
     };
   }

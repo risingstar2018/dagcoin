@@ -18,7 +18,7 @@
     vm.isCordova = Device.cordova;
     vm.color = fc.backgroundColor;
     vm.error = null;
-    vm.cancelAddCorrespondent = () => go.path('correspondentDevices');
+    vm.cancelAddCorrespondent = () => go.path('wallet.correspondentDevices');
     vm.onTextClick = $event => $event.target.select();
 
     vm.copyCode = function () {
