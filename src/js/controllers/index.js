@@ -55,6 +55,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.bSwipeSuspended = false;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
+        // This property is assigned to an empty object to escape from null pointer access.
+        // This is initialized in Local/ProfileBound event
+        self.walletInfoVisibility = {};
+
         connectionService.init();
         $rootScope.$on('connection:state-changed', (ev, isOnline) => {
           self.isOffline = !isOnline;
@@ -896,6 +900,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         // todo: what is this for?
         $rootScope.$on('Local/ProfileBound', () => {
+          const config = configService.getSync();
+
+          // password and finger print options are read from config and profile service
+          const needPassword = !!profileService.profile.xPrivKeyEncrypted;
+          const needFingerprint = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
+          self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
         });
 
         $rootScope.$on('Local/NewFocusedWallet', () => {

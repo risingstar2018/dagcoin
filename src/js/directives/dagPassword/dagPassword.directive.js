@@ -69,13 +69,16 @@
         };
 
         $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
-          self.needsUnlock = { success: true };
+          self.walletInfoVisibility.setPasswordSuccess(true);
+          $timeout(() => { $rootScope.$apply(); });
+        });
+
+        $rootScope.$on('Local/FingerprintUnlocked', () => {
+          self.walletInfoVisibility.setFingerprintSuccess(true);
+          $timeout(() => { $rootScope.$apply(); });
         });
 
         $rootScope.$on('Local/NeedsPassword', (event, isSetup, errorMessage, cb) => {
-          if (!self.needsUnlock) {
-            self.needsUnlock = {};
-          }
           self.askPassword = {
             isSetup,
             error: errorMessage,

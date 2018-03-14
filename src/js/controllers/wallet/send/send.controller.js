@@ -89,9 +89,6 @@
           },
           set(newValue) {
             $scope.__address = vm.onAddressChange(newValue);
-            if ($scope.sendForm && $scope.sendForm.address.$valid) {
-              vm.lockAddress = true;
-            }
           },
           enumerable: true,
           configurable: true,
@@ -101,7 +98,7 @@
       vm.hideNote = true;
     };
 
-    vm.setForm = function (to, amount, comment, asset, recipientDeviceAddress) {
+    vm.setForm = function (to, amount, comment, asset, recipientDeviceAddress, isMerchant) {
       vm.resetError();
       delete vm.binding;
       const form = $scope.sendForm;
@@ -114,14 +111,13 @@
         form.address.$setViewValue(to);
         form.address.$isValid = true;
         form.address.$render();
-        this.lockAddress = true;
         if (recipientDeviceAddress) {
           // must be already paired
           assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
         }
-      } else {
-        this.lockAddress = false;
       }
+
+      this.lockAddress = to && isMerchant;
 
       if (moneyAmount) {
         moneyAmount /= this.unitValue;
@@ -378,7 +374,6 @@
       form.address.$setViewValue(to);
       form.address.$isValid = true;
       form.address.$render();
-      vm.lockAddress = true;
     };
 
     vm.setSendError = function (err) {

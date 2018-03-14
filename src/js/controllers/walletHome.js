@@ -88,7 +88,8 @@
           };
 
           if (state === 'PENDING') {
-            self.setForm(address, amount, null, ENV.DAGCOIN_ASSET, null);
+            // todo: dagcoin_asset should be removed
+            self.setForm(address, amount, null, ENV.DAGCOIN_ASSET, null, true);
 
             const form = $scope.sendForm;
 
@@ -301,7 +302,7 @@
         };
 
         // TODO sinan must be deleted after testing disablePaymentRequestListener and disableMerchantPaymentRequestListener
-        this.setForm = function (to, amount, comment, asset, recipientDeviceAddress) {
+        this.setForm = function (to, amount, comment, asset, recipientDeviceAddress, isMerchant) {
           this.resetError();
           delete this.binding;
           const form = $scope.sendForm;
@@ -314,16 +315,13 @@
             form.address.$setViewValue(to);
             form.address.$isValid = true;
             form.address.$render();
-            this.lockAddress = true;
             if (recipientDeviceAddress) {
               // must be already paired
               // TODO sinan eslint issue, will be already remove with this.setForm method
               // assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
             }
-          } else {
-            this.lockAddress = false;
           }
-
+          this.lockAddress = to && isMerchant;
           if (moneyAmount) {
             moneyAmount /= this.unitValue;
             this.lockAmount = true;
