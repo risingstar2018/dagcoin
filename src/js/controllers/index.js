@@ -55,9 +55,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.bSwipeSuspended = false;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
-        // This property is assigned to an empty object to escape from null pointer access.
-        // This is initialized in Local/ProfileBound event
-        self.walletInfoVisibility = {};
 
         connectionService.init();
         $rootScope.$on('connection:state-changed', (ev, isOnline) => {
@@ -898,16 +895,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        // todo: what is this for?
-        $rootScope.$on('Local/ProfileBound', () => {
-          const config = configService.getSync();
-
-          // password and finger print options are read from config and profile service
-          const needPassword = !!profileService.profile.xPrivKeyEncrypted;
-          const needFingerprint = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
-          self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
-        });
-
         $rootScope.$on('Local/NewFocusedWallet', () => {
           self.setUxLanguage();
         });
@@ -1055,19 +1042,19 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
-          $state.go('walletHome.send', {
+          $state.go('wallet.send', {
             type: PaymentRequest.PAYMENT_REQUEST,
             address,
             amount,
             asset,
             recipientDeviceAddress
           });
-          $rootScope.$emit('Local/SetTab', 'walletHome.send');
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
         $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
           console.log(`merchantPaymentRequest event ${address}, ${amount}`);
-          $state.go('walletHome.send', {
+          $state.go('wallet.send', {
             type: PaymentRequest.MERCHANT_PAYMENT_REQUEST,
             address,
             amount,
@@ -1076,16 +1063,17 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             merchantName,
             state
           });
-          $rootScope.$emit('Local/SetTab', 'walletHome.send');
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
         $rootScope.$on('paymentUri', (event, uri) => {
-          $timeout(() => {
-            $rootScope.$emit('Local/SetTab', 'walletHome.send');
-            self.setForm(uri);
-          }, 100);
+          console.log(`paymentUri event ${address}, ${amount}`);
+          $state.go('wallet.send', {
+            type: PaymentRequest.URI,
+            uri
+          });
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
-
 
         if (autoRefreshClientService) {
           autoRefreshClientService.initHistoryAutoRefresh();

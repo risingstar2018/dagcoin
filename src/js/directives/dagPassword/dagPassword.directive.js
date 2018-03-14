@@ -9,9 +9,9 @@
   .module('copayApp.directives')
   .directive('dagPassword', dagPassword);
 
-  dagPassword.$inject = ['$rootScope', '$timeout', 'gettextCatalog'];
+  dagPassword.$inject = ['$rootScope', '$timeout', 'gettextCatalog', 'configService', 'profileService'];
 
-  function dagPassword($rootScope, $timeout, gettextCatalog) {
+  function dagPassword($rootScope, $timeout, gettextCatalog, configService, profileService) {
     return {
       restrict: 'E',
       transclude: true,
@@ -21,6 +21,9 @@
       controllerAs: 'pass',
       controller() {
         const self = this;
+        // This property is assigned to an empty object to escape from null pointer access.
+        // This is initialized in Local/ProfileBound event
+        self.walletInfoVisibility = {};
         self.validationErrors = [];
         let passwordTemp;
         self.isVerification = false;
@@ -91,6 +94,20 @@
             $rootScope.$apply();
           });
         });
+
+        /**
+         * Event that triggers when application starts.
+         * When this is trigger all services initialized and initialization are ready.
+         */
+        $rootScope.$on('Local/ProfileBound', () => {
+          const config = configService.getSync();
+
+          // password and finger print options are read from config and profile service
+          const needPassword = !!profileService.profile.xPrivKeyEncrypted;
+          const needFingerprint = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
+          self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
+        });
+
       }
     };
   }

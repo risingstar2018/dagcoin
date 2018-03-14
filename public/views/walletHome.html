@@ -1,7 +1,7 @@
-<dag-backup-notification ng-if="index.walletInfoVisibility.visible && index.needsBackup">
+<dag-backup-notification ng-if="pass.walletInfoVisibility.visible && index.needsBackup">
 </dag-backup-notification>
 
-<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="index.walletInfoVisibility.visible">
+<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="pass.walletInfoVisibility.visible">
   <qr-scanner ng-if="tab === 'wallet.send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)"
               title="{{ 'Scan address' | translate }}">
@@ -17,13 +17,13 @@
 
 
 <div class="content" ng-scrollbars>
-  <div class="onGoingProcess" ng-show="index.isOffline || (index.anyOnGoingProcess && !index.isOffline) || (home.onGoingProcess && !index.anyOnGoingProces && !index.isOffline)">
+  <div class="onGoingProcess" ng-show="index.isOffline || (index.anyOnGoingProcess && !index.isOffline) || (home.onGoingProcess && !index.anyOnGoingProcess && !index.isOffline)">
     <div class="onGoingProcess-content">
       <dag-spinner></dag-spinner>
       <!-- 1 -->
       <span translate ng-show="index.isOffline">Reconnecting to Wallet Service...</span>
       <!-- 2 -->
-      <span ng-show="home.onGoingProcess && !index.anyOnGoingProces && !index.isOffline">{{home.onGoingProcess|translate}}...</span>
+      <span ng-show="home.onGoingProcess && !index.anyOnGoingProcess && !index.isOffline">{{home.onGoingProcess|translate}}...</span>
       <!-- 3 -->
       <span translate ng-show="['openingWallet', 'updatingStatus', 'updatingBalance', 'updatingPendingTxps', 'updatingHistory'].indexOf(index.onGoingProcessName) >= 0">Updating Wallet...</span>
       <span translate ng-show="index.onGoingProcessName == 'scanning'">Scanning Wallet funds...</span>

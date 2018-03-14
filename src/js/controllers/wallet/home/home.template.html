@@ -11,7 +11,7 @@
                 <use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
               </svg>
               <div class="price_digits">
-                <div class="price_digits_wrapper" ng-if="index.walletInfoVisibility.visible">
+                <div class="price_digits_wrapper" ng-if="pass.walletInfoVisibility.visible">
                       <span class="price-number"
                             ng-style="homeCtrl.getFontSizeForWalletNumber(index.baseBalance.totalStr)">
                         {{index.baseBalance.totalStr.split('.')[0]}}</span><span class="price-separator">.
@@ -73,7 +73,7 @@
     </div>
 
     <div class="dag_transactions" ng-show="index.txHistory[0] && !index.updatingTxHistory"
-         ng-if="index.walletInfoVisibility.visible">
+         ng-if="pass.walletInfoVisibility.visible">
       <div class="dag_transactions_list">
         <div class="dag_transactions_list_triggers">
           <h4 translate>Transactions History</h4>

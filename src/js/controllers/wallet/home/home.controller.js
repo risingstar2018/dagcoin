@@ -8,7 +8,7 @@
 
   HomeCtrl.$inject = ['$scope', '$rootScope', 'animationService', '$timeout', 'profileService', 'correspondentListService', '$modal', 'lodash'];
 
-  function HomeCtrl($scope, $rootScope, animationService, $timeout,profileService, correspondentListService, $modal, lodash) {
+  function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash) {
     const vm = this;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
 
