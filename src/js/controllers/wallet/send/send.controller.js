@@ -1,4 +1,4 @@
-/* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-unused-vars,no-use-before-define,comma-dangle,no-undef */
+/* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-use-before-define,comma-dangle,no-undef */
 (() => {
   'use strict';
 
@@ -498,8 +498,8 @@
               indexScope.updateHistory((success) => {
                 if (success) {
                   $state.go('wallet.home');
-                  $rootScope.$emit('Local/SetTab', 'wallet');
-                  vm.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
+                  $rootScope.$emit('Local/SetTab', 'wallet.home');
+                  vm.openTxModal(indexScope.txHistory[0]);
                 } else {
                   console.error('updateTxHistory not executed');
                 }
@@ -603,15 +603,9 @@
      * @param btx
      */
     vm.openTxModal = function (btx) {
-      const assetIndex = lodash.findIndex(indexScope.arrBalances, { asset: btx.asset });
-      const isPrivate = indexScope.arrBalances[assetIndex].is_private;
-      const unitName = vm.unitName;
-
       transactionsService.openTxModal({
         btx,
-        isPrivate,
         walletSettings,
-        unitName,
         $rootScope
       });
     };

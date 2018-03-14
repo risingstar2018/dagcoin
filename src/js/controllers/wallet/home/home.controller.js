@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars,no-shadow */
+/* eslint-disable no-shadow */
 (() => {
   'use strict';
 

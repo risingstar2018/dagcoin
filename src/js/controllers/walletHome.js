@@ -1,4 +1,4 @@
-/* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-unused-vars,no-use-before-define,comma-dangle */
+/* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-use-before-define,comma-dangle */
 (function () {
   'use strict';
 
@@ -29,13 +29,11 @@
                 exportTransactions,
                 Device) {
         const eventBus = require('byteballcore/event_bus.js');
-        const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const self = this;
         $rootScope.hideMenuBar = false;
         $rootScope.wpInputFocused = false;
         const config = configService.getSync();
         const configWallet = config.wallet;
-        const indexScope = $scope.index;
         const isCordova = Device.cordova;
 
         // INIT
