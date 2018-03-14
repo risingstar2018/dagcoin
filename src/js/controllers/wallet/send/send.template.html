@@ -3,7 +3,7 @@
   <div class="p-share js-introduction">
     <div class="p-wrap" style="width: 300px; margin: 0 auto; overflow: unset;">
       <form class="page-form" name="sendForm" novalidate>
-        <div class="box-notification" ng-show="send.error" ng-click="receive.resetError()">
+        <div class="box-notification" ng-show="send.error" ng-click="send.resetError()">
               <span class="text-warning">
                 {{send.error|translate}}
               </span>
@@ -28,10 +28,10 @@
             <input
               ng-class="{'error': sendForm.amount.$invalid && !sendForm.amount.$error.required, 'success': !sendForm.amount.$invalid}"
               style="font-size: 12px;" type="number" id="amount"
-              ng-disabled="home.blockUx || home.lockAmount"
+              ng-disabled="send.blockUx || send.lockAmount"
               name="amount" ng-attr-placeholder="{{('Amount')|translate}}" min="0.000001"
               ng-minlength="1" ng-maxlength="16" ng-model="_amount"
-              ng-required="!home.bSendAll"
+              ng-required="!send.bSendAll"
               autocomplete="off" ng-focus="home.formFocus('amount')"
               ng-blur="home.formFocus(false)"
               normalize-amount>
@@ -55,7 +55,7 @@
               style="font-size: 12px;"
               type="text" id="address"
               name="address"
-              ng-disabled="home.blockUx || home.lockAddress"
+              ng-disabled="send.blockUx || send.lockAddress"
               ng-attr-placeholder="{{send.canSendExternalPayment() ? ('DAG address' | translate) : ('DAG address of your other wallet &#8594;' | translate)}}"
               ng-model="_address" valid-address required
               ng-blur="home.formFocus(false)">
@@ -86,9 +86,9 @@
         </div>
         <div class="page-action">
           <button ng-disabled="sendForm.$invalid || index.onGoingProcessName == 'sending'" class="btn btn_red-full send-button"
-                  ng-click="send.submitForm()" translate>Send <i ng-if="home.validForSeconds > 0">({{home.validForSeconds}})</i>
+                  ng-click="send.submitForm()" translate>Send <i ng-if="send.validForSeconds > 0">({{send.validForSeconds}})</i>
           </button>
-          <button ng-if="home.validForSeconds > 0" class="btn btn_red-full" ng-click="send.resetForm()" translate>Cancel
+          <button ng-if="send.validForSeconds > 0" class="btn btn_red-full" ng-click="send.resetForm()" translate>Cancel
           </button>
         </div>
       </form>

@@ -4,13 +4,13 @@
 
   angular.module('copayApp.services').factory('walletService', WalletService);
 
-  WalletService.$inject = ['profileService', 'correspondentListService', 'ENV', 'gettextCatalog'];
+  WalletService.$inject = ['lodash', 'ENV', 'profileService', 'correspondentListService', 'gettextCatalog'];
 
   /**
    * Send and receive functions are handled in this service
    * @constructor
    */
-  function WalletService(profileService, correspondentListService, ENV, gettextCatalog) {
+  function WalletService(lodash, ENV, profileService, correspondentListService, gettextCatalog) {
     const root = {};
 
     /**
@@ -174,7 +174,7 @@
           let merchantPromise = null;
 
           // Merchant Payment life cycle
-          if (sendCoinRequest.invoiceId !== null) {
+          if (!lodash.isEmpty(sendCoinRequest.invoiceId)) {
             merchantPromise = new Promise((resolve, reject) => {
               const merchantApiRequest = require('request');
 
@@ -326,6 +326,30 @@
           }
         }
       });
+    };
+
+    /**
+     *
+     * @param state {string}
+     * @return {string} Translated error message of merchant payment request state
+     */
+    root.getStateErrorMessageForMerchantPayment = function (state) {
+      let errorMessage = '';
+      switch (state) {
+        case 'EXPIRED':
+          errorMessage = gettextCatalog.getString('Merchant payment request expired');
+          break;
+        case 'CANCELLED':
+          errorMessage = gettextCatalog.getString('Merchant payment request has been cancelled');
+          break;
+        case 'FAILED':
+          errorMessage = gettextCatalog.getString('Merchant payment request failed');
+          break;
+        default:
+          errorMessage = gettextCatalog.getString('An error occurred during merchant request processing');
+          break;
+      }
+      return errorMessage;
     };
 
     return root;

@@ -161,7 +161,7 @@
           }
         })
         .state('walletHome.send', {
-          url: '/send',
+          url: '/send/:type/:recipientDeviceAddress/:address/:asset/:invoiceId/:validForSeconds/:merchantName/:state/:amount',
           walletShouldBeComplete: true,
           needProfile: true,
           deepStateRedirect: true,
