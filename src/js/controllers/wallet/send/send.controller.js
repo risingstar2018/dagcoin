@@ -8,11 +8,11 @@
 
   SendCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'lodash', 'profileService',
     'configService', 'addressService', 'addressbookService', 'animationService', 'gettextCatalog',
-    'utilityService', 'transactionsService', 'walletService', 'ENV', '$modal', '$state'];
+    'utilityService', 'transactionsService', 'walletService', 'ENV', '$modal', '$state', '$stateParams'];
 
   function SendCtrl($scope, $rootScope, $timeout, lodash, profileService,
                     configService, addressService, addressbookService, animationService, gettextCatalog,
-                    utilityService, transactionsService, walletService, ENV, $modal, $state) {
+                    utilityService, transactionsService, walletService, ENV, $modal, $state, $stateParams) {
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const eventBus = require('byteballcore/event_bus.js');
 
@@ -27,30 +27,80 @@
     vm.unitValue = walletSettings.unitValue;
     vm.unitName = walletSettings.unitName;
     vm.unitDecimals = walletSettings.unitDecimals;
+    vm.blockUx = false;
+    vm.lockAddress = false;
+    vm.lockAmount = false;
 
     const assocDeviceAddressesByPaymentAddress = {};
 
+    $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
+
+    /**
+     * Runs when the view of controller is rendered
+     * Make all initialization of controller in this method
+     */
     const viewContentLoaded = function () {
+      const request = lodash.assign(new PaymentRequest(), $stateParams);
       $scope.sendForm.$setPristine();
-      vm.resetForm(() => {
-        if ($rootScope.sendParams) {
-          if ($rootScope.sendParams.amount) {
-            $scope._amount = $rootScope.sendParams.amount;
-          }
-          if ($rootScope.sendParams.address) {
-            $scope._address = $rootScope.sendParams.address;
-          }
-          delete $rootScope.sendParams;
-        }
-      });
       if (profileService.focusedClient) {
         vm.setSendFormInputs();
+      }
+      if (request.isNotEmpty()) {
+        const form = $scope.sendForm;
+        console.log(`A payment requested. Form will be rendered with these values ${JSON.stringify(request)}`);
+        if (PaymentRequest.PAYMENT_REQUEST === request.type) {
+          vm.setForm(request.address, request.amount, request.comment, request.asset, request.recipientDeviceAddress);
+          if (form.address.$invalid && !vm.blockUx) { // TODO sinan ?? blockUx
+            console.log('Payment Request :: invalid address, resetting form');
+            vm.resetForm();
+            vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
+          }
+        } else if (PaymentRequest.MERCHANT_PAYMENT_REQUEST === request.type) {
+          vm.invoiceId = invoiceId;
+          vm.validForSeconds = Math.floor(vm.validForSeconds - 10); // 10 is a security threshold ?? TODO sinan
+          if (request.state === 'PENDING') {
+            vm.setForm(request.address, request.amount, null, ENV.DAGCOIN_ASSET, null);
+            if (form.address.$invalid && !vm.blockUx) { // TODO sinan ?? blockUx
+              console.log('Merchant Payment Request :: invalid address, resetting form');
+              vm.resetForm();
+              vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
+            }
+
+            if (vm.validForSeconds <= 0) { // TODO sinan bunları walletHome'dan sil
+              vm.resetForm();
+              vm.error = gettextCatalog.getString('Merchant payment request expired');
+            }
+
+            vm.countDown();
+          } else {
+            vm.resetForm();
+            vm.error = walletService.getStateErrorMessageForMerchantPayment(state);
+          }
+        }
       }
     };
 
     const destroy = () => {
       console.log('send controller $destroy');
       $rootScope.hideMenuBar = false;
+    };
+
+    vm.countDown = function () {
+      if (vm.validForSeconds == null) {
+        // Form has been reset
+        return;
+      }
+
+      if (vm.validForSeconds <= 0) {
+        vm.resetForm();
+        vm.error = gettextCatalog.getString('Payment request expired');
+        return;
+      }
+
+      $timeout(() => {
+        vm.validForSeconds -= 1;
+        vm.countDown();
+      }, 1000);
     };
 
     vm.resetError = function () {
@@ -117,11 +167,11 @@
         }
       }
 
-      this.lockAddress = to && isMerchant;
+      vm.lockAddress = to && isMerchant;
 
       if (moneyAmount) {
-        moneyAmount /= this.unitValue;
-        this.lockAmount = true;
+        moneyAmount /= vm.unitValue;
+        vm.lockAmount = true;
         $timeout(() => {
           form.amount.$setViewValue(`${moneyAmount}`);
           form.amount.$isValid = true;
@@ -132,7 +182,7 @@
           form.address.$render();
         }, 300);
       } else {
-        this.lockAmount = false;
+        vm.lockAmount = false;
         form.amount.$pristine = true;
         form.amount.$render();
       }
@@ -153,9 +203,9 @@
           throw Error(gettextCatalog.getString(`failed to find asset index of asset ${asset}`));
         }
         $scope.index.assetIndex = assetIndex;
-        this.lockAsset = true;
+        vm.lockAsset = true;
       } else {
-        this.lockAsset = false;
+        vm.lockAsset = false;
       }
     };
 
@@ -383,7 +433,7 @@
         gettextCatalog.getString('Could not send payment');
 
       vm.error = `${prefix}: ${err}`;
-      console.log(this.error);
+      console.log(vm.error);
 
       $timeout(() => {
         $scope.$digest();
@@ -404,8 +454,8 @@
 
       // TODO sinan ?? should be removed? used neither in class nor in html files
       if (utilityService.isCordova) {
-        this.hideAddress = false;
-        this.hideAmount = false;
+        vm.hideAddress = false;
+        vm.hideAmount = false;
       }
 
       const form = $scope.sendForm;

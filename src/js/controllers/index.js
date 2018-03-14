@@ -1053,6 +1053,40 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
+        $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
+          console.log(`paymentRequest event ${address}, ${amount}`);
+          $state.go('walletHome.send', {
+            type: PaymentRequest.PAYMENT_REQUEST,
+            address,
+            amount,
+            asset,
+            recipientDeviceAddress
+          });
+          $rootScope.$emit('Local/SetTab', 'walletHome.send');
+        });
+
+        $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
+          console.log(`merchantPaymentRequest event ${address}, ${amount}`);
+          $state.go('walletHome.send', {
+            type: PaymentRequest.MERCHANT_PAYMENT_REQUEST,
+            address,
+            amount,
+            invoiceId,
+            validForSeconds,
+            merchantName,
+            state
+          });
+          $rootScope.$emit('Local/SetTab', 'walletHome.send');
+        });
+
+        $rootScope.$on('paymentUri', (event, uri) => {
+          $timeout(() => {
+            $rootScope.$emit('Local/SetTab', 'walletHome.send');
+            self.setForm(uri);
+          }, 100);
+        });
+
+
         if (autoRefreshClientService) {
           autoRefreshClientService.initHistoryAutoRefresh();
         }

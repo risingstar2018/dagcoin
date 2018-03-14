@@ -46,9 +46,10 @@
         this.blockUx = false;
 
         // TODO sinan will be test after find out how 'paymentRequest' event is produced
+        /*
         const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
-          $rootScope.$emit('Local/SetTab', 'wallet.send');
+          $rootScope.$emit('Local/SetTab', 'walletHome.send');
           self.setForm(address, amount, null, asset, recipientDeviceAddress);
 
           const form = $scope.sendForm;
@@ -116,6 +117,7 @@
             self.setForm(uri);
           }, 100);
         });
+        */
 
         const disableAddrListener = $rootScope.$on('Local/NeedNewAddress', () => {
           self.setAddress(true);
@@ -189,9 +191,9 @@
         $scope.$on('$destroy', () => {
           console.log('walletHome $destroy');
           disableAddrListener();
-          disablePaymentRequestListener();
-          disableMerchantPaymentRequestListener();
-          disablePaymentUriListener();
+          // disablePaymentRequestListener();
+          // disableMerchantPaymentRequestListener();
+          // disablePaymentUriListener();
           disableTabListener();
           // disableFocusListener();
           disableResumeListener();
@@ -203,27 +205,6 @@
         this.exportTransactions = () => {
           exportTransactions.toCSV();
         };
-
-        this.countDown = function () {
-          const self = this;
-          if (this.validForSeconds === null) {
-            // Form has been reset
-            return;
-          }
-
-          if (this.validForSeconds <= 0) {
-            self.resetForm();
-            self.error = gettextCatalog.getString('Payment request expired');
-            return;
-          }
-
-          $timeout(() => {
-            self.validForSeconds -= 1;
-            self.countDown();
-          }, 1000);
-        };
-
-        // Send
 
         this.bindTouchDown = function (tries) {
           const self = this;
@@ -263,19 +244,21 @@
           $rootScope.$digest();
         }, 100);
 
+        // TODO sinan this method is called multiple places,
+        // This should be in index.js (main controller)
         this.formFocus = function (what) {
           if (isCordova) {
             this.hideMenuBar(what);
           }
 
           if (!what) {
-            this.hideAddress = false;
-            this.hideAmount = false;
+            // this.hideAddress = false;
+            // this.hideAmount = false;
           } else if (what === 'amount') {
-            this.hideAddress = true;
+            // this.hideAddress = true;
           } else if (what === 'msg') {
-            this.hideAddress = true;
-            this.hideAmount = true;
+            // this.hideAddress = true;
+            // this.hideAmount = true;
           }
           $timeout(() => {
             $rootScope.$digest();
@@ -298,67 +281,6 @@
             $timeout(() => {
               $rootScope.$apply();
             });
-          }
-        };
-
-        // TODO sinan must be deleted after testing disablePaymentRequestListener and disableMerchantPaymentRequestListener
-        this.setForm = function (to, amount, comment, asset, recipientDeviceAddress, isMerchant) {
-          this.resetError();
-          delete this.binding;
-          const form = $scope.sendForm;
-          let moneyAmount = amount;
-          if (!form || !form.address) {
-            // disappeared?
-            return console.log('form.address has disappeared');
-          }
-          if (to) {
-            form.address.$setViewValue(to);
-            form.address.$isValid = true;
-            form.address.$render();
-            if (recipientDeviceAddress) {
-              // must be already paired
-              // TODO sinan eslint issue, will be already remove with this.setForm method
-              // assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
-            }
-          }
-          this.lockAddress = to && isMerchant;
-          if (moneyAmount) {
-            moneyAmount /= this.unitValue;
-            this.lockAmount = true;
-            $timeout(() => {
-              form.amount.$setViewValue(`${moneyAmount}`);
-              form.amount.$isValid = true;
-              form.amount.$render();
-
-              form.address.$setViewValue(to);
-              form.address.$isValid = true;
-              form.address.$render();
-            }, 300);
-          } else {
-            this.lockAmount = false;
-            form.amount.$pristine = true;
-            form.amount.$render();
-          }
-
-          if (form.merkle_proof) {
-            form.merkle_proof.$setViewValue('');
-            form.merkle_proof.$render();
-          }
-          if (comment) {
-            form.comment.$setViewValue(comment);
-            form.comment.$isValid = true;
-            form.comment.$render();
-          }
-
-          if (asset) {
-            const assetIndex = lodash.findIndex($scope.index.arrBalances, { asset });
-            if (assetIndex < 0) {
-              throw Error(gettextCatalog.getString(`failed to find asset index of asset ${asset}`));
-            }
-            $scope.index.assetIndex = assetIndex;
-            this.lockAsset = true;
-          } else {
-            this.lockAsset = false;
           }
         };
 
