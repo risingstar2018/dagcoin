@@ -6,13 +6,11 @@
     .module('copayApp.controllers')
     .controller('ReceiveCtrl', ReceiveCtrl);
 
-  ReceiveCtrl.$inject = ['$scope', '$rootScope', '$location', '$anchorScroll', '$timeout', '$log', 'lodash', 'go', 'profileService',
-    'configService', 'gettextCatalog', 'derivationPathHelper', 'correspondentListService', 'utilityService',
-    'nodeWebkit', '$modal', 'animationService', 'addressService', 'ENV'];
+  ReceiveCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'profileService', 'configService', 'gettextCatalog', 'utilityService',
+                        '$modal', 'animationService', 'addressService', 'ENV'];
 
-  function ReceiveCtrl($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService,
-                       configService, gettextCatalog, derivationPathHelper, correspondentListService, utilityService,
-                       nodeWebkit, $modal, animationService, addressService, ENV) {
+  function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
+                       $modal, animationService, addressService, ENV) {
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const config = configService.getSync();

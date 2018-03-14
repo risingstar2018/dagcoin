@@ -16,12 +16,11 @@
       if (from.name === '' || (lastState && !(to.name === lastState.to && lodash.isEqual(toParams, lastState.toParams)))) {
         arrHistory.push({ to: to.name, toParams, from: from.name, fromParams });
       }
-      if (to.name === 'walletHome') {
-        $state.go('walletHome.home');
-      } else {
-        $rootScope.$emit('Local/SetTab', to.name, true);
+      if (to.name === 'wallet') {
+        $state.go('wallet.home');
       }
       root.menuOpened = false;
+      $rootScope.$emit('Local/SetTab', to.name, true);
     });
 
     function back() {

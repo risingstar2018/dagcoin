@@ -121,7 +121,7 @@
             }
           }
         })
-        .state('walletHome', {
+        .state('wallet', {
           url: '/',
           walletShouldBeComplete: true,
           needProfile: true,
@@ -134,40 +134,40 @@
             }
           }
         })
-        .state('walletHome.home', {
+        .state('wallet.home', {
           url: '/home',
           walletShouldBeComplete: true,
           needProfile: true,
           deepStateRedirect: true,
           sticky: true,
           views: {
-            '': {
+            tabs: {
               templateUrl: 'controllers/wallet/home/home.template.html',
               controller: 'HomeCtrl as homeCtrl'
             }
           }
         })
-        .state('walletHome.receive', {
+        .state('wallet.receive', {
           url: '/receive',
           walletShouldBeComplete: true,
           needProfile: true,
           deepStateRedirect: true,
           sticky: true,
           views: {
-            '': {
+            tabs: {
               templateUrl: 'controllers/wallet/receive/receive.template.html',
               controller: 'ReceiveCtrl as receive'
             }
           }
         })
-        .state('walletHome.send', {
+        .state('wallet.send', {
           url: '/send',
           walletShouldBeComplete: true,
           needProfile: true,
           deepStateRedirect: true,
           sticky: true,
           views: {
-            '': {
+            tabs: {
               templateUrl: 'controllers/wallet/send/send.template.html',
               controller: 'SendCtrl as send'
             }
@@ -214,14 +214,14 @@
             },
           },
         })
-        .state('correspondentDevices', {
+        .state('wallet.correspondentDevices', {
           url: '/correspondentDevices',
           walletShouldBeComplete: false,
           needProfile: true,
           deepStateRedirect: true,
           sticky: true,
           views: {
-            main: {
+            tabs: {
               templateUrl: 'controllers/correspondentDevices/correspondentDevices.template.html',
               controller: 'CorrespondentDevicesCtrl as correspondentDevices'
             },

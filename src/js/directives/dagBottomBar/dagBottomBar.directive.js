@@ -20,20 +20,19 @@
         $scope.menu = [{
           title: gettextCatalog.getString('My Wallet'),
           icon: 'wallet',
-          link: 'walletHome.home'
+          link: 'wallet.home'
         }, {
           title: gettextCatalog.getString('Receive'),
           icon: 'banknote',
-          link: 'walletHome.receive'
+          link: 'wallet.receive'
         }, {
           title: gettextCatalog.getString('Send'),
           icon: 'paperplane',
-          link: 'walletHome.send'
+          link: 'wallet.send'
         }, {
           title: gettextCatalog.getString('Paired Devices'),
           icon: 'share',
-          new_state: 'correspondentDevices',
-          link: 'correspondentDevices'
+          link: 'wallet.correspondentDevices'
         }];
       }
     };

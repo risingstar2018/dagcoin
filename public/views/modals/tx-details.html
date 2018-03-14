@@ -91,12 +91,6 @@
                     {{btx.merchant.pr.pd.memo}}
                 </div>
             </li>
-
-            <li ng-if="btx.action == 'sent' && isPrivate">
-                <input type="submit" ng-click="showCorrespondentList()" class="button expand black round"
-                       value="{{'Re-send private payloads'|translate}}"
-                       ng-style="{'background-color':index.backgroundColor}">
-            </li>
         </ul>
 
         <h4 translate>Transaction status</h4>

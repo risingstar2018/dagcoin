@@ -66,26 +66,16 @@
         if (fc && !fc.isComplete()) {
           root.path('copayers');
         } else {
-          root.path('walletHome', () => {
-            $rootScope.$emit('Local/SetTab', 'walletHome.home', true);
+          root.path('wallet', () => {
+            $rootScope.$emit('Local/SetTab', 'wallet.home', true);
           });
         }
       };
 
       root.send = function (cb) {
-        $stickyState.reset('walletHome');
-        root.path('walletHome', () => {
-          $rootScope.$emit('Local/SetTab', 'walletHome.send');
-          if (cb) {
-            cb();
-          }
-        });
-      };
-
-      root.history = function (cb) {
-        root.path('walletHome', () => {
-          // todo: inherited code??
-          $rootScope.$emit('Local/SetTab', 'history');
+        $stickyState.reset('wallet');
+        root.path('wallet', () => {
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
           if (cb) {
             cb();
           }

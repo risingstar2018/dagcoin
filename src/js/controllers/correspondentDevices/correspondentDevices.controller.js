@@ -17,8 +17,6 @@
     vm.state = $state;
     vm.hideRemove = true;
 
-    $rootScope.$emit('Local/SetTab', 'chat', true);
-
     vm.showCorrespondent = (correspondent) => {
       $log.debug('showCorrespondent', correspondent);
       correspondentListService.currentCorrespondent = correspondent;
@@ -73,7 +71,7 @@
         device.removeCorrespondentDevice(deviceAddress, () => {
           vm.hideRemove = true;
           vm.readList();
-          $rootScope.$emit('Local/SetTab', 'chat', true);
+          $rootScope.$emit('Local/SetTab', 'wallet.correspondentDevices', true);
         });
       });
     };

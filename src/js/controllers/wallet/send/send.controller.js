@@ -6,13 +6,13 @@
     .module('copayApp.controllers')
     .controller('SendCtrl', SendCtrl);
 
-  SendCtrl.$inject = ['$scope', '$rootScope', '$location', '$anchorScroll', '$timeout', '$log', 'lodash', 'go', 'profileService',
-    'configService', 'addressService', 'addressbookService', 'animationService', 'gettextCatalog', 'derivationPathHelper',
-    'correspondentListService', 'utilityService', 'transactionsService', 'walletService', 'ENV', '$modal', '$state'];
+  SendCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'lodash', 'profileService',
+    'configService', 'addressService', 'addressbookService', 'animationService', 'gettextCatalog',
+    'utilityService', 'transactionsService', 'walletService', 'ENV', '$modal', '$state'];
 
-  function SendCtrl($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService,
-                    configService, addressService, addressbookService, animationService, gettextCatalog, derivationPathHelper,
-                    correspondentListService, utilityService, transactionsService, walletService, ENV, $modal, $state) {
+  function SendCtrl($scope, $rootScope, $timeout, lodash, profileService,
+                    configService, addressService, addressbookService, animationService, gettextCatalog,
+                    utilityService, transactionsService, walletService, ENV, $modal, $state) {
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const eventBus = require('byteballcore/event_bus.js');
 
@@ -500,8 +500,8 @@
             } else {
               indexScope.updateHistory((success) => {
                 if (success) {
-                  $state.go('walletHome.home');
-                  $rootScope.$emit('Local/SetTab', 'walletHome');
+                  $state.go('wallet.home');
+                  $rootScope.$emit('Local/SetTab', 'wallet');
                   vm.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
                 } else {
                   console.error('updateTxHistory not executed');

@@ -1,0 +1,34 @@
+<div ng-repeat="(date, data) in transactions">
+  <h4 class="transactions_date">{{formatDate(date)}}</h4>
+  <div class="dag_transactions_table">
+    <ul>
+      <li ng-repeat="transaction in data.rows track by $index"
+          class="transaction_status_{{transaction.action}}" ng-click="openTxModal(transaction)">
+        <div class="transaction_status">
+          <svg-icon class="transaction_status_icon"
+                    ng-class="{'animation_rotate' : !transaction.confirmations}"
+                    name="{{transactionStatus(transaction).icon}}"></svg-icon>
+        </div>
+        <div class="transaction_meta">
+          <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
+          <div ng-if="transaction.action === 'received'">
+            <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
+              <span>{{transactionAddress(address).fullName}}</span>
+            </div>
+          </div>
+          <div class="transaction_address" ng-if="transaction.action === 'sent'">
+            <span>{{transactionAddress(transaction.addressTo).fullName}}</span>
+          </div>
+        </div>
+        <div class="transaction_sum">
+          <div class="transaction_sum">{{transaction.action === 'received' ? '+' : '-'}}{{formatSum(transaction.amountStr)}}
+          </div>
+          <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
+        </div>
+        <div class="transaction_expand">
+          <svg-icon name="chevron-thin-right"></svg-icon>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

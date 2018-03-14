@@ -17,28 +17,10 @@
     root.openTxModal = function (params) {
       const btx = params.btx;
       const walletSettings = params.walletSettings;
-      const isPrivate = params.isPrivate;
-      const unitName = params.unitName;
-
-      console.log(btx);
       $rootScope.modalOpened = true;
-      const fc = profileService.focusedClient;
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.btx = btx;
-        $scope.isPrivate = isPrivate;
         $scope.settings = walletSettings;
-        $scope.color = fc.backgroundColor;
-
-        // TODO sinan not used, delete after test
-        $scope.getAmount = function (amount) {
-          alert(amount);
-          return '???';
-          // return self.getAmount(amount);
-        };
-
-        $scope.getUnitName = function () {
-          return unitName;
-        };
 
         $scope.transactionAddress = function (address) {
           return root.getTransactionAddress(address);
@@ -47,6 +29,7 @@
         $scope.openInExplorer = function () {
           const url = `https://${ENV.explorerPrefix}explorer.dagcoin.org/#${btx.unit}`;
           if (typeof nw !== 'undefined') {
+            // todo: we already have method for this
             nw.Shell.openExternal(url);
           } else if (utilityService.isCordova) {
             cordova.InAppBrowser.open(url, '_system');
@@ -55,10 +38,6 @@
 
         $scope.copyAddress = function (address) {
           utilityService.copyAddress($scope, address);
-        };
-
-        $scope.showCorrespondentList = function () {
-          root.showCorrespondentListToReSendPrivPayloads(btx, walletSettings);
         };
 
         $scope.cancel = function () {
@@ -117,7 +96,7 @@
           indivisibleAsset.restorePrivateChains(btx.asset, btx.unit, btx.addressTo, (arrRecipientChains) => {
             walletGeneral.sendPrivatePayments(correspondent.device_address, arrRecipientChains, true, null, () => {
               modalInstance.dismiss('cancel');
-              go.history();
+              go.walletHome();
               $timeout(() => {
                 notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString('Private payloads sent', {}));
               });

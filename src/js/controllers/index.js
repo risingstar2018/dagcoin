@@ -167,14 +167,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         // });
         // });
 
-
-        /*
-         eventBus.on("transaction_sent", function(){
-         self.updateAll();
-         self.updateTxHistory();
-         });
-        */
-
         const acceptMessage = gettextCatalog.getString('Yes');
         const cancelMessage = gettextCatalog.getString('No');
         const confirmMessage = gettextCatalog.getString('Confirm');
@@ -426,76 +418,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.updateAll();
         };
 
-        self.openSubwalletModal = function () {
-          $rootScope.modalOpened = true;
-          const fc = profileService.focusedClient;
-
-          const ModalInstanceCtrl = function ($scope, $modalInstance) {
-            $scope.color = fc.backgroundColor;
-            $scope.indexCtl = self;
-            const arrSharedWallets = [];
-            $scope.mainWalletBalanceInfo = _.find(self.arrMainWalletBalances, { asset: 'base' });
-            $scope.asset = 'base';
-            const assocSharedByAddress = $scope.mainWalletBalanceInfo.assocSharedByAddress;
-
-            if (assocSharedByAddress) {
-              Object.keys(assocSharedByAddress).forEach((sa) => {
-                const objSharedWallet = {};
-                objSharedWallet.shared_address = sa;
-                objSharedWallet.total = assocSharedByAddress[sa];
-                objSharedWallet.totalStr = `${profileService.formatAmount(assocSharedByAddress[sa], 'dag')}`;
-
-                arrSharedWallets.push(objSharedWallet);
-              });
-              $scope.arrSharedWallets = arrSharedWallets;
-            }
-
-            $scope.cancel = function () {
-              breadcrumbs.add('openSubwalletModal cancel');
-              $modalInstance.dismiss('cancel');
-            };
-
-            $scope.selectSubwallet = function (sharedAddress) {
-              self.shared_address = sharedAddress;
-              if (sharedAddress) {
-                const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
-                walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
-                  self.bHasMerkle = bHasMerkle;
-                  $rootScope.$apply();
-                });
-              } else {
-                self.bHasMerkle = false;
-              }
-              self.updateAll();
-              self.updateTxHistory();
-              $modalInstance.close();
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/select-subwallet.html',
-            windowClass: animationService.modalAnimated.slideUp,
-            controller: ModalInstanceCtrl
-          });
-
-          const disableCloseModal = $rootScope.$on('closeModal', () => {
-            breadcrumbs.add('openSubwalletModal on closeModal');
-            modalInstance.dismiss('cancel');
-          });
-
-          modalInstance.result.finally(() => {
-            $rootScope.modalOpened = false;
-            disableCloseModal();
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutDown);
-          });
-        };
-
         self.goHome = function () {
           go.walletHome();
         };
 
-        self.tab = 'walletHome.home';
+        self.tab = 'wallet.home';
 
         self.setFocusedWallet = function () {
           const fc = profileService.focusedClient;
@@ -521,6 +448,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
           self.txHistory = [];
           self.completeHistory = [];
+          // todo: something wrong with this
           self.txProgress = 0;
           self.historyShowShowAll = false;
           self.balanceByAddress = null;
@@ -579,46 +507,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               shared_address: self.shared_address
             });
           });
-        };
-
-        self.setTab = function (tab, reset, tries, switchState) {
-          console.log('index controller setTab', tab, reset, tries, switchState);
-          const setTabTries = tries || 0;
-
-          // TODO sinan when walletHome removed, fix here. below code is bad
-          const normalizedTab = tab;
-          $rootScope.tab = normalizedTab;
-          self.tab = normalizedTab;
-
-          const changeTab = function (tab) {
-            // TODO sinan no effect, after testing remove 'Local/TabChanged'
-            $rootScope.$emit('Local/TabChanged', tab);
-          };
-
-          // check if the whole menu item passed
-          if (typeof tab === 'object') {
-            if (!tab.new_state) backButton.clearHistory();
-            if (tab.open) {
-              if (tab.link) {
-                $rootScope.tab = tab.link;
-                self.tab = tab.link;
-              }
-              tab.open();
-              return;
-            } else if (tab.new_state) {
-              changeTab(tab.link);
-              $rootScope.tab = tab.link;
-              self.tab = tab.link;
-              go.path(tab.new_state);
-              return;
-            }
-            return self.setTab(tab.link, reset, setTabTries, switchState);
-          }
-          console.log(`current tab ${self.tab}, requested to set tab ${tab}, reset=${reset}`);
-          if (self.tab === tab && !reset) {
-            return;
-          }
-          changeTab(tab);
         };
 
         self.updateAll = function (opts) {
@@ -821,7 +709,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             });
           }
         };
-
+        // todo: move to service?
         self.updateLocalTxHistory = function (client, cb) {
           const walletId = client.credentials.walletId;
           const walletSettings = configService.getSync().wallet.settings;
@@ -867,17 +755,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        self.showAllHistory = function () {
-          self.historyShowShowAll = false;
-          self.historyRendering = true;
-          $timeout(() => {
-            $rootScope.$apply();
-            $timeout(() => {
-              self.historyRendering = false;
-              self.txHistory = self.completeHistory;
-            }, 100);
-          }, 100);
-        };
 
         self.updateHistory = function (cb) {
           const fc = profileService.focusedClient;
@@ -925,25 +802,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.updateTxHistory = lodash.debounce(() => {
           self.updateHistory();
         }, 1000);
-
-        self.onClick = function () {
-          console.log('== click');
-          self.oldAssetIndex = self.assetIndex;
-        };
-
-        // for light clients only
-        self.updateHistoryFromNetwork = lodash.throttle(() => {
-          setTimeout(() => {
-            if (self.assetIndex !== self.oldAssetIndex) {
-              // it was a swipe
-              console.log('== swipe');
-              return;
-            }
-            console.log('== updateHistoryFromNetwork');
-            const lightWallet = require('byteballcore/light_wallet.js');
-            lightWallet.refreshLightClientHistory();
-          }, 500);
-        }, 5000);
 
         self.recreate = function () {
           const fc = profileService.focusedClient;
@@ -1143,7 +1001,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               $timeout(() => {
                 self.txHistory = [];
                 self.completeHistory = [];
-                self.startScan(walletId);
               }, 500);
             });
           });
@@ -1205,8 +1062,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         });
 
         $rootScope.$on('Local/SetTab', (event, tab, reset) => {
-          console.log(`SetTab ${tab}, reset ${reset}`);
-          self.setTab(tab, reset);
+          if (self.tab === tab) {
+            return;
+          }
+          $rootScope.tab = tab;
+          self.tab = tab;
+          $state.go(tab);
         });
 
         $rootScope.$on('Local/RequestTouchid', (event, client, cb) => {

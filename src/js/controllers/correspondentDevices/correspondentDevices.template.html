@@ -1,45 +1,33 @@
-<div class="backup" ng-if="index.needsBackup" ng-click="index.openBackupNeededModal()">
-  <span translate>Wallet seed not backed up</span>
+<div class="content chats tab-view">
+  <ul class="correspondentList">
+    <dag-background></dag-background>
+    <li ng-repeat="correspondent in correspondentDevices.list" ng-class="{'noclick': !correspondent.clickable}">
+      <a ng-show="correspondentDevices.selectedCorrespondentList[correspondent.device_address]"
+         ng-hide="correspondentDevices.hideRemoveButton(correspondent.removable)"
+         ng-click="correspondentDevices.remove(correspondent.device_address)"
+         class="removeCorrespondentList">
+        <svg-icon name="delete"></svg-icon>
+      </a>
+      <a class="selectCorrespondentList"
+         ng-show="correspondentDevices.editCorrespondentList"
+         ng-click="correspondentDevices.toggleSelectCorrespondentList(correspondent.device_address)">
+        <i class="fi-trash"></i></a>
+      <div ng-click="correspondentDevices.showCorrespondent(correspondent)" class="pointer">
+        {{correspondent.name}}
+        <div class="right text-gray"><i class="icon-arrow-right3 size-24"
+                                        ng-show="!correspondentDevices.editCorrespondentList && correspondentDevices.hideRemove"></i>
+        </div>
+        <div class="right correspondentlist_badge"
+             ng-show="correspondentDevices.newMessagesCount[correspondent.device_address]">
+          {{correspondentDevices.newMessagesCount[correspondent.device_address]}}
+        </div>
+        <div class="size-10 text-gray ellipsis">{{correspondent.device_address}}@{{correspondent.hub}}</div>
+      </div>
+    </li>
+  </ul>
+  <button ng-show="!correspondentDevices.editCorrespondentList"
+          ng-click="correspondentDevices.hideRemove = !correspondentDevices.hideRemove" class="btn btn_red tiny">
+    <svg-icon name="remove"></svg-icon>
+    <span translate>Remove a device</span>
+  </button>
 </div>
-<dag-nav-bar title="{{ 'Paired devices' | translate}}">
-    <a dag-state-transition="slide-left" ui-sref="addCorrespondentDevice">
-        <svg-icon name="add"></svg-icon>
-    </a>
-</dag-nav-bar>
-
-<div class="content chats">
-    <ul class="correspondentList">
-      <dag-background></dag-background>
-        <li ng-repeat="correspondent in correspondentDevices.list" ng-class="{'noclick': !correspondent.clickable}">
-
-            <a ng-show="correspondentDevices.selectedCorrespondentList[correspondent.device_address]"
-               ng-hide="correspondentDevices.hideRemoveButton(correspondent.removable)"
-               ng-click="correspondentDevices.remove(correspondent.device_address)"
-               class="removeCorrespondentList">
-                <svg-icon name="delete"></svg-icon>
-            </a>
-
-            <a class="selectCorrespondentList"
-               ng-show="correspondentDevices.editCorrespondentList"
-               ng-click="correspondentDevices.toggleSelectCorrespondentList(correspondent.device_address)">
-                <i class="fi-trash"></i></a>
-
-            <div ng-click="correspondentDevices.showCorrespondent(correspondent)" class="pointer">
-                {{correspondent.name}}
-                <div class="right text-gray"><i class="icon-arrow-right3 size-24"
-                                                ng-show="!correspondentDevices.editCorrespondentList && correspondentDevices.hideRemove"></i></div>
-                <div class="right correspondentlist_badge" ng-show="correspondentDevices.newMessagesCount[correspondent.device_address]">
-                    {{correspondentDevices.newMessagesCount[correspondent.device_address]}}
-                </div>
-                <div class="size-10 text-gray ellipsis">{{correspondent.device_address}}@{{correspondent.hub}}</div>
-            </div>
-        </li>
-
-    </ul>
-
-    <button ng-show="!correspondentDevices.editCorrespondentList" ng-click="correspondentDevices.hideRemove = !correspondentDevices.hideRemove" class="btn btn_red tiny">
-        <svg-icon name="remove"></svg-icon>
-        <span translate>Remove a device</span>
-    </button>
-</div>
-<dag-bottom-bar></dag-bottom-bar>

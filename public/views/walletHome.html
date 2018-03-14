@@ -2,13 +2,16 @@
 </dag-backup-notification>
 
 <dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="!pass.needsUnlock || pass.needsUnlock.success === true">
-  <qr-scanner ng-if="tab === 'walletHome.send' && index.isComplete"
+  <qr-scanner ng-if="tab === 'wallet.send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)"
               title="{{ 'Scan address' | translate }}">
   </qr-scanner>
-  <a id="address-share" ng-if="index.isCordova && tab === 'walletHome.receive' && index.isComplete"
+  <a id="address-share" ng-if="index.isCordova && tab === 'wallet.receive' && index.isComplete"
      ng-click="home.shareAddress(home.addr[index.walletId])">
     <svg-icon name="share"></svg-icon>
+  </a>
+  <a dag-state-transition="slide-left" ng-if="tab === 'wallet.correspondentDevices'" ui-sref="addCorrespondentDevice">
+    <svg-icon name="add"></svg-icon>
   </a>
 </dag-nav-bar>
 
@@ -31,9 +34,8 @@
       <span translate ng-show="index.onGoingProcessName == 'recoveringFromSeed'">Recovering from seed...</span>
     </div>
   </div>
-
   <div ng-show="!index.noFocusedWallet">
-    <div ui-view></div> <!-- tabs are rendered into this div -->
+    <div ui-view="tabs"></div>
   </div>
 </div>
 <dag-bottom-bar></dag-bottom-bar>

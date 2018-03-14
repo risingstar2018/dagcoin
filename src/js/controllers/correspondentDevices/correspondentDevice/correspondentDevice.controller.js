@@ -21,8 +21,9 @@
     const chatScope = $scope;
     const indexScope = $scope.index;
     const isCordova = Device.cordova;
-    $scope.index.tab = 'chat';
-    $rootScope.tab = $scope.index.tab;
+    // todo: remove?
+    // $scope.index.tab = 'chat';
+    // $rootScope.tab = $scope.index.tab;
     $scope.backgroundColor = profileService.focusedClient.backgroundColor;
     const correspondent = correspondentListService.currentCorrespondent;
     $scope.correspondent = correspondent;
@@ -77,8 +78,9 @@
 
     $scope.$on('$stateChangeStart', (evt, toState) => {
       if (toState.name === 'correspondentDevice') {
-        $scope.index.tab = 'chat';
-        $rootScope.tab = $scope.index.tab;
+        // todo: remove?
+        // $scope.index.tab = 'chat';
+        // $rootScope.tab = $scope.index.tab;
         $scope.newMessagesCount[correspondentListService.currentCorrespondent.device_address] = 0;
       } else {
         removeNewMessagesDelim();
