@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesSecurityController',
-    function ($scope, $q, $rootScope, $log, $modal, $timeout, configService, uxLanguage, pushNotificationsService, profileService,
+    function ($scope, $q, $rootScope, $log, $modal, $state, $timeout, configService, uxLanguage, pushNotificationsService, profileService,
               fingerprintService, fundingExchangeProviderService, animationService, changeWalletTypeService, gettext, gettextCatalog) {
       const conf = require('byteballcore/conf.js');
       const self = this;
@@ -69,6 +69,28 @@
             }
           });
         });
+      }
+
+      function requestPassword(error) {
+        const def = $q.defer();
+
+        profileService.unlockFC(error, (err) => {
+          if (err) {
+            if (err.message !== gettextCatalog.getString('Password needed')) {
+              return requestPassword(err.message).then((locked) => {
+                def.resolve(locked);
+              });
+            }
+
+            def.resolve(true);
+            return;
+          }
+
+          def.resolve(false);
+          return;
+        });
+
+        return def.promise;
       }
 
       function unlock(error) {
@@ -200,6 +222,26 @@
         unwatchRequestTouchid();
         unwatchFundingNode();
       });
+
+      self.navigateSecure = function (state) {
+        if ($scope.encrypt) {
+          requestPassword().then((locked) => {
+            if (!locked) {
+              $state.go(state);
+            }
+          });
+        }
+
+        if ($scope.touchid) {
+          profileService.requestTouchid('unlockingApp', (err) => {
+            if (!err) {
+              $timeout(() => {
+                $state.go(state);
+              }, 100);
+            }
+          });
+        }
+      }
 
       self.changeWalletType = function () {
         if (self.isLight) {

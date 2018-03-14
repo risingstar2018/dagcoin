@@ -2,7 +2,7 @@
 
 <div class="content preferences" ng-controller="preferencesSecurityController as prefGlobal" ng-init="prefGlobal.init()">
   <ul class="preferences_links" ng-hide="index.isPrivKeyExternal">
-    <li dag-state-transition="slide-left" ui-sref="backup">
+    <li dag-state-transition="slide-left" ng-click="prefGlobal.navigateSecure('backup')">
       <div translate>Backup wallet</div>
       <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
@@ -10,7 +10,7 @@
         </span>
       </div>
     </li>
-    <li dag-state-transition="slide-left" ui-sref="recovery">
+    <li dag-state-transition="slide-left" ng-click="prefGlobal.navigateSecure('recovery')">
       <div translate>Recover wallet</div>
     </li>
     <div ng-show="!index.noFocusedWallet && index.canSign">
