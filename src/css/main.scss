@@ -1612,6 +1612,13 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 .splash {
   top: 0;
 
+  .step {
+    min-height: 100vh;
+    .mCSB_scrollTools {
+      display: none !important;
+    }
+  }
+
   .container-image {
     padding: 2rem 0;
   }
@@ -2815,6 +2822,15 @@ canvas {
   overflow-y: auto;
 }
 
+.send {
+  height: 100%;
+  overflow: -webkit-paged-y;
+}
+
+.send-button {
+  margin-bottom: 25px;
+}
+
 .p-wrap_android {
   padding-top: 80px;
   padding-bottom: 20px;
@@ -3303,4 +3319,19 @@ p.color_red {
 .password {
   -webkit-text-security: disc;
   -moz-text-security: disc;
+}
+
+.password-container {
+  input {
+    padding-right: 37px;
+  }
+
+  .pass-svg {
+    width: 25px;
+    top: 6px;
+    right: 6px;
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+  }
 }

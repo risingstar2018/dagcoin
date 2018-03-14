@@ -46,8 +46,7 @@
                 const ixNotRemovable = arrNotRemovableDeviceAddresses.indexOf(corrDev.device_address);
                 // device is removable when not in list
                 corrDev.removable = (ixNotRemovable === -1);
-                corrDev.clickable = (corrDev.device_address !== ENV.discoveryDeviceAddress &&
-                                     corrDev.name.toLowerCase().indexOf('funding-node') === -1);
+                corrDev.clickable = (corrDev.device_address !== ENV.discoveryDeviceAddress && corrDev.name.toLowerCase().indexOf('funding-node') === -1);
               }
 
               $scope.list = correspondents;
