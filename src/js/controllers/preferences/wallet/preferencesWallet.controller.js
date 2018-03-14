@@ -13,7 +13,6 @@
       const config = configService.getSync();
       vm.unitName = config.wallet.settings.unitName;
       vm.currentLanguageName = uxLanguage.getCurrentLanguageName();
-      vm.spendUnconfirmed = config.wallet.spendUnconfirmed;
       const fc = profileService.focusedClient;
       if (fc) {
         vm.externalSource = null;
@@ -25,27 +24,6 @@
         vm.numCosigners = fc.credentials.n;
       }
     };
-
-    const unwatchSpendUnconfirmed = $scope.$watch('spendUnconfirmed', (newVal, oldVal) => {
-      if (newVal === oldVal) {
-        return;
-      }
-      const opts = {
-        wallet: {
-          spendUnconfirmed: newVal
-        }
-      };
-      configService.set(opts, (err) => {
-        $rootScope.$emit('Local/SpendUnconfirmedUpdated');
-        if (err) {
-          $log.debug(err);
-        }
-      });
-    });
-
-    $scope.$on('$destroy', () => {
-      unwatchSpendUnconfirmed();
-    });
 
     $scope.$watch('index.isSingleAddress', (newValue, oldValue) => {
       if (oldValue === newValue) { return; }

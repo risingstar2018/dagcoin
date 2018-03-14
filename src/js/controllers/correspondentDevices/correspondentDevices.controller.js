@@ -71,7 +71,7 @@
         device.removeCorrespondentDevice(deviceAddress, () => {
           vm.hideRemove = true;
           vm.readList();
-          $rootScope.$emit('Local/SetTab', 'wallet.correspondentDevices', true);
+          $rootScope.$emit('Local/SetTab', 'wallet.correspondentDevices');
         });
       });
     };

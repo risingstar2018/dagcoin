@@ -20,7 +20,7 @@
         $state.go('wallet.home');
       }
       root.menuOpened = false;
-      $rootScope.$emit('Local/SetTab', to.name, true);
+      $rootScope.$emit('Local/SetTab', to.name);
     });
 
     function back() {

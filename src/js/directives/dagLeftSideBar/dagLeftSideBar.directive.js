@@ -54,7 +54,7 @@
           self.walletSelection = false;
           return profileService.setAndStoreFocus(selectedWalletId, () => {
             $state.go(state);
-            $rootScope.$emit('Local/SetTab', state, true);
+            $rootScope.$emit('Local/SetTab', state);
           });
         };
 

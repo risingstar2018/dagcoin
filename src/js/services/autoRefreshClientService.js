@@ -13,10 +13,6 @@
       autoRefreshRateSec: 60
     };
 
-    const service = {
-      initHistoryAutoRefresh
-    };
-
     function initHistoryAutoRefresh() {
       const refreshRate = settings.autoRefreshRateSec * 1000;
 
@@ -27,7 +23,9 @@
       }, refreshRate);
     }
 
-    return service;
+    return {
+      initHistoryAutoRefresh
+    };
   }
 }());
 

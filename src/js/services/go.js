@@ -67,7 +67,7 @@
           root.path('copayers');
         } else {
           root.path('wallet', () => {
-            $rootScope.$emit('Local/SetTab', 'wallet.home', true);
+            $rootScope.$emit('Local/SetTab', 'wallet.home');
           });
         }
       };

@@ -37,7 +37,6 @@
         const configWallet = config.wallet;
         const indexScope = $scope.index;
         const isCordova = Device.cordova;
-        $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
 
         // INIT
         const walletSettings = configWallet.settings;
@@ -46,7 +45,6 @@
         this.unitDecimals = walletSettings.unitDecimals;
 
         this.addresses = [];
-        this.isMobile = Device.any;
         this.blockUx = false;
 
         // TODO sinan will be test after find out how 'paymentRequest' event is produced
@@ -203,17 +201,6 @@
           eventBus.removeListener('new_wallet_address', onNewWalletAddress);
         });
 
-        // const accept_msg = gettextCatalog.getString('Accept');
-        // const cancel_msg = gettextCatalog.getString('Cancel');
-        // const confirm_msg = gettextCatalog.getString('Confirm');
-
-
-
-
-
-
-
-
         this.exportTransactions = () => {
           exportTransactions.toCSV();
         };
@@ -237,22 +224,7 @@
           }, 1000);
         };
 
-        this.shareAddress = function (addr) {
-          if (isCordova) {
-            window.plugins.socialsharing.share(addr, null, null, null);
-          }
-        };
-
         // Send
-
-        const unwatchSpendUnconfirmed = $scope.$watch('currentSpendUnconfirmed', (newVal, oldVal) => {
-          if (newVal === oldVal) return;
-          $scope.currentSpendUnconfirmed = newVal;
-        });
-
-        $scope.$on('$destroy', () => {
-          unwatchSpendUnconfirmed();
-        });
 
         this.bindTouchDown = function (tries) {
           const self = this;
@@ -421,39 +393,8 @@
           return objRequest.address;
         };
 
-        // History
-
-        function strip(number) {
-          return (parseFloat(number.toPrecision(12)));
-        }
-
-        this.hasAction = function (actions) {
-          return Object.prototype.hasOwnProperty.call(actions, 'create');
-        };
-
         /* Start setup */
 
-        this.getFontSizeForWalletNumber = (value, type) => {
-          if (value) {
-            const visibleWidth = window.innerWidth - 50;
-            const str = value.toString().split('.');
-
-            const length = str[0].length + ((str[1] || 0).length / 2);
-            const size = ((visibleWidth / length) < 70 ? ((visibleWidth / length) + 10) : 80);
-
-            return { 'font-size': `${(!type ? size : size / 2)}px` };
-          }
-          return { 'font-size': '80px' };
-        };
-
         this.bindTouchDown();
-
-        // TODO sinan remove tests are finished
-        if (profileService.focusedClient) {
-          // this.setAddress();
-
-          // TODO sinan moved to send.controller, remove this line later
-          // this.setSendFormInputs();
-        }
       });
 }());

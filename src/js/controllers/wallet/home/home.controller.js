@@ -101,18 +101,18 @@
         };
 
         $scope.selectSubwallet = function (sharedAddress) {
-          self.shared_address = sharedAddress;
+          $scope.indexCtl.shared_address = sharedAddress;
           if (sharedAddress) {
             const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
             walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
-              self.bHasMerkle = bHasMerkle;
+              $scope.indexCtl.bHasMerkle = bHasMerkle;
               $rootScope.$apply();
             });
           } else {
-            self.bHasMerkle = false;
+            $scope.indexCtl.bHasMerkle = false;
           }
-          self.updateAll();
-          self.updateTxHistory();
+          $scope.indexCtl.updateAll();
+          $scope.indexCtl.updateTxHistory();
           $modalInstance.close();
         };
       };

@@ -50,24 +50,19 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         const _ = require('lodash');
         breadcrumbs.add('index.js');
         const self = this;
-        self.isSafari = Device.safari;
         self.onGoingProcess = {};
         self.updatingTxHistory = true;
         self.bSwipeSuspended = false;
-        self.$state = $state;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
-
-        self.triggerUrl = (state) => {
-          $state.go(state);
-        };
-
         connectionService.init();
         $rootScope.$on('connection:state-changed', (ev, isOnline) => {
           self.isOffline = !isOnline;
         });
 
+
         if (isCordova && constants.version === '1.0') {
+          // todo: move to service?
           const db = require('byteballcore/db.js');
           db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
             if (rows.length > 0) {
@@ -160,12 +155,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         indexEventsSupport.initWalletDeclined();
         indexEventsSupport.initWalletCompleted();
 
-        // eventBus.on('confirm_on_other_devices', () => {
-        // // todo: originally the mesage was: 'Transaction created. \nPlease approve it on the other devices.'. we have to bring this back and think about better solution.
-        // $rootScope.$emit('Local/ShowAlert', 'Transaction created.', 'fi-key', () => {
-        // go.walletHome();
-        // });
-        // });
+        eventBus.on('confirm_on_other_devices', () => {
+          $rootScope.$emit('Local/ShowAlert', 'Transaction created.', 'fi-key', () => {
+            go.walletHome();
+          });
+        });
 
         const acceptMessage = gettextCatalog.getString('Yes');
         const cancelMessage = gettextCatalog.getString('No');
@@ -398,29 +392,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        self.selectSubWallet = function (sharedAddress) {
-          const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses');
-          self.shared_address = sharedAddress;
-          if (sharedAddress) {
-            walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
-              self.bHasMerkle = bHasMerkle;
-              walletDefinedByAddresses.readSharedAddressCosigners(sharedAddress, (cosigners) => {
-                self.shared_address_cosigners = cosigners.map(cosigner => cosigner.name).join(', ');
-                $timeout(() => {
-                  $rootScope.$apply();
-                });
-              });
-            });
-          } else {
-            self.bHasMerkle = false;
-          }
-
-          self.updateAll();
-        };
-
-        self.goHome = function () {
-          go.walletHome();
-        };
 
         self.tab = 'wallet.home';
 
@@ -431,14 +402,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           breadcrumbs.add(`setFocusedWallet ${fc.credentials.walletId}`);
 
           // Clean status
-          self.totalBalanceBytes = null;
-          self.lockedBalanceBytes = null;
-          self.availableBalanceBytes = null;
-          self.pendingAmount = null;
-          self.spendUnconfirmed = null;
-
-          self.totalBalanceStr = null;
-          self.availableBalanceStr = null;
+          // todo: something wrong with this
           self.lockedBalanceStr = null;
 
           self.arrBalances = [];
@@ -450,13 +414,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.completeHistory = [];
           // todo: something wrong with this
           self.txProgress = 0;
-          self.historyShowShowAll = false;
-          self.balanceByAddress = null;
-          self.pendingTxProposalsCountForUs = null;
-          self.setSpendUnconfirmed();
 
           $timeout(() => {
-            // $rootScope.$apply();
             self.hasProfile = true;
             self.noFocusedWallet = false;
             self.onGoingProcess = {};
@@ -562,10 +521,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        self.setSpendUnconfirmed = function () {
-          self.spendUnconfirmed = configService.getSync().wallet.spendUnconfirmed;
-        };
-
         self.updateBalance = function () {
           const fc = profileService.focusedClient;
           $timeout(() => {
@@ -630,6 +585,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           fc.alias = self.alias;
         };
 
+        // todo: do we need this ?
         self.updateColor = function () {
           self.backgroundColor = '#d51f26';
           const fc = profileService.focusedClient;
@@ -645,7 +601,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         };
 
         self.setBalance = function (assocBalances, assocSharedBalances) {
-          if (!assocBalances) return;
+          if (!assocBalances) {
+            return;
+          }
           const config = configService.getSync().wallet.settings;
 
           // Selected unit
@@ -746,8 +704,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 self.completeHistory[date].rows.push(t);
                 self.visible_rows += 1;
               }
-
-              self.historyShowShowAll = newHistory.length >= self.historyShowLimit;
               $rootScope.$apply();
             }
 
@@ -916,6 +872,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         });
 
         // UX event handlers
+        // todo: do we need this?
         $rootScope.$on('Local/ColorUpdated', () => {
           self.updateColor();
           $timeout(() => {
@@ -937,11 +894,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        $rootScope.$on('Local/SpendUnconfirmedUpdated', () => {
-          self.setSpendUnconfirmed();
-          self.updateAll();
-        });
-
+        // todo: what is this for?
         $rootScope.$on('Local/ProfileBound', () => {
         });
 
@@ -951,12 +904,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/LanguageSettingUpdated', () => {
           self.setUxLanguage();
-        });
-
-        $rootScope.$on('Local/UnitSettingUpdated', () => {
-          breadcrumbs.add('UnitSettingUpdated');
-          self.updateAll();
-          self.updateTxHistory();
         });
 
         $rootScope.$on('Local/NeedFreshHistory', () => {
@@ -1061,7 +1008,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           go.walletHome();
         });
 
-        $rootScope.$on('Local/SetTab', (event, tab, reset) => {
+        $rootScope.$on('Local/SetTab', (event, tab) => {
           if (self.tab === tab) {
             return;
           }
@@ -1096,16 +1043,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-
         if (autoRefreshClientService) {
           autoRefreshClientService.initHistoryAutoRefresh();
-        }
-
-        let gui;
-        try {
-          gui = require('nw.gui');
-        } catch (e) {
-          // continue regardless of error
         }
       });
 }());

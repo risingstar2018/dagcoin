@@ -30,8 +30,6 @@
 
     const assocDeviceAddressesByPaymentAddress = {};
 
-    $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
-
     const viewContentLoaded = function () {
       $scope.sendForm.$setPristine();
       vm.resetForm(() => {
@@ -196,7 +194,6 @@
       vm.lockAddress = false;
       vm.lockAmount = false;
       vm.hideAdvSend = true;
-      $scope.currentSpendUnconfirmed = configService.getSync().wallet.spendUnconfirmed;
 
       vm._amount = null;
       vm._address = null;

@@ -36,7 +36,6 @@
       wallet: {
         requiredCosigners: 2,
         totalCosigners: 3,
-        spendUnconfirmed: false,
         reconnectDelay: 5000,
         idleDurationMin: 4,
         settings: {
