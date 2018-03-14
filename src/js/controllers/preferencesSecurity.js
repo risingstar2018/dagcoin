@@ -87,7 +87,6 @@
           }
 
           def.resolve(false);
-          return;
         });
 
         return def.promise;
@@ -241,7 +240,7 @@
             }
           });
         }
-      }
+      };
 
       self.changeWalletType = function () {
         if (self.isLight) {
