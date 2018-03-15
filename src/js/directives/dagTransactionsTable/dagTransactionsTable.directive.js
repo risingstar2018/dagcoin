@@ -15,16 +15,17 @@
   function dagTransactionsTable(moment, transactionsService, $rootScope, configService) {
     return {
       restrict: 'E',
+      transclude: true,
       replace: true,
       templateUrl: 'directives/dagTransactionsTable/dagTransactionsTable.template.html',
-      scope: {
-        transactions: '='
-      },
-      link: ($scope) => {
+      scope: false,
+      controllerAs: 'txList',
+      controller() {
+        const self = this;
         const today = moment().format('DD/MM/YYYY');
         const yesterday = moment().subtract(1, 'day').format('DD/MM/YYYY');
 
-        $scope.formatDate = (value) => {
+        self.formatDate = (value) => {
           if (value === today) {
             return 'Today';
           } else if (value === yesterday) {
@@ -33,24 +34,22 @@
           return value;
         };
 
-        $scope.formatSum = (sum) => {
+        self.formatSum = (sum) => {
           const string = sum.toString().split('.');
-
           if (!string[1]) {
             return `${sum}.00`;
           }
-
           if (string[1] && string[1].length === 1) {
             return `${sum}0`;
           }
           return sum;
         };
 
-        $scope.transactionAddress = address => transactionsService.getTransactionAddress(address);
+        self.transactionAddress = address => transactionsService.getTransactionAddress(address);
 
-        $scope.transactionStatus = transaction => transactionsService.getTransactionStatus(transaction);
+        self.transactionStatus = transaction => transactionsService.getTransactionStatus(transaction);
 
-        $scope.openTxModal = (btx) => {
+        self.openTxModal = (btx) => {
           const config = configService.getSync();
           const configWallet = config.wallet;
           const walletSettings = configWallet.settings;

@@ -41,7 +41,7 @@
 
       function setCsvContent(data) {
         const csvElement = document.getElementById(CSV_CONTENT_ID);
-        if (csvElement != null) {
+        if (csvElement !== null) {
           csvElement.value = data;
         } else {
           $log.error(`Textarea element with id=${CSV_CONTENT_ID} not exits in DOM`);

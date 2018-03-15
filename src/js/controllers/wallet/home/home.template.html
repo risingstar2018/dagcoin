@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <div class="dag_transactions row m20t text-gray text-center">
+    <div class="dag_transactions row m20t text-gray text-center" ng-if="index.updatingTxHistory">
       <div ng-if="index.txProgress > 6">
         <div translate class="oh text-center p20 text-gray">
           Initial transaction history synchronization can take some minutes for wallets with many transactions.<br/>
@@ -78,7 +78,7 @@
           <h4 translate>Transactions History</h4>
           <dag-csv-history></dag-csv-history>
         </div>
-        <dag-transactions-table transactions="index.completeHistory"></dag-transactions-table>
+        <dag-transactions-table></dag-transactions-table>
       </div>
     </div>
   </div>

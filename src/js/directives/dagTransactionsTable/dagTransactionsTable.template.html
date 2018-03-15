@@ -1,27 +1,27 @@
-<div ng-repeat="(date, data) in transactions">
-  <h4 class="transactions_date">{{formatDate(date)}}</h4>
+<div ng-repeat="(date, data) in index.completeHistory">
+  <h4 class="transactions_date">{{txList.formatDate(date)}}</h4>
   <div class="dag_transactions_table">
     <ul>
       <li ng-repeat="transaction in data.rows track by $index"
-          class="transaction_status_{{transaction.action}}" ng-click="openTxModal(transaction)">
+          class="transaction_status_{{transaction.action}}" ng-click="txList.openTxModal(transaction)">
         <div class="transaction_status">
           <svg-icon class="transaction_status_icon"
                     ng-class="{'animation_rotate' : !transaction.confirmations}"
-                    name="{{transactionStatus(transaction).icon}}"></svg-icon>
+                    name="{{txList.transactionStatus(transaction).icon}}"></svg-icon>
         </div>
         <div class="transaction_meta">
-          <div class="transaction_title">{{transactionStatus(transaction).title}}</div>
+          <div class="transaction_title">{{txList.transactionStatus(transaction).title}}</div>
           <div ng-if="transaction.action === 'received'">
             <div class="transaction_address" ng-repeat="address in transaction.arrPayerAddresses">
-              <span>{{transactionAddress(address).fullName}}</span>
+              <span>{{txList.transactionAddress(address).fullName}}</span>
             </div>
           </div>
           <div class="transaction_address" ng-if="transaction.action === 'sent'">
-            <span>{{transactionAddress(transaction.addressTo).fullName}}</span>
+            <span>{{txList.transactionAddress(transaction.addressTo).fullName}}</span>
           </div>
         </div>
         <div class="transaction_sum">
-          <div class="transaction_sum">{{transaction.action === 'received' ? '+' : '-'}}{{formatSum(transaction.amountStr)}}
+          <div class="transaction_sum">{{transaction.action === 'received' ? '+' : '-'}}{{txList.formatSum(transaction.amountStr)}}
           </div>
           <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
         </div>
