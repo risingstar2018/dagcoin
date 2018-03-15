@@ -222,7 +222,7 @@
           sticky: true,
           views: {
             tabs: {
-              templateUrl: 'controllers/correspondentDevices/correspondentDevices.template.html',
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevices.template.html',
               controller: 'CorrespondentDevicesCtrl as correspondentDevices'
             },
           },
@@ -233,7 +233,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/correspondentDevices/correspondentDevice/correspondentDevice.template.html',
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/correspondentDevice.template.html',
               controller: 'CorrespondentDeviceCtrl'
             },
           },
@@ -244,7 +244,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/correspondentDevices/correspondentDevice/edit/editCorrespondentDevice.template.html',
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/edit/editCorrespondentDevice.template.html',
               controller: 'EditCorrespondentDeviceCtrl as editDevice'
             },
           },
@@ -254,7 +254,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/correspondentDevices/correspondentDevice/add/addCorrespondentDevice.template.html',
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/add/addCorrespondentDevice.template.html',
             }
           }
         })
@@ -264,7 +264,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/correspondentDevices/correspondentDevice/invite/inviteCorrespondentDevice.template.html',
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/invite/inviteCorrespondentDevice.template.html',
               controller: 'InviteCorrespondentDeviceCtrl as inviteDevice'
             }
           }
@@ -275,7 +275,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/correspondentDevices/correspondentDevice/accept/acceptInvitation.template.html',
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/accept/acceptInvitation.template.html',
               controller: 'AcceptCorrespondentInvitationCtrl as acceptInvitation'
             },
           },
