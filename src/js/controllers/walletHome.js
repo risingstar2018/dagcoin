@@ -49,15 +49,6 @@
           self.setAddress(true);
         });
 
-        // TODO sinan Local/NewFocusedWallet is used for receive.controller.
-        // in receive.controller these rows already written in viewContentLoaded method
-        /**
-        const disableFocusListener = $rootScope.$on('Local/NewFocusedWallet', () => {
-          self.addr = {};
-          self.resetForm();
-        });
-         */
-
         const disableResumeListener = $rootScope.$on('Local/Resume', () => {
           // This is needed then the apps go to sleep
           // looks like it already works ok without rebinding touch events after every resume
@@ -80,11 +71,6 @@
         $scope.$on('$destroy', () => {
           console.log('walletHome $destroy');
           disableAddrListener();
-          // disablePaymentRequestListener();
-          // disableMerchantPaymentRequestListener();
-          // disablePaymentUriListener();
-          // disableTabListener();
-          // disableFocusListener();
           disableResumeListener();
           disableOngoingProcessListener();
           $rootScope.hideMenuBar = false;
@@ -134,7 +120,7 @@
         }, 100);
 
         // TODO sinan this method is called multiple places,
-        // This should be in index.js (main controller)
+        // Should this be in index.js (main controller) ?
         this.formFocus = function (what) {
           if (isCordova) {
             this.hideMenuBar(what);
@@ -171,12 +157,6 @@
               $rootScope.$apply();
             });
           }
-        };
-
-        // TODO sinan there are lots of resetForm invoking in walletHome.js, so that this dummy method created
-        // TODO remove later
-        this.resetForm = () => {
-
         };
 
         /* Start setup */
