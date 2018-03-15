@@ -4,7 +4,7 @@
   angular.module('copayApp.services')
     .factory('faucetService', ($rootScope, $q, ENV) => {
       const self = {};
-      const code = 'A6thOoiPnsPGKgMj4G/OYkh4d7WR/MX3r1k2tG/WJPof@localhost:6611#0000';
+      const code = 'A6thOoiPnsPGKgMj4G/OYkh4d7WR/MX3r1k2tG/WJPof@byteball.org/bb-test#0000';
       let isInitialized = false;
 
       self.isFaucetAddress = isFaucetAddress;

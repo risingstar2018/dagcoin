@@ -1,3 +1,5 @@
+@import "../../../css/variables";
+
 .chats{
   padding: 30px;
 
@@ -10,6 +12,46 @@
 
       &:last-child{
         margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.no_devices_message {
+  @extend .slideInDown;
+  margin: 30px;
+  margin-top: 40px;
+  text-align: center;
+  padding: 30px;
+  background: transparent;
+  border-radius: 10px;
+
+  &.ng-leave {
+    display: none;
+  }
+
+  svg {
+    color: $gray;
+    width: 100px;
+    height: 100px;
+  }
+
+  p {
+    color: $gray;
+    font-size: 14px;
+    line-height: 18px;
+    margin: 20px 0;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    svg-icon.svg-icon-star_border {
+      svg {
+        position: relative;
+        top: -1px;
+        margin: 0 5px;
       }
     }
   }

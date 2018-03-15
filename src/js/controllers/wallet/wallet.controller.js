@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.controllers')
-    .controller('walletHomeController',
+    .controller('WalletCtrl',
       function ($scope,
                 $rootScope,
                 $timeout,
@@ -32,27 +32,13 @@
         const self = this;
         $rootScope.hideMenuBar = false;
         $rootScope.wpInputFocused = false;
-        const config = configService.getSync();
-        const configWallet = config.wallet;
         const isCordova = Device.cordova;
-
-        // INIT
-        const walletSettings = configWallet.settings;
-        this.unitValue = walletSettings.unitValue;
-        this.unitName = walletSettings.unitName;
-        this.unitDecimals = walletSettings.unitDecimals;
 
         this.addresses = [];
         this.blockUx = false;
 
         const disableAddrListener = $rootScope.$on('Local/NeedNewAddress', () => {
           self.setAddress(true);
-        });
-
-        const disableResumeListener = $rootScope.$on('Local/Resume', () => {
-          // This is needed then the apps go to sleep
-          // looks like it already works ok without rebinding touch events after every resume
-          // self.bindTouchDown();
         });
 
         const disableOngoingProcessListener = $rootScope.$on('Addon/OngoingProcess', (e, name) => {
@@ -71,7 +57,6 @@
         $scope.$on('$destroy', () => {
           console.log('walletHome $destroy');
           disableAddrListener();
-          disableResumeListener();
           disableOngoingProcessListener();
           $rootScope.hideMenuBar = false;
           eventBus.removeListener('new_wallet_address', onNewWalletAddress);

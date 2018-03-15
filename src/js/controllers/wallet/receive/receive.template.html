@@ -1,5 +1,4 @@
 <div id="receive" class="receive p-share tab-view cordova-scrollable">
-  <dag-background></dag-background>
   <div class="p-wrap text-center m20t">
 
     <h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">{{'Tap the' | translate}}
@@ -29,16 +28,15 @@
             </div>
           </div>
         </div>
-        <div ng-show="!index.isCordova" ng-class="{'visible': tooltipCopiedShown}"
+        <div ng-show="!receive.isCordova" ng-class="{'visible': tooltipCopiedShown}"
              class="tooltip radius tip-top" translate>
           <svg-icon name="done"></svg-icon>
           Copied!
         </div>
       </div>
       <div class="m10t" ng-hide>
-        <h4 ng-class="{'enable_text_select': !index.isCordova}" class="size-12">
+        <h4 ng-class="{'enable_text_select': !receive.isCordova}" class="size-12">
           {{index.shared_address || (home.generatingAddress ? '...' : receive.addr[index.walletId])}}
-
         </h4>
       </div>
     </div>

@@ -1,6 +1,10 @@
-<div class="content chats tab-view" >
+<div class="content chats tab-view">
+  <div ng-if="correspondentDevices.list.length === 0" class="no_devices_message">
+    <svg-icon name="share"></svg-icon>
+    <p translate>You don't have any paired devices yet.</p>
+    <p translate>Press "+" in the right upper corner to pair with device.</p>
+  </div>
   <ul class="correspondentList">
-    <dag-background></dag-background>
     <li ng-repeat="correspondent in correspondentDevices.list" ng-class="{'noclick': !correspondent.clickable}">
       <a ng-show="correspondentDevices.selectedCorrespondentList[correspondent.device_address]"
          ng-hide="correspondentDevices.hideRemoveButton(correspondent.removable)"
@@ -25,7 +29,7 @@
       </div>
     </li>
   </ul>
-  <button ng-show="!correspondentDevices.editCorrespondentList"
+  <button ng-if="!correspondentDevices.editCorrespondentList && correspondentDevices.list.length > 0"
           ng-click="correspondentDevices.hideRemove = !correspondentDevices.hideRemove" class="btn btn_red tiny">
     <svg-icon name="remove"></svg-icon>
     <span translate>Remove a device</span>

@@ -7,28 +7,20 @@
     .controller('ReceiveCtrl', ReceiveCtrl);
 
   ReceiveCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'profileService', 'configService', 'gettextCatalog', 'utilityService',
-                        '$modal', 'animationService', 'addressService', 'ENV'];
+                        '$modal', 'animationService', 'addressService'];
 
   function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
-                       $modal, animationService, addressService, ENV) {
+                       $modal, animationService, addressService) {
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const config = configService.getSync();
-    const configWallet = config.wallet;
     const vm = this;
-
-    // INIT
-    const walletSettings = configWallet.settings;
-    vm.unitValue = walletSettings.unitValue;
-    vm.unitName = walletSettings.unitName;
-    vm.unitDecimals = walletSettings.unitDecimals;
-    vm.protocol = ENV.protocolPrefix;
+    vm.isCordova = isCordova;
 
     // TODO indexScope is called just for getting available amount. This should not be done like that.
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
-      console.log('receive controller content loaded');
       vm.addr = {};
       vm.setAddress();
     };
@@ -46,11 +38,13 @@
       const fc = profileService.focusedClient;
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         const conf = require('byteballcore/conf.js');
+        const configWallet = config.wallet;
+        const walletSettings = configWallet.settings;
         $scope.addr = addr;
         $scope.color = fc.backgroundColor;
-        $scope.unitName = vm.unitName;
-        $scope.unitValue = vm.unitValue;
-        $scope.unitDecimals = vm.unitDecimals;
+        $scope.unitName = walletSettings.unitName;
+        $scope.unitValue = walletSettings.unitValue;
+        $scope.unitDecimals = walletSettings.unitDecimals;
         $scope.isCordova = isCordova;
         $scope.buttonLabel = gettextCatalog.getString('Generate QR Code');
         $scope.protocol = conf.program;

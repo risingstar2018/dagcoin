@@ -129,8 +129,8 @@
           sticky: true,
           views: {
             main: {
-              templateUrl: 'views/walletHome.html',
-              controller: 'walletHomeController as home'
+              templateUrl: 'controllers/wallet/wallet.template.html',
+              controller: 'WalletCtrl as home'
             }
           }
         })
