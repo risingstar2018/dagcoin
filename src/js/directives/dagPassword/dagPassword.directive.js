@@ -21,6 +21,7 @@
       controllerAs: 'pass',
       controller() {
         const self = this;
+
         // This property is assigned to an empty object to escape from null pointer access.
         // This is initialized in Local/ProfileBound event
         self.walletInfoVisibility = {};
@@ -82,6 +83,9 @@
         });
 
         $rootScope.$on('Local/NeedsPassword', (event, isSetup, errorMessage, cb) => {
+          // Clear password field
+          self.password = '';
+
           self.askPassword = {
             isSetup,
             error: errorMessage,
