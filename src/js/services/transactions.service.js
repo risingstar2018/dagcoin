@@ -3,7 +3,7 @@
 
   angular.module('copayApp.services').factory('transactionsService', (lodash, ENV, utilityService, profileService,
                                                                       addressbookService, animationService, correspondentListService,
-                                                                      gettextCatalog, $rootScope, $modal) => {
+                                                                      gettextCatalog, $rootScope, $modal, txFormatService, notification) => {
     const root = {};
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
 
@@ -150,6 +150,32 @@
         return { icon: 'code', title: gettextCatalog.getString('Moved') };
       }
       return { icon: 'call_made', title: gettextCatalog.getString('Sent') };
+    };
+
+    root.processNewTxs = (txs) => {
+      const now = Math.floor(Date.now() / 1000);
+      const ret = [];
+      lodash.each(txs, (tx) => {
+        const transaction = txFormatService.processTx(tx);
+        // no future transactions...
+        if (transaction.time > now) {
+          transaction.time = now;
+        }
+        ret.push(transaction);
+      });
+      return ret;
+    };
+
+    root.checkTransactionsAreConfirmed = (oldHistory, newHistory) => {
+      if (oldHistory && newHistory && oldHistory.length > 0) {
+        lodash.each(oldHistory, (tx) => {
+          const newTx = lodash.find(newHistory, { unit: tx.unit });
+          if (newTx && tx.confirmations === 0 && newTx.confirmations === 1) {
+            const confirmedMessage = 'Your transaction has been confirmed';
+            notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(confirmedMessage));
+          }
+        });
+      }
     };
 
 

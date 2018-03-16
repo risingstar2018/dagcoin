@@ -86,7 +86,7 @@
     };
 
     vm.countDown = function () {
-      if (vm.validForSeconds == null) {
+      if (vm.validForSeconds === null) {
         // Form has been reset
         return;
       }
@@ -598,8 +598,7 @@
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.color = fc.backgroundColor;
         $scope.arrPublicAssetInfos = indexScope.arrBalances.filter(b => !b.is_private).map((b) => {
-          const r = { asset: b.asset, displayName: vm.unitName };
-          return r;
+          return {asset: b.asset, displayName: vm.unitName};
         });
         $scope.binding = { // defaults
           type: 'reverse_payment',

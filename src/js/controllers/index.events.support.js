@@ -20,6 +20,7 @@ function IndexEventsSupport(params) {
   const gettextCatalog = params.gettextCatalog;
   const newVersion = params.newVersion;
   const isCordova = Device.cordova;
+  self.catchupBallsAtStart = -1;
 
   this.initNotFatalError = (cb) => {
     eventBus.on('nonfatal_error', (errorMessage, errorObject) => {
@@ -199,6 +200,13 @@ function IndexEventsSupport(params) {
         $rootScope.$emit('Local/WalletCompleted');
       });
       if (cb) cb();
+    });
+  };
+  this.initConfirmOnOtherDevice = () => {
+    eventBus.on('confirm_on_other_devices', () => {
+      $rootScope.$emit('Local/ShowAlert', 'Transaction created.', 'fi-key', () => {
+        go.walletHome();
+      });
     });
   };
   this.initCreateNewWallet = (cb) => {

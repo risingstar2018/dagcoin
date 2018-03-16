@@ -29,10 +29,6 @@
           self.setWallets();
         });
 
-        $rootScope.$on('Local/ColorUpdated', () => {
-          self.setWallets();
-        });
-
         $rootScope.$on('Local/AliasUpdated', () => {
           self.setWallets();
         });

@@ -4,14 +4,15 @@
 
   angular.module('copayApp.services').factory('walletService', WalletService);
 
-  WalletService.$inject = ['lodash', 'ENV', 'profileService', 'correspondentListService', 'gettextCatalog'];
+  WalletService.$inject = ['lodash', 'ENV', 'profileService', 'correspondentListService', 'gettextCatalog', 'Device', '$rootScope'];
 
   /**
    * Send and receive functions are handled in this service
    * @constructor
    */
-  function WalletService(lodash, ENV, profileService, correspondentListService, gettextCatalog) {
+  function WalletService(lodash, ENV, profileService, correspondentListService, gettextCatalog, Device, $rootScope) {
     const root = {};
+    const isCordova = Device.cordova;
 
     /**
      * While sending coins, callbacks defined in sendCoinRequest are invoked.
@@ -202,7 +203,7 @@
           }
 
           merchantPromise.then(() => {
-            if (invoiceId != null) {
+            if (invoiceId !== null) {
               const objectHash = require('byteballcore/object_hash');
               const payload = JSON.stringify({ invoiceId });
               opts.messages = [{
@@ -350,6 +351,25 @@
           break;
       }
       return errorMessage;
+    };
+
+
+    root.checkTestnetData = () => {
+      const constants = require('byteballcore/constants.js');
+      if (isCordova && constants.version === '1.0') {
+        const db = require('byteballcore/db.js');
+        db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
+          if (rows.length > 0) {
+            $rootScope.$emit('Local/ShowErrorAlert', 'Looks like you have testnet data.  Please remove the app and reinstall.', () => {
+              if (navigator && navigator.app) {
+                // android
+                navigator.app.exitApp();
+              }
+              // ios doesn't exit
+            });
+          }
+        });
+      }
     };
 
     return root;

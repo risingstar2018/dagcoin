@@ -4,42 +4,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
   'use strict';
 
   angular.module('copayApp.controllers').controller('indexController',
-      function ($rootScope,
-                $scope,
-                $log,
-                $filter,
-                $timeout,
-                $interval,
-                lodash,
-                go,
-                fingerprintService,
-                profileService,
-                configService,
-                Device,
-                storageService,
-                addressService,
-                gettextCatalog,
-                amMoment,
-                nodeWebkit,
-                txFormatService,
-                uxLanguage,
-                $state,
-                addressbookService,
-                notification,
-                animationService,
-                $modal,
-                bwcService,
-                backButton,
-                faucetService,
-                changeWalletTypeService,
-                autoRefreshClientService,
-                connectionService,
-                sharedService,
-                newVersion,
-                ENV,
-                moment) {
+      function ($rootScope, $scope, $log, $filter, $timeout, $interval, lodash, go, fingerprintService, profileService, configService,
+                Device, storageService, addressService, gettextCatalog, amMoment, nodeWebkit, txFormatService, uxLanguage,
+                $state, addressbookService, notification, animationService, $modal, bwcService, backButton, faucetService, changeWalletTypeService,
+                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService) {
         const async = require('async');
-        const constants = require('byteballcore/constants.js');
         const mutex = require('byteballcore/mutex.js');
         const eventBus = require('byteballcore/event_bus.js');
         const objectHash = require('byteballcore/object_hash.js');
@@ -47,45 +16,39 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const Bitcore = require('bitcore-lib');
         const isCordova = Device.cordova;
-        const _ = require('lodash');
+        const acceptMessage = gettextCatalog.getString('Yes');
+        const cancelMessage = gettextCatalog.getString('No');
+        const confirmMessage = gettextCatalog.getString('Confirm');
+        // units that were already approved or rejected by user.
+        // if there are more than one addresses to sign from,
+        // we won't pop up confirmation dialog for each address,
+        // instead we'll use the already obtained approval
+        const assocChoicesByUnit = {};
         breadcrumbs.add('index.js');
         const self = this;
+        self.tab = 'wallet.home';
         self.onGoingProcess = {};
         self.updatingTxHistory = true;
         self.bSwipeSuspended = false;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
 
+        walletService.checkTestnetData();
         connectionService.init();
+
         $rootScope.$on('connection:state-changed', (ev, isOnline) => {
           self.isOffline = !isOnline;
         });
 
-
-        if (isCordova && constants.version === '1.0') {
-          // todo: move to service?
-          const db = require('byteballcore/db.js');
-          db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
-            if (rows.length > 0) {
-              $rootScope.$emit('Local/ShowErrorAlert', 'Looks like you have testnet data.  Please remove the app and reinstall.', () => {
-                if (navigator && navigator.app) {
-                  // android
-                  navigator.app.exitApp();
-                }
-                // ios doesn't exit
-              });
-            }
-          });
+        if (autoRefreshClientService) {
+          autoRefreshClientService.initHistoryAutoRefresh();
         }
 
-
         self.showPopup = function (msg, msgIcon, cb) {
-          $log.warn(`Showing ${msgIcon} popup:${msg}`);
-
           if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
             return false;
           }
-
+          $log.warn(`Showing ${msgIcon} popup:${msg}`);
           self.showAlert = {
             msg: msg.toString(),
             msg_icon: msgIcon,
@@ -123,49 +86,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        const indexEventsSupport = new IndexEventsSupport({
-          Device,
-          Raven,
-          go,
-          $rootScope,
-          changeWalletTypeService,
-          self,
-          $timeout,
-          profileService,
-          notification,
-          gettextCatalog,
-          newVersion
-        });
-        indexEventsSupport.initNotFatalError();
-        indexEventsSupport.initUncaughtError();
-
-        // catchupBallsAtStart variable is used in eventBus event.
-        // TODO sinan move this variable into indexEventsSupport class
-        self.catchupBallsAtStart = -1;
-        indexEventsSupport.initCatchingUpStarted();
-        indexEventsSupport.initCatchupBallsLeft();
-        indexEventsSupport.initCatchingUpDone();
-        indexEventsSupport.initRefreshLightStarted();
-        indexEventsSupport.initRefreshLightDone();
-        indexEventsSupport.initRefusedToSign();
-        indexEventsSupport.initNewMyTransactions();
-        indexEventsSupport.initMyTransactionsBecameStable();
-        indexEventsSupport.initMciBecameStable();
-        indexEventsSupport.initMaybeNewTransactions();
-        indexEventsSupport.initWalletApproved();
-        indexEventsSupport.initWalletDeclined();
-        indexEventsSupport.initWalletCompleted();
-
-        eventBus.on('confirm_on_other_devices', () => {
-          $rootScope.$emit('Local/ShowAlert', 'Transaction created.', 'fi-key', () => {
-            go.walletHome();
-          });
-        });
-
-        const acceptMessage = gettextCatalog.getString('Yes');
-        const cancelMessage = gettextCatalog.getString('No');
-        const confirmMessage = gettextCatalog.getString('Confirm');
-
         const modalRequestApproval = function (question, callbacks) {
           const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
             $scope.header = $sce.trustAsHtml('Request approval');
@@ -175,7 +95,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             $scope.cancel_button_class = 'warning';
             $scope.cancel_label = 'No';
             $scope.loading = false;
-
             $scope.ok = function () {
               $scope.loading = true;
               $modalInstance.close(acceptMessage);
@@ -184,18 +103,15 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               $modalInstance.dismiss(cancelMessage);
             };
           };
-
           const modalInstance = $modal.open({
             templateUrl: 'views/modals/confirmation.html',
             windowClass: animationService.modalAnimated.slideUp,
             controller: ModalInstanceCtrl,
           });
-
           modalInstance.result.finally(() => {
             const m = angular.element(document.getElementsByClassName('reveal-modal'));
             m.addClass(animationService.modalAnimated.slideOutDown);
           });
-
           modalInstance.result.then(callbacks.ifYes, callbacks.ifNo);
         };
 
@@ -216,7 +132,36 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
         };
 
-        // TODO sinan, it uses requestApproval->modal methods, after merging move this into index.events.support.js
+        const indexEventsSupport = new IndexEventsSupport({
+          Device,
+          Raven,
+          go,
+          $rootScope,
+          changeWalletTypeService,
+          self,
+          $timeout,
+          profileService,
+          notification,
+          gettextCatalog,
+          newVersion
+        });
+        indexEventsSupport.initNotFatalError();
+        indexEventsSupport.initUncaughtError();
+        indexEventsSupport.initCatchingUpStarted();
+        indexEventsSupport.initCatchupBallsLeft();
+        indexEventsSupport.initCatchingUpDone();
+        indexEventsSupport.initRefreshLightStarted();
+        indexEventsSupport.initRefreshLightDone();
+        indexEventsSupport.initRefusedToSign();
+        indexEventsSupport.initNewMyTransactions();
+        indexEventsSupport.initMyTransactionsBecameStable();
+        indexEventsSupport.initMciBecameStable();
+        indexEventsSupport.initMaybeNewTransactions();
+        indexEventsSupport.initWalletApproved();
+        indexEventsSupport.initWalletDeclined();
+        indexEventsSupport.initWalletCompleted();
+        indexEventsSupport.initConfirmOnOtherDevice();
+
         // in arrOtherCosigners, 'other' is relative to the initiator
         eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
           const device = require('byteballcore/device.js');
@@ -272,13 +217,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        // units that were already approved or rejected by user.
-        // if there are more than one addresses to sign from,
-        // we won't pop up confirmation dialog for each address,
-        // instead we'll use the already obtained approval
-        const assocChoicesByUnit = {};
-
-        // TODO sinan, it uses requestApproval->modal methods, after merging move this into index.events.support.js
         // objAddress is local wallet address, top_address is the address that requested the signature,
         // it may be different from objAddress if it is a shared address
         eventBus.on('signing_request', (objAddress, topAddress, objUnit, assocPrivatePayloads, fromAddress, signingPath) => {
@@ -393,9 +331,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-
-        self.tab = 'wallet.home';
-
         self.setFocusedWallet = function () {
           const fc = profileService.focusedClient;
           if (!fc) return;
@@ -438,7 +373,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
             self.txps = [];
             self.copayers = [];
-            self.updateColor();
             self.updateAlias();
             self.setAddressbook();
 
@@ -494,13 +428,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             if (!options.quiet) {
               self.setOngoingProcess('updatingStatus', false);
             }
-
+            self.setOngoingProcess('updatingBalance', true);
             fc.getBalance(self.shared_address, (err, assocBalances, assocSharedBalances) => {
+              self.setOngoingProcess('updatingBalance', false);
               if (err) {
                 throw Error('impossible getBal');
               }
               $log.debug('updateAll Wallet Balance:', assocBalances, assocSharedBalances);
-
               self.setBalance(assocBalances, assocSharedBalances);
               // Notify external addons or plugins
               $rootScope.$emit('Local/BalanceUpdated', assocBalances);
@@ -522,28 +456,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        self.updateBalance = function () {
-          const fc = profileService.focusedClient;
-          $timeout(() => {
-            self.setOngoingProcess('updatingBalance', true);
-            $log.debug('Updating Balance');
-            fc.getBalance(self.shared_address, (err, assocBalances, assocSharedBalances) => {
-              self.setOngoingProcess('updatingBalance', false);
-              if (err) {
-                throw Error('impossible error from getBalance');
-              }
-              $log.debug('updateBalance Wallet Balance:', assocBalances, assocSharedBalances);
-              self.setBalance(assocBalances, assocSharedBalances);
-            });
-          });
-        };
-
         self.openWallet = function () {
-          console.log('index.openWallet called');
           const fc = profileService.focusedClient;
           breadcrumbs.add(`openWallet ${fc.credentials.walletId}`);
           $timeout(() => {
-            // $rootScope.$apply();
             self.setOngoingProcess('openingWallet', true);
             self.updateError = false;
             fc.openWallet((err, walletStatus) => {
@@ -555,27 +471,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               self.updateAll(lodash.isObject(walletStatus) ? {
                 walletStatus
               } : null);
-              // $rootScope.$apply();
             });
           });
-        };
-
-        self.processNewTxs = function (txs) {
-          // const config = configService.getSync().wallet.settings;
-          const now = Math.floor(Date.now() / 1000);
-          const ret = [];
-
-          lodash.each(txs, (tx) => {
-            const transaction = txFormatService.processTx(tx);
-
-            // no future transactions...
-            if (transaction.time > now) {
-              transaction.time = now;
-            }
-            ret.push(transaction);
-          });
-
-          return ret;
         };
 
         self.updateAlias = function () {
@@ -586,13 +483,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           fc.alias = self.alias;
         };
 
-        // todo: do we need this ?
-        self.updateColor = function () {
-          self.backgroundColor = '#d51f26';
-          const fc = profileService.focusedClient;
-          fc.backgroundColor = '#d51f26';
-        };
-
         self.updateSingleAddressFlag = function () {
           const config = configService.getSync();
           config.isSingleAddress = config.isSingleAddress || {};
@@ -600,7 +490,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           const fc = profileService.focusedClient;
           fc.isSingleAddress = self.isSingleAddress;
         };
-
+        // todo: refactor
         self.setBalance = function (assocBalances, assocSharedBalances) {
           if (!assocBalances) {
             return;
@@ -646,7 +536,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             self.arrMainWalletBalances = self.arrBalances;
           }
 
-          self.baseBalance = _.find(self.arrBalances, { asset: 'base' });
+          self.baseBalance = lodash.find(self.arrBalances, { asset: 'base' });
           console.log(`========= setBalance done, balances: ${JSON.stringify(self.arrBalances)}`);
           breadcrumbs.add(`setBalance done, balances: ${JSON.stringify(self.arrBalances)}`);
 
@@ -655,20 +545,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        self.checkTransactionsAreConfirmed = function (oldHistory, newHistory) {
-          if (oldHistory && newHistory && oldHistory.length > 0) {
-            lodash.each(oldHistory, (tx) => {
-              const newTx = lodash.find(newHistory, { unit: tx.unit });
-
-              if (newTx && tx.confirmations === 0 && newTx.confirmations === 1) {
-                const confirmedMessage = 'Your transaction has been confirmed';
-
-                notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(confirmedMessage));
-              }
-            });
-          }
-        };
-        // todo: move to service?
         self.updateLocalTxHistory = function (client, cb) {
           const walletId = client.credentials.walletId;
           const walletSettings = configService.getSync().wallet.settings;
@@ -677,9 +553,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             return console.log('fc incomplete yet');
           }
           return client.getTxHistory('base', self.shared_address, (txs) => {
-            const newHistory = self.processNewTxs(txs);
+            const newHistory = transactionsService.processNewTxs(txs);
             $log.debug(`Tx History synced. Total Txs: ${newHistory.length}`);
-            self.checkTransactionsAreConfirmed(self.txHistory, newHistory);
+            transactionsService.checkTransactionsAreConfirmed(self.txHistory, newHistory);
 
             if (walletId === profileService.focusedClient.credentials.walletId) {
               self.txHistory = newHistory;
@@ -711,7 +587,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             return cb();
           });
         };
-
 
         self.updateHistory = function (cb) {
           const fc = profileService.focusedClient;
@@ -759,23 +634,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.updateTxHistory = lodash.debounce(() => {
           self.updateHistory();
         }, 1000);
-
-        self.recreate = function () {
-          const fc = profileService.focusedClient;
-          self.setOngoingProcess('recreating', true);
-          fc.recreateWallet((err) => {
-            self.setOngoingProcess('recreating', false);
-
-            if (err) {
-              throw Error('impossible err from recreateWallet');
-            }
-
-            profileService.setWalletClients();
-            $timeout(() => {
-              $rootScope.$emit('Local/WalletImported', self.walletId);
-            }, 100);
-          });
-        };
 
         self.openMenu = () => {
           backButton.menuOpened = true;
@@ -873,14 +731,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         });
 
         // UX event handlers
-        // todo: do we need this?
-        $rootScope.$on('Local/ColorUpdated', () => {
-          self.updateColor();
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        });
-
         $rootScope.$on('Local/AliasUpdated', () => {
           self.updateAlias();
           $timeout(() => {
@@ -921,7 +771,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           $log.debug('### Resume event');
           const lightWallet = require('byteballcore/light_wallet.js');
           lightWallet.refreshLightClientHistory();
-          // self.debouncedUpdate();
         });
 
         $rootScope.$on('Local/BackupDone', () => {
@@ -1074,9 +923,5 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
           $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
-
-        if (autoRefreshClientService) {
-          autoRefreshClientService.initHistoryAutoRefresh();
-        }
       });
 }());

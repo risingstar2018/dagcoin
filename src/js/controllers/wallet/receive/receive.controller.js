@@ -11,6 +11,7 @@
 
   function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
                        $modal, animationService, addressService) {
+    const eventBus = require('byteballcore/event_bus.js');
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const config = configService.getSync();
@@ -25,8 +26,17 @@
       vm.setAddress();
     };
 
+    function onNewWalletAddress(newAddress) {
+      console.log(`==== NEW ADDRESSS ${newAddress}`);
+      vm.addr = {};
+      vm.setAddress();
+    }
+
+    eventBus.on('new_wallet_address', onNewWalletAddress);
+
     const destroy = function () {
       console.log('receive controller $destroy');
+      eventBus.removeListener('new_wallet_address', onNewWalletAddress);
     };
 
     vm.copyAddress = function (address) {
