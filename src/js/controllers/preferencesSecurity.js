@@ -240,6 +240,10 @@
             }
           });
         }
+
+        if (!$scope.encrypt && !$scope.touchid) {
+          $state.go(state);
+        }
       };
 
       self.changeWalletType = function () {

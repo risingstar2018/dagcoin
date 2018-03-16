@@ -484,6 +484,20 @@
             },
           },
         })
+        .state('backupGlobal', {
+          url: '/backup',
+          params: {
+            backTo: 'preferencesGlobal'
+          },
+          templateUrl: 'views/backup.html',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'views/backup.html',
+            },
+          },
+        })
         .state('recovery', {
           url: '/recovery',
           params: {

@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
-    function ($scope, $q, $rootScope, $log, $modal, configService, uxLanguage, pushNotificationsService, profileService,
+    function ($scope, $q, $rootScope, $log, $state, $modal, configService, uxLanguage, pushNotificationsService, profileService,
               fundingExchangeProviderService, animationService, changeWalletTypeService, gettextCatalog) {
       const conf = require('byteballcore/conf.js');
       const self = this;
@@ -31,6 +31,7 @@
         this.currentLanguageName = uxLanguage.getCurrentLanguageName();
         this.torEnabled = conf.socksHost && conf.socksPort;
         $scope.pushNotifications = config.pushNotifications.enabled;
+        $scope.touchid = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
 
         self.initFundingNode();
       };
@@ -87,6 +88,27 @@
         });
       }
 
+      function requestPassword(error) {
+        const def = $q.defer();
+
+        profileService.unlockFC(error, (err) => {
+          if (err) {
+            if (err.message !== gettextCatalog.getString('Password needed')) {
+              return requestPassword(err.message).then((locked) => {
+                def.resolve(locked);
+              });
+            }
+
+            def.resolve(true);
+            return;
+          }
+
+          def.resolve(false);
+        });
+
+        return def.promise;
+      }
+
       const unwatchEncrypt = $scope.$watch('encrypt', (val) => {
         const fc = profileService.focusedClient;
 
@@ -137,6 +159,30 @@
         }, () => {
           self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
         });
+      };
+
+      self.navigateSecure = function (state) {
+        if ($scope.encrypt) {
+          requestPassword().then((locked) => {
+            if (!locked) {
+              $state.go(state);
+            }
+          });
+        }
+
+        if ($scope.touchid) {
+          profileService.requestTouchid('unlockingApp', (err) => {
+            if (!err) {
+              $timeout(() => {
+                $state.go(state);
+              }, 100);
+            }
+          });
+        }
+
+        if (!$scope.encrypt && !$scope.touchid) {
+          $state.go(state);
+        }
       };
 
       $scope.$on('$destroy', () => {

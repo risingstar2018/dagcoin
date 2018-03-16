@@ -10,6 +10,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 $filter,
                 $timeout,
                 $interval,
+                $q,
                 lodash,
                 go,
                 fingerprintService,
@@ -1458,8 +1459,53 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
 
           modalInstance.result.then((ok) => {
+            function requestPassword(error) {
+              const def = $q.defer();
+
+              profileService.unlockFC(error, (err) => {
+                if (err) {
+                  if (err.message !== gettextCatalog.getString('Password needed')) {
+                    return requestPassword(err.message).then((locked) => {
+                      def.resolve(locked);
+                    });
+                  }
+
+                  def.resolve(true);
+                  return;
+                }
+
+                def.resolve(false);
+              });
+
+              return def.promise;
+            }
+
             if (ok) {
-              $state.go('backup');
+              const config = configService.getSync();
+              const needPassword = !!profileService.profile.xPrivKeyEncrypted;
+              const needFingerprint = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
+
+              if (needPassword) {
+                requestPassword().then((locked) => {
+                  if (!locked) {
+                    $state.go('backup');
+                  }
+                });
+              }
+
+              if (needFingerprint) {
+                profileService.requestTouchid('unlockingApp', (err) => {
+                  if (!err) {
+                    $timeout(() => {
+                      $state.go('backup');
+                    }, 100);
+                  }
+                });
+              }
+
+              if (!needPassword && !needFingerprint) {
+                $state.go('backup');
+              }
             }
           });
         };
