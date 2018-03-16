@@ -3301,11 +3301,16 @@ p.color_red {
   width: 100%;
 }
 
+.div-with-top-right-img > .text {
+  width: -webkit-calc(100% - 24px);
+}
+
 .div-with-top-right-img > .star {
   position: absolute;
   right: 0;
   top: 0;
   color: $gold;
+  width: 24px;
 }
 
 .seed-words {
