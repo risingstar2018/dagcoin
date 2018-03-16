@@ -1896,6 +1896,28 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
           }
         }
       }
+
+      .transaction-status-list {
+        .first-row {
+          svg-icon {
+            top: -5px;
+          }
+          .tx-status-list-title {
+            position: relative;
+            top: -4px;
+          }
+        }
+
+        .last-row {
+          svg-icon {
+            top: 5px;
+          }
+          .tx-status-list-title {
+            position: relative;
+            top: 5px;
+          }
+        }
+      }
     }
 
     .modal-content-header {
