@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
-    function ($scope, $q, $rootScope, $log, $state, $modal, configService, uxLanguage, pushNotificationsService, profileService,
+    function ($scope, $q, $rootScope, $log, $state, $modal, $timeout, configService, uxLanguage, pushNotificationsService, profileService,
               fundingExchangeProviderService, animationService, changeWalletTypeService, gettextCatalog) {
       const conf = require('byteballcore/conf.js');
       const self = this;
