@@ -7,7 +7,7 @@
     </a>
 </dag-nav-bar>
 
-<div class="content chats" ng-init="readList()">
+<div class="content chats" ng-init="readList()" ng-scrollbars>
     <ul class="correspondentList">
 
         <li ng-repeat="correspondent in list" ng-class="{'noclick': !correspondent.clickable}">
