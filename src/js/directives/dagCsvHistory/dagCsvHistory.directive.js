@@ -10,9 +10,10 @@
     .directive('dagCsvHistory', dagCsvHistory);
 
   dagCsvHistory.$inject = ['utilityService', 'profileService', 'configService', 'sharedService',
-    '$rootScope', 'nodeWebkit', '$timeout', '$log'];
+    '$rootScope', 'nodeWebkit', '$timeout', '$log', 'Device', 'gettextCatalog'];
 
-  function dagCsvHistory(utilityService, profileService, configService, sharedService, $rootScope, nodeWebkit, $timeout, $log) {
+  function dagCsvHistory(utilityService, profileService, configService, sharedService, $rootScope, nodeWebkit,
+                         $timeout, $log, Device, gettextCatalog) {
     const isCordova = utilityService.isCordova;
     return {
       restrict: 'E',
@@ -99,8 +100,58 @@
         return result;
       }
 
-      // const step = 6;
-      // const unique = {};
+      /**
+       * Used when platform is cordova
+       * Downloads file into window.cordova.file.documentsDirectory with a filename tailing with current time
+       * @param uri
+       */
+      function saveFileIntoDownloadFolder(csvContent) {
+        const errorCallback = function (e) {
+          console.error(`Error: ${e}`);
+          $rootScope.$emit('Local/ShowAlert', JSON.stringify(e), 'fi-alert', () => { });
+        };
+
+        // TODO move to fileSystemService as getDownloadDir. It only works with cordova.
+        let storageLocation;
+        if (Device.android) {
+          storageLocation = 'file:///storage/emulated/0/';
+        } else if (Device.iOS) {
+          storageLocation = window.cordova.file.documentsDirectory;
+        } else {
+          alert('Could not detect device');
+          return;
+        }
+
+        // Arrange file name, filter some special characters
+        const date = new Date().toISOString().slice(0, 19)
+          .replace(':', '')
+          .replace('T', '-');
+        const fileName = `${self.alias || self.walletName}-${date}.csv`
+          .replace(/[ <>:,{}"\/\\|?*]+/g, '');
+
+        window.resolveLocalFileSystemURL(storageLocation, (fileSystem) => {
+          fileSystem.getDirectory('Download', {
+            create: true,
+            exclusive: false
+          }, (directory) => {
+            directory.getFile(fileName, {
+              create: true,
+              exclusive: false
+            }, (fileEntry) => {
+              fileEntry.createWriter((writer) => {
+                writer.onwriteend = function () {
+                  console.log(`${fileName} File written to downloads`);
+                };
+                writer.seek(0);
+                const blob = new Blob([csvContent], { type: 'text/plain;charset=utf-8', endings: 'native' });
+                writer.write(blob);
+                const message = `${gettextCatalog.getString('Download completed')} : ${fileName}`;
+                $rootScope.$emit('Local/ShowAlert', message, 'fi-check', () => { });
+              }, errorCallback);
+            }, errorCallback);
+          }, errorCallback);
+        }, errorCallback);
+      }
 
       if (isCordova) {
         $log.info('CSV generation not available in mobile');
@@ -123,10 +174,13 @@
 
           const data = txs;
           const filename = `Dagcoin-${currentWallet.alias || currentWallet.walletName}.csv`;
-          let csvContent = '';
+          let csvContent;
 
-          if (!isNode) csvContent = 'data:text/csv;charset=utf-8,';
-          csvContent += 'Date,Destination,Note,Amount,Currency\n';
+          if (!isNode && !Device.any) {
+            csvContent = 'data:text/csv;charset=utf-8,';
+          } else {
+            csvContent = 'Date,Destination,Note,Amount,Currency\n';
+          }
 
           // let amount;
           let note;
@@ -152,6 +206,8 @@
 
           if (isNode) {
             saveFile('#export_file', csvContent);
+          } else if (Device.any) {
+            saveFileIntoDownloadFolder(csvContent);
           } else {
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
@@ -159,6 +215,7 @@
             link.setAttribute('download', filename);
             link.click();
           }
+
           $rootScope.$apply();
         });
       });

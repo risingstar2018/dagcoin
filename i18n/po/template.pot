@@ -1857,3 +1857,7 @@ msgstr ""
 #: edit_contact.template.html:36
 msgid "Field is too long"
 msgstr ""
+
++#: csvHistory method
++msgid "Download completed"
++msgstr ""
