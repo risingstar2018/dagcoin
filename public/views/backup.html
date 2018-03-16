@@ -19,7 +19,7 @@
             Wallet seed not available.
           </div>
         </div>
-        <div ng-show="wordsC.mnemonicWords || (wordsC.credentialsEncrypted && !wordsC.deleted)">
+        <div ng-show="wordsC.mnemonicWords || (wordsC.needAuth && !wordsC.deleted)">
           <div>
             <div class="m10t columns">
               <a class="button outline light-gray expand tiny" ng-click="wordsC.toggle()">

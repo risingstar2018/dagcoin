@@ -2,12 +2,19 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('wordsController',
-    function ($rootScope, $scope, $timeout, profileService, go, gettextCatalog, confirmDialog, notification, $log, isCordova) {
+    function ($rootScope, $scope, $timeout, profileService, go, gettextCatalog, confirmDialog, notification, $log, isCordova, configService) {
       const msg = gettextCatalog.getString('Are you sure you want to delete the backup words?');
       const successMsg = gettextCatalog.getString('Backup words deleted');
       const self = this;
       self.show = false;
+
+      const config = configService.getSync();
       const fc = profileService.focusedClient;
+
+      const needPassword = !!profileService.profile.xPrivKeyEncrypted;
+      const needFingerprint = !!config.touchId;
+      self.needAuth = needPassword || needFingerprint;
+      self.deleted = fc.credentials && !fc.credentials.mnemonicEncrypted && !fc.credentials.mnemonic;
 
       if (isCordova) {
         self.text = gettextCatalog.getString(`To protect your funds, please use multisig wallets with redundancy, 
@@ -22,23 +29,18 @@
                      Just the wallet seed is not enough.`);
       }
 
-      if (profileService.profile.xPrivKeyEncrypted) {
-        self.credentialsEncrypted = true;
-      } else {
+      if (!self.needAuth) {
         setWords(fc.getMnemonic());
-      }
-      if (fc.credentials && !fc.credentials.mnemonicEncrypted && !fc.credentials.mnemonic) {
-        self.deleted = true;
       }
 
       self.toggle = function () {
         self.error = '';
-        if (!self.credentialsEncrypted) {
+        if (!self.needAuth) {
           self.show = !self.show;
-        }
-
-        if (self.credentialsEncrypted) {
+        } else if (needPassword) {
           self.passwordRequest();
+        } else if (needFingerprint) {
+          self.fingerprintRequest();
         }
 
         $timeout(() => {
@@ -80,13 +82,17 @@
             $log.warn('Error decrypting credentials:', self.error); // TODO
             return;
           }
-          if (!self.show && self.credentialsEncrypted) {
-            self.show = !self.show;
-          }
-          self.credentialsEncrypted = false;
-          setWords(fc.getMnemonic());
-          $rootScope.$emit('Local/BackupDone');
+          this.successUnlock();
         });
+      };
+
+      self.successUnlock = function () {
+        if (!self.show && self.needAuth) {
+          self.show = !self.show;
+        }
+        self.needAuth = false;
+        setWords(fc.getMnemonic());
+        $rootScope.$emit('Local/BackupDone');
       };
 
       self.passwordRequest = function () {
@@ -94,7 +100,7 @@
           self.unlock();
         } catch (e) {
           if (e.message && e.message.match(/encrypted/) && !!profileService.profile.xPrivKeyEncrypted) {
-            self.credentialsEncrypted = true;
+            self.needAuth = true;
 
             $timeout(() => {
               $scope.$apply();
@@ -103,6 +109,14 @@
             self.unlock();
           }
         }
+      };
+
+      self.fingerprintRequest = function () {
+        profileService.requestTouchid(null, (err) => {
+          if (!err) {
+            this.successUnlock();
+          }
+        });
       };
     });
 }());
