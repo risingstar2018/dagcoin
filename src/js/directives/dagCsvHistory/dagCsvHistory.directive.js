@@ -9,12 +9,12 @@
     .module('copayApp.directives')
     .directive('dagCsvHistory', dagCsvHistory);
 
-  dagCsvHistory.$inject = ['utilityService', 'profileService', 'configService', 'sharedService',
-    '$rootScope', 'nodeWebkit', '$timeout', '$log', 'Device', 'gettextCatalog'];
+  dagCsvHistory.$inject = ['utilityService', 'profileService', 'configService', 'sharedService', 'fileSystemService',
+    '$rootScope', 'nodeWebkit', '$timeout', '$log', 'lodash', 'gettextCatalog'];
 
-  function dagCsvHistory(utilityService, profileService, configService, sharedService, $rootScope, nodeWebkit,
-                         $timeout, $log, Device, gettextCatalog) {
-    const isCordova = utilityService.isCordova;
+  function dagCsvHistory(utilityService, profileService, configService, sharedService, fileSystemService,
+                         $rootScope, nodeWebkit, $timeout, $log, lodash, gettextCatalog) {
+    const isMobile = utilityService.isMobile();
     return {
       restrict: 'E',
       templateUrl: 'directives/dagCsvHistory/dagCsvHistory.template.html',
@@ -23,9 +23,10 @@
         $scope.csvHistory = () => {
           const fc = profileService.focusedClient;
           const config = configService.getSync();
-          const dagUnitValue = config.wallet.settings.dagUnitValue;
+          // in case of existing dagUnitValue control
+          const unitValue = config.wallet.settings.dagUnitValue || config.wallet.settings.unitValue;
           const currentWallet = sharedService.getCurrentWallet();
-          csvHistory(currentWallet, fc, dagUnitValue);
+          csvHistory(currentWallet, fc, unitValue);
         };
       }
     };
@@ -35,9 +36,9 @@
      *
      * @param currentWallet current selected wallet
      * @param fc focused client
-     * @param dagUnitValue
+     * @param unitValue
      */
-    function csvHistory(currentWallet, fc, dagUnitValue) {
+    function csvHistory(currentWallet, fc, unitValue) {
       const CSV_CONTENT_ID = '__csv_content';
 
       function setCsvContent(data) {
@@ -103,6 +104,8 @@
       /**
        * Used when platform is cordova
        * Downloads file into window.cordova.file.documentsDirectory with a filename tailing with current time
+       * window.cordova.file.documentsDirectory variable is set just for iOS.
+       * For Android @see fileSystemService.getDeviceStorageDir
        * @param uri
        */
       function saveFileIntoDownloadFolder(csvContent) {
@@ -111,13 +114,8 @@
           $rootScope.$emit('Local/ShowAlert', JSON.stringify(e), 'fi-alert', () => { });
         };
 
-        // TODO move to fileSystemService as getDownloadDir. It only works with cordova.
-        let storageLocation;
-        if (Device.android) {
-          storageLocation = 'file:///storage/emulated/0/';
-        } else if (Device.iOS) {
-          storageLocation = window.cordova.file.documentsDirectory;
-        } else {
+        const storageLocation = fileSystemService.getDeviceStorageDir();
+        if (lodash.isEmpty(storageLocation)) {
           alert('Could not detect device');
           return;
         }
@@ -126,7 +124,7 @@
         const date = new Date().toISOString().slice(0, 19)
           .replace(':', '')
           .replace('T', '-');
-        const fileName = `${self.alias || self.walletName}-${date}.csv`
+        const fileName = `${currentWallet.alias || currentWallet.walletName}-${date}.csv`
           .replace(/[ <>:,{}"\/\\|?*]+/g, '');
 
         window.resolveLocalFileSystemURL(storageLocation, (fileSystem) => {
@@ -153,15 +151,11 @@
         }, errorCallback);
       }
 
-      if (isCordova) {
-        $log.info('CSV generation not available in mobile');
-        return;
-      }
       const isNode = nodeWebkit.isDefined();
       if (!fc.isComplete()) return;
 
       $log.debug('Generating CSV from History');
-      // self.setOngoingProcess('generatingCSV', true);
+      $rootScope.$emit('Local/generatingCSV', true);
 
       $timeout(() => {
         if (!currentWallet) {
@@ -169,14 +163,14 @@
           return;
         }
         fc.getTxHistory('base', currentWallet.shared_address, (txs) => {
-          // self.setOngoingProcess('generatingCSV', false);
+          $rootScope.$emit('Local/generatingCSV', false);
           $log.debug('Wallet Transaction History:', txs);
 
           const data = txs;
           const filename = `Dagcoin-${currentWallet.alias || currentWallet.walletName}.csv`;
           let csvContent;
 
-          if (!isNode && !Device.any) {
+          if (!isNode && !isMobile) {
             csvContent = 'data:text/csv;charset=utf-8,';
           } else {
             csvContent = 'Date,Destination,Note,Amount,Currency\n';
@@ -199,14 +193,13 @@
             if (it.action === 'moved') {
               note += ` Moved:${it.amount}`;
             }
-
-            dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${formatString((amount / dagUnitValue).toString())},dag`;
+            dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${formatString((amount / unitValue).toString())},dag`;
             csvContent += `${dataString}\n`;
           });
 
           if (isNode) {
             saveFile('#export_file', csvContent);
-          } else if (Device.any) {
+          } else if (isMobile) {
             saveFileIntoDownloadFolder(csvContent);
           } else {
             const encodedUri = encodeURI(csvContent);

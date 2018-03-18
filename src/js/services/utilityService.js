@@ -75,6 +75,10 @@
       return amount / unitValue;
     };
 
+    root.isMobile = function () {
+      return Device.android || Device.iOS;
+    };
+
     return root;
   });
 }());

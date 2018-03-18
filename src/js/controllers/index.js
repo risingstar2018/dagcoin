@@ -923,5 +923,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
           $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
+
+        $rootScope.$on('Local/generatingCSV', (event, state) => {
+          console.log(`generatingCSV event ${state}`)
+          self.setOngoingProcess('generatingCSV', state);
+        });
       });
 }());
