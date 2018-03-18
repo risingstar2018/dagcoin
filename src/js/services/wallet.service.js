@@ -31,18 +31,6 @@
           sendCoinRequest.requestTouchidCb(err);
           return;
         }
-        /* değiştir
-        if (err) {
-          profileService.lockFC();
-          indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
-          vm.error = err;
-          $timeout(() => {
-            delete vm.current_payment_key;
-            $scope.$digest();
-          }, 1);
-          return;
-        }
-        */
         let myAddress;
         const device = require('byteballcore/device.js');
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
@@ -129,11 +117,6 @@
             walletDefinedByAddresses.createNewSharedAddress(arrDefinition, assocSignersByPath, {
               ifError(err) {
                 sendCoinRequest.createNewSharedAddressCb(err);
-                /* değiştir
-                delete vm.current_payment_key;
-                indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
-                vm.setSendError(err);
-                */
               },
               ifOk(sharedAddress) {
                 composeAndSend(sharedAddress);
@@ -221,13 +204,6 @@
                 let error = sendMultiPaymentError;
 
                 sendCoinRequest.sendMultiPaymentDoneBeforeCb(sendMultiPaymentError);
-                /* değiştir
-                // if multisig, it might take very long before the callback is called
-                indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
-                breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
-                delete vm.current_payment_key;
-                profileService.bKeepUnlocked = false;
-                */
                 if (sendMultiPaymentError) {
                   if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
                     error = gettextCatalog.getString('Not enough dagcoins');
@@ -236,8 +212,6 @@
                   }
                   sendCoinRequest.sendMultiPaymentDoneErrorCb(error);
                   return;
-                  // değiştir
-                  // return vm.setSendError(error);
                 }
                 const binding = sendCoinRequest.binding;
 
@@ -266,14 +240,8 @@
                   }
                 }
 
-                /* değiştir
-                vm.resetForm();
-                $rootScope.$emit('NewOutgoingTx');
-                */
                 sendCoinRequest.sendMultiPaymentDoneAfter(recipientDeviceAddress, toAddress, asset);
                 if (recipientDeviceAddress) { // show payment in chat window
-                  // değiştir
-                  // eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset, indexScope.walletId, true, toAddress);
                   if (binding && binding.reverseAmount) { // create a request for reverse payment
                     if (!myAddress) {
                       throw Error(gettextCatalog.getString('my address not known'));
@@ -291,29 +259,12 @@
                       walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => { });
                     }
                   }
-                } else {
-                  /* değiştir, sendMultiPaymentDoneAfter buna ekle
-                  indexScope.updateHistory((success) => {
-                    if (success) {
-                      $state.go('walletHome.home');
-                      $rootScope.$emit('Local/SetTab', 'walletHome');
-                      vm.openTxModal(indexScope.txHistory[0], indexScope.txHistory);
-                    } else {
-                      console.error('updateTxHistory not executed');
-                    }
-                  });
-                  */
                 }
               });
             });
             sendCoinRequest.composeAndSendDoneCb();
-            // değiştir
-            // $scope.sendForm.$setPristine();
           }).catch((error) => {
             sendCoinRequest.composeAndSendErrorCb(error);
-            // delete vm.current_payment_key;
-            // indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
-            // $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => { });
           });
         }
 

@@ -16,7 +16,6 @@
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const eventBus = require('byteballcore/event_bus.js');
 
-    // TODO indexScope is called just for getting available amount. This should not be done like that.
     const indexScope = $scope.index;
     const config = configService.getSync();
     const configWallet = config.wallet;
@@ -50,22 +49,22 @@
         console.log(`A payment requested. Form will be rendered with these values ${JSON.stringify(request)}`);
         if (PaymentRequest.PAYMENT_REQUEST === request.type) {
           vm.setForm(request.address, request.amount, request.comment, request.asset, request.recipientDeviceAddress);
-          if (form.address.$invalid && !vm.blockUx) { // TODO sinan ?? blockUx
+          if (form.address.$invalid && !vm.blockUx) {
             console.error('Payment Request :: invalid address, resetting form');
             vm.resetForm();
             vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
           }
         } else if (PaymentRequest.MERCHANT_PAYMENT_REQUEST === request.type) {
           vm.invoiceId = invoiceId;
-          vm.validForSeconds = Math.floor(vm.validForSeconds - 10); // 10 is a security threshold ?? TODO sinan
+          vm.validForSeconds = Math.floor(vm.validForSeconds - 10); // 10 is a security threshold ??
           if (request.state === 'PENDING') {
             vm.setForm(request.address, request.amount, null, ENV.DAGCOIN_ASSET, null);
-            if (form.address.$invalid && !vm.blockUx) { // TODO sinan ?? blockUx
+            if (form.address.$invalid && !vm.blockUx) {
               console.error('Merchant Payment Request :: invalid address, resetting form');
               vm.resetForm();
               vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
             }
-            if (vm.validForSeconds <= 0) { // TODO sinan bunları walletHome'dan sil
+            if (vm.validForSeconds <= 0) {
               vm.resetForm();
               vm.error = gettextCatalog.getString('Merchant payment request expired');
             }
@@ -474,7 +473,6 @@
       const fc = profileService.focusedClient;
       const unitValue = vm.unitValue;
 
-      // TODO sinan ?? should be removed? used neither in class nor in html files
       if (utilityService.isCordova) {
         vm.hideAddress = false;
         vm.hideAmount = false;
@@ -485,7 +483,6 @@
         return console.log('form is gone');
       }
       if (form.$invalid) {
-        // TODO sinan why setSendError not used
         vm.error = gettextCatalog.getString('Unable to send transaction proposal');
         return;
       }
@@ -597,9 +594,9 @@
 
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.color = fc.backgroundColor;
-        $scope.arrPublicAssetInfos = indexScope.arrBalances.filter(b => !b.is_private).map((b) => {
-          return {asset: b.asset, displayName: vm.unitName};
-        });
+        $scope.arrPublicAssetInfos = indexScope.arrBalances
+          .filter(b => !b.is_private)
+          .map(b => ({ asset: b.asset, displayName: vm.unitName }));
         $scope.binding = { // defaults
           type: 'reverse_payment',
           timeout: 4,

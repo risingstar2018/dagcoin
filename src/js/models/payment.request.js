@@ -1,5 +1,9 @@
 /* eslint-disable no-unused-vars */
 
+/**
+ * PaymentRequest is used for send.controller initialization parameters
+ * @constructor
+ */
 function PaymentRequest() {
   this.type = null;
   this.address = null;
@@ -7,7 +11,7 @@ function PaymentRequest() {
   this.asset = null;
   this.recipientDeviceAddress = null;
   this.uri = null;
-  this.comment = null; // TODO sinan how this is used? This must be added to routes.js path variable later
+  this.comment = null;
   this.isNotEmpty = function () {
     if (this.type === PaymentRequest.PAYMENT_REQUEST) {
       return this.address != null

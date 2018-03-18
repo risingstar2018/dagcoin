@@ -209,14 +209,4 @@ function IndexEventsSupport(params) {
       });
     });
   };
-  this.initCreateNewWallet = (cb) => {
-    console.log('initCreateNewWallet eventBus on');
-    // TODO sinan after merging move method from indexjs
-    if (cb) cb();
-  };
-  this.initSigningRequest = (cb) => {
-    console.log('initSigningRequest eventBus on');
-    // TODO sinan after merging move method from indexjs
-    if (cb) cb();
-  };
 }

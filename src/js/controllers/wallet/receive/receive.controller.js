@@ -18,7 +18,6 @@
     const vm = this;
     vm.isCordova = isCordova;
 
-    // TODO indexScope is called just for getting available amount. This should not be done like that.
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {

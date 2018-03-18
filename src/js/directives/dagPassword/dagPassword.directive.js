@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (() => {
   'use strict';
 
@@ -111,7 +112,6 @@
           const needFingerprint = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
           self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
         });
-
       }
     };
   }

@@ -73,8 +73,6 @@
       $rootScope.$digest();
     }, 100);
 
-    // TODO sinan this method is called multiple places,
-    // Should this be in index.js (main controller) ?
     this.formFocus = function (what) {
       if (isCordova) {
         this.hideMenuBar(what);

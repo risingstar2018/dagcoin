@@ -162,7 +162,5 @@
         lightWallet.refreshLightClientHistory();
       }, 500);
     }, 5000);
-
-    // TODO sinan home methods will be written into this class
   }
 })();
