@@ -108,8 +108,12 @@
                 <span class="name" translate>Set up a Password </span>
               </div>
               <div class="input-wrap">
-                <input class="password" autocomplete="off" type="text" placeholder="{{'Your export password'|translate}}"
-                       name="password" ng-model="export.password">
+                <dag-password placeholder="'Your export password'"
+                              name="'password'"
+                              ng-model="export.password"
+                              can-set-visible="true"
+                              id="'passwordInput1'"
+                              auto-focus="true"></dag-password>
               </div>
             </div>
             <div class="form-group">
@@ -117,8 +121,12 @@
                 <span class="name" translate>Repeat the password</span>
               </div>
               <div class="input-wrap">
-                <input class="password" autocomplete="off" type="text" placeholder="{{'Repeat password'|translate}}"
-                       name="password2" ng-model="export.repeatpassword">
+                <dag-password placeholder="'Repeat password'"
+                              name="'password2'"
+                              ng-model="export.repeatpassword"
+                              can-set-visible="true"
+                              id="'passwordInput2'"
+                              auto-focus="true"></dag-password>
               </div>
             </div>
             <div class="size-14 m20b text-gray" ng-show="!export.isCordova">

@@ -5,12 +5,12 @@
     function ($rootScope, $scope, $timeout, profileService, notification, go, gettextCatalog) {
       const self = this;
 
+      self.password = '';
       self.validationErrors = [];
       let passwordTemp;
 
       self.isVerification = false;
       self.passwordVisible = false;
-      document.getElementById('passwordInput').focus();
 
       self.close = function (cb) {
         return cb('No password given');
