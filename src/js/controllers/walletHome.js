@@ -1320,10 +1320,7 @@
           }
         };
 
-        this.resetForm = function (cb) {
-          this.resetError();
-          delete this.binding;
-
+        this.cancelForm = function (cb) {
           const invoiceId = this.invoiceId;
 
           if (invoiceId != null) {
@@ -1344,6 +1341,13 @@
               self.error = gettextCatalog.getString('Payment is cancelled');
             });
           }
+
+          this.resetForm(cb);
+        };
+
+        this.resetForm = function (cb) {
+          this.resetError();
+          delete this.binding;
 
           if (this.invoiceTimeout) {
             $timeout.cancel(this.invoiceTimeout);
