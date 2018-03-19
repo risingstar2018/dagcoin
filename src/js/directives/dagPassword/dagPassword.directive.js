@@ -29,6 +29,7 @@
         self.validationErrors = [];
         let passwordTemp;
         self.isVerification = false;
+        self.passwordVisible = false;
         if (self.askPassword) {
           document.getElementById('passwordInput').focus();
         }

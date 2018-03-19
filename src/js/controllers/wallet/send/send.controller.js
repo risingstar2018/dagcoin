@@ -29,6 +29,7 @@
     vm.blockUx = false;
     vm.lockAddress = false;
     vm.lockAmount = false;
+    vm.invoiceTimeout = null;
 
     const assocDeviceAddressesByPaymentAddress = {};
 
@@ -96,7 +97,7 @@
         return;
       }
 
-      $timeout(() => {
+      vm.invoiceTimeout = $timeout(() => {
         vm.validForSeconds -= 1;
         vm.countDown();
       }, 1000);
@@ -236,15 +237,14 @@
 
       const invoiceId = vm.invoiceId;
 
-      const options = {
-        uri: `${ENV.MERCHANT_INTEGRATION_API}/cancel`,
-        method: 'POST',
-        json: {
-          invoiceId
-        }
-      };
-
       if (invoiceId !== null) {
+        const options = {
+          uri: `${ENV.MERCHANT_INTEGRATION_API}/cancel`,
+          method: 'POST',
+          json: {
+            invoiceId
+          }
+        };
         const request = require('request');
         request(options, (error, response, body) => {
           if (error) {
@@ -252,7 +252,12 @@
           }
           console.log(`RESPONSE: ${JSON.stringify(response)}`);
           console.log(`BODY: ${JSON.stringify(body)}`);
+          vm.error = gettextCatalog.getString('Payment is cancelled');
         });
+      }
+
+      if (vm.invoiceTimeout) {
+        $timeout.cancel(vm.invoiceTimeout);
       }
 
       vm.invoiceId = null;
@@ -594,9 +599,7 @@
 
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.color = fc.backgroundColor;
-        $scope.arrPublicAssetInfos = indexScope.arrBalances
-          .filter(b => !b.is_private)
-          .map(b => ({ asset: b.asset, displayName: vm.unitName }));
+        $scope.arrPublicAssetInfos = indexScope.arrBalances.filter(b => !b.is_private).map(b => ({ asset: b.asset, displayName: vm.unitName }));
         $scope.binding = { // defaults
           type: 'reverse_payment',
           timeout: 4,

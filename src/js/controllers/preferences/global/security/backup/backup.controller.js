@@ -45,7 +45,7 @@
                      e.g. 1-of-2 wallet with one key on this device and another key on your smartphone.  
                      Just the wallet seed is not enough.`);
     }
-    if (fc.isPrivKeyEncrypted()) {
+    if (profileService.profile.xPrivKeyEncrypted) {
       vm.credentialsEncrypted = true;
     } else {
       setWords(fc.getMnemonic());
@@ -59,6 +59,7 @@
     vm.passwordRequest = passwordRequest;
     vm.walletExportCordova = walletExportCordova;
     vm.walletExport = walletExport;
+    vm.unlock = unlock;
 
     vm.delete = function () {
       confirmDialog.show(msg, (ok) => {
@@ -99,30 +100,34 @@
 
     function passwordRequest() {
       try {
-        setWords(fc.getMnemonic());
+        unlock();
       } catch (e) {
-        if (e.message && e.message.match(/encrypted/) && fc.isPrivKeyEncrypted()) {
+        if (e.message && e.message.match(/encrypted/) && !!profileService.profile.xPrivKeyEncrypted) {
           vm.credentialsEncrypted = true;
 
           $timeout(() => {
             $scope.$apply();
           }, 1);
 
-          profileService.unlockFC(null, (err) => {
-            if (err) {
-              vm.error = `${gettextCatalog.getString('Could not decrypt')}: ${err.message}`;
-              $log.warn('Error decrypting credentials:', vm.error); // TODO
-              return;
-            }
-            if (!vm.show && vm.credentialsEncrypted) {
-              vm.show = !vm.show;
-            }
-            vm.credentialsEncrypted = false;
-            setWords(fc.getMnemonic());
-            $rootScope.$emit('Local/BackupDone');
-          });
+          unlock();
         }
       }
+    }
+
+    function unlock() {
+      profileService.unlockFC(null, (err) => {
+        if (err) {
+          vm.error = `${gettextCatalog.getString('Could not decrypt')}: ${err.message}`;
+          $log.warn('Error decrypting credentials:', vm.error); // TODO
+          return;
+        }
+        if (!vm.show && vm.credentialsEncrypted) {
+          vm.show = !vm.show;
+        }
+        vm.credentialsEncrypted = false;
+        setWords(fc.getMnemonic());
+        $rootScope.$emit('Local/BackupDone');
+      });
     }
 
     function walletExportCordova(connection) {
