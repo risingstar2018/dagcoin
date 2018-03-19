@@ -9,7 +9,7 @@
       let passwordTemp;
 
       self.isVerification = false;
-
+      self.passwordVisible = false;
       document.getElementById('passwordInput').focus();
 
       self.close = function (cb) {

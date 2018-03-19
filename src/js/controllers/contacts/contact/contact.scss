@@ -1,8 +1,11 @@
 @import "../../../../css/variables";
 
 .contact.contact {
-  background: #f1f1f1;
   padding: 15px;
+
+  > .mCustomScrollBox {
+    max-height: 100% !important;
+  }
 
   .contact_card {
     background: #fff;
@@ -22,6 +25,7 @@
         font-size: 16px;
         color: #333;
         font-weight: 700;
+        word-wrap: break-word;
       }
 
       .contact_meta_triggers {
@@ -68,7 +72,7 @@
       .contact_info_value {
         color: #575f69;
         font-size: 14px;
-        white-space: pre;
+        word-wrap: break-word;
       }
 
       > ul {
@@ -76,6 +80,10 @@
           border-top: 1px solid #eee;
           padding: 10px 0;
           margin: 0 10px;
+
+          &.contact_action {
+            padding-top: 25px;
+          }
         }
       }
     }
