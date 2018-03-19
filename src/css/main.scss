@@ -1896,6 +1896,28 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
           }
         }
       }
+
+      .transaction-status-list {
+        .first-row {
+          svg-icon {
+            top: -5px;
+          }
+          .tx-status-list-title {
+            position: relative;
+            top: -4px;
+          }
+        }
+
+        .last-row {
+          svg-icon {
+            top: 5px;
+          }
+          .tx-status-list-title {
+            position: relative;
+            top: 5px;
+          }
+        }
+      }
     }
 
     .modal-content-header {
@@ -3300,11 +3322,16 @@ p.color_red {
   width: 100%;
 }
 
+.div-with-top-right-img > .text {
+  width: -webkit-calc(100% - 24px);
+}
+
 .div-with-top-right-img > .star {
   position: absolute;
   right: 0;
   top: 0;
   color: $gold;
+  width: 24px;
 }
 
 .seed-words {

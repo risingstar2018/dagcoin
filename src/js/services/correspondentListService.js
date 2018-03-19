@@ -91,9 +91,8 @@ angular.module('copayApp.services').factory('correspondentListService',
           return address;
         }
         return `<a dropdown-toggle="#pop${address}">${address}</a><ul id="pop${address}"` +
-            'class="f-dropdown drop-to4p drop-4up" style="left:0px" data-dropdown-content><li>' +
-            `<a ng-click="sendPayment('${address}')">Pay to this address</a></li>` +
-            `<li><a ng-click="offerContract('${address}')">Offer a contract</a></li></ul>`;
+          'class="f-dropdown drop-to4p drop-4up" style="left:0px" data-dropdown-content><li>' +
+          `<a ng-click="sendPayment('${address}')">Pay to this address</a></li></ul>`;
       }).replace(paymentRequestRegexp, (str, address, queryString) => {
         if (!ValidationUtils.isValidAddress(address)) {
           return str;

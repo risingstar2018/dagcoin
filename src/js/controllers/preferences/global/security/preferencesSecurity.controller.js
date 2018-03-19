@@ -10,10 +10,9 @@
   function PreferencesSecurityCtrl($scope, $rootScope, $log, $timeout, configService, profileService, fingerprintService, gettextCatalog, $q) {
     const vm = this;
     const config = configService.getSync();
-    config.touchIdFor = config.touchIdFor || {};
     vm.encrypt = !!profileService.profile.xPrivKeyEncrypted;
     vm.touchidAvailable = fingerprintService.isAvailable();
-    vm.touchid = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
+    vm.touchid = !!config.touchId;
 
     const unwatchEncrypt = $scope.$watch('security.encrypt', (val) => {
       const fc = profileService.focusedClient;
@@ -34,12 +33,10 @@
         vm.touchidError = false;
         return;
       }
-      const walletId = profileService.focusedClient.credentials.walletId;
-
       const opts = {
-        touchIdFor: {},
+        touchId: null,
       };
-      opts.touchIdFor[walletId] = newVal;
+      opts.touchId = newVal;
 
       profileService.requestTouchid('unlockingApp', (err) => {
         if (err) {

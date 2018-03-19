@@ -26,30 +26,6 @@
     if (window.cordova !== undefined) {
       document.addEventListener('deviceready', () => {
         /*
-         document.addEventListener('pause', function() {
-         if (!window.ignoreMobilePause) {
-         setTimeout(function() {
-         window.location = '#/cordova/pause/';
-         }, 100);
-         }
-         setTimeout(function() {
-         window.ignoreMobilePause = false;
-         }, 100);
-         }, false);
-
-         document.addEventListener('resume', function() {
-         if (!window.ignoreMobilePause) {
-         setTimeout(function() {
-         window.location = '#/cordova/resume/';
-         }, 100);
-         }
-         setTimeout(function() {
-         window.ignoreMobilePause = false;
-         }, 100);
-         }, false);
-         */
-
-        /*
          // Back button event
          document.addEventListener('backbutton', function() {
          var loc = window.location;
