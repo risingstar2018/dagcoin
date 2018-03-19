@@ -99,6 +99,7 @@ public/migrations
 # IntelliJ Idea
 .idea/*
 .sass-cache
+dagcoin.iml
 
 # eslint
 .eslintcache
