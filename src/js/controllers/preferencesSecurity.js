@@ -31,8 +31,7 @@
         this.currentLanguageName = uxLanguage.getCurrentLanguageName();
         this.torEnabled = conf.socksHost && conf.socksPort;
         this.touchidAvailable = fingerprintService.isAvailable();
-        config.touchIdFor = config.touchIdFor || {};
-        $scope.touchid = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
+        $scope.touchid = !!config.touchId;
         $scope.pushNotifications = config.pushNotifications.enabled;
         self.initFundingNode();
       };
@@ -142,12 +141,10 @@
           $scope.touchidError = false;
           return;
         }
-        const walletId = profileService.focusedClient.credentials.walletId;
-
         const opts = {
-          touchIdFor: {},
+          touchId: null,
         };
-        opts.touchIdFor[walletId] = newVal;
+        opts.touchId = newVal;
 
         profileService.requestTouchid('unlockingApp', (err) => {
           if (err) {

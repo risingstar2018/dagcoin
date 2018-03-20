@@ -86,10 +86,10 @@
 
               </div>
 
-              <span ng-if="index.dagBalance.pending" class="ballance" translate>Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
-              <span ng-if="!index.dagBalance.pending" class="ballance" translate>Wallet balance</span>
+              <span ng-if="index.walletInfoVisibility.visible && index.dagBalance.pending" class="ballance" translate>Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
+              <span ng-if="index.walletInfoVisibility.visible && !index.dagBalance.pending" class="ballance" translate>Wallet balance</span>
 
-              <div class="size-10 m10t" ng-if="index.dagBalance.shared !== undefined">
+              <div class="size-10 m10t" ng-if="index.walletInfoVisibility.visible && index.dagBalance.shared !== undefined">
                 <a ng-click="index.openSubwalletModal()">
                   <span translate>Also</span>
                   <span>{{index.dagBalance.sharedStr}}</span>
@@ -97,7 +97,7 @@
                 </a>
               </div>
 
-              <div class="m10t">
+              <div class="m10t" ng-if="index.walletInfoVisibility.visible">
                 <a ng-click="openSharedAddressDefinitionModal(index.shared_address)"
                    class="button outline round light-gray tiny preferences-icon m0" ng-if="index.shared_address">
                   <i class="fi-eye size-24 vm wallet-settings"></i>
@@ -363,7 +363,7 @@
               <button ng-disabled="sendForm.$invalid || index.onGoingProcessName == 'sending'" class="btn btn_red-full send-button"
                       ng-click="home.submitForm()" translate>Send <i ng-if="home.validForSeconds > 0">({{home.validForSeconds}})</i>
               </button>
-              <button ng-if="home.validForSeconds > 0" class="btn btn_red-full" ng-click="home.resetForm()" translate>Cancel
+              <button ng-if="home.validForSeconds > 0" class="btn btn_red-full" ng-click="home.cancelForm()" translate>Cancel
               </button>
             </div>
           </form>

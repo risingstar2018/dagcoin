@@ -1550,11 +1550,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/ProfileBound', () => {
           const config = configService.getSync();
-
           // password and finger print options are read from config and profile service
           const needPassword = !!profileService.profile.xPrivKeyEncrypted;
-          const needFingerprint = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
-          self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
+          const needFingerprint = !!config.touchId;
+
+          if (!(self.walletInfoVisibility instanceof WalletInfoVisibility)) {
+            self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
+          }
         });
 
         $rootScope.$on('Local/NewFocusedWallet', () => {

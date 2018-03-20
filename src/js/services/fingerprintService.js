@@ -87,8 +87,7 @@ angular.module('copayApp.services').factory('fingerprintService', ($log, gettext
     if (client === 'unlockingApp') return true;
 
     const config = configService.getSync();
-    config.touchIdFor = config.touchIdFor || {};
-    return config.touchIdFor[client.credentials.walletId];
+    return config.touchId;
   };
 
   root.isAvailable = () => _isAvailable;

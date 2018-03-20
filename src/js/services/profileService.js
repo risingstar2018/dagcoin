@@ -163,14 +163,13 @@
             require('byteballcore/wallet.js');
             const device = require('byteballcore/device.js');
             const config = configService.getSync();
-            config.touchIdFor = config.touchIdFor || {};
             const firstWc = root.walletClients[lodash.keys(root.walletClients)[0]];
             if (root.profile.xPrivKeyEncrypted) {
               console.log('priv key is encrypted, will wait for UI and request password');
               // assuming bindProfile is called on encrypted keys only at program startup
               unlockWalletAndInitDevice();
               device.setDeviceAddress(root.profile.my_device_address);
-            } else if (config.touchIdFor[root.focusedClient.credentials.walletId]) {
+            } else if (config.touchId) {
               unlockWalletWithFingerprintAndInitDevice();
               device.setDeviceAddress(root.profile.my_device_address);
             } else if (root.profile.xPrivKey) {

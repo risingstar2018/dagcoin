@@ -60,6 +60,7 @@
         this.showScanner = false;
         this.isMobile = isMobile.any();
         this.addr = {};
+        this.invoiceTimeout = null;
         $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
         const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
@@ -490,7 +491,7 @@
             return;
           }
 
-          $timeout(() => {
+          this.invoiceTimeout = $timeout(() => {
             self.validForSeconds -= 1;
             self.countDown();
           }, 1000);
@@ -1263,9 +1264,12 @@
             return console.log('form.address has disappeared');
           }
           if (to) {
-            form.address.$setViewValue(to);
-            form.address.$isValid = true;
-            form.address.$render();
+            $timeout(() => {
+              form.address.$setViewValue(to);
+              form.address.$isValid = true;
+              form.address.$render();
+            }, 100);
+
             if (recipientDeviceAddress) {
               // must be already paired
               assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
@@ -1286,11 +1290,7 @@
               form.amount.$setViewValue(`${moneyAmount}`);
               form.amount.$isValid = true;
               form.amount.$render();
-
-              form.address.$setViewValue(to);
-              form.address.$isValid = true;
-              form.address.$render();
-            }, 300);
+            }, 100);
           } else {
             this.lockAmount = false;
             form.amount.$pristine = true;
@@ -1319,21 +1319,17 @@
           }
         };
 
-        this.resetForm = function (cb) {
-          this.resetError();
-          delete this.binding;
-
+        this.cancelForm = function (cb) {
           const invoiceId = this.invoiceId;
 
-          const options = {
-            uri: `${ENV.MERCHANT_INTEGRATION_API}/cancel`,
-            method: 'POST',
-            json: {
-              invoiceId
-            }
-          };
-
           if (invoiceId != null) {
+            const options = {
+              uri: `${ENV.MERCHANT_INTEGRATION_API}/cancel`,
+              method: 'POST',
+              json: {
+                invoiceId
+              }
+            };
             const request = require('request');
             request(options, (error, response, body) => {
               if (error) {
@@ -1341,7 +1337,19 @@
               }
               console.log(`RESPONSE: ${JSON.stringify(response)}`);
               console.log(`BODY: ${JSON.stringify(body)}`);
+              self.error = gettextCatalog.getString('Payment is cancelled');
             });
+          }
+
+          this.resetForm(cb);
+        };
+
+        this.resetForm = function (cb) {
+          this.resetError();
+          delete this.binding;
+
+          if (this.invoiceTimeout) {
+            $timeout.cancel(this.invoiceTimeout);
           }
 
           this.invoiceId = null;
