@@ -6,14 +6,6 @@
     function ($timeout) {
       let notifications = [];
 
-      /*
-       ls.getItem('notifications', function(err, data) {
-       if (data) {
-       notifications = JSON.parse(data);
-       }
-       });
-       */
-
       const queue = [];
       const settings = {
         info: {
@@ -256,40 +248,5 @@
 
       };
     },
-  ]).directive('notifications', (notification) => {
-    /**
-     *
-     * It should also parse the arguments passed to it that specify
-     * its position on the screen like "bottom right" and apply those
-     * positions as a class to the container element
-     *
-     * Finally, the directive should have its own controller for
-     * handling all of the notifications from the notification service
-     */
-    function link(scope, element, attrs) {
-      let position = attrs.notifications;
-      position = position.split(' ');
-      element.addClass('dr-notification-container');
-      for (let i = 0; i < position.length; i += 1) {
-        element.addClass(position[i]);
-      }
-    }
-
-    return {
-      restrict: 'A',
-      scope: {},
-      templateUrl: 'views/includes/notifications.html',
-      link,
-      controller: ['$scope',
-        function NotificationsCtrl($scope) {
-          $scope.queue = notification.getQueue();
-
-          $scope.removeNotification = function (noti) {
-            $scope.queue.splice($scope.queue.indexOf(noti), 1);
-          };
-        },
-      ],
-
-    };
-  });
+  ]);
 }());

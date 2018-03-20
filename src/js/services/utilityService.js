@@ -1,10 +1,11 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('utilityService', (lodash) => {
+  angular.module('copayApp.services').factory('utilityService', (lodash, Device, $timeout, nodeWebkit, gettextCatalog) => {
     const root = {};
     const regexStartWithPunctuationMark = /^[!@#$%^&*()-=_+|;'`:",.<>?']/i;
 
+    root.isCordova = Device.cordova;
     root.sortWalletsByName = function (wallets) {
       return lodash.sortBy(wallets, (wallet) => {
         const name = wallet.name.toUpperCase();
@@ -40,6 +41,42 @@
         return string;
       }
       return [string.slice(0, position), replace, string.slice(position)].join('');
+    };
+
+    /**
+     * @param scope scope of the dom
+     * @param address the address to be copied, if empty nothing happens
+     */
+    root.copyAddress = function (scope, address) {
+      if (lodash.isEmpty(address)) {
+        return;
+      }
+      if (root.isCordova) {
+        window.cordova.plugins.clipboard.copy(address);
+        window.plugins.toast.showShortCenter(gettextCatalog.getString('Copied to clipboard'));
+      } else if (nodeWebkit.isDefined()) {
+        nodeWebkit.writeToClipboard(address);
+      }
+
+      scope.tooltipCopiedShown = true;
+
+      $timeout(() => {
+        scope.tooltipCopiedShown = false;
+      }, 1000);
+    };
+
+    root.getAmountInSmallestUnits = function (amount, asset, unitValue) {
+      console.log(amount, asset, unitValue);
+      const moneyAmount = amount * self.unitValue;
+      return Math.round(moneyAmount);
+    };
+
+    root.getAmountInDisplayUnits = function (amount, unitValue) {
+      return amount / unitValue;
+    };
+
+    root.isMobile = function () {
+      return Device.android || Device.iOS;
     };
 
     return root;

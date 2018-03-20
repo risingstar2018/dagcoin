@@ -2,8 +2,9 @@
   'use strict';
 
   angular.module('copayApp.services')
-  .factory('fileSystemService', ($log, isCordova) => {
+  .factory('fileSystemService', ($log, Device) => {
     const root = {};
+    const isCordova = Device.cordova;
     let bFsInitialized = false;
 
     const fs = require('fs');
@@ -211,6 +212,23 @@
       }
 
       return desktopApp.getAppDataDir();
+    };
+
+    /**
+     *
+     * @return {*} storage directory of device. null in case of device is not a phone.
+     */
+    root.getDeviceStorageDir = function () {
+      let storageDir;
+      if (Device.android) {
+        storageDir = 'file:///storage/emulated/0/';
+      } else if (Device.iOS) {
+        storageDir = window.cordova.file.documentsDirectory;
+      } else {
+        $log.warn('Could not detect device as getting storage directory');
+        storageDir = null;
+      }
+      return storageDir;
     };
 
     return root;

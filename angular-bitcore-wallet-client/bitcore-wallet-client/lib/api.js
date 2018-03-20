@@ -6,7 +6,6 @@ const breadcrumbs = require('byteballcore/breadcrumbs.js');
 const constants = require('byteballcore/constants.js');
 
 const isTestnet = constants.version.match(/t$/);
-constants.DAGCOIN_ASSET = isTestnet ? 'B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=' : 'j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=';
 const lodash = require('lodash');
 const $ = require('preconditions').singleton();
 const util = require('util');
@@ -489,17 +488,6 @@ API.prototype.createAddress = function (isChange, cb) {
   }
 };
 
-/*
- API.prototype.sendPayment = function(asset, to_address, amount, arrSigningDeviceAddresses, recipient_device_address, cb) {
- this.sendMultiPayment({
- asset: asset,
- to_address: to_address,
- amount: amount,
- arrSigningDeviceAddresses: arrSigningDeviceAddresses,
- recipient_device_address: recipient_device_address
- }, cb);
- } */
-
 API.prototype.sendMultiPayment = function (opts, cb) {
   const self = this;
   const coin = (this.credentials.network === 'livenet' ? '0' : '1');
@@ -520,9 +508,6 @@ API.prototype.sendMultiPayment = function (opts, cb) {
       opts.change_address = opts.main_address;
     } else {
       opts.change_address = opts.shared_address;
-    }
-    if (opts.asset && opts.asset !== 'base') {
-      opts.fee_paying_wallet = self.credentials.walletId;
     }
     Wallet.sendMultiPayment(opts, cb);
   } else {
@@ -558,9 +543,6 @@ API.prototype.getBalance = function (sharedAddress, cb) {
   $.checkState(this.credentials && this.credentials.isComplete());
   const walletId = this.credentials.walletId;
   Wallet.readBalance(sharedAddress || walletId, (assocBalances) => {
-    if (!assocBalances[constants.DAGCOIN_ASSET]) {
-      assocBalances[constants.DAGCOIN_ASSET] = { stable: 0, pending: 0 };
-    }
     Wallet.readSharedBalance(walletId, (assocSharedBalances) => {
       Object.keys(assocSharedBalances).forEach((asset) => {
         if (!assocBalances[asset]) {

@@ -1,0 +1,104 @@
+<dag-nav-bar title="{{ 'Wallet Information' | translate }}" go-back="preferencesAdvanced" invert></dag-nav-bar>
+
+<div class="content preferences" ng-scrollbars>
+  <h4 translate>Wallet Information</h4>
+  <ul class="preferences_links">
+    <li>
+      <div translate>Wallet Name</div>
+      <div class="value">{{info.walletName}}</div>
+    </li>
+
+    <li>
+      <div translate>Wallet Id</div>
+      <div class="value">{{info.walletId}}</div>
+    </li>
+
+    <li>
+      <div translate>Wallet Configuration (m-n)</div>
+      <div class="value">{{info.M}}-{{info.N}}</div>
+    </li>
+
+    <li>
+      <div translate>Derivation Strategy</div>
+      <div class="value">{{info.derivationStrategy}}</div>
+    </li>
+
+    <li ng-show="index.externalSource">
+      <div translate>Hardware Wallet</div>
+      <div class="value capitalize">{{index.externalSource}}</div>
+    </li>
+
+    <li ng-show="!index.externalSource && !index.canSign">
+      <div class="value capitalize" translate>No private key</div>
+    </li>
+
+    <li ng-show="index.account">
+      <div translate>Account ({{info.derivationStrategy}})</div>
+      <div class="value">#{{index.account}}</div>
+    </li>
+  </ul>
+  <h4 translate>Co-signers</h4>
+  <ul class="preferences_links">
+    <li ng-repeat="copayer in index.copayers">
+    <span class="size-12" ng-show="copayer.me">
+      <i class="icon-contact size-24 m10r"></i>{{'Me'|translate}} <i class="fi-check m5 right"></i>
+    </span>
+      <span class="size-12 text-gray" ng-show="!copayer.me">
+      <i class="icon-contact size-24 m10r"></i> {{copayer.name}}<i class="fi-check m5 right"></i>
+    </span>
+    </li>
+  </ul>
+
+  <h4 translate>Extended Public Keys</h4>
+  <ul class="preferences_links">
+    <li ng-repeat="copayer in index.copayers">
+      <div>{{copayer.name||'Me'|translate}}</div>
+      <div class="value wrapped">
+        {{copayer.extended_pubkey}}
+      </div>
+    </li>
+  </ul>
+
+  <div class="wallet-addresses" ng-show="info.addrs">
+    <h4>{{'All Wallet Addresses' | translate}}
+      <button ng-click="info.setAddress()" ng-disabled="index.isOffline"
+              ng-show="!info.isSingleAddressWallet()">
+        {{'Generate new address' | translate}}
+      </button>
+    </h4>
+    <ul class="preferences_links">
+      <li ng-repeat="a in info.addrs">
+        <div class="enable_text_select ellipsis">
+          {{a.address}}
+        </div>
+        <div class="value">
+          {{a.path}} &middot; {{a.createdOn *1000 | amDateFormat:'MMMM Do YYYY, h:mm a' }}
+        </div>
+      </li>
+
+      <li class="line-b p20" ng-show="info.isCordova">
+        <button class="btn btn_red"
+                ng-click="info.sendAddrs()"
+                ng-disabled="info.loading">
+          <i class="fi-mail"></i>
+          <span translate>Send addresses by email</span>
+        </button>
+      </li>
+    </ul>
+
+    <div ng-show="info.hasListOfBalances()">
+      <h4 translate>Balance By Address</h4>
+      <ul class="preferences_links">
+        <li class="line-b p20" ng-repeat="(key, value) in info.assocListOfBalances">
+          <div class="enable_text_select">
+            {{key}}
+          </div>
+          <div class="text-gray size-12">
+            <span ng-repeat="row in value">{{row.amount}}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="extra-margin-bottom"></div>
+</div>

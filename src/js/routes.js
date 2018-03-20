@@ -2,21 +2,6 @@
 (function () {
   'use strict';
 
-  let unsupported;
-  let isaosp;
-
-  if (window && window.navigator) {
-    const rxaosp = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
-    isaosp = (rxaosp && rxaosp[1] < 537);
-    if (!window.cordova && isaosp) {
-      unsupported = true;
-    }
-    if (unsupported) {
-      window.location = '#/unsupported';
-    }
-  }
-
-// Setting up route
   angular
     .module('copayApp')
     .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider, ngDialogProvider) => {
@@ -111,17 +96,18 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/splash.html',
-            },
-          },
+              templateUrl: 'controllers/initialization/splash/splash.template.html',
+              controller: 'SplashCtrl as splash'
+            }
+          }
         })
         .state('intro', {
           url: '/intro',
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/intro/intro.template.html',
-              controller: 'IntroController'
+              templateUrl: 'controllers/initialization/intro/intro.template.html',
+              controller: 'IntroCtrl as intro'
             }
           }
         })
@@ -130,32 +116,12 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/intro_confirm/intro_confirm.template.html',
-              controller: 'IntroConfirmController'
+              templateUrl: 'controllers/initialization/confirm/confirm.template.html',
+              controller: 'IntroConfirmCtrl as confirm'
             }
           }
         })
-        .state('translators', {
-          url: '/translators',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/translators.html',
-            },
-          },
-        })
-        .state('disclaimer', {
-          url: '/disclaimer',
-          needProfile: false,
-          views: {
-            main: {
-              templateUrl: 'views/disclaimer.html',
-              controller: 'disclaimerController'
-            }
-          }
-        })
-        .state('walletHome', {
+        .state('wallet', {
           url: '/',
           walletShouldBeComplete: true,
           needProfile: true,
@@ -163,17 +129,47 @@
           sticky: true,
           views: {
             main: {
-              templateUrl: 'views/walletHome.html',
-              controller: 'walletHomeController as home'
-            },
-          },
+              templateUrl: 'controllers/wallet/wallet.template.html',
+              controller: 'WalletCtrl as home'
+            }
+          }
         })
-        .state('unsupported', {
-          url: '/unsupported',
-          needProfile: false,
+        .state('wallet.home', {
+          url: '/home',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
           views: {
-            main: {
-              templateUrl: 'views/unsupported.html',
+            tabs: {
+              templateUrl: 'controllers/wallet/home/home.template.html',
+              controller: 'HomeCtrl as homeCtrl'
+            }
+          }
+        })
+        .state('wallet.receive', {
+          url: '/receive',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            tabs: {
+              templateUrl: 'controllers/wallet/receive/receive.template.html',
+              controller: 'ReceiveCtrl as receive'
+            }
+          }
+        })
+        .state('wallet.send', {
+          url: '/send/:type/:recipientDeviceAddress/:address/:asset/:invoiceId/:validForSeconds/:merchantName/:state/:amount/:uri',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            tabs: {
+              templateUrl: 'controllers/wallet/send/send.template.html',
+              controller: 'SendCtrl as send'
             }
           }
         })
@@ -187,67 +183,47 @@
           },
           needProfile: true,
         })
-        .state('selectWalletForPayment', {
-          url: '/selectWalletForPayment',
-          controller: 'walletForPaymentController',
-          needProfile: true,
-        })
-        .state('importProfile', {
-          url: '/importProfile',
-          templateUrl: 'views/importProfile.html',
-          needProfile: false,
-        })
-        .state('importLegacy', {
-          url: '/importLegacy',
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/importLegacy.html',
-            },
-          },
-
-        })
         .state('create', {
           url: '/create',
-          templateUrl: 'views/create.html',
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/create.html',
-            },
-          },
+              templateUrl: 'controllers/create/create.template.html',
+              controller: 'CreateCtrl as create'
+            }
+          }
         })
         .state('copayers', {
           url: '/copayers',
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/copayers.html',
+              templateUrl: 'controllers/copayers/copayers.template.html',
+              controller: 'CopayersCtrl as copayers'
             },
           },
         })
         .state('preferences', {
           url: '/preferences',
-          templateUrl: 'views/preferences.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferences.html',
-              controller: 'preferencesController as preferences'
+              templateUrl: 'controllers/preferences/wallet/preferencesWallet.template.html',
+              controller: 'PreferencesCtrl as preferences'
             },
           },
         })
-        .state('correspondentDevices', {
+        .state('wallet.correspondentDevices', {
           url: '/correspondentDevices',
           walletShouldBeComplete: false,
           needProfile: true,
           deepStateRedirect: true,
           sticky: true,
           views: {
-            main: {
-              templateUrl: 'views/correspondentDevices.html',
-              controller: 'correspondentDevicesController'
+            tabs: {
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevices.template.html',
+              controller: 'CorrespondentDevicesCtrl as correspondentDevices'
             },
           },
         })
@@ -257,8 +233,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/correspondentDevice.html',
-              controller: 'correspondentDeviceController'
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/correspondentDevice.template.html',
+              controller: 'CorrespondentDeviceCtrl'
             },
           },
         })
@@ -268,8 +244,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/editCorrespondentDevice.html',
-              controller: 'editCorrespondentDeviceController'
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/edit/editCorrespondentDevice.template.html',
+              controller: 'EditCorrespondentDeviceCtrl as editDevice'
             },
           },
         })
@@ -278,9 +254,9 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/addCorrespondentDevice.html',
-            },
-          },
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/add/addCorrespondentDevice.template.html',
+            }
+          }
         })
         .state('inviteCorrespondentDevice', {
           url: '/inviteCorrespondentDevice',
@@ -288,10 +264,10 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/inviteCorrespondentDevice.html',
-              controller: 'inviteCorrespondentDeviceController'
-            },
-          },
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/invite/inviteCorrespondentDevice.template.html',
+              controller: 'InviteCorrespondentDeviceCtrl as inviteDevice'
+            }
+          }
         })
         .state('acceptCorrespondentInvitation', {
           url: '/acceptCorrespondentInvitation',
@@ -299,8 +275,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/acceptCorrespondentInvitation.html',
-              controller: 'acceptCorrespondentInvitationController'
+              templateUrl: 'controllers/wallet/correspondentDevices/correspondentDevice/accept/acceptInvitation.template.html',
+              controller: 'AcceptCorrespondentInvitationCtrl as acceptInvitation'
             },
           },
         })
@@ -310,7 +286,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/authConfirmation.html',
+              templateUrl: 'controllers/authConfirmation/authConfirmation.template.html',
+              controller: ''
             },
           },
         })
@@ -320,8 +297,8 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/preferencesDeviceName.html',
-              controller: 'preferencesDeviceNameController as prefDeviceName'
+              templateUrl: 'controllers/preferences/global/device/name/preferencesDeviceName.template.html',
+              controller: 'PreferencesDeviceNameCtrl as prefDeviceName'
             },
           },
         })
@@ -331,66 +308,40 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesLanguage.html',
+              templateUrl: 'controllers/preferences/global/language/preferencesLanguage.html',
               controller: 'preferencesLanguageController as prefLang'
             },
           },
         })
-
         .state('preferencesAdvanced', {
           url: '/preferencesAdvanced',
-          templateUrl: 'views/preferencesAdvanced.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAdvanced.html',
-            },
+              templateUrl: 'controllers/preferences/wallet/advanced/preferencesAdvanced.template.html',
+            }
           },
         })
         .state('preferencesDeleteWallet', {
           url: '/delete',
-          templateUrl: 'views/preferencesDeleteWallet.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             'main@': {
-              templateUrl: 'views/preferencesDeleteWallet.html'
+              templateUrl: 'controllers/preferences/wallet/delete/preferencesDeleteWallet.template.html',
+              controller: 'PreferencesDeleteWalletCtrl as preferences'
             },
           }
         })
-        .state('preferencesColor', {
-          url: '/preferencesColor',
-          templateUrl: 'views/preferencesColor.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/preferencesColor.html',
-            },
-          },
-        })
-
         .state('preferencesAlias', {
           url: '/preferencesAlias',
-          templateUrl: 'views/preferencesAlias.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAlias.html',
-            },
-
-          },
-        })
-        .state('preferencesEmail', {
-          url: '/preferencesEmail',
-          templateUrl: 'views/preferencesEmail.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/preferencesEmail.html',
+              templateUrl: 'controllers/preferences/wallet/alias/preferencesAlias.template.html',
+              controller: 'PreferencesAliasCtrl as prefAlias'
             },
 
           },
@@ -401,8 +352,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesInformation.html',
-              controller: 'preferencesInformation as info'
+              templateUrl: 'controllers/preferences/wallet/information/preferencesInformation.template.html',
+              controller: 'PreferencesInformationCtrl as info'
             },
           },
         })
@@ -412,7 +363,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesSystem.html',
+              templateUrl: 'controllers/preferences/global/system/preferencesSystem.template.html',
+              controller: 'PreferencesSystemCtrl as system'
             },
           },
         })
@@ -422,18 +374,19 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesSecurity.html',
+              templateUrl: 'controllers/preferences/global/security/preferencesSecurity.template.html',
+              controller: 'PreferencesSecurityCtrl as security'
             },
           },
         })
-
         .state('about', {
           url: '/about',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAbout.html',
+              templateUrl: 'controllers/preferences/global/about/preferencesAbout.template.html',
+              controller: 'PreferencesAboutCtrl as about'
             },
           },
         })
@@ -443,7 +396,8 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesAboutDevice.html',
+              templateUrl: 'controllers/preferences/global/device/about/preferencesAboutDevice.template.html',
+              controller: 'PreferencesAboutDeviceCtrl as aboutDevice'
             },
           },
         })
@@ -454,35 +408,24 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesLogs.html',
-              controller: 'preferencesLogs as logs'
-            },
-          },
-        })
-        .state('paperWallet', {
-          url: '/paperWallet',
-          templateUrl: 'views/paperWallet.html',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/paperWallet.html',
-            },
-          },
+              templateUrl: 'controllers/preferences/global/log/preferencesLogs.template.html',
+              controller: 'PreferencesLogsCtrl as logs'
+            }
+          }
         })
         .state('backup', {
           url: '/backup',
           params: {
             backTo: 'security'
           },
-          templateUrl: 'views/backup.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/backup.html',
-            },
-          },
+              templateUrl: 'controllers/preferences/global/security/backup/backup.template.html',
+              controller: 'BackupCtrl as backup'
+            }
+          }
         })
         .state('backupGlobal', {
           url: '/backup',
@@ -503,35 +446,34 @@
           params: {
             backTo: 'security'
           },
-          templateUrl: 'views/recovery.html',
           walletShouldBeComplete: true,
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/recovery.html',
-            },
-          },
+              templateUrl: 'controllers/preferences/global/security/recovery/recovery.template.html',
+              controller: 'RecoveryCtrl as recovery'
+            }
+          }
         })
         .state('initialRecovery', {
           url: '/initialRecovery',
-          templateUrl: 'views/recovery.html',
           walletShouldBeComplete: false,
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'views/recovery.html',
-            },
-          },
+              templateUrl: 'controllers/preferences/global/security/recovery/recovery.html',
+              controller: 'RecoveryCtrl as recovery'
+            }
+          }
         })
         .state('preferencesGlobal', {
           url: '/preferencesGlobal',
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'views/preferencesGlobal.html',
-              controller: 'preferencesGlobalController as prefGlobal'
-            },
-          },
+              templateUrl: 'controllers/preferences/global/preferencesGlobal.template.html'
+            }
+          }
         })
         .state('transactions', {
           url: '/transactions',
@@ -577,7 +519,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/contacts/contact/new_contact/new_contact.template.html',
+              templateUrl: 'controllers/contacts/contact/new/newContact.template.html',
               controller: 'NewContactController as contact'
             }
           }
@@ -604,7 +546,7 @@
           needProfile: true,
           views: {
             main: {
-              templateUrl: 'controllers/contacts/contact/edit_contact/edit_contact.template.html',
+              templateUrl: 'controllers/contacts/contact/edit/editContact.template.html',
               controller: 'EditContactController as contact'
             },
           }
@@ -614,16 +556,6 @@
           controller: 'warningController',
           templateUrl: 'views/warning.html',
           needProfile: false,
-        })
-
-        .state('add', {
-          url: '/add',
-          needProfile: true,
-          views: {
-            main: {
-              templateUrl: 'views/add.html',
-            },
-          },
         })
         .state('cordova', { // never used
           url: '/cordova/:status/:isHome',
@@ -645,20 +577,14 @@
                   default:
                   // Error handler should be here
                 }
-                // why should we go home on resume or backbutton?
-                /*
-                 $timeout(function() {
-                 $rootScope.$emit('Local/SetTab', 'walletHome', true);
-                 }, 100);
-                 go.walletHome();
-                 */
               },
             },
           },
           needProfile: false,
         });
     })
-    .run(($rootScope, $state, $stateParams, $log, uriHandler, isCordova, profileService, configService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
+    .run(($rootScope, $state, $stateParams, $log, uriHandler, Device, profileService, configService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
+      const isCordova = Device.cordova;
       if ('addEventListener' in document) {
         document.addEventListener('DOMContentLoaded', () => {
           FastClick.attach(document.body);
@@ -691,6 +617,30 @@
           win.menu = nativeMenuBar;
         }
       }
+      if (isCordova) {
+        document.addEventListener('resume', () => {
+          $timeout(() => {
+            const config = configService.getSync();
+            // password and finger print options are read from config and profile service
+            const needPassword = !!profileService.profile.xPrivKeyEncrypted;
+            const needFingerprint = !!config.touchId;
+            if (needPassword) {
+              profileService.insistUnlockFC(null, (err) => {
+                if (!err) {
+                  $rootScope.$emit('Local/ProfileBound');
+                }
+              });
+            } else if (needFingerprint) {
+              profileService.insistUnlockWithFingerprintFC((err) => {
+                if (!err) {
+                  $rootScope.$emit('Local/ProfileBound');
+                }
+              });
+            }
+          }, 100);
+        }, false);
+      }
+
       if (isCordova) {
         document.addEventListener('resume', () => {
           $timeout(() => {

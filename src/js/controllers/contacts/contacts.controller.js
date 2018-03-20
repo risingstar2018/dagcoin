@@ -45,8 +45,6 @@
       contacts.favoriteListTotal = 0;
 
       addressbookService.list((list) => {
-        console.log(list);
-
         function hashSort(src) {
           const keys = Object.keys(src);
           const target = {};

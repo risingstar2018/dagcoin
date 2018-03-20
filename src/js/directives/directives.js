@@ -40,29 +40,15 @@
     },
   ])
   .directive('validAmount', ['configService', 'ENV',
-    function (configService, ENV) {
+    function (configService) {
       return {
         require: 'ngModel',
         link(scope, element, attrs, ctrl) {
           const val = function (value) {
-            // console.log('-- scope', ctrl);
-            /* if (scope.home && scope.home.bSendAll){
-             console.log('-- send all');
-             ctrl.$setValidity('validAmount', true);
-             return value;
-             } */
-            // console.log('-- amount');
             const asset = attrs.validAmount;
             const settings = configService.getSync().wallet.settings;
-            let unitValue = 1;
-            let decimals = 0;
-            if (asset === 'base') {
-              unitValue = settings.unitValue;
-              decimals = Number(settings.unitDecimals);
-            } else if (asset === ENV.DAGCOIN_ASSET) {
-              unitValue = settings.dagUnitValue;
-              decimals = Number(settings.dagUnitDecimals);
-            }
+            const unitValue = settings.unitValue;
+            const decimals = Number(settings.unitDecimals);
 
             const vNum = Number((value * unitValue).toFixed(0));
 
@@ -206,11 +192,6 @@
       });
     },
   }))
-  .directive('menuToggle', () => ({
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'views/includes/menu-toggle.html',
-  }))
   .directive('logo', () => ({
     restrict: 'E',
     scope: {
@@ -224,11 +205,6 @@
     replace: true,
     // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
     template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
-  }))
-  .directive('availableBalance', () => ({
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'views/includes/available-balance.html',
   }))
   .directive('normalizeAmount', ['utilityService', function (utilityService) {
     return {

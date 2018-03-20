@@ -1,0 +1,37 @@
+<div class="content chats tab-view">
+  <div ng-if="correspondentDevices.list.length === 0" class="no_devices_message">
+    <svg-icon name="share"></svg-icon>
+    <p translate>You don't have any paired devices yet.</p>
+    <p translate>Press "+" in the right upper corner to pair with device.</p>
+  </div>
+  <ul class="correspondentList">
+    <li ng-repeat="correspondent in correspondentDevices.list" ng-class="{'noclick': !correspondent.clickable}">
+      <a ng-show="correspondentDevices.selectedCorrespondentList[correspondent.device_address]"
+         ng-hide="correspondentDevices.hideRemoveButton(correspondent.removable)"
+         ng-click="correspondentDevices.remove(correspondent.device_address)"
+         class="removeCorrespondentList">
+        <svg-icon name="delete"></svg-icon>
+      </a>
+      <a class="selectCorrespondentList"
+         ng-show="correspondentDevices.editCorrespondentList"
+         ng-click="correspondentDevices.toggleSelectCorrespondentList(correspondent.device_address)">
+        <i class="fi-trash"></i></a>
+      <div ng-click="correspondentDevices.showCorrespondent(correspondent)" class="pointer">
+        {{correspondent.name}}
+        <div class="right text-gray"><i class="icon-arrow-right3 size-24"
+                                        ng-show="!correspondentDevices.editCorrespondentList && correspondentDevices.hideRemove"></i>
+        </div>
+        <div class="right correspondentlist_badge"
+             ng-show="correspondentDevices.newMessagesCount[correspondent.device_address]">
+          {{correspondentDevices.newMessagesCount[correspondent.device_address]}}
+        </div>
+        <div class="size-10 text-gray ellipsis">{{correspondent.device_address}}@{{correspondent.hub}}</div>
+      </div>
+    </li>
+  </ul>
+  <button ng-if="!correspondentDevices.editCorrespondentList && correspondentDevices.list.length > 0"
+          ng-click="correspondentDevices.hideRemove = !correspondentDevices.hideRemove" class="btn btn_red tiny">
+    <svg-icon name="remove"></svg-icon>
+    <span translate>Remove a device</span>
+  </button>
+</div>

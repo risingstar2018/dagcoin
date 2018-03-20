@@ -2,8 +2,6 @@
 (function () {
   'use strict';
 
-  const ValidationUtils = require('byteballcore/validation_utils.js');
-
   /**
    * @desc validating DAG address
    * @example <input type="text" valid-address>
@@ -20,6 +18,7 @@
       require: 'ngModel',
       link(scope, elem, attrs, ctrl) {
         const validator = (value) => {
+          const validationUtils = require('byteballcore/validation_utils.js');
           if (!profileService.focusedClient) {
             return '';
           }
@@ -30,7 +29,7 @@
           }
 
           // Regular Address
-          ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(value));
+          ctrl.$setValidity('validAddress', validationUtils.isValidAddress(value));
           return value;
         };
 

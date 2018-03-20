@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('configService', (storageService, lodash, $log, isCordova, ENV) => {
+  angular.module('copayApp.services').factory('configService', (storageService, lodash, $log, Device, ENV) => {
     const root = {};
 
-    root.colorOpts = [
+    const colorOpts = [
       '#DD4B39',
       '#F38F12',
       '#FAA77F',
@@ -18,6 +18,7 @@
       '#FF599E',
       '#7A8C9E',
     ];
+    const colorOptsLength = colorOpts.length;
 
     const defaultConfig = {
       // wallet limits
@@ -27,29 +28,21 @@
 
       hub: ENV.hub,
 
-      // requires bluetooth permission on android
-      // deviceName: /*isCordova ? cordova.plugins.deviceName.name : */require('os').hostname(),
-
       getDeviceName() {
-        return isCordova ? cordova.plugins.deviceName.name : require('os').hostname();
+        return Device.cordova ? cordova.plugins.deviceName.name : require('os').hostname();
       },
 
       // wallet default config
       wallet: {
         requiredCosigners: 2,
         totalCosigners: 3,
-        spendUnconfirmed: false,
         reconnectDelay: 5000,
         idleDurationMin: 4,
         settings: {
-          unitName: 'bytes',
-          unitValue: 1,
-          unitDecimals: 0,
-          unitCode: 'oneByte',
-          dagUnitName: 'DAG',
-          dagUnitValue: 1000000,
-          dagUnitDecimals: 6,
-          dagUnitCode: 'one',
+          unitName: 'DAG',
+          unitValue: 1000000,
+          unitDecimals: 6,
+          unitCode: 'one',
           alternativeName: 'US Dollar',
           alternativeIsoCode: 'USD',
         },
@@ -99,23 +92,7 @@
             configCache.wallet.settings.unitCode = defaultConfig.wallet.settings.unitCode;
           }
           if (!configCache.wallet.settings.unitValue) {
-            if (configCache.wallet.settings.unitToBytes) {
-              configCache.wallet.settings.unitValue = configCache.wallet.settings.unitToBytes;
-            } else {
-              configCache.wallet.settings.unitValue = defaultConfig.wallet.settings.unitValue;
-            }
-          }
-          if (!configCache.wallet.settings.dagUnitName) {
-            configCache.wallet.settings.dagUnitName = defaultConfig.wallet.settings.dagUnitName;
-          }
-          if (!configCache.wallet.settings.dagUnitValue) {
-            configCache.wallet.settings.dagUnitValue = defaultConfig.wallet.settings.dagUnitValue;
-          }
-          if (!configCache.wallet.settings.dagUnitDecimals) {
-            configCache.wallet.settings.dagUnitDecimals = defaultConfig.wallet.settings.dagUnitDecimals;
-          }
-          if (!configCache.wallet.settings.dagUnitCode) {
-            configCache.wallet.settings.dagUnitCode = defaultConfig.wallet.settings.dagUnitCode;
+            configCache.wallet.settings.unitValue = defaultConfig.wallet.settings.unitValue;
           }
           if (!configCache.pushNotifications) {
             configCache.pushNotifications = defaultConfig.pushNotifications;
@@ -180,6 +157,10 @@
 
     root.getDefaults = function () {
       return lodash.clone(defaultConfig);
+    };
+
+    root.getWalletColor = function (firstCharacterOfWallet) {
+      return colorOpts[firstCharacterOfWallet % colorOptsLength];
     };
 
     return root;

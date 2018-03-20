@@ -1,0 +1,39 @@
+<dag-nav-bar title="{{ 'Copayers' | translate}}" invert></dag-nav-bar>
+<div class="content">
+  <div>
+    <div class="row m10t text-center">
+      <div class="large-12 columns">
+        <h1 translate>Approve wallet creation on other devices</h1>
+      </div>
+    </div>
+
+    <h4 class="title oh m0">
+      <span translate>Waiting for co-signers</span>
+      <span class="text-gray right">
+        [ <span translate>{{index.m}}-of-{{index.n}}</span> ]
+      </span>
+    </h4>
+    <div class="p10 line-b">
+      <ul class="no-bullet m0">
+        <li class="" ng-repeat="copayer in index.copayers">
+          <span class="size-12" ng-show="copayer.me">
+            <i class="fi-check m5r"></i> {{'Me'|translate}}
+          </span>
+          <span class="size-12 text-gray" ng-show="!copayer.me">
+            <i class="m5r" ng-class="copayer.approval_date ? 'fi-check' : 'fi-clock'"></i>
+            {{copayer.name}} ({{copayer.device_address.substr(0,4)}}...)
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div ng-if="!index.isComplete" class="p10 line-b m20b">
+      <p class="size-12 m0">
+        <i class="fi-loop"></i>
+        <span translate>Waiting...</span>
+      </p>
+    </div>
+  </div>
+  <div class="cancel_wallet columns"><a href="#" ng-click="copayers.deleteWallet()" translate>cancel wallet creation</a>
+  </div>
+</div>
+<div class="extra-margin-bottom"></div>

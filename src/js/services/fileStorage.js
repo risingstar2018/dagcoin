@@ -107,11 +107,7 @@
       if (!cordova.file) {
         return cb('Could not write on device storage');
       }
-
       const url = cordova.file.dataDirectory;
-      // This could be needed for windows
-      // if (cordova.file === undefined) {
-      //   url = 'ms-appdata:///local/';
       return window.resolveLocalFileSystemURL(url, dir => cb(null, dir), (err) => {
         $log.warn(err);
         return cb(err || `Could not resolve filesystem:${url}`);

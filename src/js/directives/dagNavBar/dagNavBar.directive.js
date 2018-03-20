@@ -30,9 +30,9 @@
         $scope.showBack = (!!$stateParams.backTo || !!$scope.goBack);
         $scope.goStateBack = () => {
           if ($scope.goBackParams) {
-            $state.go($stateParams.backTo || $scope.goBack || 'walletHome', JSON.parse($scope.goBackParams));
+            $state.go($stateParams.backTo || $scope.goBack || 'wallet', JSON.parse($scope.goBackParams));
           } else {
-            $state.go($stateParams.backTo || $scope.goBack || 'walletHome');
+            $state.go($stateParams.backTo || $scope.goBack || 'wallet');
           }
         };
 

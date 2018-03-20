@@ -1,0 +1,42 @@
+<dag-backup-notification ng-if="pass.walletInfoVisibility.visible && index.needsBackup">
+</dag-backup-notification>
+
+<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="pass.walletInfoVisibility.visible">
+  <qr-scanner ng-if="tab === 'wallet.send' && index.isComplete"
+              on-scan="index.onQrCodeScanned(data)"
+              title="{{ 'Scan address' | translate }}">
+  </qr-scanner>
+  <a id="address-share" ng-if="index.isCordova && tab === 'wallet.receive' && index.isComplete"
+     ng-click="home.shareAddress(home.addr[index.walletId])">
+    <svg-icon name="share"></svg-icon>
+  </a>
+  <a dag-state-transition="slide-left" ng-if="tab === 'wallet.correspondentDevices'" ui-sref="addCorrespondentDevice">
+    <svg-icon name="add"></svg-icon>
+  </a>
+</dag-nav-bar>
+
+<dag-background></dag-background>
+<div class="content" ng-scrollbars>
+
+  <div class="onGoingProcess" ng-show="index.isOffline || (index.anyOnGoingProcess && !index.isOffline) || (home.onGoingProcess && !index.anyOnGoingProcess && !index.isOffline)">
+    <div class="onGoingProcess-content">
+      <dag-spinner></dag-spinner>
+      <!-- 1 -->
+      <span translate ng-show="index.isOffline">Reconnecting to Wallet Service...</span>
+      <!-- 2 -->
+      <span ng-show="home.onGoingProcess && !index.anyOnGoingProcess && !index.isOffline">{{home.onGoingProcess|translate}}...</span>
+      <!-- 3 -->
+      <span translate ng-show="['openingWallet', 'updatingStatus', 'updatingBalance', 'updatingPendingTxps', 'updatingHistory'].indexOf(index.onGoingProcessName) >= 0">Updating Wallet...</span>
+      <span translate ng-show="index.onGoingProcessName == 'scanning'">Scanning Wallet funds...</span>
+      <span translate ng-show="index.onGoingProcessName == 'recreating'">Recreating Wallet...</span>
+      <span translate ng-show="index.onGoingProcessName == 'generatingCSV'">Generating .csv file...</span>
+      <span translate ng-show="index.onGoingProcessName == 'Syncing'">Syncing... {{index.syncProgress}}</span>
+      <span translate ng-show="index.onGoingProcessName == 'sending'">Sending...</span>
+      <span translate ng-show="index.onGoingProcessName == 'recoveringFromSeed'">Recovering from seed...</span>
+    </div>
+  </div>
+  <div ng-show="!index.noFocusedWallet">
+    <div ui-view="tabs"></div>
+  </div>
+</div>
+<dag-bottom-bar></dag-bottom-bar>

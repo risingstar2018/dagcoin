@@ -1,14 +1,8 @@
 {
   "ENV": {
     "environment": "live",
-    "discoveryDeviceAddress": "0EPKJTMDEB5RUCOHTL77LHPR5K6KV3G7V",
-    "DAGCOIN_ASSET": "j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=",
     "explorerPrefix": "",
     "TIMESTAMPER_ADDRESS": "I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT",
-    "hub": "byteball.org/bb",
-    "discoveryServicePairingCode": "A9H9+e43QH6kqD2HGO9wr1JHliAJuvn9s6KH4/xwbzwt@byteball.org/bb#0000",
-    "protocolPrefix": "dagcoin",
-    "DATABASE_MIGRATION_TOOL": "native-queries",
-    "MERCHANT_INTEGRATION_API" : ""
+    "hub": "byteball.org/bb"
   }
 }

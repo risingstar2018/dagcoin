@@ -9,23 +9,31 @@
     .module('copayApp.directives')
     .directive('dagBottomBar', dagBottomBar);
 
-  dagBottomBar.$inject = ['menuLinks'];
+  dagBottomBar.$inject = ['gettextCatalog'];
 
-  function dagBottomBar(menuLinks) {
+  function dagBottomBar(gettextCatalog) {
     return {
       restrict: 'E',
       templateUrl: 'directives/dagBottomBar/dagBottomBar.template.html',
       replace: true,
       link: ($scope) => {
-        $scope.links = [];
-
-        menuLinks.forEach((category) => {
-          category.links.forEach((link) => {
-            if (link.menuBar) {
-              $scope.links.push(link);
-            }
-          });
-        });
+        $scope.menu = [{
+          title: gettextCatalog.getString('My Wallet'),
+          icon: 'wallet',
+          link: 'wallet.home'
+        }, {
+          title: gettextCatalog.getString('Receive'),
+          icon: 'banknote',
+          link: 'wallet.receive'
+        }, {
+          title: gettextCatalog.getString('Send'),
+          icon: 'paperplane',
+          link: 'wallet.send'
+        }, {
+          title: gettextCatalog.getString('Paired Devices'),
+          icon: 'share',
+          link: 'wallet.correspondentDevices'
+        }];
       }
     };
   }

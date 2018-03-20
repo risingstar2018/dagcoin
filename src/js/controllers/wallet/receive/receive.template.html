@@ -1,0 +1,48 @@
+<div id="receive" class="receive p-share tab-view cordova-scrollable">
+  <div class="p-wrap text-center m20t">
+
+    <h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">{{'Tap the' | translate}}
+      <strong>QR-code</strong> {{'to copy its address.' | translate}}<br/>
+      {{'Share it with the sender via email or text.' | translate}}</h2>
+
+    <!-- Address-->
+    <div class="text-center">
+      <div class="box-notification" ng-show="home.addrError">
+                <span class="text-warning">
+                  {{home.addrError|translate}}
+                </span>
+      </div>
+
+      <div ng-click="receive.copyAddress(receive.addr[index.walletId])"
+           ng-show="receive.addr[index.walletId] || receive.generatingAddress">
+        <dag-qr-code url="{{receive.protocol}}:{{receive.addr[index.walletId]}}"></dag-qr-code>
+
+        <div ng-show="home.generatingAddress" style="position:relative; top:-226px; height:0px">
+          <div style="height:220px; width:220px; margin:auto; background: url(img/qr.png) white">
+            <div class="spinner" style="margin-top:80px">
+              <div class="rect1"></div>
+              <div class="rect2"></div>
+              <div class="rect3"></div>
+              <div class="rect4"></div>
+              <div class="rect5"></div>
+            </div>
+          </div>
+        </div>
+        <div ng-show="!receive.isCordova" ng-class="{'visible': tooltipCopiedShown}"
+             class="tooltip radius tip-top" translate>
+          <svg-icon name="done"></svg-icon>
+          Copied!
+        </div>
+      </div>
+      <div class="m10t" ng-hide>
+        <h4 ng-class="{'enable_text_select': !receive.isCordova}" class="size-12">
+          {{index.shared_address || (home.generatingAddress ? '...' : receive.addr[index.walletId])}}
+        </h4>
+      </div>
+    </div>
+    <a class="size-14"
+       ng-click="receive.openCustomizedAmountModal(index.shared_address || receive.addr[index.walletId])">
+      <span translate>Request a specific amount</span>
+    </a>
+  </div>
+</div>

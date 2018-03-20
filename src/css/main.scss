@@ -1,6 +1,6 @@
 @import "variables";
 @import "mobile";
-@import "settings";
+@import "../js/controllers/preferences/preferences";
 /* Components */
 @import "components/buttons";
 @import "components/inputs";
@@ -2825,7 +2825,6 @@ canvas {
 }
 
 .tab-view {
-  display: none;
   width: 100%;
   position: relative;
   overflow: auto;

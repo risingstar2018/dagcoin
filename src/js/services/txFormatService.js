@@ -1,17 +1,13 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('txFormatService', (profileService, configService, lodash, ENV) => {
+  angular.module('copayApp.services').factory('txFormatService', (profileService, configService, lodash) => {
     const root = {};
-    const formatAmountStr = function (amount, asset) {
+    const formatAmountStr = function (amount) {
       if (!amount) {
         return;
       }
-      if (asset !== 'base' && asset !== ENV.DAGCOIN_ASSET) {
-        return amount;
-      }
-      const assetName = asset !== 'base' ? 'dag' : 'base';
-      return profileService.formatAmount(amount, assetName);
+      return profileService.formatAmount(amount);
     };
 
     const formatFeeStr = function (fee) {

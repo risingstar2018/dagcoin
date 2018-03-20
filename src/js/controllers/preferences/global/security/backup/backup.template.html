@@ -1,0 +1,148 @@
+<dag-nav-bar title="{{'Backup' | translate}}" invert></dag-nav-bar>
+
+<div class="content">
+  <dag-tabset>
+    <dag-tab heading="{{'Backup seed' | translate}}">
+      <div>
+        <div class="box-notification" ng-show="backup.error">
+      <span class="text-warning">
+      {{backup.error|translate}}
+      </span>
+        </div>
+        <div>
+          <div class="m10t columns size-14 text-gray">
+            <span translate>{{backup.text}}</span>
+          </div>
+        </div>
+        <div class="m20t" ng-show="backup.deleted">
+          <div class="columns size-14 text-gray text-center" translate>
+            Wallet seed not available.
+          </div>
+        </div>
+        <div ng-show="backup.mnemonicWords || (backup.needAuth && !backup.deleted)">
+          <div>
+            <div class="m10t columns">
+              <a class="button outline light-gray expand tiny" ng-click="backup.toggle()">
+                <i class="fi-widget m3r"></i>
+                <span translate ng-hide="backup.show">Show the Wallet Seed Anyway</span>
+                <span translate ng-hide="!backup.show">Hide the Wallet Seed</span>
+                <i ng-if="!backup.show" class="icon-arrow-down4"></i>
+                <i ng-if="backup.show" class="icon-arrow-up4"></i>
+              </a>
+            </div>
+          </div>
+          <div class="row m10t m10b" ng-show="backup.show">
+            <div class="text-gray columns size-14 text-center">
+              <span translate>Your Wallet Seed:</span><br/>
+              <span translate class="text-bold">
+                Write it down and keep it somewhere safe.
+              </span>
+            </div>
+          </div>
+
+          <div ng-show="backup.show">
+            <div class="columns">
+              <div class="m10t columns size-14 text-gray seed-words"
+                   ng-class="{'enable_text_select': index.network == 'testnet'}">
+      <span><span>{{backup.mnemonicWordsJoined}}</span><span
+        ng-show="backup.useIdeograms">&#x3000;</span> </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="m10t m20b" ng-show="backup.show">
+            <div class="columns" ng-show="backup.mnemonicHasPassphrase">
+      <span class="size-12">
+      <i class="fi-alert"></i>
+      <span translate>
+      WARNING: This seed was created with a passphrase. To recover this wallet both the mnemonic and passphrase are needed.
+      </span>
+      </span>
+            </div>
+          </div>
+
+          <div ng-show="backup.show">
+            <div class="m10t text-center columns">
+              <div class="size-12 text-gray" translate>Once you have written your wallet seed down, it is recommended to
+                delete it from this device.
+              </div>
+              <button class="btn btn_red tiny" ng-click="backup.delete()">
+                <svg-icon name="delete"></svg-icon>
+                <span translate>DELETE WORDS</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </dag-tab>
+    <dag-tab heading="{{'Full backup' | translate}}">
+      <div>
+        <div class="onGoingProcess" ng-show="backup.exporting">
+          <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+            <div class="spinner">
+              <div class="rect1"></div>
+              <div class="rect2"></div>
+              <div class="rect3"></div>
+              <div class="rect4"></div>
+              <div class="rect5"></div>
+            </div>
+            <span translate> Exporting... </span>
+          </div>
+        </div>
+        <div>
+          <div class="text-warning size-14 m20b" ng-show="backup.error">
+            <i class="fi-alert size-12"></i>
+            <span translate> Failed to backup </span>
+          </div>
+
+          <form class="page-form">
+            <div class="form-group">
+              <div class="box-notification" ng-show="backup.passError">
+							<span class="text-warning">
+								{{backup.passError|translate}}
+							</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="title clearfix">
+                <span class="name" translate>Set up a Password </span>
+              </div>
+              <div class="input-wrap">
+                <input class="password" autocomplete="off" type="text" placeholder="{{'Your export password'|translate}}"
+                       name="password" ng-model="backup.password">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="title clearfix">
+                <span class="name" translate>Repeat the password</span>
+              </div>
+              <div class="input-wrap">
+                <input class="password" autocomplete="off" type="text" placeholder="{{'Repeat password'|translate}}"
+                       name="password2" ng-model="backup.repeatpassword">
+              </div>
+            </div>
+            <div class="size-14 m20b text-gray" ng-show="!backup.isCordova">
+              <switch name="bCompression" ng-model="backup.bCompression" class="green right"></switch>
+              <div translate>Compress the file? (Slower)</div>
+            </div>
+            <div class="form-group">
+              <div class="input-wrap">
+                <input type="file" id="nwExportInputFile" nwsaveas="" style="display: none"/>
+              </div>
+            </div>
+            <div class="page-action">
+              <a class="btn btn_red-full" href="#" ng-click="backup.walletExport()"
+                 ng-disabled="(backup.exporting || !backup.password || backup.password != backup.repeatpassword)"
+                 translate>
+                Export
+              </a>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </dag-tab>
+  </dag-tabset>
+</div>
