@@ -28,7 +28,7 @@
       }
     });
 
-    const unwatchRequestTouchid = $scope.$watch('touchid', (newVal, oldVal) => {
+    const unwatchRequestTouchid = $scope.$watch('security.touchid', (newVal, oldVal) => {
       if (newVal === oldVal || $scope.touchidError) {
         vm.touchidError = false;
         return;
