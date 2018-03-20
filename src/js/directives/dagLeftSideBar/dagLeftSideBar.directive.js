@@ -78,7 +78,7 @@
             n: c.n,
             name: config.aliasFor[c.walletId] || c.walletName,
             id: c.walletId,
-            color: '#d51f26',
+            color: configService.getWalletColor(c.walletId.charCodeAt(0))
           }));
           self.wallets = utilityService.sortWalletsByName(ret);
         };

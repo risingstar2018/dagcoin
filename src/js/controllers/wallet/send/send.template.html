@@ -87,7 +87,7 @@
           <button ng-disabled="sendForm.$invalid || index.onGoingProcessName == 'sending'" class="btn btn_red-full send-button"
                   ng-click="send.submitForm()" translate>Send <i ng-if="send.validForSeconds > 0">({{send.validForSeconds}})</i>
           </button>
-          <button ng-if="send.validForSeconds > 0" class="btn btn_red-full" ng-click="send.resetForm()" translate>Cancel
+          <button ng-if="send.validForSeconds > 0" class="btn btn_red-full" ng-click="send.cancelForm()" translate>Cancel
           </button>
         </div>
       </form>

@@ -563,12 +563,15 @@
             createWallets(arrWalletIndexes, () => {
               createAddresses(assocMaxAddressIndexes, () => {
                 self.scanning = false;
-                $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString(`${arrWalletIndexes.length} wallets recovered, please restart the application to finish.`), 'fi-check', () => {
-                  if (navigator && navigator.app) {  // android
-                    navigator.app.exitApp();
-                  } else if (process.exit) { // nwjs
-                    process.exit();
-                  }
+                storageService.clearBackupFlag('all', () => {
+                  const alertContent = gettextCatalog.getString(`${arrWalletIndexes.length} wallets recovered, please restart the application to finish.`);
+                  $rootScope.$emit('Local/ShowAlert', alertContent, 'fi-check', () => {
+                    if (navigator && navigator.app) {  // android
+                      navigator.app.exitApp();
+                    } else if (process.exit) { // nwjs
+                      process.exit();
+                    }
+                  });
                 });
               });
             });

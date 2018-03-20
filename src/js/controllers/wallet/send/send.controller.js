@@ -158,9 +158,12 @@
         return console.log('form.address has disappeared');
       }
       if (to) {
-        form.address.$setViewValue(to);
-        form.address.$isValid = true;
-        form.address.$render();
+        $timeout(() => {
+          form.address.$setViewValue(to);
+          form.address.$isValid = true;
+          form.address.$render();
+        }, 100);
+
         if (recipientDeviceAddress) {
           // must be already paired
           assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
@@ -176,11 +179,7 @@
           form.amount.$setViewValue(`${moneyAmount}`);
           form.amount.$isValid = true;
           form.amount.$render();
-
-          form.address.$setViewValue(to);
-          form.address.$isValid = true;
-          form.address.$render();
-        }, 300);
+        }, 100);
       } else {
         vm.lockAmount = false;
         form.amount.$pristine = true;
@@ -230,12 +229,8 @@
       return objRequest.address;
     };
 
-
-    vm.resetForm = function (cb) {
-      vm.resetError();
-      delete vm.binding;
-
-      const invoiceId = vm.invoiceId;
+    vm.cancelForm = function (cb) {
+      const invoiceId = this.invoiceId;
 
       if (invoiceId !== null) {
         const options = {
@@ -252,24 +247,33 @@
           }
           console.log(`RESPONSE: ${JSON.stringify(response)}`);
           console.log(`BODY: ${JSON.stringify(body)}`);
-          vm.error = gettextCatalog.getString('Payment is cancelled');
+          self.error = gettextCatalog.getString('Payment is cancelled');
         });
       }
 
-      if (vm.invoiceTimeout) {
-        $timeout.cancel(vm.invoiceTimeout);
+      vm.resetForm(cb);
+    };
+
+
+    vm.resetForm = function (cb) {
+      this.resetError();
+      delete this.binding;
+
+      if (this.invoiceTimeout) {
+        $timeout.cancel(this.invoiceTimeout);
       }
 
-      vm.invoiceId = null;
-      vm.validForSeconds = null;
-      vm.lockAsset = false;
-      vm.lockAddress = false;
-      vm.lockAmount = false;
-      vm.hideAdvSend = true;
+      this.invoiceId = null;
+      this.validForSeconds = null;
+      this.lockAsset = false;
+      this.lockAddress = false;
+      this.lockAmount = false;
+      this.hideAdvSend = true;
+      $scope.currentSpendUnconfirmed = configService.getSync().wallet.spendUnconfirmed;
 
-      vm._amount = null;
-      vm._address = null;
-      vm.bSendAll = false;
+      this._amount = null;
+      this._address = null;
+      this.bSendAll = false;
 
       const form = $scope.sendForm;
 

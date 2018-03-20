@@ -23,17 +23,21 @@
               </div>
             </div>
           </div>
-          <span ng-if="index.baseBalance.pending" class="ballance" translate>Pending wallet balance: {{index.baseBalance.pendingStr}}</span>
-          <span ng-if="!index.baseBalance.pending" class="ballance" translate>Wallet balance</span>
+          <span ng-if="index.walletInfoVisibility.visible && index.dagBalance.pending" class="ballance" translate>
+            Pending wallet balance: {{index.baseBalance.pendingStr}}
+          </span>
+          <span ng-if="index.walletInfoVisibility.visible && !index.dagBalance.pending" class="ballance" translate>
+            Wallet balance
+          </span>
 
-          <div class="size-10 m10t" ng-if="index.baseBalance.shared !== undefined">
+          <div class="size-10 m10t" ng-if="index.walletInfoVisibility.visible && index.baseBalance.shared !== undefined">
             <a ng-click="homeCtrl.openSubwalletModal()" style="color: #fff; opacity: .6;">
               <span translate>Also</span>
               <span>{{index.baseBalance.sharedStr}}</span>
               <span translate>in smart wallets</span>
             </a>
           </div>
-          <div class="m10t">
+          <div class="m10t" ng-if="index.walletInfoVisibility.visible">
             <a ng-click="homeCtrl.openSharedAddressDefinitionModal(index.shared_address)"
                class="button outline round light-gray tiny preferences-icon m0" ng-if="index.shared_address">
               <i class="fi-eye size-24 vm wallet-settings"></i>

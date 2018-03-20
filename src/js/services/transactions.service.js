@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define,no-shadow */
 (function () {
   'use strict';
 
@@ -9,10 +10,10 @@
 
     /**
      * This will be moved into tx directive
-     * not used now
-     * @param btx transaction
-     * @param walletSettings can be get from configService.getSync().wallet.settings
-     * @param indexScope $scope.indexScope
+     * @param param {*} is an object that has properties
+     *  btx transaction
+     *  walletSettings can be get from configService.getSync().wallet.settings
+     *  indexScope $scope.indexScope
      */
     root.openTxModal = function (params) {
       const btx = params.btx;
@@ -177,7 +178,6 @@
         });
       }
     };
-
 
     return root;
   });
