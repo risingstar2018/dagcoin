@@ -543,47 +543,6 @@
           templateUrl: 'views/warning.html',
           needProfile: false,
         })
-        /*
-        .state('send', {
-          url: '/',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          deepStateRedirect: true,
-          sticky: true,
-          views: {
-            tab: {
-              templateUrl: 'controllers/wallet/send/send.template.html',
-              controller: 'SendCtrl as send'
-            }
-          }
-        })
-        .state('receive', {
-          url: '/receive',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          deepStateRedirect: true,
-          sticky: true,
-          views: {
-            tab: {
-              templateUrl: 'controllers/receive/receive.template.html',
-              controller: 'ReceiveCtrl as receive'
-            }
-          }
-        })
-        .state('home', {
-          url: '/home',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          deepStateRedirect: true,
-          sticky: true,
-          views: {
-            tab: {
-              templateUrl: 'controllers/wallet/home/home.template.html',
-              controller: 'HomeCtrl as homeCtrl'
-            }
-          }
-        })
-        */
         .state('cordova', { // never used
           url: '/cordova/:status/:isHome',
           views: {
@@ -611,6 +570,7 @@
         });
     })
     .run(($rootScope, $state, $stateParams, $log, uriHandler, Device, profileService, configService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
+      const isCordova = Device.cordova;
       if ('addEventListener' in document) {
         document.addEventListener('DOMContentLoaded', () => {
           FastClick.attach(document.body);
@@ -620,7 +580,7 @@
       uxLanguage.init();
 
       // Register URI handler, not for mobileApp
-      if (!Device.cordova) {
+      if (!isCordova) {
         uriHandler.register();
       }
 
