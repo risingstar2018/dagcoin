@@ -45,21 +45,16 @@
                      e.g. 1-of-2 wallet with one key on this device and another key on your smartphone.  
                      Just the wallet seed is not enough.`);
     }
-    if (profileService.profile.xPrivKeyEncrypted) {
-      vm.credentialsEncrypted = true;
-    } else {
-      setWords(fc.getMnemonic());
-    }
+
+    setWords(fc.getMnemonic());
     if (fc.credentials && !fc.credentials.mnemonicEncrypted && !fc.credentials.mnemonic) {
       vm.deleted = true;
     }
 
     vm.toggle = toggle;
     vm.walletExportPC = walletExportPC;
-    vm.passwordRequest = passwordRequest;
     vm.walletExportCordova = walletExportCordova;
     vm.walletExport = walletExport;
-    vm.unlock = unlock;
 
     vm.delete = function () {
       confirmDialog.show(msg, (ok) => {
@@ -95,38 +90,6 @@
         } else {
           vm.walletExportPC(connection);
         }
-      });
-    }
-
-    function passwordRequest() {
-      try {
-        unlock();
-      } catch (e) {
-        if (e.message && e.message.match(/encrypted/) && !!profileService.profile.xPrivKeyEncrypted) {
-          vm.credentialsEncrypted = true;
-
-          $timeout(() => {
-            $scope.$apply();
-          }, 1);
-
-          unlock();
-        }
-      }
-    }
-
-    function unlock() {
-      profileService.unlockFC(null, (err) => {
-        if (err) {
-          vm.error = `${gettextCatalog.getString('Could not decrypt')}: ${err.message}`;
-          $log.warn('Error decrypting credentials:', vm.error); // TODO
-          return;
-        }
-        if (!vm.show && vm.credentialsEncrypted) {
-          vm.show = !vm.show;
-        }
-        vm.credentialsEncrypted = false;
-        setWords(fc.getMnemonic());
-        $rootScope.$emit('Local/BackupDone');
       });
     }
 
@@ -203,16 +166,7 @@
     }
 
     function toggle() {
-      vm.error = '';
-      if (!vm.credentialsEncrypted) {
-        vm.show = !vm.show;
-      }
-      if (vm.credentialsEncrypted) {
-        vm.passwordRequest();
-      }
-      $timeout(() => {
-        $scope.$apply();
-      }, 1);
+      vm.show = !vm.show;
     }
 
     function setWords(words) {

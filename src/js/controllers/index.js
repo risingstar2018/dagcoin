@@ -7,7 +7,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       function ($rootScope, $scope, $log, $filter, $timeout, $interval, lodash, go, fingerprintService, profileService, configService,
                 Device, storageService, addressService, gettextCatalog, amMoment, nodeWebkit, txFormatService, uxLanguage,
                 $state, addressbookService, notification, animationService, $modal, bwcService, backButton, faucetService, changeWalletTypeService,
-                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService) {
+                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService, navigationService) {
         const async = require('async');
         const mutex = require('byteballcore/mutex.js');
         const eventBus = require('byteballcore/event_bus.js');
@@ -696,6 +696,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           addressbookService.list((ab) => {
             self.addressbook = ab;
           });
+        };
+
+        self.navigateSecure = function (state) {
+          navigationService.navigateSecure(state);
         };
 
         function getNumberOfSelectedSigners() {

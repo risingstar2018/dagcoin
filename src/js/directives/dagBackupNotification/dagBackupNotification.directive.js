@@ -10,9 +10,9 @@
   .module('copayApp.directives')
   .directive('dagBackupNotification', dagBackupNotification);
 
-  dagBackupNotification.$inject = ['$state', 'gettextCatalog', '$modal', 'animationService'];
+  dagBackupNotification.$inject = ['$state', 'gettextCatalog', '$modal', 'animationService', 'navigationService'];
 
-  function dagBackupNotification($state, gettextCatalog, $modal, animationService) {
+  function dagBackupNotification($state, gettextCatalog, $modal, animationService, navigationService) {
     return {
       restrict: 'E',
       templateUrl: 'directives/dagBackupNotification/dagBackupNotification.template.html',
@@ -49,7 +49,7 @@
 
           modalInstance.result.then((ok) => {
             if (ok) {
-              $state.go('backup');
+              navigationService.navigateSecure('backup');
             }
           });
         };
