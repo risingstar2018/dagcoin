@@ -22,17 +22,14 @@
       controllerAs: 'pass',
       controller() {
         const self = this;
-
+        let passwordTemp;
         // This property is assigned to an empty object to escape from null pointer access.
         // This is initialized in Local/ProfileBound event
         self.walletInfoVisibility = {};
         self.validationErrors = [];
-        let passwordTemp;
+        self.password = '';
         self.isVerification = false;
         self.passwordVisible = false;
-        if (self.askPassword) {
-          document.getElementById('passwordInput').focus();
-        }
 
         self.close = cb => cb('No password given');
 
