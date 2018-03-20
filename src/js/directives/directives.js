@@ -45,7 +45,7 @@
         require: 'ngModel',
         link(scope, element, attrs, ctrl) {
           const val = function (value) {
-            const asset = attrs.validAmount;
+            // const asset = attrs.validAmount;
             const settings = configService.getSync().wallet.settings;
             const unitValue = settings.unitValue;
             const decimals = Number(settings.unitDecimals);

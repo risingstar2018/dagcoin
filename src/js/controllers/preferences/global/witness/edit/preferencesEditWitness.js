@@ -7,12 +7,12 @@
       this.witness = witnessListService.currentWitness;
 
       this.save = function () {
-        const new_address = this.witness.trim();
-        if (new_address === witnessListService.currentWitness) {
+        const newAddress = this.witness.trim();
+        if (newAddress === witnessListService.currentWitness) {
           return goBack();
         }
         const myWitnesses = require('byteballcore/my_witnesses.js');
-        myWitnesses.replaceWitness(witnessListService.currentWitness, new_address, (err) => {
+        myWitnesses.replaceWitness(witnessListService.currentWitness, newAddress, (err) => {
           console.log(err);
           if (err) {
             return setError(err);

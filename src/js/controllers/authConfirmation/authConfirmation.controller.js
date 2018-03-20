@@ -22,7 +22,6 @@
   AuthConfirmationCtrl.$inject = ['$scope', 'profileService', 'go', 'authService', 'lodash'];
 
   function AuthConfirmationCtrl($scope, profileService, go, authService, lodash) {
-
     const Bitcore = require('bitcore-lib');
     const ecdsaSig = require('byteballcore/signature.js');
     const bbWallet = require('byteballcore/wallet.js');
