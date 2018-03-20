@@ -158,9 +158,12 @@
         return console.log('form.address has disappeared');
       }
       if (to) {
-        form.address.$setViewValue(to);
-        form.address.$isValid = true;
-        form.address.$render();
+        $timeout(() => {
+          form.address.$setViewValue(to);
+          form.address.$isValid = true;
+          form.address.$render();
+        }, 100);
+
         if (recipientDeviceAddress) {
           // must be already paired
           assocDeviceAddressesByPaymentAddress[to] = recipientDeviceAddress;
@@ -176,11 +179,7 @@
           form.amount.$setViewValue(`${moneyAmount}`);
           form.amount.$isValid = true;
           form.amount.$render();
-
-          form.address.$setViewValue(to);
-          form.address.$isValid = true;
-          form.address.$render();
-        }, 300);
+        }, 100);
       } else {
         vm.lockAmount = false;
         form.amount.$pristine = true;

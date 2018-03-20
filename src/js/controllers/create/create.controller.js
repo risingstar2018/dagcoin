@@ -12,13 +12,15 @@
                       configService, gettextCatalog, derivationPathHelper, correspondentListService, utilityService) {
     const vm = this;
     const defaults = configService.getDefaults();
+    const NETWORK = 'livenet';
     vm.account = 1;
     vm.derivationPath = derivationPathHelper.default;
     vm.TCValues = lodash.range(2, defaults.limits.totalCosigners + 1);
-    vm.totalCosigners = defaults.wallet.totalCosigners;
-    vm.cosigners = [];// Array($scope.totalCosigners);
+    vm.totalCosignersNumber = defaults.wallet.totalCosigners;
+    vm.cosigners = []; // Array(self.totalCosignersNumber);
+    vm.requiredCosignersNumber = 0;
 
-    for (let i = 0; i < vm.totalCosigners - 1; i += 1) {
+    for (let i = 0; i < vm.totalCosignersNumber - 1; i += 1) {
       vm.cosigners.push({});
     }
     correspondentListService.list((err, ab) => {
@@ -69,7 +71,7 @@
         vm.error = gettextCatalog.getString('Please enter the required fields');
         return;
       }
-      if (vm.cosigners.length !== vm.totalCosigners - 1) {
+      if (vm.cosigners.length !== self.totalCosignersNumber - 1) {
         setError('invalid number of cosigners');
         return;
       }
@@ -80,16 +82,16 @@
       }
 
       const opts = {
-        m: vm.requiredCosigners,
-        n: vm.totalCosigners,
+        m: self.requiredCosignersNumber,
+        n: self.totalCosignersNumber,
         name: form.walletName.$modelValue,
-        networkName: 'livenet',
+        networkName: NETWORK,
         cosigners: [],
         isSingleAddress: form.isSingleAddress.$viewValue
       };
-      if (vm.totalCosigners > 1) {
+      if (vm.totalCosignersNumber > 1) {
         opts.cosigners = lodash.uniq(vm.cosigners.map(cosigner => cosigner.device_address));
-        if (opts.cosigners.length !== vm.totalCosigners - 1) {
+        if (opts.cosigners.length !== vm.totalCosignersNumber - 1) {
           setError('Please select different co-signers');
           return;
         }
@@ -146,7 +148,7 @@
 
     function setMultisig() {
       vm.setTotalCosigners(3);
-      vm.requiredCosigners = 2;
+      vm.requiredCosignersNumber = 2;
     }
 
     function setTotalCosigners(tc) {
@@ -166,10 +168,10 @@
     }
 
     function updateRCSelect(n) {
-      vm.totalCosigners = n;
+      vm.totalCosignersNumber = n;
       vm.RCValues = lodash.range(1, n + 1);
-      if (vm.requiredCosigners > n || !vm.requiredCosigners) {
-        vm.requiredCosigners = parseInt((n / 2) + 1, 10);
+      if (vm.requiredCosignersNumber > n || !vm.requiredCosignersNumber) {
+        vm.requiredCosignersNumber = parseInt((n / 2) + 1, 10);
       }
     }
 

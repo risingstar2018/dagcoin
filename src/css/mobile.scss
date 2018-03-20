@@ -369,7 +369,10 @@ a.missing-copayers {
         }
 
         .name-wallet{
-          height: 30px;
+          min-height: 30px;
+          font-size: 14px;
+          font-weight: 400;
+          padding-top: 0 !important;
         }
 
         a{

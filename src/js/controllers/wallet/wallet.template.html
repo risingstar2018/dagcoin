@@ -10,7 +10,7 @@
      ng-click="home.shareAddress(home.addr[index.walletId])">
     <svg-icon name="share"></svg-icon>
   </a>
-  <a dag-state-transition="slide-left" ng-if="tab === 'wallet.correspondentDevices'" ui-sref="addCorrespondentDevice">
+  <a title="{{ 'Add a new device' | translate }}" dag-state-transition="slide-left" ng-if="tab === 'wallet.correspondentDevices'" ui-sref="addCorrespondentDevice">
     <svg-icon name="add"></svg-icon>
   </a>
 </dag-nav-bar>

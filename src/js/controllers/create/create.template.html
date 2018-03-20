@@ -67,15 +67,15 @@
         </div>
         <div class="row" ng-show="create.totalCosigners != 1">
           <label class="input-wrap"><span translate>Total number of co-signers</span>
-            <select ng-model="create.totalCosigners"
+            <select ng-model="create.totalCosignersNumber"
                     ng-options="totalCosigners as totalCosigners for totalCosigners in create.TCValues"
-                    ng-change="create.setTotalCosigners(create.totalCosigners)">
+                    ng-change="create.setTotalCosigners(create.totalCosignersNumber)">
             </select>
           </label>
           <label class="input-wrap"><span translate>Required number of signatures</span>
-            <select ng-model="create.requiredCosigners"
+            <select ng-model="create.requiredCosignersNumber"
                     ng-options="requiredCosigners as requiredCosigners for requiredCosigners in create.RCValues"
-                    ng-disabled="create.totalCosigners == 1">
+                    ng-disabled="create.totalCosignersNumber == 1">
             </select>
           </label>
           <div ng-repeat="cosigner in create.cosigners track by $index">
@@ -95,7 +95,7 @@
           <button type="submit"
                   class="btn btn_red-full"
                   ng-disabled="setupForm.$invalid || create.loading">
-            <span translate>Create {{create.requiredCosigners}}-of-{{create.totalCosigners}} wallet</span>
+            <span translate>Create {{create.requiredCosignersNumber}}-of-{{create.totalCosignersNumber}} wallet</span>
           </button>
         </div>
       </form>
