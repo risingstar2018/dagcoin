@@ -20,6 +20,7 @@
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
+      const conf = require('byteballcore/conf.js');
       vm.addr = {};
       vm.setAddress();
       vm.isCordova = isCordova;
