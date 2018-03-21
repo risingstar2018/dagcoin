@@ -4,7 +4,7 @@
   <dag-tabset>
     <dag-tab heading="{{'Recover from seed'| translate}}">
       <div>
-        <div class="onGoingProcess" ng-show="backup.scanning">
+        <div class="onGoingProcess" ng-show="recovery.scanning">
           <div class="onGoingProcess-content" ng-style="{'background-color':index.backgroundColor}">
             <div class="spinner">
               <div class="rect1"></div>
@@ -17,27 +17,27 @@
           </div>
         </div>
 
-        <div class="text-center size-14" ng-show="backup.error">
+        <div class="text-center size-14" ng-show="recovery.error">
           <span class="text-warning">
-            {{backup.error}}
+            {{recovery.error}}
           </span>
         </div>
 
-        <form name="settingsDeviceNameForm" class="columns" ng-submit="backup.recoveryForm()">
+        <form name="settingsDeviceNameForm" class="columns" ng-submit="recovery.recoveryForm()">
           <label>
             <span translate>Your Wallet Seed:</span>
           </label>
 
-          <textarea id="inputMnemonic" ng-model="backup.inputMnemonic" style="max-height: 100px;"></textarea>
+          <textarea id="inputMnemonic" ng-model="recovery.inputMnemonic" style="max-height: 100px;"></textarea>
 
           <div class="page-action">
-            <button ng-show="!backup.scanning" type="submit" class="btn btn_red-full"
-                    ng-disabled="backup.inputMnemonic.trim() === ''" translate>
+            <button ng-show="!recovery.scanning" type="submit" class="btn btn_red-full"
+                    ng-disabled="recovery.inputMnemonic.trim() === ''" translate>
               Recover
             </button>
           </div>
 
-          <div class="text-alert size-14 text-center m15t" ng-if="!backup.isInitial">
+          <div class="text-alert size-14 text-center m15t" ng-if="!recovery.isInitial">
             <span translate>WARNINGS:</span> <br/>
             <span translate>This will permanently delete all your existing wallets!</span> <br/>
             <span translate>Only single-sig wallets can be recovered.</span> <br/>
@@ -50,7 +50,7 @@
     <dag-tab heading="{{'Recover from backup' | translate}}">
       <div>
 
-        <div class="onGoingProcess" ng-show="backup.imported">
+        <div class="onGoingProcess" ng-show="recovery.imported">
           <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
             <div class="spinner">
               <div class="rect1"></div>
@@ -63,12 +63,12 @@
           </div>
         </div>
 
-        <div class="box-notification text-center" ng-show="backup.error">
+        <div class="box-notification text-center" ng-show="recovery.error">
           <span class="text-warning">
-            {{backup.error}}
+            {{recovery.error}}
           </span>
         </div>
-        <form class="page-form" ng-submit="backup.walletImport()">
+        <form class="page-form" ng-submit="recovery.walletImport()">
           <div class="form-group">
             <div class="title clearfix">
               <span class="name" translate>Your wallet file:</span>
@@ -82,28 +82,28 @@
               <span class="name" translate>Password</span>
             </div>
             <div class="input-wrap">
-              <input class="password" type="text" placeholder="Password" ng-model="backup.password" autocomplete="off">
+              <input class="password" type="text" placeholder="Password" ng-model="recovery.password" autocomplete="off">
             </div>
           </div>
           <div class="page-action">
-            <button ng-disabled="backup.imported || backup.password == '' || !file" type="submit"
+            <button ng-disabled="recovery.imported || recovery.password == '' || !file" type="submit"
                     class="btn btn_red-full">{{'Import'|translate}}
             </button>
           </div>
         </form>
 
-        <div ng-show="backup.iOs && backup.arrBackupFiles.length > 0">
+        <div ng-show="recovery.iOs && recovery.arrBackupFiles.length > 0">
           <div class="center">OR</div>
           <div>
-            <ul class="no-bullet m0" ng-repeat="backupFile in backup.arrBackupFiles | orderBy:backupFile.time:true">
-              <li ng-click="backup.iosWalletImportFromFile(backupFile.originalName)">
+            <ul class="no-bullet m0" ng-repeat="backupFile in recovery.arrBackupFiles | orderBy:backupFile.time:true">
+              <li ng-click="recovery.iosWalletImportFromFile(backupFile.originalName)">
                 <i class="icon-arrow-right3 size-24 right text-gray"></i>
                 <div>{{backupFile.name}}</div>
               </li>
             </ul>
           </div>
         </div>
-        <div class="text-alert size-12 columns" ng-if="!backup.isInitial" translate>
+        <div class="text-alert size-12 columns" ng-if="!recovery.isInitial" translate>
           WARNING: This will permanently delete all your existing wallets!
         </div>
       </div>

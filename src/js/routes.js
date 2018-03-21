@@ -461,7 +461,7 @@
           needProfile: false,
           views: {
             main: {
-              templateUrl: 'controllers/preferences/global/security/recovery/recovery.html',
+              templateUrl: 'controllers/preferences/global/security/recovery/recovery.template.html',
               controller: 'RecoveryCtrl as recovery'
             }
           }
