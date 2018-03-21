@@ -23,7 +23,9 @@
         if (err) {
           vm.$emit('Local/DeviceError', err);
         }
-        vm.bDeviceNameSet = true;
+        $timeout(() => {
+          vm.bDeviceNameSet = true;
+        });
       });
     };
 
