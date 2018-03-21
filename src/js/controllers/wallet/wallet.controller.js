@@ -6,9 +6,9 @@
     .module('copayApp.controllers')
     .controller('WalletCtrl', WalletCtrl);
 
-  WalletCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$log', 'lodash', 'exportTransactions', 'Device'];
+  WalletCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$log', 'lodash', 'Device'];
 
-  function WalletCtrl($scope, $rootScope, $timeout, $log, lodash, exportTransactions, Device) {
+  function WalletCtrl($scope, $rootScope, $timeout, $log, lodash, Device) {
     const self = this;
     $rootScope.hideMenuBar = false;
     $rootScope.wpInputFocused = false;
@@ -30,10 +30,6 @@
       disableOngoingProcessListener();
       $rootScope.hideMenuBar = false;
     });
-
-    this.exportTransactions = () => {
-      exportTransactions.toCSV();
-    };
 
     this.bindTouchDown = function (tries) {
       const self = this;
