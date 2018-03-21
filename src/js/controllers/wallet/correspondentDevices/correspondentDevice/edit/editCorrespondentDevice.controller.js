@@ -28,16 +28,15 @@
     };
 
     vm.purgeChat = function () {
-      const ModalInstanceCtrl = function ($modalInstance, $sce) {
-        const modal = this;
-        modal.header = $sce.trustAsHtml(gettextCatalog.getString('Clear chat history'));
-        modal.title = $sce.trustAsHtml(gettextCatalog.getString(`Delete the whole chat history with ${correspondent.name} ?`));
+      const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
+        $scopeModal.header = $sce.trustAsHtml(gettextCatalog.getString('Clear chat history'));
+        $scopeModal.title = $sce.trustAsHtml(gettextCatalog.getString(`Delete the whole chat history with ${correspondent.name} ?`));
 
-        modal.ok = function () {
+        $scopeModal.ok = function () {
           $modalInstance.close(true);
           go.path('correspondentDevice');
         };
-        modal.cancel = function () {
+        $scopeModal.cancel = function () {
           $modalInstance.dismiss('cancel');
           go.path('editCorrespondentDevice');
         };
@@ -46,7 +45,7 @@
       const modalInstance = $modal.open({
         templateUrl: 'views/modals/confirmation.html',
         windowClass: animationService.modalAnimated.slideUp,
-        controller: ['$modalInstance', '$sce', ModalInstanceCtrl],
+        controller: ['$scope', '$modalInstance', '$sce', ModalInstanceCtrl],
       });
 
       modalInstance.result.finally(() => {
