@@ -4,7 +4,8 @@
 
   angular.module('copayApp.services').factory('transactionsService', (lodash, ENV, utilityService, profileService,
                                                                       addressbookService, animationService, correspondentListService,
-                                                                      gettextCatalog, $rootScope, $modal, txFormatService, notification) => {
+                                                                      gettextCatalog, $rootScope, $modal, txFormatService,
+                                                                      notification, configService) => {
     const root = {};
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
 
@@ -17,6 +18,14 @@
      */
     root.openTxModal = function (params) {
       const btx = params.btx;
+
+      // fix fee value
+      if (btx.action !== 'received' && (typeof btx.feeStr === 'string')) {
+        const feeVal = btx.feeStr.split(' ')[0] || 0;
+        const config = configService.getSync();
+        btx.feeStr = feeVal / config.wallet.settings.unitValue;
+      }
+
       const walletSettings = params.walletSettings;
       $rootScope.modalOpened = true;
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
