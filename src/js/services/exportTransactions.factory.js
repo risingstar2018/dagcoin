@@ -6,10 +6,10 @@
     .factory('exportTransactions', exportTransactions);
 
   exportTransactions.$inject = ['$q', '$log', 'lodash', 'Device', 'nodeWebkit', 'profileService', 'utilityService', 'fileSystemService',
-    '$rootScope', 'ENV', '$timeout'];
+    'ENV', '$timeout'];
 
   function exportTransactions($q, $log, lodash, Device, nodeWebkit, profileService, utilityService, fileSystemService,
-                              $rootScope, ENV, $timeout) {
+                              ENV, $timeout) {
     return {
       toCsvFile
     };
