@@ -627,7 +627,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     root.getPendingSharedAddresses = getPendingSharedAddresses;
 
     root.list = function (cb) {
-      const device = {}; require('byteballcore/device.js');
+      const device = require('byteballcore/device.js');
       device.readCorrespondents((arrCorrespondents) => {
         cb(null, arrCorrespondents);
       });
