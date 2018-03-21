@@ -16,13 +16,14 @@
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
     const config = configService.getSync();
     const vm = this;
-    vm.isCordova = isCordova;
 
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
       vm.addr = {};
       vm.setAddress();
+      vm.isCordova = isCordova;
+      vm.protocol = conf.program;
     };
 
     function onNewWalletAddress(newAddress) {
