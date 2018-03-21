@@ -17,7 +17,7 @@
     vm.derivationPath = derivationPathHelper.default;
     vm.TCValues = lodash.range(2, defaults.limits.totalCosigners + 1);
     vm.totalCosignersNumber = defaults.wallet.totalCosigners;
-    vm.cosigners = []; // Array(self.totalCosignersNumber);
+    vm.cosigners = []; // Array(vm.totalCosignersNumber);
     vm.requiredCosignersNumber = 0;
 
     for (let i = 0; i < vm.totalCosignersNumber - 1; i += 1) {
@@ -71,7 +71,7 @@
         vm.error = gettextCatalog.getString('Please enter the required fields');
         return;
       }
-      if (vm.cosigners.length !== self.totalCosignersNumber - 1) {
+      if (vm.cosigners.length !== vm.totalCosignersNumber - 1) {
         setError('invalid number of cosigners');
         return;
       }
@@ -82,8 +82,8 @@
       }
 
       const opts = {
-        m: self.requiredCosignersNumber,
-        n: self.totalCosignersNumber,
+        m: vm.requiredCosignersNumber,
+        n: vm.totalCosignersNumber,
         name: form.walletName.$modelValue,
         networkName: NETWORK,
         cosigners: [],
