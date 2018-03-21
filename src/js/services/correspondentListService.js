@@ -455,7 +455,7 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     function readCorrespondentAndForwardMessage(fromAddress, body) {
       return new Promise((resolve) => {
-        const device = {}; require('byteballcore/device.js');
+        const device = require('byteballcore/device.js');
         device.readCorrespondent(fromAddress, (correspondent) => {
           resolve(correspondent);
         });
