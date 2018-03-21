@@ -272,5 +272,16 @@
         });
       }
     };
-  }]);
+  }])
+  .directive('ngEnter', () => (scope, element, attrs) => {
+      element.bind('keydown', (e) => {
+        if (e.which === 13) {
+          scope.$apply(() => {
+            scope.$eval(attrs.ngEnter, { e });
+          });
+          e.preventDefault();
+        }
+      });
+    }
+  );
 }());
