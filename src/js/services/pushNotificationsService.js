@@ -3,7 +3,7 @@
 
   /* eslint-disable no-shadow */
   angular.module('copayApp.services')
-  .factory('pushNotificationsService', ($http, $rootScope, $log, storageService, configService, lodash, Device) => {
+  .factory('pushNotificationsService', ($http, $log, storageService, configService, lodash, Device) => {
     const root = {};
     const usePushNotifications = Device.cordova && !Device.windows;
     let projectNumber;
