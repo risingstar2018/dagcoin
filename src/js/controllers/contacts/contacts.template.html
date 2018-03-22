@@ -4,8 +4,8 @@
   </a>
 </dag-nav-bar>
 
-<div class="content contacts" ng-class="{'no_contacts' : !contacts.listTotal}">
-  <div class="swiper_tabs_menu" ng-if="contacts.listTotal">
+<div class="content contacts" ng-class="{'no_contacts' : !contacts.existsAnyContact}">
+  <div class="swiper_tabs_menu" ng-if="contacts.existsAnyContact">
     <ul>
       <li ng-class="{'active': contacts.activeTab(0)}" ng-click="contacts.swiper.slideTo(0)">
         <span>{{ 'contacts' | translate }}</span>
@@ -16,14 +16,14 @@
     </ul>
   </div>
 
-  <div ng-if="contacts.listTotal" class="input-wrap input-icon search-container">
+  <div ng-if="contacts.existsAnyContact" class="input-wrap input-icon search-container">
     <input type="text" ng-model="contacts.search" id="search" name="search" ng-attr-placeholder="{{'Search' | translate}}">
     <a>
       <i class="icon icon-d fi-magnifying-glass"></i>
     </a>
   </div>
 
-  <div ng-if="!contacts.listTotal" class="no_contacts_message">
+  <div ng-if="!contacts.existsAnyContact" class="no_contacts_message">
     <svg-icon name="agenda"></svg-icon>
     <p translate>Search result is empty or you don't have any contacts in your address book.</p>
     <p translate>Press "+" in the right upper corner to add new contact.</p>
