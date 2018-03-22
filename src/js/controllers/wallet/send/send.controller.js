@@ -469,7 +469,11 @@
         gettextCatalog.getString('Could not create payment proposal') :
         gettextCatalog.getString('Could not send payment');
 
-      vm.error = `${prefix}: ${err}`;
+      let errorStr = err || '';
+      if (errorStr.match(new RegExp('not enough spendable funds from.*', 'gi'))) {
+        errorStr = gettextCatalog.getString('Not enough spendable funds');
+      }
+      vm.error = `${prefix}: ${errorStr}`;
       console.log(vm.error);
 
       $timeout(() => {
@@ -483,7 +487,7 @@
      */
     vm.submitForm = function () {
       if ($scope.index.arrBalances.length === 0) {
-        vm.setSendError(gettextCatalog('no balances yet'));
+        vm.setSendError(gettextCatalog.getString('no balances yet'));
         return console.log('send payment: no balances yet');
       }
       const fc = profileService.focusedClient;

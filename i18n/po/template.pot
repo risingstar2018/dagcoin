@@ -1858,6 +1858,10 @@ msgstr ""
 msgid "Field is too long"
 msgstr ""
 
-+#: csvHistory method
-+msgid "Download completed"
-+msgstr ""
+#: csvHistory method
+msgid "Download completed"
+msgstr ""
+
+#: send.controller:474
+msgid "Not enough spendable funds"
+msgstr ""
