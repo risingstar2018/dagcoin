@@ -172,7 +172,7 @@
 
       vm.lockAddress = to && isMerchant;
 
-      if (moneyAmount) {
+      if (!lodash.isEmpty(moneyAmount)) {
         moneyAmount /= vm.unitValue;
         vm.lockAmount = true;
         $timeout(() => {
@@ -184,6 +184,13 @@
         vm.lockAmount = false;
         form.amount.$pristine = true;
         form.amount.$render();
+
+        // send.controller is called whether from payment request from chat, or from scanning barcode
+        // If just address barcode is scanned and there is an already entered amount, this amount value is read
+        if (!lodash.isEmpty($rootScope.alreadyEnteredAmount)) {
+          form.amount.$setViewValue(`${$rootScope.alreadyEnteredAmount}`);
+          form.amount.$isValid = true;
+        }
       }
 
       if (form.merkle_proof) {
@@ -268,7 +275,7 @@
       this.lockAsset = false;
       this.lockAddress = false;
       this.lockAmount = false;
-      this.hideAdvSend = true;
+      // this.hideAdvSend = true;
       $scope.currentSpendUnconfirmed = configService.getSync().wallet.spendUnconfirmed;
 
       this._amount = null;
@@ -678,6 +685,15 @@
         walletSettings,
         $rootScope
       });
+    };
+
+    /**
+     * $rootScope.alreadyEnteredAmount is used for storing entered amount,
+     * after scanning barcode of an address, send.controller is created again.
+     * In order to get already entered amount alreadyEnteredAmount variable is used.
+     */
+    $scope.amountBlur = () => {
+      $rootScope.alreadyEnteredAmount = $scope.sendForm.amount.$viewValue;
     };
 
     $scope.$on('$viewContentLoaded', viewContentLoaded);
