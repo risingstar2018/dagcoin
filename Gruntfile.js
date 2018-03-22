@@ -99,6 +99,9 @@ module.exports = function (grunt) {
       },
       osx32: {
         command: '../byteballbuilds/build-osx.sh osx32 <%= pkg.name %>'
+      },
+      nwBackground: {
+        command: 'nw . &'
       }
     },
 
@@ -475,6 +478,7 @@ module.exports = function (grunt) {
       options: {
         dateFormat(time) {
           grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
+          grunt.log.writeln('Please ' + 'Reload app'.yellow + ' from browser');
           grunt.log.writeln('Waiting for more changes...');
         }
       },
@@ -535,7 +539,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-contrib-sass');
 
-  grunt.registerTask('dev', ['watch']);
+  grunt.registerTask('dev', ['build', 'exec:nwBackground', 'watch']);
   grunt.registerTask('build', (target) => {
     var ngconstantTask = 'ngconstant:testnet';
     if (target === 'live') {
