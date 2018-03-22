@@ -74,7 +74,7 @@
               <span class="name" translate>Your wallet file:</span>
             </div>
             <div class="input-wrap">
-              <input type="file" ng-file-select>
+              <input type="file" ng-file-select ng-file-selected="recovery.onFileSelected(file)">
             </div>
           </div>
           <div class="form-group">
@@ -82,11 +82,11 @@
               <span class="name" translate>Password</span>
             </div>
             <div class="input-wrap">
-              <input class="password" type="text" placeholder="Password" ng-model="recovery.password" autocomplete="off">
+              <dag-password-input placeholder="'Password'" ng-model="recovery.password"></dag-password-input>
             </div>
           </div>
           <div class="page-action">
-            <button ng-disabled="recovery.imported || recovery.password == '' || !file" type="submit"
+            <button ng-disabled="recovery.imported || recovery.password == '' || !recovery.file" type="submit"
                     class="btn btn_red-full">{{'Import'|translate}}
             </button>
           </div>

@@ -91,10 +91,17 @@
     },
   }))
   .directive('ngFileSelect', () => ({
+    restrict: 'A',
+    scope: {
+      ngFileSelected: '&'
+    },
     link($scope, el) {
       el.bind('change', (e) => {
-        $scope.file = (e.srcElement || e.target).files[0];
-        $scope.getFile();
+        if ($scope.ngFileSelected) {
+          $scope.ngFileSelected({
+            file: (e.srcElement || e.target).files[0]
+          });
+        }
       });
     },
   }))

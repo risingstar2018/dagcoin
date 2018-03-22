@@ -59,7 +59,7 @@
     self.walletImport = walletImport;
     self.iosWalletImportFromFile = iosWalletImportFromFile;
     self.recoveryForm = recoveryForm;
-
+    self.onFileSelected = onFileSelected;
 
     self.getFile = () => {
       $timeout(() => {
@@ -110,6 +110,10 @@
       }
     }
 
+    function onFileSelected(file) {
+      self.file = file;
+    }
+
     function walletImport() {
       self.imported = true;
       self.error = '';
@@ -118,7 +122,7 @@
           unzipAndWriteFiles(data, self.password);
         });
       } else {
-        fileSystemService.readFileFromForm($scope.file, (err, data) => {
+        fileSystemService.readFileFromForm(self.file, (err, data) => {
           if (err) {
             return showError(err);
           }
