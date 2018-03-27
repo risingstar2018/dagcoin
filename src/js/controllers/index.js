@@ -1070,13 +1070,66 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             return formatString;
           }
 
+          /**
+           * TODO move to csvHistory directive
+           * Used when platform is cordova
+           * Downloads file into window.cordova.file.documentsDirectory with a filename tailing with current time
+           * @param uri
+           */
+          function saveFileIntoDownloadFolder(csvContent) {
+            const errorCallback = function (e) {
+              console.error(`Error: ${e}`);
+              $rootScope.$emit('Local/ShowAlert', JSON.stringify(e), 'fi-alert', () => { });
+            };
+
+            // TODO move to fileSystemService as getDownloadDir. It only works with cordova.
+            let storageLocation;
+            if (isMobile.Android()) {
+              storageLocation = 'file:///storage/emulated/0/';
+            } else { // IOS
+              storageLocation = window.cordova.file.documentsDirectory;
+            }
+
+            // Arrange file name, filter some special characters
+            const date = new Date().toISOString().slice(0, 19)
+              .replace(':', '')
+              .replace('T', '-');
+            const fileName = `${self.alias || self.walletName}-${date}.csv`
+              .replace(/[ <>:,{}"\/\\|?*]+/g, '');
+
+            window.resolveLocalFileSystemURL(storageLocation, (fileSystem) => {
+              fileSystem.getDirectory('Download', {
+                  create: true,
+                  exclusive: false
+                }, (directory) => {
+                  directory.getFile(fileName, {
+                      create: true,
+                      exclusive: false
+                    }, (fileEntry) => {
+                      fileEntry.createWriter((writer) => {
+                        writer.onwriteend = function () {
+                          console.log(`${fileName} File written to downloads`);
+                        };
+                        writer.seek(0);
+                        const blob = new Blob([csvContent], { type: 'text/plain;charset=utf-8', endings: 'native' });
+                        writer.write(blob);
+                        const message = `${gettextCatalog.getString('Download completed')} : ${fileName}`;
+                        $rootScope.$emit('Local/ShowAlert', message, 'fi-check', () => { });
+                      }, errorCallback);
+                    }, errorCallback);
+                }, errorCallback);
+            }, errorCallback);
+          }
+
           const step = 6;
           // const unique = {};
 
+          /*
           if (isCordova) {
             $log.info('CSV generation not available in mobile');
             return;
           }
+          */
           const isNode = nodeWebkit.isDefined();
           const fc = profileService.focusedClient;
           const c = fc.credentials;
@@ -1097,10 +1150,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
               const data = txs;
               const filename = `Dagcoin-${self.alias || self.walletName}.csv`;
-              let csvContent = '';
+              let csvContent;
 
-              if (!isNode) csvContent = 'data:text/csv;charset=utf-8,';
-              csvContent += 'Date,Destination,Note,Amount,Currency\n';
+              if (!isNode && !isMobile.any()) {
+                csvContent = 'data:text/csv;charset=utf-8,';
+              } else {
+                csvContent = 'Date,Destination,Note,Amount,Currency\n';
+              }
 
               let amount;
               let note;
@@ -1126,6 +1182,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
               if (isNode) {
                 saveFile('#export_file', csvContent);
+              } else if (isMobile.any()) {
+                saveFileIntoDownloadFolder(csvContent);
               } else {
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement('a');
@@ -1504,11 +1562,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/ProfileBound', () => {
           const config = configService.getSync();
-
           // password and finger print options are read from config and profile service
           const needPassword = !!profileService.profile.xPrivKeyEncrypted;
-          const needFingerprint = !!config.touchIdFor[profileService.focusedClient.credentials.walletId];
-          self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
+          const needFingerprint = !!config.touchId;
+
+          if (!(self.walletInfoVisibility instanceof WalletInfoVisibility)) {
+            self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
+          }
         });
 
         $rootScope.$on('Local/NewFocusedWallet', () => {

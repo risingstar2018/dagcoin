@@ -3,7 +3,8 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('recoveryFromSeed',
-    function ($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService, configService, fundingExchangeClientService) {
+    function ($rootScope, $scope, $state, $log, $timeout, profileService,
+              gettextCatalog, fileSystemService, configService, fundingExchangeClientService, storageService) {
       const async = require('async');
       const conf = require('byteballcore/conf.js');
       const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
@@ -151,7 +152,6 @@
           }
         }
 
-
         startAddToNewWallet(0);
       }
 
@@ -263,12 +263,14 @@
               createWallets(arrWalletIndexes, () => {
                 createAddresses(assocMaxAddressIndexes, () => {
                   self.scanning = false;
-                  $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString(`${arrWalletIndexes.length} wallets recovered, please restart the application to finish.`), 'fi-check', () => {
-                    if (navigator && navigator.app) {  // android
-                      navigator.app.exitApp();
-                    } else if (process.exit) { // nwjs
-                      process.exit();
-                    }
+                  storageService.clearBackupFlag('all', () => {
+                    $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString(`${arrWalletIndexes.length} wallets recovered, please restart the application to finish.`), 'fi-check', () => {
+                      if (navigator && navigator.app) {  // android
+                        navigator.app.exitApp();
+                      } else if (process.exit) { // nwjs
+                        process.exit();
+                      }
+                    });
                   });
                 });
               });

@@ -86,10 +86,10 @@
 
               </div>
 
-              <span ng-if="index.dagBalance.pending" class="ballance" translate>Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
-              <span ng-if="!index.dagBalance.pending" class="ballance" translate>Wallet balance</span>
+              <span ng-if="index.walletInfoVisibility.visible && index.dagBalance.pending" class="ballance" translate>Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
+              <span ng-if="index.walletInfoVisibility.visible && !index.dagBalance.pending" class="ballance" translate>Wallet balance</span>
 
-              <div class="size-10 m10t" ng-if="index.dagBalance.shared !== undefined">
+              <div class="size-10 m10t" ng-if="index.walletInfoVisibility.visible && index.dagBalance.shared !== undefined">
                 <a ng-click="index.openSubwalletModal()">
                   <span translate>Also</span>
                   <span>{{index.dagBalance.sharedStr}}</span>
@@ -97,7 +97,7 @@
                 </a>
               </div>
 
-              <div class="m10t">
+              <div class="m10t" ng-if="index.walletInfoVisibility.visible">
                 <a ng-click="openSharedAddressDefinitionModal(index.shared_address)"
                    class="button outline round light-gray tiny preferences-icon m0" ng-if="index.shared_address">
                   <i class="fi-eye size-24 vm wallet-settings"></i>
@@ -142,7 +142,7 @@
             <div class="dag_transactions_list_triggers">
               <h4 translate>Transactions History</h4>
               <!-- EXPORT TO CVS: START -->
-              <div ng-if="!index.isCordova">
+              <div>
                 <input id="export_file" type="file" nwsaveas="Dagcoin-{{index.alias || index.walletName}}.csv"
                        accept=".csv" style="display:none">
                 <button ng-disabled="exporting" class="transactions_export_button btn btn_red"
