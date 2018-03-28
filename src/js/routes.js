@@ -679,8 +679,7 @@
       }
       if (isCordova) {
         document.addEventListener('resume', () => {
-          $timeout(() => {
-            const config = configService.getSync();
+          configService.get((configCacheErr, config) => {
             // password and finger print options are read from config and profile service
             const needPassword = !!profileService.profile.xPrivKeyEncrypted;
             const needFingerprint = !!config.touchId;
@@ -697,7 +696,7 @@
                 }
               });
             }
-          }, 100);
+          });
         }, false);
       }
 
