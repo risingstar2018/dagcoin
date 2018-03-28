@@ -68,7 +68,7 @@
           self.setForm(address, amount, null, asset, recipientDeviceAddress);
 
           const form = $scope.sendForm;
-          if (form.address.$invalid && !self.blockUx) {
+          if (!form.address.$isValid && !self.blockUx) {
             console.log('invalid address, resetting form');
             self.resetForm();
             self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
