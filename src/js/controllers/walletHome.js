@@ -1265,11 +1265,9 @@
             return console.log('form.address has disappeared');
           }
           if (to) {
-            $timeout(() => {
-              form.address.$setViewValue(to);
-              form.address.$isValid = true;
-              form.address.$render();
-            }, 100);
+            form.address.$setViewValue(to);
+            form.address.$isValid = true;
+            form.address.$render();
 
             if (recipientDeviceAddress) {
               // must be already paired
