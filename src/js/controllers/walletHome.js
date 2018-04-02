@@ -105,21 +105,22 @@
 
           if (state === 'PENDING') {
             self.setForm(address, amount, null, ENV.DAGCOIN_ASSET, null, true);
+            $timeout(() => {
+              const form = $scope.sendForm;
 
-            const form = $scope.sendForm;
+              if (!form.address.$isValid && !self.blockUx) {
+                console.log('invalid address, resetting form');
+                self.resetForm();
+                self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
+              }
 
-            if (form.address.$invalid && !self.blockUx) {
-              console.log('invalid address, resetting form');
-              self.resetForm();
-              self.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
-            }
+              if (this.validForSeconds <= 0) {
+                self.resetForm();
+                self.error = gettextCatalog.getString('Merchant payment request expired');
+              }
 
-            if (this.validForSeconds <= 0) {
-              self.resetForm();
-              self.error = gettextCatalog.getString('Merchant payment request expired');
-            }
-
-            self.countDown();
+              self.countDown();
+            }, 200);
           } else {
             processNonPendingStates(state);
           }
