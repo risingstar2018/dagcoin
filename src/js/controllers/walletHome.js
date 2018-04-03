@@ -1265,9 +1265,11 @@
             return console.log('form.address has disappeared');
           }
           if (to) {
-            form.address.$setViewValue(to);
             form.address.$isValid = true;
-            form.address.$render();
+            $timeout(() => {
+              form.address.$setViewValue(to);
+              form.address.$render();
+            }, 100);
 
             if (recipientDeviceAddress) {
               // must be already paired
@@ -1285,9 +1287,9 @@
               moneyAmount /= this.dagUnitValue;
             }
             this.lockAmount = true;
+            form.amount.$isValid = true;
             $timeout(() => {
               form.amount.$setViewValue(`${moneyAmount}`);
-              form.amount.$isValid = true;
               form.amount.$render();
             }, 100);
           } else {
@@ -1295,6 +1297,7 @@
             form.amount.$pristine = true;
             form.amount.$render();
           }
+
 
           if (form.merkle_proof) {
             form.merkle_proof.$setViewValue('');
