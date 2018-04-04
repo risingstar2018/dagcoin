@@ -1,0 +1,112 @@
+<dag-nav-bar title="{{ 'Recovery' | translate}}" go-back="security" invert></dag-nav-bar>
+
+<div class="content">
+  <dag-tabset>
+    <dag-tab heading="{{'Recover from seed'| translate}}">
+      <div>
+        <div class="onGoingProcess" ng-show="recovery.scanning">
+          <div class="onGoingProcess-content" ng-style="{'background-color':index.backgroundColor}">
+            <div class="spinner">
+              <div class="rect1"></div>
+              <div class="rect2"></div>
+              <div class="rect3"></div>
+              <div class="rect4"></div>
+              <div class="rect5"></div>
+            </div>
+            <span translate> Scanning for addresses... </span>
+          </div>
+        </div>
+
+        <div class="text-center size-14" ng-show="recovery.error">
+          <span class="text-warning">
+            {{recovery.error}}
+          </span>
+        </div>
+
+        <form name="settingsDeviceNameForm" class="columns" ng-submit="recovery.recoveryForm()">
+          <label>
+            <span translate>Your Wallet Seed:</span>
+          </label>
+
+          <textarea id="inputMnemonic" ng-model="recovery.inputMnemonic" style="max-height: 100px;"></textarea>
+
+          <div class="page-action">
+            <button ng-show="!recovery.scanning" type="submit" class="btn btn_red-full"
+                    ng-disabled="recovery.inputMnemonic.trim() === ''" translate>
+              Recover
+            </button>
+          </div>
+
+          <div class="text-alert size-14 text-center m15t" ng-if="!recovery.isInitial">
+            <span translate>WARNINGS:</span> <br/>
+            <span translate>This will permanently delete all your existing wallets!</span> <br/>
+            <span translate>Only single-sig wallets can be recovered.</span> <br/>
+            <span translate>Correspondents are not restored.</span> <br/>
+            <span translate>Do not clone wallets, stop using the original wallet with this seed.</span> <br/>
+          </div>
+        </form>
+      </div>
+    </dag-tab>
+    <dag-tab heading="{{'Recover from backup' | translate}}">
+      <div>
+
+        <div class="onGoingProcess" ng-show="recovery.imported">
+          <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+            <div class="spinner">
+              <div class="rect1"></div>
+              <div class="rect2"></div>
+              <div class="rect3"></div>
+              <div class="rect4"></div>
+              <div class="rect5"></div>
+            </div>
+            <span translate> Importing wallet... </span>
+          </div>
+        </div>
+
+        <div class="box-notification text-center" ng-show="recovery.error">
+          <span class="text-warning">
+            {{recovery.error}}
+          </span>
+        </div>
+        <form class="page-form" ng-submit="recovery.walletImport()">
+          <div class="form-group">
+            <div class="title clearfix">
+              <span class="name" translate>Your wallet file:</span>
+            </div>
+            <div class="input-wrap">
+              <input type="file" ng-file-select ng-file-selected="recovery.onFileSelected(file)">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="title clearfix">
+              <span class="name" translate>Password</span>
+            </div>
+            <div class="input-wrap">
+              <dag-password-input placeholder="'Password'" ng-model="recovery.password"></dag-password-input>
+            </div>
+          </div>
+          <div class="page-action">
+            <button ng-disabled="recovery.imported || recovery.password == '' || !recovery.file" type="submit"
+                    class="btn btn_red-full">{{'Import'|translate}}
+            </button>
+          </div>
+        </form>
+
+        <div ng-show="recovery.iOs && recovery.arrBackupFiles.length > 0">
+          <div class="center">OR</div>
+          <div>
+            <ul class="no-bullet m0" ng-repeat="backupFile in recovery.arrBackupFiles | orderBy:backupFile.time:true">
+              <li ng-click="recovery.iosWalletImportFromFile(backupFile.originalName)">
+                <i class="icon-arrow-right3 size-24 right text-gray"></i>
+                <div>{{backupFile.name}}</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-alert size-12 columns" ng-if="!recovery.isInitial" translate>
+          WARNING: This will permanently delete all your existing wallets!
+        </div>
+      </div>
+    </dag-tab>
+  </dag-tabset>
+</div>

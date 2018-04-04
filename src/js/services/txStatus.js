@@ -34,27 +34,6 @@
         type = 'broadcasted';
       } else {
         throw Error('unsupported status');
-        /*
-         var n = txp.actions.length;
-         var action = lodash.find(txp.actions, {
-         copayerId: fc.credentials.copayerId
-         });
-
-         if (!action)  {
-         type = 'created';
-         } else if (action.type == 'accept') {
-         // created and accepted at the same time?
-         if ( n == 1 && action.createdOn - txp.createdOn < INMEDIATE_SECS ) {
-         type = 'created';
-         } else {
-         type = 'accepted';
-         }
-         } else if (action.type == 'reject') {
-         type = 'rejected';
-         } else {
-         throw new Error('Unknown type:' + type);
-         }
-         */
       }
 
       openModal(type, txp, cb);

@@ -1,287 +1,90 @@
-/* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,
+/* eslint-disable no-mixed-operators,no-use-before-define,new-cap,
 no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-dependencies,import/no-unresolved, no-undef */
 (function () {
   'use strict';
 
   angular.module('copayApp.controllers').controller('indexController',
-      function ($rootScope,
-                $scope,
-                $log,
-                $filter,
-                $timeout,
-                $interval,
-                lodash,
-                go,
-                fingerprintService,
-                profileService,
-                configService,
-                isCordova,
-                storageService,
-                addressService,
-                gettextCatalog,
-                amMoment,
-                nodeWebkit,
-                addonManager,
-                txFormatService,
-                uxLanguage,
-                $state, isMobile,
-                addressbookService,
-                notification,
-                animationService,
-                fundingExchangeProviderService,
-                fundingExchangeClientService,
-                $modal,
-                bwcService,
-                backButton,
-                faucetService,
-                changeWalletTypeService,
-                autoRefreshClientService,
-                connectionService,
-                newVersion,
-                ENV,
-                moment) {
+      function ($rootScope, $scope, $log, $filter, $timeout, $interval, lodash, go, fingerprintService, profileService, configService,
+                Device, storageService, addressService, gettextCatalog, amMoment, nodeWebkit, txFormatService, uxLanguage,
+                $state, addressbookService, notification, animationService, $modal, bwcService, backButton, faucetService, changeWalletTypeService,
+                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService, navigationService) {
         const async = require('async');
-        const constants = require('byteballcore/constants.js');
         const mutex = require('byteballcore/mutex.js');
         const eventBus = require('byteballcore/event_bus.js');
         const objectHash = require('byteballcore/object_hash.js');
         const ecdsaSig = require('byteballcore/signature.js');
         const breadcrumbs = require('byteballcore/breadcrumbs.js');
         const Bitcore = require('bitcore-lib');
-        const _ = require('lodash');
+        const isCordova = Device.cordova;
+        const acceptMessage = gettextCatalog.getString('Yes');
+        const cancelMessage = gettextCatalog.getString('No');
+        const confirmMessage = gettextCatalog.getString('Confirm');
+        // units that were already approved or rejected by user.
+        // if there are more than one addresses to sign from,
+        // we won't pop up confirmation dialog for each address,
+        // instead we'll use the already obtained approval
+        const assocChoicesByUnit = {};
         breadcrumbs.add('index.js');
         const self = this;
-        self.isCordova = isCordova;
-        self.isSafari = isMobile.Safari();
+        self.tab = 'wallet.home';
         self.onGoingProcess = {};
         self.updatingTxHistory = true;
         self.bSwipeSuspended = false;
-        self.$state = $state;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
 
-        // This property is assigned to an empty object to escape from null pointer access.
-        // This is initialized in Local/ProfileBound event
-        self.walletInfoVisibility = {};
-
-        constants.DAG_FEE = 500; // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
-        constants.MIN_BYTE_FEE = 950;
-
-        fundingExchangeClientService.setIndex(this);
-
-        self.triggerUrl = (state) => {
-          $state.go(state);
-        };
-
+        walletService.checkTestnetData();
         connectionService.init();
+
         $rootScope.$on('connection:state-changed', (ev, isOnline) => {
           self.isOffline = !isOnline;
         });
 
-        function updatePublicKeyRing(walletClient, onDone) {
-          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
-          walletDefinedByKeys.readCosigners(walletClient.credentials.walletId, (arrCosigners) => {
-            const arrApprovedDevices = arrCosigners
-              .filter(cosigner => cosigner.approval_date)
-              .map(cosigner => cosigner.device_address);
-            console.log(`approved devices: ${arrApprovedDevices.join(', ')}`);
-            walletClient.credentials.addPublicKeyRing(arrApprovedDevices);
-
-            // save it to profile
-            const credentialsIndex = lodash.findIndex(profileService.profile.credentials, { walletId: walletClient.credentials.walletId });
-            if (credentialsIndex < 0) {
-              throw Error('failed to find our credentials in profile');
-            }
-            profileService.profile.credentials[credentialsIndex] = JSON.parse(walletClient.export());
-            console.log(`saving profile: ${JSON.stringify(profileService.profile)}`);
-            storageService.storeProfile(profileService.profile, () => {
-              if (onDone) {
-                onDone();
-              }
-            });
-          });
+        if (autoRefreshClientService) {
+          autoRefreshClientService.initHistoryAutoRefresh();
         }
 
-        if (isCordova && constants.version === '1.0') {
-          const db = require('byteballcore/db.js');
-          db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
-            if (rows.length > 0) {
-              self.showErrorPopup('Looks like you have testnet data.  Please remove the app and reinstall.', () => {
-                if (navigator && navigator.app) {
-                  // android
-                  navigator.app.exitApp();
-                }
-                // ios doesn't exit
-              });
+        self.showPopup = function (msg, msgIcon, cb) {
+          if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
+            return false;
+          }
+          $log.warn(`Showing ${msgIcon} popup:${msg}`);
+          self.showAlert = {
+            msg: msg.toString(),
+            msg_icon: msgIcon,
+            close(err) {
+              self.showAlert = null;
+              if (cb) return cb(err);
             }
-          });
-        }
-
-        eventBus.on('nonfatal_error', (errorMessage, errorObject) => {
-          console.log('nonfatal error stack', errorObject.stack);
-          Raven.captureException(`nonfatal error stack ${errorMessage}`);
-          errorObject.bIgnore = true;
-        });
-
-        eventBus.on('uncaught_error', (errorMessage, errorObject) => {
-          Raven.captureException(errorMessage);
-          if (errorMessage.indexOf('ECONNREFUSED') >= 0 || errorMessage.indexOf('host is unreachable') >= 0) {
-            $rootScope.$emit('Local/ShowAlert', 'Error connecting to TOR', 'fi-alert', () => {
-              go.path('preferencesTor');
-            });
-            return;
-          }
-          if (errorMessage.indexOf('ttl expired') >= 0 || errorMessage.indexOf('general SOCKS server failure') >= 0) {
-            // TOR error after wakeup from sleep
-            return;
-          }
-
-          const handled = changeWalletTypeService.tryHandleError(errorObject);
-          if (errorObject && (errorObject.bIgnore || handled)) {
-            return;
-          }
-          self.showErrorPopup(errorMessage, () => {
-            if (self.isCordova && navigator && navigator.app) {
-              // android
-              navigator.app.exitApp();
-            } else if (process.exit) {
-              // nwjs
-              process.exit();
-            }
-            // ios doesn't exit
-          });
-        });
-
-        let catchupBallsAtStart = -1;
-        eventBus.on('catching_up_started', () => {
-          self.setOngoingProcess('Syncing', true);
-          self.syncProgress = '0% of new units';
-          fundingExchangeProviderService.pause();
-        });
-        eventBus.on('catchup_balls_left', (countLeft) => {
-          self.setOngoingProcess('Syncing', true);
-          if (catchupBallsAtStart === -1) {
-            catchupBallsAtStart = countLeft;
-          }
-          const percent = Math.round(((catchupBallsAtStart - countLeft) / catchupBallsAtStart) * 100);
-          self.syncProgress = `${percent}% of new units`;
+          };
           $timeout(() => {
             $rootScope.$apply();
           });
-        });
-        eventBus.on('catching_up_done', () => {
-          catchupBallsAtStart = -1;
-          self.setOngoingProcess('Syncing', false);
-          self.syncProgress = '';
-          fundingExchangeProviderService.unpause();
-        });
-        eventBus.on('refresh_light_started', () => {
-          console.log('refresh_light_started');
-          self.setOngoingProcess('Syncing', true);
-        });
-        eventBus.on('refresh_light_done', () => {
-          console.log('refresh_light_done');
-          self.setOngoingProcess('Syncing', false);
-          newVersion.askForVersion();
-        });
+        };
 
-        // eventBus.on('confirm_on_other_devices', () => {
-        // // todo: originally the mesage was: 'Transaction created. \nPlease approve it on the other devices.'. we have to bring this back and think about better solution.
-        // $rootScope.$emit('Local/ShowAlert', 'Transaction created.', 'fi-key', () => {
-        // go.walletHome();
-        // });
-        // });
+        self.showErrorPopup = function (msg, cb) {
+          $log.warn(`Showing err popup:${msg}`);
+          self.showPopup(msg, 'fi-alert', cb);
+        };
 
-        eventBus.on('refused_to_sign', (deviceAddress) => {
-          const device = require('byteballcore/device.js');
-          device.readCorrespondent(deviceAddress, (correspondent) => {
-            notification.success(gettextCatalog.getString('Refused'), gettextCatalog.getString(`${correspondent.name} refused to sign the transaction`));
-          });
-        });
+        self.setOngoingProcess = function (processName, isOn) {
+          $log.debug('onGoingProcess', processName, isOn);
+          self[processName] = isOn;
+          self.onGoingProcess[processName] = isOn;
 
-        /*
-         eventBus.on("transaction_sent", function(){
-         self.updateAll();
-         self.updateTxHistory();
-         });
-        */
-
-        eventBus.on('new_my_transactions', () => {
-          breadcrumbs.add('new_my_transactions');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('my_transactions_became_stable', () => {
-          breadcrumbs.add('my_transactions_became_stable');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('mci_became_stable', () => {
-          breadcrumbs.add('mci_became_stable');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('maybe_new_transactions', () => {
-          breadcrumbs.add('maybe_new_transactions');
-          self.updateAll();
-          self.updateTxHistory();
-        });
-
-        eventBus.on('wallet_approved', (walletId, deviceAddress) => {
-          console.log(`wallet_approved ${walletId} by ${deviceAddress}`);
-          const client = profileService.walletClients[walletId];
-          // already deleted (maybe declined by another device) or not present yet
-          if (!client) {
-            return;
-          }
-          const walletName = client.credentials.walletName;
-          updatePublicKeyRing(client);
-          const device = require('byteballcore/device.js');
-          device.readCorrespondent(deviceAddress, (correspondent) => {
-            notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(`Wallet ${walletName} approved by ${correspondent.name}`));
-          });
-        });
-
-        eventBus.on('wallet_declined', (walletId, deviceAddress) => {
-          const client = profileService.walletClients[walletId];
-          // already deleted (maybe declined by another device)
-          if (!client) {
-            return;
-          }
-          const walletName = client.credentials.walletName;
-          const device = require('byteballcore/device.js');
-          device.readCorrespondent(deviceAddress, (correspondent) => {
-            notification.info(gettextCatalog.getString('Declined'), gettextCatalog.getString(`Wallet ${walletName} declined by ${correspondent.name}`));
-          });
-          profileService.deleteWallet({ client }, (err) => {
-            if (err) {
-              console.log(err);
+          let name;
+          self.anyOnGoingProcess = lodash.any(self.onGoingProcess, (isOn, processName) => {
+            if (isOn) {
+              name = name || processName;
             }
+            return isOn;
           });
-        });
-
-        eventBus.on('wallet_completed', (walletId) => {
-          console.log(`wallet_completed ${walletId}`);
-          const client = profileService.walletClients[walletId];
-          if (!client) {
-            return;
-          } // impossible
-          const walletName = client.credentials.walletName;
-          updatePublicKeyRing(client, () => {
-            if (!client.isComplete()) {
-              throw Error('not complete');
-            }
-            notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(`Wallet ${walletName} is ready`));
-            $rootScope.$emit('Local/WalletCompleted');
+          // The first one
+          self.onGoingProcessName = name;
+          $timeout(() => {
+            $rootScope.$apply();
           });
-        });
-
-        const acceptMessage = gettextCatalog.getString('Yes');
-        const cancelMessage = gettextCatalog.getString('No');
-        const confirmMessage = gettextCatalog.getString('Confirm');
+        };
 
         const modalRequestApproval = function (question, callbacks) {
           const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
@@ -292,7 +95,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             $scope.cancel_button_class = 'warning';
             $scope.cancel_label = 'No';
             $scope.loading = false;
-
             $scope.ok = function () {
               $scope.loading = true;
               $modalInstance.close(acceptMessage);
@@ -301,18 +103,15 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               $modalInstance.dismiss(cancelMessage);
             };
           };
-
           const modalInstance = $modal.open({
             templateUrl: 'views/modals/confirmation.html',
             windowClass: animationService.modalAnimated.slideUp,
             controller: ModalInstanceCtrl,
           });
-
           modalInstance.result.finally(() => {
             const m = angular.element(document.getElementsByClassName('reveal-modal'));
             m.addClass(animationService.modalAnimated.slideOutDown);
           });
-
           modalInstance.result.then(callbacks.ifYes, callbacks.ifNo);
         };
 
@@ -332,6 +131,36 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             modalRequestApproval(question, callbacks);
           }
         };
+
+        const indexEventsSupport = new IndexEventsSupport({
+          Device,
+          Raven,
+          go,
+          $rootScope,
+          changeWalletTypeService,
+          self,
+          $timeout,
+          profileService,
+          notification,
+          gettextCatalog,
+          newVersion
+        });
+        indexEventsSupport.initNotFatalError();
+        indexEventsSupport.initUncaughtError();
+        indexEventsSupport.initCatchingUpStarted();
+        indexEventsSupport.initCatchupBallsLeft();
+        indexEventsSupport.initCatchingUpDone();
+        indexEventsSupport.initRefreshLightStarted();
+        indexEventsSupport.initRefreshLightDone();
+        indexEventsSupport.initRefusedToSign();
+        indexEventsSupport.initNewMyTransactions();
+        indexEventsSupport.initMyTransactionsBecameStable();
+        indexEventsSupport.initMciBecameStable();
+        indexEventsSupport.initMaybeNewTransactions();
+        indexEventsSupport.initWalletApproved();
+        indexEventsSupport.initWalletDeclined();
+        indexEventsSupport.initWalletCompleted();
+        indexEventsSupport.initConfirmOnOtherDevice();
 
         // in arrOtherCosigners, 'other' is relative to the initiator
         eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
@@ -364,7 +193,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                         const n = arrDeviceAddresses.length;
                         const m = arrWalletDefinitionTemplate[1].required || n;
                         walletClient.credentials.addWalletInfo(walletName, m, n);
-                        updatePublicKeyRing(walletClient);
+                        profileService.updatePublicKeyRing(walletClient);
                         profileService.addWalletClient(walletClient, {}, () => {
                           if (isSingleAddress) {
                             profileService.setSingleAddressFlag(true);
@@ -387,12 +216,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             });
           });
         });
-
-        // units that were already approved or rejected by user.
-        // if there are more than one addresses to sign from,
-        // we won't pop up confirmation dialog for each address,
-        // instead we'll use the already obtained approval
-        const assocChoicesByUnit = {};
 
         // objAddress is local wallet address, top_address is the address that requested the signature,
         // it may be different from objAddress if it is a shared address
@@ -453,7 +276,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               if (arrPaymentMessages.length === 0) {
                 throw Error('no payment message found');
               }
-              const assocAmountByAssetAndAddress = {};
+              const assocAmountByAddress = {};
               // exclude outputs paying to my change addresses
               async.eachSeries(
                 arrPaymentMessages,
@@ -465,41 +288,27 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                   if (!payload) {
                     throw Error(`no inline payload and no private payload either, message=${JSON.stringify(objMessage)}`);
                   }
-                  const asset = payload.asset || 'base';
                   if (!payload.outputs) {
                     throw Error('no outputs');
                   }
-                  if (!assocAmountByAssetAndAddress[asset]) {
-                    assocAmountByAssetAndAddress[asset] = {};
-                  }
                   payload.outputs.forEach((output) => {
                     if (arrChangeAddresses.indexOf(output.address) === -1) {
-                      if (!assocAmountByAssetAndAddress[asset][output.address]) {
-                        assocAmountByAssetAndAddress[asset][output.address] = 0;
+                      if (!assocAmountByAddress[output.address]) {
+                        assocAmountByAddress[output.address] = 0;
                       }
-                      assocAmountByAssetAndAddress[asset][output.address] += output.amount;
+                      assocAmountByAddress[output.address] += output.amount;
                     }
                   });
                   cb();
                 },
                 () => {
                   const arrDestinations = [];
-                  Object.keys(assocAmountByAssetAndAddress).forEach((asset) => {
-                    const walletSettings = configService.getSync().wallet.settings;
-                    const formattedAsset = isCordova ? asset : (`<span class='small'>${asset}</span><br/>`);
-                    let currency;
-                    let value;
+                  const walletSettings = configService.getSync().wallet.settings;
 
-                    Object.keys(assocAmountByAssetAndAddress[asset]).forEach((address) => {
-                      if (asset !== 'base') {
-                        currency = asset === ENV.DAGCOIN_ASSET ? 'dag' : `of asset ${formattedAsset}`;
-                        value = assocAmountByAssetAndAddress[asset][address] / walletSettings.dagUnitValue;
-                      } else {
-                        currency = 'bytes';
-                        value = assocAmountByAssetAndAddress[asset][address] / walletSettings.unitValue;
-                      }
-                      arrDestinations.push(`${value} ${currency} to ${address}`);
-                    });
+                  Object.keys(assocAmountByAddress).forEach((address) => {
+                    const currency = 'bytes';
+                    const value = assocAmountByAddress[address] / walletSettings.unitValue;
+                    arrDestinations.push(`${value} ${currency} to ${address}`);
                   });
                   const dest = (arrDestinations.length > 0) ? arrDestinations.join(', ') : 'to myself';
                   const question = gettextCatalog.getString(`Sign transaction spending ${dest} from wallet ${credentials.walletName}?`);
@@ -522,144 +331,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        self.selectSubWallet = function (sharedAddress) {
-          const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses');
-          self.shared_address = sharedAddress;
-          if (sharedAddress) {
-            walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
-              self.bHasMerkle = bHasMerkle;
-              walletDefinedByAddresses.readSharedAddressCosigners(sharedAddress, (cosigners) => {
-                self.shared_address_cosigners = cosigners.map(cosigner => cosigner.name).join(', ');
-                $timeout(() => {
-                  $rootScope.$apply();
-                });
-              });
-            });
-          } else {
-            self.bHasMerkle = false;
-          }
-
-          self.updateAll();
-        };
-
-        self.openSubwalletModal = function () {
-          $rootScope.modalOpened = true;
-          const fc = profileService.focusedClient;
-
-          const ModalInstanceCtrl = function ($scope, $modalInstance) {
-            $scope.color = fc.backgroundColor;
-            $scope.indexCtl = self;
-            const arrSharedWallets = [];
-            $scope.mainWalletBalanceInfo = _.find(self.arrMainWalletBalances, { asset: ENV.DAGCOIN_ASSET });
-            $scope.asset = ENV.DAGCOIN_ASSET;
-            const assocSharedByAddress = $scope.mainWalletBalanceInfo.assocSharedByAddress;
-
-            if (assocSharedByAddress) {
-              Object.keys(assocSharedByAddress).forEach((sa) => {
-                const objSharedWallet = {};
-                objSharedWallet.shared_address = sa;
-                objSharedWallet.total = assocSharedByAddress[sa];
-                objSharedWallet.totalStr = `${profileService.formatAmount(assocSharedByAddress[sa], 'dag')}`;
-
-                arrSharedWallets.push(objSharedWallet);
-              });
-              $scope.arrSharedWallets = arrSharedWallets;
-            }
-
-            $scope.cancel = function () {
-              breadcrumbs.add('openSubwalletModal cancel');
-              $modalInstance.dismiss('cancel');
-            };
-
-            $scope.selectSubwallet = function (sharedAddress) {
-              self.shared_address = sharedAddress;
-              if (sharedAddress) {
-                const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
-                walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
-                  self.bHasMerkle = bHasMerkle;
-                  $rootScope.$apply();
-                });
-              } else {
-                self.bHasMerkle = false;
-              }
-              self.updateAll();
-              self.updateTxHistory();
-              $modalInstance.close();
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/select-subwallet.html',
-            windowClass: animationService.modalAnimated.slideUp,
-            controller: ModalInstanceCtrl
-          });
-
-          const disableCloseModal = $rootScope.$on('closeModal', () => {
-            breadcrumbs.add('openSubwalletModal on closeModal');
-            modalInstance.dismiss('cancel');
-          });
-
-          modalInstance.result.finally(() => {
-            $rootScope.modalOpened = false;
-            disableCloseModal();
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutDown);
-          });
-        };
-
-        self.goHome = function () {
-          go.walletHome();
-        };
-
-        self.menu = [{
-          title: gettextCatalog.getString('Home'),
-          icon: 'icon-home',
-          link: 'walletHome'
-        }, {
-          title: gettextCatalog.getString('Receive'),
-          icon: 'icon-recieve',
-          link: 'receive'
-        }, {
-          title: gettextCatalog.getString('Send'),
-          icon: 'icon-send',
-          link: 'send'
-        }, {
-          title: gettextCatalog.getString('Chat'),
-          icon: 'icon-chat',
-          new_state: 'correspondentDevices',
-          link: 'chat'
-        }];
-
-        self.getSvgSrc = function (id) {
-          return `img/svg/symbol-defs.svg#${id}`;
-        };
-
-        self.addonViews = addonManager.addonViews();
-        self.menu = self.menu.concat(addonManager.addonMenuItems());
-        self.menuItemSize = self.menu.length > 5 ? 2 : 3;
-        self.txTemplateUrl = addonManager.txTemplateUrl() || 'views/includes/transaction.html';
-
-        self.tab = 'walletHome';
-
-        self.setOngoingProcess = function (processName, isOn) {
-          $log.debug('onGoingProcess', processName, isOn);
-          self[processName] = isOn;
-          self.onGoingProcess[processName] = isOn;
-
-          let name;
-          self.anyOnGoingProcess = lodash.any(self.onGoingProcess, (isOn, processName) => {
-            if (isOn) {
-              name = name || processName;
-            }
-            return isOn;
-          });
-          // The first one
-          self.onGoingProcessName = name;
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        };
-
         self.setFocusedWallet = function () {
           const fc = profileService.focusedClient;
           if (!fc) return;
@@ -667,14 +338,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           breadcrumbs.add(`setFocusedWallet ${fc.credentials.walletId}`);
 
           // Clean status
-          self.totalBalanceBytes = null;
-          self.lockedBalanceBytes = null;
-          self.availableBalanceBytes = null;
-          self.pendingAmount = null;
-          self.spendUnconfirmed = null;
-
-          self.totalBalanceStr = null;
-          self.availableBalanceStr = null;
+          // todo: something wrong with this
           self.lockedBalanceStr = null;
 
           self.arrBalances = [];
@@ -684,14 +348,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
           self.txHistory = [];
           self.completeHistory = [];
+          // todo: something wrong with this
           self.txProgress = 0;
-          self.historyShowShowAll = false;
-          self.balanceByAddress = null;
-          self.pendingTxProposalsCountForUs = null;
-          self.setSpendUnconfirmed();
 
           $timeout(() => {
-            // $rootScope.$apply();
             self.hasProfile = true;
             self.noFocusedWallet = false;
             self.onGoingProcess = {};
@@ -713,7 +373,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
             self.txps = [];
             self.copayers = [];
-            self.updateColor();
             self.updateAlias();
             self.setAddressbook();
 
@@ -735,81 +394,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             }
             self.openWallet();
             self.updateSingleAddressFlag();
-          });
-        };
-
-        self.setTab = function (tab, reset, tries, switchState) {
-          console.log('setTab', tab, reset, tries, switchState);
-          let setTabTries = tries || 0;
-
-          const changeTab = function (tab) {
-            if (document.querySelector('.tab-in.tab-view')) {
-              const el = angular.element(document.querySelector('.tab-in.tab-view'));
-              el.removeClass('tab-in').addClass('tab-out');
-              const old = document.getElementById(`menu-${self.tab}`);
-              if (old) {
-                old.className = '';
-              }
-            }
-
-            if (document.getElementById(tab)) {
-              const el = angular.element(document.getElementById(tab));
-              el.removeClass('tab-out').addClass('tab-in');
-              const newe = document.getElementById(`menu-${tab}`);
-              if (newe) {
-                newe.className = 'active';
-              }
-            }
-
-            $rootScope.tab = tab;
-            self.tab = tab;
-            $rootScope.$emit('Local/TabChanged', tab);
-          };
-
-          // check if the whole menu item passed
-          if (typeof tab === 'object') {
-            if (!tab.new_state) backButton.clearHistory();
-            if (tab.open) {
-              if (tab.link) {
-                $rootScope.tab = tab.link;
-                self.tab = tab.link;
-              }
-              tab.open();
-              return;
-            } else if (tab.new_state) {
-              changeTab(tab.link);
-              $rootScope.tab = tab.link;
-              self.tab = tab.link;
-              go.path(tab.new_state);
-              return;
-            }
-            return self.setTab(tab.link, reset, setTabTries, switchState);
-          }
-          console.log(`current tab ${self.tab}, requested to set tab ${tab}, reset=${reset}`);
-          if (self.tab === tab && !reset) {
-            return;
-          }
-          setTabTries += 1;
-          if (!document.getElementById(`menu-${tab}`) && setTabTries < 5) {
-            console.log('will retry setTab later:', tab, reset, setTabTries, switchState);
-            return $timeout(() => {
-              self.setTab(tab, reset, setTabTries, switchState);
-            }, (setTabTries === 1) ? 10 : 300);
-          }
-
-          if (!self.tab || !$state.is('walletHome')) {
-            $rootScope.tab = 'walletHome';
-            self.tab = 'walletHome';
-          }
-
-          if (switchState && !$state.is('walletHome')) {
-            go.path('walletHome', () => {
-              changeTab(tab);
+            sharedService.setCurrentWallet({
+              walletId: self.walletId,
+              walletName: self.walletName,
+              alias: self.alias,
+              shared_address: self.shared_address
             });
-            return;
-          }
-
-          changeTab(tab);
+          });
         };
 
         self.updateAll = function (opts) {
@@ -837,13 +428,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             if (!options.quiet) {
               self.setOngoingProcess('updatingStatus', false);
             }
-
+            self.setOngoingProcess('updatingBalance', true);
             fc.getBalance(self.shared_address, (err, assocBalances, assocSharedBalances) => {
+              self.setOngoingProcess('updatingBalance', false);
               if (err) {
                 throw Error('impossible getBal');
               }
               $log.debug('updateAll Wallet Balance:', assocBalances, assocSharedBalances);
-
               self.setBalance(assocBalances, assocSharedBalances);
               // Notify external addons or plugins
               $rootScope.$emit('Local/BalanceUpdated', assocBalances);
@@ -865,32 +456,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         };
 
-        self.setSpendUnconfirmed = function () {
-          self.spendUnconfirmed = configService.getSync().wallet.spendUnconfirmed;
-        };
-
-        self.updateBalance = function () {
-          const fc = profileService.focusedClient;
-          $timeout(() => {
-            self.setOngoingProcess('updatingBalance', true);
-            $log.debug('Updating Balance');
-            fc.getBalance(self.shared_address, (err, assocBalances, assocSharedBalances) => {
-              self.setOngoingProcess('updatingBalance', false);
-              if (err) {
-                throw Error('impossible error from getBalance');
-              }
-              $log.debug('updateBalance Wallet Balance:', assocBalances, assocSharedBalances);
-              self.setBalance(assocBalances, assocSharedBalances);
-            });
-          });
-        };
-
         self.openWallet = function () {
-          console.log('index.openWallet called');
           const fc = profileService.focusedClient;
           breadcrumbs.add(`openWallet ${fc.credentials.walletId}`);
           $timeout(() => {
-            // $rootScope.$apply();
             self.setOngoingProcess('openingWallet', true);
             self.updateError = false;
             fc.openWallet((err, walletStatus) => {
@@ -902,31 +471,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               self.updateAll(lodash.isObject(walletStatus) ? {
                 walletStatus
               } : null);
-              // $rootScope.$apply();
             });
           });
-        };
-
-        self.processNewTxs = function (txs) {
-          // const config = configService.getSync().wallet.settings;
-          const now = Math.floor(Date.now() / 1000);
-          const ret = [];
-
-          lodash.each(txs, (tx) => {
-            const transaction = txFormatService.processTx(tx);
-            const fundingNodeTx = txs.filter(x => (x.time === tx.time && x.unit === tx.unit &&
-              x.amount === constants.DAG_FEE && x.amount === tx.amount));
-
-            transaction.isFundingNodeTransaction = fundingNodeTx.length > 0;
-
-            // no future transactions...
-            if (transaction.time > now) {
-              transaction.time = now;
-            }
-            ret.push(transaction);
-          });
-
-          return ret;
         };
 
         self.updateAlias = function () {
@@ -937,14 +483,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           fc.alias = self.alias;
         };
 
-        self.updateColor = function () {
-          const config = configService.getSync();
-          config.colorFor = config.colorFor || {};
-          self.backgroundColor = '#d51f26'; // config.colorFor[self.walletId] || '#4A90E2';
-          const fc = profileService.focusedClient;
-          fc.backgroundColor = '#d51f26'; // self.backgroundColor;
-        };
-
         self.updateSingleAddressFlag = function () {
           const config = configService.getSync();
           config.isSingleAddress = config.isSingleAddress || {};
@@ -952,15 +490,16 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           const fc = profileService.focusedClient;
           fc.isSingleAddress = self.isSingleAddress;
         };
-
+        // todo: refactor
         self.setBalance = function (assocBalances, assocSharedBalances) {
-          if (!assocBalances) return;
+          if (!assocBalances) {
+            return;
+          }
           const config = configService.getSync().wallet.settings;
 
           // Selected unit
           self.unitValue = config.unitValue;
           self.unitName = config.unitName;
-          self.dagUnitName = config.dagUnitName;
 
           self.arrBalances = [];
 
@@ -977,15 +516,15 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 balanceInfo.assocSharedByAddress[sa] = totalOnSharedAddress;
               });
             }
-            if (asset === 'base' || asset === ENV.DAGCOIN_ASSET) {
-              const assetName = asset !== 'base' ? 'DAG' : 'base';
-              balanceInfo.totalStr = profileService.formatAmount(balanceInfo.total, assetName);
-              balanceInfo.stableStr = profileService.formatAmount(balanceInfo.stable, assetName);
-              balanceInfo.pendingStr = `${profileService.formatAmount(balanceInfo.pending, assetName)} ${config.dagUnitName}`;
-              if (balanceInfo.shared) {
-                balanceInfo.sharedStr = profileService.formatAmount(balanceInfo.shared, assetName);
-              }
+
+            const assetName = 'base';
+            balanceInfo.totalStr = profileService.formatAmount(balanceInfo.total, assetName);
+            balanceInfo.stableStr = profileService.formatAmount(balanceInfo.stable, assetName);
+            balanceInfo.pendingStr = `${profileService.formatAmount(balanceInfo.pending, assetName)} ${config.unitName}`;
+            if (balanceInfo.shared) {
+              balanceInfo.sharedStr = profileService.formatAmount(balanceInfo.shared, assetName);
             }
+
             self.arrBalances.push(balanceInfo);
           });
           self.assetIndex = self.assetIndex || 0;
@@ -997,217 +536,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             self.arrMainWalletBalances = self.arrBalances;
           }
 
-          self.dagBalance = _.find(self.arrBalances, { asset: ENV.DAGCOIN_ASSET });
-          self.baseBalance = _.find(self.arrBalances, { asset: 'base' });
+          self.baseBalance = lodash.find(self.arrBalances, { asset: 'base' });
           console.log(`========= setBalance done, balances: ${JSON.stringify(self.arrBalances)}`);
           breadcrumbs.add(`setBalance done, balances: ${JSON.stringify(self.arrBalances)}`);
 
           $timeout(() => {
             $rootScope.$apply();
           });
-        };
-
-        this.csvHistory = function () {
-          const CSV_CONTENT_ID = '__csv_content';
-
-          function setCvsContent(data) {
-            const csvElement = document.getElementById(CSV_CONTENT_ID);
-            if (csvElement != null) {
-              csvElement.value = data;
-            } else {
-              $log.error(`Textarea element with id=${CSV_CONTENT_ID} not exits in DOM`);
-            }
-          }
-
-          function saveFile(name, data) {
-            const chooser = document.querySelector(name);
-            setCvsContent(data);
-            chooser.removeEventListener('change', () => {
-            });
-            chooser.addEventListener('change', function (evt) {
-              const fs = require('fs');
-              const csvElement = document.getElementById(CSV_CONTENT_ID);
-              const csvContent = csvElement !== null
-                ? document.getElementById(CSV_CONTENT_ID).value
-                : `Textarea element with id=${CSV_CONTENT_ID} not exits in DOM`;
-              fs.writeFile(this.value, csvContent, (err) => {
-                if (err) {
-                  $log.debug(evt, err);
-                }
-              });
-              this.value = '';
-            }, false);
-            chooser.click();
-          }
-
-          function formatDate(date) {
-            const dateObj = new Date(date);
-            if (!dateObj) {
-              $log.debug('Error formating a date');
-              return 'DateError';
-            }
-            if (!dateObj.toJSON()) {
-              return '';
-            }
-
-            return dateObj.toJSON();
-          }
-
-          function formatString(str) {
-            let formatString = str;
-            if (!formatString) {
-              return '';
-            }
-
-            if (formatString.indexOf('"') !== -1) {
-              // replace all
-              formatString = formatString.replace(new RegExp('"', 'g'), '\'');
-            }
-
-            // escaping commas
-            formatString = `\"${formatString}\"`;
-
-            return formatString;
-          }
-
-          /**
-           * TODO move to csvHistory directive
-           * Used when platform is cordova
-           * Downloads file into window.cordova.file.documentsDirectory with a filename tailing with current time
-           * @param uri
-           */
-          function saveFileIntoDownloadFolder(csvContent) {
-            const errorCallback = function (e) {
-              console.error(`Error: ${e}`);
-              $rootScope.$emit('Local/ShowAlert', JSON.stringify(e), 'fi-alert', () => { });
-            };
-
-            // TODO move to fileSystemService as getDownloadDir. It only works with cordova.
-            let storageLocation;
-            if (isMobile.Android()) {
-              storageLocation = 'file:///storage/emulated/0/';
-            } else { // IOS
-              storageLocation = window.cordova.file.documentsDirectory;
-            }
-
-            // Arrange file name, filter some special characters
-            const date = new Date().toISOString().slice(0, 19)
-              .replace(':', '')
-              .replace('T', '-');
-            const fileName = `${self.alias || self.walletName}-${date}.csv`
-              .replace(/[ <>:,{}"\/\\|?*]+/g, '');
-
-            window.resolveLocalFileSystemURL(storageLocation, (fileSystem) => {
-              fileSystem.getDirectory('Download', {
-                  create: true,
-                  exclusive: false
-                }, (directory) => {
-                  directory.getFile(fileName, {
-                      create: true,
-                      exclusive: false
-                    }, (fileEntry) => {
-                      fileEntry.createWriter((writer) => {
-                        writer.onwriteend = function () {
-                          console.log(`${fileName} File written to downloads`);
-                        };
-                        writer.seek(0);
-                        const blob = new Blob([csvContent], { type: 'text/plain;charset=utf-8', endings: 'native' });
-                        writer.write(blob);
-                        const message = `${gettextCatalog.getString('Download completed')} : ${fileName}`;
-                        $rootScope.$emit('Local/ShowAlert', message, 'fi-check', () => { });
-                      }, errorCallback);
-                    }, errorCallback);
-                }, errorCallback);
-            }, errorCallback);
-          }
-
-          const step = 6;
-          // const unique = {};
-
-          /*
-          if (isCordova) {
-            $log.info('CSV generation not available in mobile');
-            return;
-          }
-          */
-          const isNode = nodeWebkit.isDefined();
-          const fc = profileService.focusedClient;
-          const c = fc.credentials;
-          if (!fc.isComplete()) return;
-          const self = this;
-          const allTxs = [];
-
-          $log.debug('Generating CSV from History');
-          self.setOngoingProcess('generatingCSV', true);
-
-          const config = configService.getSync();
-          const dagUnitValue = config.wallet.settings.dagUnitValue;
-
-          $timeout(() => {
-            fc.getTxHistory(ENV.DAGCOIN_ASSET, self.shared_address, (txs) => {
-              self.setOngoingProcess('generatingCSV', false);
-              $log.debug('Wallet Transaction History:', txs);
-
-              const data = txs;
-              const filename = `Dagcoin-${self.alias || self.walletName}.csv`;
-              let csvContent;
-
-              if (!isNode && !isMobile.any()) {
-                csvContent = 'data:text/csv;charset=utf-8,';
-              } else {
-                csvContent = 'Date,Destination,Note,Amount,Currency\n';
-              }
-
-              let amount;
-              let note;
-              let dataString;
-              data.forEach((it, index) => {
-                console.log('Processing transactions number', index);
-                let amount = it.amount;
-
-                if (it.action === 'moved') {
-                  amount = 0;
-                }
-
-                amount = (it.action === 'sent' ? '-' : '') + amount;
-                note = formatString(`${it.message ? it.message : ''} unit: ${it.unit}`);
-
-                if (it.action === 'moved') {
-                  note += ` Moved:${it.amount}`;
-                }
-
-                dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${formatString((amount / dagUnitValue).toString())},dag`;
-                csvContent += `${dataString}\n`;
-              });
-
-              if (isNode) {
-                saveFile('#export_file', csvContent);
-              } else if (isMobile.any()) {
-                saveFileIntoDownloadFolder(csvContent);
-              } else {
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement('a');
-                link.setAttribute('href', encodedUri);
-                link.setAttribute('download', filename);
-                link.click();
-              }
-              $rootScope.$apply();
-            });
-          });
-        };
-
-        self.checkTransactionsAreConfirmed = function (oldHistory, newHistory) {
-          if (oldHistory && newHistory && oldHistory.length > 0) {
-            lodash.each(oldHistory, (tx) => {
-              const newTx = lodash.find(newHistory, { unit: tx.unit });
-
-              if (newTx && tx.confirmations === 0 && newTx.confirmations === 1) {
-                const confirmedMessage = 'Your transaction has been confirmed';
-
-                notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(confirmedMessage));
-              }
-            });
-          }
         };
 
         self.updateLocalTxHistory = function (client, cb) {
@@ -1217,10 +552,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           if (!client.isComplete()) {
             return console.log('fc incomplete yet');
           }
-          return client.getTxHistory(ENV.DAGCOIN_ASSET, self.shared_address, (txs) => {
-            const newHistory = self.processNewTxs(txs);
+          return client.getTxHistory('base', self.shared_address, (txs) => {
+            const newHistory = transactionsService.processNewTxs(txs);
             $log.debug(`Tx History synced. Total Txs: ${newHistory.length}`);
-            self.checkTransactionsAreConfirmed(self.txHistory, newHistory);
+            transactionsService.checkTransactionsAreConfirmed(self.txHistory, newHistory);
 
             if (walletId === profileService.focusedClient.credentials.walletId) {
               self.txHistory = newHistory;
@@ -1230,43 +565,27 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
               for (let x = 0, maxLen = self.txHistory.length; x < maxLen; x += 1) {
                 const t = self.txHistory[x];
-                if (!t.isFundingNodeTransaction) {
-                  const timestamp = t.time * 1000;
-                  const date = moment(timestamp).format('DD/MM/YYYY');
+                const timestamp = t.time * 1000;
+                const date = moment(timestamp).format('DD/MM/YYYY');
 
-                  if (!self.completeHistory[date]) {
-                    self.completeHistory[date] = { balance: 0, rows: [] };
-                  }
-
-                  if (t.action === 'received') {
-                    self.completeHistory[date].balance += (t.amount / walletSettings.dagUnitValue);
-                  } else {
-                    self.completeHistory[date].balance -= (t.amount / walletSettings.dagUnitValue);
-                  }
-
-                  self.completeHistory[date].rows.push(t);
-                  self.visible_rows += 1;
+                if (!self.completeHistory[date]) {
+                  self.completeHistory[date] = { balance: 0, rows: [] };
                 }
-              }
 
-              self.historyShowShowAll = newHistory.length >= self.historyShowLimit;
+                if (t.action === 'received') {
+                  self.completeHistory[date].balance += (t.amount / walletSettings.unitValue);
+                } else {
+                  self.completeHistory[date].balance -= (t.amount / walletSettings.unitValue);
+                }
+
+                self.completeHistory[date].rows.push(t);
+                self.visible_rows += 1;
+              }
               $rootScope.$apply();
             }
 
             return cb();
           });
-        };
-
-        self.showAllHistory = function () {
-          self.historyShowShowAll = false;
-          self.historyRendering = true;
-          $timeout(() => {
-            $rootScope.$apply();
-            $timeout(() => {
-              self.historyRendering = false;
-              self.txHistory = self.completeHistory;
-            }, 100);
-          }, 100);
         };
 
         self.updateHistory = function (cb) {
@@ -1316,67 +635,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.updateHistory();
         }, 1000);
 
-        self.onClick = function () {
-          console.log('== click');
-          self.oldAssetIndex = self.assetIndex;
-        };
-
-        // for light clients only
-        self.updateHistoryFromNetwork = lodash.throttle(() => {
-          setTimeout(() => {
-            if (self.assetIndex !== self.oldAssetIndex) {
-              // it was a swipe
-              console.log('== swipe');
-              return;
-            }
-            console.log('== updateHistoryFromNetwork');
-            const lightWallet = require('byteballcore/light_wallet.js');
-            lightWallet.refreshLightClientHistory();
-          }, 500);
-        }, 5000);
-
-        self.showPopup = function (msg, msgIcon, cb) {
-          $log.warn(`Showing ${msgIcon} popup:${msg}`);
-
-          if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
-            return false;
-          }
-
-          self.showAlert = {
-            msg: msg.toString(),
-            msg_icon: msgIcon,
-            close(err) {
-              self.showAlert = null;
-              if (cb) return cb(err);
-            }
-          };
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        };
-
-        self.showErrorPopup = function (msg, cb) {
-          $log.warn(`Showing err popup:${msg}`);
-          self.showPopup(msg, 'fi-alert', cb);
-        };
-
-        self.recreate = function () {
-          const fc = profileService.focusedClient;
-          self.setOngoingProcess('recreating', true);
-          fc.recreateWallet((err) => {
-            self.setOngoingProcess('recreating', false);
-
-            if (err) {
-              throw Error('impossible err from recreateWallet');
-            }
-
-            profileService.setWalletClients();
-            $timeout(() => {
-              $rootScope.$emit('Local/WalletImported', self.walletId);
-            }, 100);
-          });
-        };
-
         self.openMenu = () => {
           backButton.menuOpened = true;
           go.swipe(true);
@@ -1415,39 +673,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }, 100);
         };
 
-        self.retryScan = function () {
-          const self = this;
-          self.startScan(self.walletId);
-        };
         self.onQrCodeScanned = function (data) {
           go.handleUri(data);
-          // $rootScope.$emit('dataScanned', data);
         };
 
         self.openSendScreen = function () {
           go.send();
-        };
-
-        self.startScan = function (walletId) {
-          $log.debug(`Scanning wallet ${walletId}`);
-          // const c = profileService.walletClients[walletId];
-          // if (!c.isComplete()) {
-          //   return;
-          // }
-          /*
-           if (self.walletId == walletId)
-           self.setOngoingProcess('scanning', true);
-
-           c.startScan({
-           includeCopayerBranches: true,
-           }, function(err) {
-           if (err && self.walletId == walletId) {
-           self.setOngoingProcess('scanning', false);
-           self.handleError(err);
-           $rootScope.$apply();
-           }
-           });
-           */
         };
 
         self.setUxLanguage = function () {
@@ -1465,6 +696,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           addressbookService.list((ab) => {
             self.addressbook = ab;
           });
+        };
+
+        self.navigateSecure = function (state) {
+          navigationService.navigateSecure(state);
         };
 
         function getNumberOfSelectedSigners() {
@@ -1488,40 +723,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           return profileService.getWallets('livenet');
         };
 
-        self.openBackupNeededModal = function () {
-          const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
-            $scopeModal.header = $sce.trustAsHtml(gettextCatalog.getString('Backup needed'));
-            $scopeModal.title = $sce.trustAsHtml(gettextCatalog.getString(`Now is a good time to backup your wallet seed.
-          Write it down and keep it somewhere safe. Once you have written your wallet seed down, you must delete it from
-          this device. If this device is lost, it will be impossible to access your funds without a backup.`));
-
-            $scopeModal.yes_label = gettextCatalog.getString('Backup now');
-            $scopeModal.ok = function () {
-              $modalInstance.close(true);
-            };
-            $scopeModal.cancel = function () {
-              $modalInstance.dismiss('cancel');
-            };
-          };
-
-          const modalInstance = $modal.open({
-            templateUrl: 'views/modals/confirmation.html',
-            windowClass: animationService.modalAnimated.slideUp,
-            controller: ['$scope', '$modalInstance', '$sce', ModalInstanceCtrl],
-          });
-
-          modalInstance.result.finally(() => {
-            const m = angular.element(document.getElementsByClassName('reveal-modal'));
-            m.addClass(animationService.modalAnimated.slideOutDown);
-          });
-
-          modalInstance.result.then((ok) => {
-            if (ok) {
-              $state.go('backup');
-            }
-          });
-        };
-
         $rootScope.$on('Local/ClearHistory', (event) => {
           $log.debug('The wallet transaction history has been deleted', event);
           self.txHistory = [];
@@ -1534,13 +735,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         });
 
         // UX event handlers
-        $rootScope.$on('Local/ColorUpdated', () => {
-          self.updateColor();
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        });
-
         $rootScope.$on('Local/AliasUpdated', () => {
           self.updateAlias();
           $timeout(() => {
@@ -1555,34 +749,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        $rootScope.$on('Local/SpendUnconfirmedUpdated', () => {
-          self.setSpendUnconfirmed();
-          self.updateAll();
-        });
-
-        $rootScope.$on('Local/ProfileBound', () => {
-          const config = configService.getSync();
-          // password and finger print options are read from config and profile service
-          const needPassword = !!profileService.profile.xPrivKeyEncrypted;
-          const needFingerprint = !!config.touchId;
-
-          if (!(self.walletInfoVisibility instanceof WalletInfoVisibility)) {
-            self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
-          }
-        });
-
         $rootScope.$on('Local/NewFocusedWallet', () => {
           self.setUxLanguage();
         });
 
         $rootScope.$on('Local/LanguageSettingUpdated', () => {
           self.setUxLanguage();
-        });
-
-        $rootScope.$on('Local/UnitSettingUpdated', () => {
-          breadcrumbs.add('UnitSettingUpdated');
-          self.updateAll();
-          self.updateTxHistory();
         });
 
         $rootScope.$on('Local/NeedFreshHistory', () => {
@@ -1599,21 +771,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.setOngoingProcess('recoveringFromSeed', true);
         });
 
-//  self.debouncedUpdate = lodash.throttle(function() {
-//    self.updateAll({
-//      quiet: true
-//    });
-//    self.updateTxHistory();
-//  }, 4000, {
-//    leading: false,
-//    trailing: true
-//  });
-
         $rootScope.$on('Local/Resume', () => {
           $log.debug('### Resume event');
           const lightWallet = require('byteballcore/light_wallet.js');
           lightWallet.refreshLightClientHistory();
-          // self.debouncedUpdate();
         });
 
         $rootScope.$on('Local/BackupDone', () => {
@@ -1628,14 +789,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        $rootScope.$on('Local/DeviceError', (event, err) => {
-          self.showErrorPopup(err, () => {
-            if (self.isCordova && navigator && navigator.app) {
-              navigator.app.exitApp();
-            }
-          });
-        });
-
         $rootScope.$on('Local/WalletImported', (event, walletId) => {
           self.needsBackup = false;
           storageService.setBackupFlag(walletId, () => {
@@ -1645,7 +798,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               $timeout(() => {
                 self.txHistory = [];
                 self.completeHistory = [];
-                self.startScan(walletId);
               }, 500);
             });
           });
@@ -1706,37 +858,17 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           go.walletHome();
         });
 
-        $rootScope.$on('Local/SetTab', (event, tab, reset) => {
-          console.log(`SetTab ${tab}, reset ${reset}`);
-          self.setTab(tab, reset);
+        $rootScope.$on('Local/SetTab', (event, tab) => {
+          if (self.tab === tab) {
+            return;
+          }
+          $rootScope.tab = tab;
+          self.tab = tab;
+          $state.go(tab);
         });
 
         $rootScope.$on('Local/RequestTouchid', (event, client, cb) => {
           fingerprintService.check(client, cb);
-        });
-
-        $rootScope.$on('Local/ShowAlert', (event, msg, msgIcon, cb) => {
-          self.showPopup(msg, msgIcon, cb);
-        });
-
-        $rootScope.$on('Local/ShowErrorAlert', (event, msg, cb) => {
-          self.showErrorPopup(msg, cb);
-        });
-
-        $rootScope.$on('Local/NeedsPassword', (event, isSetup, errorMessage, cb) => {
-          console.log('NeedsPassword');
-
-          self.askPassword = {
-            isSetup,
-            error: errorMessage,
-            callback(err, pass) {
-              self.askPassword = null;
-              return cb(err, pass);
-            }
-          };
-          $timeout(() => {
-            $rootScope.$apply();
-          });
         });
 
         lodash.each(['NewCopayer', 'CopayerUpdated'], (eventName) => {
@@ -1761,52 +893,44 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
-          self.walletInfoVisibility.setPasswordSuccess(true);
-          $timeout(() => { $rootScope.$apply(); });
+        $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
+          console.log(`paymentRequest event ${address}, ${amount}`);
+          $state.go('wallet.send', {
+            type: PaymentRequest.PAYMENT_REQUEST,
+            address,
+            amount,
+            asset,
+            recipientDeviceAddress
+          });
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
-        $rootScope.$on('Local/FingerprintUnlocked', () => {
-          self.walletInfoVisibility.setFingerprintSuccess(true);
-          $timeout(() => { $rootScope.$apply(); });
+        $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
+          console.log(`merchantPaymentRequest event ${address}, ${amount}`);
+          $state.go('wallet.send', {
+            type: PaymentRequest.MERCHANT_PAYMENT_REQUEST,
+            address,
+            amount,
+            invoiceId,
+            validForSeconds,
+            merchantName,
+            state
+          });
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
-        if (autoRefreshClientService) {
-          autoRefreshClientService.initHistoryAutoRefresh();
-        }
-
-        let gui;
-        try {
-          gui = require('nw.gui');
-        } catch (e) {
-          // continue regardless of error
-        }
-
-        if (gui) { // nwjs
-          const win = gui.Window.get();
-          win.on('close', function () {
-            fundingExchangeProviderService.deactivate()
-              .then(() => {
-                this.close(true);
-              });
+        $rootScope.$on('paymentUri', (event, uri) => {
+          console.log(`paymentUri event ${address}, ${amount}`);
+          $state.go('wallet.send', {
+            type: PaymentRequest.URI,
+            uri
           });
-          win.on('closed', function () {
-            fundingExchangeProviderService.deactivate()
-              .then(() => {
-                this.close(true);
-              });
-          });
-        } else if (window.cordova) {
-          document.addEventListener('resume', () => {
-            fundingExchangeProviderService.init()
-              .then(() => {
-              });
-          }, false);
-          document.addEventListener('pause', () => {
-            fundingExchangeProviderService.deactivate()
-              .then(() => {
-              });
-          }, false);
-        }
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
+        });
+
+        $rootScope.$on('Local/generatingCSV', (event, state) => {
+          console.log(`generatingCSV event ${state}`);
+          self.setOngoingProcess('generatingCSV', state);
+        });
       });
 }());

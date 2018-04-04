@@ -101,7 +101,7 @@
   }
 
   .contacts_list {
-    height: 85%;
+    height: calc(100% - 60px);
     position: relative;
     margin-top: 70px;
 

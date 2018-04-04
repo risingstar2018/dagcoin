@@ -1,81 +1,117 @@
+/* eslint-disable no-undef */
 (() => {
   'use strict';
 
   /**
-   * @example <dagPassword></dagPassword>
+   * @name DagCoin Password modal
+   * @example <dag-password></dag-nav-bar>
    */
   angular
-    .module('copayApp.directives')
-    .directive('dagPassword', dagPassword);
+  .module('copayApp.directives')
+  .directive('dagPassword', dagPassword);
 
-  dagPassword.$inject = ['$timeout'];
+  dagPassword.$inject = ['$rootScope', '$timeout', 'gettextCatalog', 'configService', 'profileService'];
 
-  function dagPassword($timeout) {
+  function dagPassword($rootScope, $timeout, gettextCatalog, configService, profileService) {
     return {
       restrict: 'E',
-      templateUrl: 'directives/dagPassword/dagPassword.template.html',
+      transclude: true,
       replace: true,
-      require: 'ngModel',
-      scope: {
-        inputType: '=',
-        ngChange: '&',
-        placeholder: '=',
-        id: '=',
-        name: '=',
-        canSetVisible: '=',
-        ngModel: '=',
-        autoFocus: '='
-      },
-      link: ($scope) => {
-        $scope.onChangeTimeout = null;
-        $scope.id = $scope.id || '';
-        $scope.placeholder = $scope.placeholder || '';
-        $scope.name = $scope.name || '';
-        $scope.inputType = $scope.inputType || 'text';
+      scope: false,
+      templateUrl: 'directives/dagPassword/dagPassword.template.html',
+      controllerAs: 'pass',
+      controller() {
+        const self = this;
+        let passwordTemp;
+        // This property is assigned to an empty object to escape from null pointer access.
+        // This is initialized in Local/ProfileBound event
+        self.walletInfoVisibility = {};
+        self.validationErrors = [];
+        self.password = '';
+        self.isVerification = false;
+        self.passwordVisible = false;
 
-        $scope.canSetVisible = $scope.canSetVisible !== false;
-        $scope.autoFocus = $scope.autoFocus === true;
-        $scope.passwordVisible = false;
+        self.close = cb => cb('No password given');
 
-        $scope.setInputType = function (type) {
-          const input = document.getElementById($scope.id);
-          if (!input) {
+        self.set = function (isSetup, cb) {
+          self.error = false;
+          if (isSetup && !self.isVerification) {
+            document.getElementById('passwordInput').focus();
+            self.isVerification = true;
+            passwordTemp = self.password;
+            self.password = null;
+            $timeout(() => {
+              $rootScope.$apply();
+            });
             return;
           }
-          input.type = type;
-        };
-
-        $scope.setFocus = function () {
-          const input = document.getElementById($scope.id);
-          if (!input) {
-            return;
-          }
-
-          input.focus();
-        };
-
-        $scope.toggle = function () {
-          $scope.passwordVisible = !$scope.passwordVisible;
-          $scope.setInputType($scope.passwordVisible ? 'text' : $scope.inputType);
-        };
-
-        $scope.onChange = function () {
-          if ($scope.onChangeTimeout) {
-            $timeout.cancel($scope.onChangeTimeout);
-          }
-
-          $scope.onChangeTimeout = $timeout(() => {
-            if ($scope.ngChange) {
-              $scope.ngChange();
+          if (isSetup) {
+            if (passwordTemp !== self.password) {
+              self.error = gettextCatalog.getString('Passwords do not match');
+              return;
             }
-          }, 100);
+          }
+          cb(null, self.password);
         };
 
-        $timeout(() => {
-          if ($scope.autoFocus) {
-            $scope.setFocus();
+        self.validate = function () {
+          self.validationErrors = [];
+          if (self.password.length < 8) {
+            self.validationErrors.push(gettextCatalog.getString('Password must be at least 8 characters long'));
           }
-        }, 1);
+          if (self.password.search(/[a-z]/i) < 0) {
+            self.validationErrors.push(gettextCatalog.getString('Password must contain at least one letter'));
+          }
+          if (self.password.search(/[0-9]/) < 0) {
+            self.validationErrors.push(gettextCatalog.getString('Password must contain at least one digit'));
+          }
+          if (self.password.search(/[!@#$%^&*]/) < 0) {
+            self.validationErrors.push(gettextCatalog.getString('Password must contain at least one special character'));
+          }
+          return self.validationErrors.length <= 0;
+        };
+
+        $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
+          self.walletInfoVisibility.setPasswordSuccess(true);
+          $timeout(() => { $rootScope.$apply(); });
+        });
+
+        $rootScope.$on('Local/FingerprintUnlocked', () => {
+          self.walletInfoVisibility.setFingerprintSuccess(true);
+          $timeout(() => { $rootScope.$apply(); });
+        });
+
+        $rootScope.$on('Local/NeedsPassword', (event, isSetup, errorMessage, cb) => {
+          // Clear password field
+          self.password = '';
+
+          self.askPassword = {
+            isSetup,
+            error: errorMessage,
+            callback(err, pass) {
+              self.askPassword = null;
+              return cb(err, pass);
+            }
+          };
+          $timeout(() => {
+            $rootScope.$apply();
+          });
+        });
+
+        /**
+         * Event that triggers when application starts.
+         * When this is trigger all services initialized and initialization are ready.
+         */
+        $rootScope.$on('Local/ProfileBound', () => {
+          const config = configService.getSync();
+          // password and finger print options are read from config and profile service
+          const needPassword = !!profileService.profile.xPrivKeyEncrypted;
+          const needFingerprint = !!config.touchId;
+
+          if (!(self.walletInfoVisibility instanceof WalletInfoVisibility)) {
+            self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
+          }
+        });
       }
     };
   }

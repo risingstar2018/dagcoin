@@ -10,6 +10,11 @@
   function ContactsController(addressbookService, $timeout, $scope, lodash) {
     const contacts = this;
 
+    function viewContentLoaded() {
+      loadList();
+      contacts.existsAnyContact = contacts.listTotal > 0;
+    }
+
     contacts.toggleFavorite = (contact) => {
       contact.favorite = !contact.favorite;
       addressbookService.update(contact, (error, record) => {
@@ -45,8 +50,6 @@
       contacts.favoriteListTotal = 0;
 
       addressbookService.list((list) => {
-        console.log(list);
-
         function hashSort(src) {
           const keys = Object.keys(src);
           const target = {};
@@ -109,9 +112,10 @@
         contacts.list = hashSort(contacts.list);
         contacts.favoriteList = hashSort(contacts.favoriteList);
 
-        if (contacts.listTotal <= 0) {
-          contacts.activeTabIndex = 0;
-        }
+        // todo why this setting? If in favorite, contacts tab is active???
+        // if (contacts.listTotal <= 0) {
+        //  contacts.activeTabIndex = 0;
+        // }
       });
     }
 
@@ -119,6 +123,6 @@
       loadList(value);
     });
 
-    loadList();
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
   }
 })();

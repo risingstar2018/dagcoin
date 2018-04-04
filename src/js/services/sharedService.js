@@ -5,21 +5,21 @@
     .module('copayApp.services')
     .factory('sharedService', sharedService);
 
-  sharedService.$inject = ['$rootScope', 'ENV'];
+  sharedService.$inject = ['$rootScope'];
 
   /* @ngInject */
-  function sharedService($rootScope, ENV) {
+  function sharedService($rootScope) {
     const service = {};
-    const balanceStatuses = {
+    service.balanceStatuses = {
       total: 'total',
       pending: 'pending',
       stable: 'stable'
     };
-
-    service.balanceStatuses = balanceStatuses;
+    service.currentWallet = null;
     service.hasBalance = hasBalance;
-    service.hasDags = hasDags;
     service.hasBytes = hasBytes;
+    service.getCurrentWallet = getCurrentWallet;
+    service.setCurrentWallet = setCurrentWallet;
 
     let currentBalance = null;
 
@@ -28,17 +28,32 @@
     });
 
     function hasBalance(status) {
-      return hasBytes(status) || hasDags(status);
+      return hasBytes(status);
     }
 
     function hasBytes(status) {
-      const st = status || balanceStatuses.stable;
+      const st = status || {
+          total: 'total',
+          pending: 'pending',
+          stable: 'stable'
+        }.stable;
       return (currentBalance && currentBalance.base && currentBalance.base[st] > 0);
     }
 
-    function hasDags(status) {
-      const st = status || balanceStatuses.stable;
-      return (currentBalance && currentBalance[ENV.DAGCOIN_ASSET] && currentBalance[ENV.DAGCOIN_ASSET][st] > 0);
+    /**
+     *
+     * @return {null|*} currently selected wallet
+     */
+    function getCurrentWallet() {
+      return service.currentWallet;
+    }
+
+    /**
+     *
+     * @param wallet {walletId, walletName, alias, shared_address}
+     */
+    function setCurrentWallet(wallet) {
+      service.currentWallet = wallet;
     }
 
     return service;

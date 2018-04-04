@@ -1,0 +1,34 @@
+<dag-nav-bar title="{{editDevice.name}}" go-back-transition="false" go-back="correspondentDevice" invert></dag-nav-bar>
+<div class="columns m20t m20b">
+  <div>
+    <span translate>Full address:</span>
+    <div class="size-10 m10t m10b text-gray seed-words"
+         style="word-wrap: break-word;">
+      {{editDevice.correspondent.device_address}}@{{editDevice.hub}}
+    </div>
+  </div>
+  <form name="editForm" class="m20t">
+    <div class="text-warning size-12 m10b" ng-show="editDevice.error">{{editDevice.error|translate}}</div>
+
+    <div class="input-wrap m20t">
+      <label for="name" translate>Rename:</label>
+      <input type="text" id="name" name="name" ng-model="editDevice.name" maxlength="30" required>
+    </div>
+
+    <div class="input-wrap m20t">
+      <label for="hub" translate>Change hub:</label>
+      <input type="text" id="hub" name="hub" ng-model="editDevice.hub" required>
+    </div>
+    <div class="row m20t">
+      <button type="submit"
+              class="btn btn_red-full"
+              ng-disabled="!editForm.$valid"
+              ng-click="editDevice.save()">{{'Save' | translate}}
+      </button>
+      <button class="btn btn_red tiny" ng-click="editDevice.purgeChat()">
+        <svg-icon name="delete"></svg-icon>
+        <span translate>Clear chat history</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -13,8 +13,8 @@
 
     contact.editContact = () => {
       ngDialog.open({
-        template: 'controllers/contacts/contact/edit_modal.template.html',
-        controller: 'EditContactModalController'
+        template: 'controllers/contacts/contact/remove/removeContact.template.html',
+        controller: 'RemoveContactModalCtrl'
       });
     };
 

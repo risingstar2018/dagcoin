@@ -13,7 +13,7 @@
                               configService,
                               fingerprintService,
                               pushNotificationsService,
-                              isCordova,
+                              Device,
                               gettext,
                               gettextCatalog,
                               nodeWebkit,
@@ -25,21 +25,15 @@
     root.walletClients = {};
 
     root.Utils = bwcService.getUtils();
-    root.formatAmount = function (amount, asset) {
+    root.formatAmount = function (amount) {
       const options = { dontRound: true };
       const config = configService.getSync().wallet.settings;
-      // if (config.unitCode == 'byte') return amount;
-
       // TODO : now only works for english, specify opts to change thousand separator and decimal separator
-      if (asset.toLowerCase() === 'dag') {
-        return this.Utils.formatAmount(amount, config.dagUnitCode, options);
-      }
       return this.Utils.formatAmount(amount, config.unitCode, options);
     };
 
     root.setFocus = function (walletId, cb) {
       $log.debug('Set focus:', walletId);
-
       // Set local object
       if (walletId) {
         root.focusedClient = root.walletClients[walletId];
@@ -71,9 +65,7 @@
       if (root.walletClients[credentials.walletId] && root.walletClients[credentials.walletId].started) {
         return;
       }
-
       const client = bwcService.getClient(JSON.stringify(credentials));
-
       client.credentials.xPrivKey = root.profile.xPrivKey;
       client.credentials.mnemonic = root.profile.mnemonic;
       client.credentials.xPrivKeyEncrypted = root.profile.xPrivKeyEncrypted;
@@ -421,7 +413,7 @@
       root.setWalletClients();
 
       // assign wallet color based on first character of walletId
-      const color = configService.colorOpts[walletId.charCodeAt(0) % configService.colorOpts.length];
+      const color = configService.getWalletColor(walletId.charCodeAt(0));
       const configOpts = { colorFor: {} };
       configOpts.colorFor[walletId] = color;
       return configService.set(configOpts, configServiceError => root.setAndStoreFocus(walletId, () => {
@@ -590,10 +582,6 @@
         $log.debug('Wallet encrypted');
         return cb();
       });
-      /* root.updateCredentialsFC(function() {
-       $log.debug('Wallet encrypted');
-       return cb();
-       }); */
     };
 
 
@@ -621,10 +609,6 @@
         $log.debug('Wallet encryption disabled');
         return cb();
       });
-      /* root.updateCredentialsFC(function() {
-       $log.debug('Wallet encryption disabled');
-       return cb();
-       }); */
     };
 
     root.lockFC = function () {
@@ -772,6 +756,30 @@
             }
           }
         );
+      });
+    };
+
+    root.updatePublicKeyRing = (walletClient, onDone) => {
+      const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+      walletDefinedByKeys.readCosigners(walletClient.credentials.walletId, (arrCosigners) => {
+        const arrApprovedDevices = arrCosigners
+          .filter(cosigner => cosigner.approval_date)
+          .map(cosigner => cosigner.device_address);
+        console.log(`approved devices: ${arrApprovedDevices.join(', ')}`);
+        walletClient.credentials.addPublicKeyRing(arrApprovedDevices);
+
+        // save it to profile
+        const credentialsIndex = lodash.findIndex(root.profile.credentials, { walletId: walletClient.credentials.walletId });
+        if (credentialsIndex < 0) {
+          throw Error('failed to find our credentials in profile');
+        }
+        root.profile.credentials[credentialsIndex] = JSON.parse(walletClient.export());
+        console.log(`saving profile: ${JSON.stringify(root.profile)}`);
+        storageService.storeProfile(root.profile, () => {
+          if (onDone) {
+            onDone();
+          }
+        });
       });
     };
 

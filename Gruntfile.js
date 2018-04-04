@@ -99,6 +99,9 @@ module.exports = function (grunt) {
       },
       osx32: {
         command: '../byteballbuilds/build-osx.sh osx32 <%= pkg.name %>'
+      },
+      nwBackground: {
+        command: 'nw . &'
       }
     },
 
@@ -212,10 +215,6 @@ module.exports = function (grunt) {
           '!src/js/**/*.spec.js'
         ],
         dest: 'public/dagcoin.js'
-      },
-      migrations: {
-        src: ['migrations/migrations.json'],
-        dest: 'public/migrations/migrations.json'
       },
       constants: {
         src: ['src/js/config.js'],
@@ -372,7 +371,7 @@ module.exports = function (grunt) {
         appName: '<%= process.env.nwjsAppName %>',
         flavor: '<%= process.env.nwjsFlavor %>',
         buildDir: '../byteballbuilds',
-        version: '0.14.7',
+        version: '0.26.2',
         zip: false,
         macIcns: './public/img/icons/icon-white-outline.icns',
         winIco: './public/img/icons/dagcoin.ico',
@@ -479,6 +478,7 @@ module.exports = function (grunt) {
       options: {
         dateFormat(time) {
           grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
+          grunt.log.writeln('Please ' + 'Reload app'.yellow + ' from browser');
           grunt.log.writeln('Waiting for more changes...');
         }
       },
@@ -539,7 +539,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-contrib-sass');
 
-  grunt.registerTask('dev', ['watch']);
+  grunt.registerTask('dev', ['build', 'exec:nwBackground', 'watch']);
   grunt.registerTask('build', (target) => {
     var ngconstantTask = 'ngconstant:testnet';
     if (target === 'live') {

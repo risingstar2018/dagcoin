@@ -14,7 +14,7 @@ if ($isFirstRun) {
   npm install node-sass@4.5.3
   npm install npm@5.5.1
   npm install npm-check-updates@2.13.0
-  npm install nw@0.24.3
+  npm install nw@0.26.2
   npm install nw-gyp@3.6.2
 }
 

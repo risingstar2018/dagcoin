@@ -1,0 +1,21 @@
+<dag-nav-bar go-back="wallet.correspondentDevices" go-back-transition="false" title="{{ 'Add device' | translate }}"
+             invert></dag-nav-bar>
+
+<div class="content">
+  <ul class="no-bullet manage size-12">
+    <li dag-state-transition="slide-left" ui-sref="inviteCorrespondentDevice">
+      <a>
+        <i class="fi-die-four circle plus-fixed"></i>
+        <i class="icon-arrow-right3 size-18 right m20t"></i>
+        <span translate>Invite the other device</span>
+      </a>
+    </li>
+    <li dag-state-transition="slide-left" ui-sref="acceptCorrespondentInvitation">
+      <a>
+        <i class="icon-scan circle"></i>
+        <i class="icon-arrow-right3 size-18 right m20t"></i>
+        <span translate style="max-width: 60%">Accept invitation from the other device</span>
+      </a>
+    </li>
+  </ul>
+</div>

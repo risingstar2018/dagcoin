@@ -5,16 +5,12 @@
     .module('copayApp.services')
     .factory('autoRefreshClientService', autoRefreshClientService);
 
-  autoRefreshClientService.$inject = ['$rootScope', '$interval'];
+  autoRefreshClientService.$inject = ['$interval'];
 
   /* @ngInject */
-  function autoRefreshClientService($rootScope, $interval) {
+  function autoRefreshClientService($interval) {
     const settings = {
       autoRefreshRateSec: 60
-    };
-
-    const service = {
-      initHistoryAutoRefresh
     };
 
     function initHistoryAutoRefresh() {
@@ -27,7 +23,9 @@
       }, refreshRate);
     }
 
-    return service;
+    return {
+      initHistoryAutoRefresh
+    };
   }
 }());
 

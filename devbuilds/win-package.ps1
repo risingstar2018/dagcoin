@@ -2,9 +2,6 @@ $isTestnet = $true
 
 Write-Host "Started creation of Windows packages"
 
-(Get-Content ..\Gruntfile.js).replace('0.14.7', '0.24.3') | Set-Content ..\Gruntfile.js
-Write-Host "Chanaged nwjs version"
-
 cd ..\
 $currentProjectDirectory = (Get-Item -Path ".\" -Verbose).FullName
 Remove-Item .\node_modules -Force -Recurse

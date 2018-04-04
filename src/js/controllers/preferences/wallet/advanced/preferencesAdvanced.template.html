@@ -1,0 +1,11 @@
+<dag-nav-bar title="{{ 'Advanced' | translate}}" go-back="preferences" invert></dag-nav-bar>
+
+<div class="content preferences">
+  <ul class="preferences_links">
+    <li dag-state-transition="slide-left" dag-right-icon="chevron-thin-right" ui-sref="information">
+      <div translate>Wallet Information</div>
+    </li>
+  </ul>
+  <a ui-sref="preferencesDeleteWallet" style="font-size: 12px;" class="btn btn-red color_red" translate>Delete
+    Wallet</a>
+</div>

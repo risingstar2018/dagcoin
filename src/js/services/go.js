@@ -1,23 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
 (function () {
-  'use strinct';
+  'use strict';
 
-  const eventBus = require('byteballcore/event_bus.js');
-  angular.module('copayApp.services')
-  .factory('go',
-    ($window,
-     $rootScope,
-     $location,
-     $state,
-     profileService,
-     nodeWebkit,
-     notification,
-     gettextCatalog,
-     authService,
-     $deepStateRedirect,
-     $stickyState,
-     ENV) => {
-      const root = {};
+  angular.module('copayApp.services').factory('go', ($window, $rootScope, $location, $state, profileService, nodeWebkit,
+                                                     notification, gettextCatalog, authService, $deepStateRedirect,
+                                                     $stickyState, ENV) => {
+    const root = {};
       let removeListener;
       const hideSidebars = function () {
         if (typeof document === 'undefined') {
@@ -78,33 +66,20 @@
         if (fc && !fc.isComplete()) {
           root.path('copayers');
         } else {
-          root.path('walletHome', () => {
-            $rootScope.$emit('Local/SetTab', 'walletHome', true);
+          root.path('wallet', () => {
+            $rootScope.$emit('Local/SetTab', 'wallet.home');
           });
         }
       };
 
       root.send = function (cb) {
-        $stickyState.reset('walletHome');
-        root.path('walletHome', () => {
-          $rootScope.$emit('Local/SetTab', 'send');
+        $stickyState.reset('wallet');
+        root.path('wallet', () => {
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
           if (cb) {
             cb();
           }
         });
-      };
-
-      root.history = function (cb) {
-        root.path('walletHome', () => {
-          $rootScope.$emit('Local/SetTab', 'history');
-          if (cb) {
-            cb();
-          }
-        });
-      };
-
-      root.addWallet = function () {
-        $state.go('add');
       };
 
       root.preferences = function () {
@@ -355,7 +330,8 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
-      const exHandler = (exception, cause) => {
+    const eventBus = require('byteballcore/event_bus.js');
+    const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
         eventBus.emit('uncaught_error', `An e xception occurred: ${exception}; cause: ${cause}`, exception);
@@ -376,12 +352,15 @@
   }
 
   window.onerror = function (msg, url, line, col, error) {
+    const eventBus = require('byteballcore/event_bus.js');
     console.log(`Javascript error: ${msg}`, error);
     eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
   };
 
+  /*
   process.on('uncaughtException', (e) => {
     console.log('uncaughtException');
     eventBus.emit('uncaught_error', `Uncaught exception: ${e}`, e);
   });
+  */
 }());

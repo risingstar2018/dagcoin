@@ -1,11 +1,3 @@
-/*
- *
- * Byteball mobile CSS
- *
- */
-
-/* disabling text selection */
-
 * {
   -webkit-user-drag: none;
   -ms-user-drag: none;
@@ -27,8 +19,6 @@ body {
 .enable_text_select {
   user-select: text;
 }
-
-/* END disabling text selection */
 
 .inner-wrap {
   transition-duration: 200ms;
@@ -190,10 +180,6 @@ _:-ms-fullscreen, :root .main {
 
 .off-canvas-wrap, .inner-wrap {
   height: 100%;
-}
-
-.walletHome {
-  background-color: #fff;
 }
 
 .walletHome .avatar-wallet {
@@ -597,7 +583,7 @@ to prevent collapsing during animation*/
 }
 
 .dr-notification-container.top {
-  top: 45px;
+  top: 0;
 }
 
 .dr-notification-container.center {
@@ -649,6 +635,18 @@ to prevent collapsing during animation*/
   font-size: 1.5rem;
   border-radius: 100%;
   margin: 0.6rem;
+  position: relative;
+
+  i {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .dr-notification-image img {

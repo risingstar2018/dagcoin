@@ -1,6 +1,6 @@
 @import "variables";
 @import "mobile";
-@import "settings";
+@import "../js/controllers/preferences/preferences";
 /* Components */
 @import "components/buttons";
 @import "components/inputs";
@@ -2825,7 +2825,6 @@ canvas {
 }
 
 .tab-view {
-  display: none;
   width: 100%;
   position: relative;
   overflow: auto;
@@ -2923,7 +2922,6 @@ input {
 }
 
 .title {
-  margin-left: 25px;
   margin-right: 25px;
   font-family: "Montserrat", sans-serif;
   font-size: 10px;
@@ -3110,11 +3108,6 @@ section {
 
 p.color_red {
   text-align: center;
-}
-
-.noclick {
-  pointer-events: none;
-  color: #8597a7;
 }
 
 .badge {
@@ -3343,3 +3336,31 @@ p.color_red {
   border-radius: 10px;
   border: 1px dashed #ddd;
 }
+
+.dag-scroll {
+  &::-webkit-scrollbar { width: 0 !important }
+
+  width: 100%;
+  max-height: calc(100% - 100px); //skip navbar
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.has-notification {
+  .dag-scroll {
+    max-height: calc(100% - 124px);
+  }
+}
+
+#qr-scanner-camera-border {
+  position:absolute;
+  float:left;
+  width:165px;
+  min-height:165px;
+  left: 98px;
+  top: 72px;
+  z-index:300000;
+  background-image: url(../img/camera-background-red-165x165.png);
+}
+
+

@@ -23,14 +23,13 @@
 
     <div class="off-canvas-wrap" id="off-canvas-wrap">
       <div class="inner-wrap">
-        <div ng-include="'views/includes/sidebar.html'" ng-if="index.hasProfile"></div>
-
-        <div notifications="right top"></div>
-        <div ng-include="'views/includes/password.html'" ng-if="index.askPassword"></div>
-        <div ng-include="'views/includes/alert.html'" ng-if="index.showAlert"></div>
+        <div dag-notifications="right top"></div>
+        <dag-left-side-bar ng-if="index.hasProfile"></dag-left-side-bar>
+        <dag-password></dag-password>
+        <dag-alert></dag-alert>
         <div id="sectionContainer">
           <div id="mainSection">
-            <section ui-view="main" class="section {{viewTransition}}" ng-class="{'main': index.hasProfile}"></section>
+            <section ui-view="main" class="section {{viewTransition}}" ng-class="{'main': index.hasProfile, 'has-notification': pass.walletInfoVisibility.visible && index.needsBackup}"></section>
           </div>
         </div>
         <a class="close-menu" ng-click="index.closeMenu()"></a>
