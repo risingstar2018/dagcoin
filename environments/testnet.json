@@ -10,6 +10,8 @@
     "discoveryServicePairingCode": "AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@testnetexplorer.dagcoin.org/wss/#0000",
     "protocolPrefix": "dagcoin-tn",
     "DATABASE_MIGRATION_TOOL": "native-queries",
-    "MERCHANT_INTEGRATION_API" : "https://test-api.dagpay.io/api/invoices"
+    "MERCHANT_INTEGRATION_API" : "https://test-api.dagpay.io/api/invoices",
+    "fundingNodePairingCode": "A5VED5YcHoX9S4ik6YufcYSAeAxXBExlVaZ00w3mDCHq@testnetexplorer.dagcoin.org/wss/#1G5kGcBcsfkH",
+    "fundingNodeDeviceAddress": "0A5DATV2A3XFAWFMHZUT7DJXZTZRAD6G2"
   }
 }
