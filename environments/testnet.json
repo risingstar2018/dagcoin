@@ -5,6 +5,7 @@
     "explorerPrefix": "testnet",
     "TIMESTAMPER_ADDRESS": "OPNUXBRSSQQGHKQNEPD2GLWQYEUY5XLD",
     "hub": "testnetexplorer.dagcoin.org/wss/",
-    "MERCHANT_INTEGRATION_API" : "https://test-api.dagpay.io/api/invoices"
+    "MERCHANT_INTEGRATION_API" : "https://test-api.dagpay.io/api/invoices",
+    "universalLinkHost": "testnetexplorer.dagcoin.org"
   }
 }

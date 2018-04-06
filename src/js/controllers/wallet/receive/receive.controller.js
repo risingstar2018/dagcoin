@@ -7,10 +7,10 @@
     .controller('ReceiveCtrl', ReceiveCtrl);
 
   ReceiveCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'profileService', 'configService', 'gettextCatalog', 'utilityService',
-                        '$modal', 'animationService', 'addressService'];
+                        '$modal', 'animationService', 'addressService', 'ENV'];
 
   function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
-                       $modal, animationService, addressService) {
+                       $modal, animationService, addressService, ENV) {
     const eventBus = require('byteballcore/event_bus.js');
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
@@ -86,7 +86,13 @@
         };
 
         $scope.shareAddress = function (uri) {
-          window.plugins.socialsharing.share(uri, null, null, null);
+          const options = {
+            message: `Payment request: ${amount} DAG to ${address}`, // not supported on some apps (Facebook, Instagram)
+            subject: 'Payment Request', // fi. for email
+            url: `https://${ENV.universalLinkHost}/paymentRequest?address=${address}&amount=${amount}`,
+            chooserTitle: 'Pick an application' // Android only, you can override the default share sheet title
+          };
+          window.plugins.socialsharing.shareWithOptions(options);
         };
 
         $scope.cancel = function () {

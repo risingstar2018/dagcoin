@@ -3,6 +3,8 @@
     "environment": "live",
     "explorerPrefix": "",
     "TIMESTAMPER_ADDRESS": "I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT",
-    "hub": "byteball.org/bb"
+    "hub": "byteball.org/bb",
+    "universalLinkHost": "dagcoin.org",
+
   }
 }

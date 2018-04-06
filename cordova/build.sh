@@ -1,4 +1,9 @@
 #! /bin/bash
+
+Green='\033[0;32m'
+Red='\033[0;31m'
+CloseColor='\033[0m'
+
 #
 # Usage:
 # sh ./build.sh --android --reload
@@ -7,7 +12,7 @@
 # Check function OK
 checkOK() {
 	if [ $? != 0 ]; then
-		echo "${OpenColor}${Red}* ERROR. Exiting...${CloseColor}"
+		echo "${Red}* ERROR. Exiting...${CloseColor}"
 		exit 1
 	fi
 }
@@ -17,6 +22,7 @@ BUILDDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 
 CURRENT_OS=$1
+UNIVERSAL_LINK_HOST=false
 
 if [ -z "CURRENT_OS" ]
 then
@@ -36,8 +42,15 @@ then
 	DBGJS=true
 fi
 
+if $DBGJS
+then
+  UNIVERSAL_LINK_HOST=$(node -p -e "require('./environments/testnet.json').ENV.universalLinkHost")
+else
+  UNIVERSAL_LINK_HOST=$(node -p -e "require('./environments/live.json').ENV.universalLinkHost")
+fi
+echo -e "${Green}OK UNIVERSAL_LINK_HOST is set to ${UNIVERSAL_LINK_HOST}...${CloseColor}"
 
-echo "${OpenColor}${Green}* Checking dependencies...${CloseColor}"
+echo "${Green}* Checking dependencies...${CloseColor}"
 command -v cordova >/dev/null 2>&1 || { echo >&2 "Cordova is not present, please install it: sudo npm install -g cordova."; exit 1; }
 #command -v xcodebuild >/dev/null 2>&1 || { echo >&2 "XCode is not present, install it or use [--android]."; exit 1; }
 
@@ -55,31 +68,31 @@ echo "Project directory is $PROJECT"
 
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
-	echo "${OpenColor}${Green}* Creating project... ${CloseColor}"
+	echo "${Green}* Creating project... ${CloseColor}"
 	cordova create ../../byteballbuilds/project-$1 org.dagcoin Dagcoin
 	checkOK
 
 	cd $PROJECT
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
-		echo "${OpenColor}${Green}* Adding Android platform... ${CloseColor}"
+		echo "${Green}* Adding Android platform... ${CloseColor}"
 		cordova platforms add android
 		checkOK
 	fi
 
 	if [ $CURRENT_OS == "IOS" ]; then
-		echo "${OpenColor}${Green}* Adding IOS platform... ${CloseColor}"
+		echo "${Green}* Adding IOS platform... ${CloseColor}"
 		cordova platforms add ios
 		checkOK
 	fi
 
 	if [ $CURRENT_OS == "WP8" ]; then
-		echo "${OpenColor}${Green}* Adding WP8 platform... ${CloseColor}"
+		echo "${Green}* Adding WP8 platform... ${CloseColor}"
 		cordova platforms add wp8
 		checkOK
 	fi
 
-	echo "${OpenColor}${Green}* Installing plugins... ${CloseColor}"
+	echo "${Green}* Installing plugins... ${CloseColor}"
 
 #  cordova plugin add https://github.com/florentvaldelievre/virtualartifacts-webIntent.git
 #  checkOK
@@ -159,28 +172,31 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
 	checkOK
 
+	cordova plugin add cordova-universal-links-plugin
+	checkOK
+
 fi
 
 if $DBGJS
 then
-	echo "${OpenColor}${Green}* Generating byteball bundle (debug js)...${CloseColor}"
+	echo "${Green}* Generating byteball bundle (debug js)...${CloseColor}"
 	cd $BUILDDIR/..
 	grunt cordova:$4
 	checkOK
 else
-	echo "${OpenColor}${Green}* Generating byteball bundle...${CloseColor}"
+	echo "${Green}* Generating byteball bundle...${CloseColor}"
 	cd $BUILDDIR/..
 	#grunt cordova-prod byteball core has some error, so uglify doesn't work.
 	grunt cordova:$4
 	checkOK
 fi
 
-echo "${OpenColor}${Green}* Copying files...${CloseColor}"
+echo "${Green}* Copying files...${CloseColor}"
 cd $BUILDDIR/..
 cp -af public/** $PROJECT/www
 checkOK
 
-echo "${OpenColor}${Green}* Copying initial database...${CloseColor}"
+echo "${Green}* Copying initial database...${CloseColor}"
 cp node_modules/byteballcore/initial.byteball.sqlite $PROJECT/www
 cp node_modules/byteballcore/initial.byteball-light.sqlite $PROJECT/www
 checkOK
@@ -191,6 +207,8 @@ checkOK
 cd $BUILDDIR
 
 cp config.xml $PROJECT/config.xml
+UNIVERSAL_LINK_HOST_EXP='s/@UNIVERSAL_LINK_HOST/'${UNIVERSAL_LINK_HOST}'/g'
+sed -i ${UNIVERSAL_LINK_HOST_EXP} $PROJECT/config.xml
 checkOK
 
 if [ $CURRENT_OS == "ANDROID" ]; then

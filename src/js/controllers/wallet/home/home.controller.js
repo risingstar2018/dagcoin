@@ -6,11 +6,15 @@
     .module('copayApp.controllers')
     .controller('HomeCtrl', HomeCtrl);
 
-  HomeCtrl.$inject = ['$scope', '$rootScope', 'animationService', '$timeout', 'profileService', 'correspondentListService', '$modal', 'lodash'];
+  HomeCtrl.$inject = ['$scope', '$rootScope', 'animationService', '$timeout', 'profileService', 'correspondentListService', '$modal', 'lodash', 'go'];
 
-  function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash) {
+  function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash, go) {
     const vm = this;
     const breadcrumbs = require('byteballcore/breadcrumbs.js');
+
+    const viewContentLoaded = function () {
+      go.redirectToTabIfNeeded();
+    };
 
     vm.openSharedAddressDefinitionModal = function (address) {
       $rootScope.modalOpened = true;
@@ -162,5 +166,7 @@
         lightWallet.refreshLightClientHistory();
       }, 500);
     }, 5000);
+
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
   }
 })();

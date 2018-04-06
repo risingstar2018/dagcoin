@@ -1,10 +1,10 @@
-/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
+/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved,no-undef */
 (function () {
   'use strict';
 
   angular.module('copayApp.services').factory('go', ($window, $rootScope, $location, $state, profileService, nodeWebkit,
                                                      notification, gettextCatalog, authService, $deepStateRedirect,
-                                                     $stickyState, ENV) => {
+                                                     $stickyState, ENV, configService, $modalStack) => {
     const root = {};
       let removeListener;
       const hideSidebars = function () {
@@ -67,7 +67,7 @@
           root.path('copayers');
         } else {
           root.path('wallet', () => {
-            $rootScope.$emit('Local/SetTab', 'wallet.home');
+           // $rootScope.$emit('Local/SetTab', 'wallet.home');
           });
         }
       };
@@ -81,6 +81,25 @@
           }
         });
       };
+
+    /**
+     * This redirect works in case window.initialTab is not empty and there is any tab to redirect.
+     * Otherwise no effect.
+     */
+    root.redirectToTabIfNeeded = function () {
+      if (window.initialTab) {
+        if (window.initialTab.tab === 'wallet.send') {
+          $modalStack.dismissAll();
+          const address = window.initialTab.payload.address;
+          const walletSettings = configService.getSync().wallet.settings;
+          const unitValue = walletSettings.unitValue;
+          let amount = window.initialTab.payload.amount;
+          amount *= unitValue;
+          $rootScope.$emit('paymentRequest', address, amount, 'base', null);
+        }
+        delete window.initialTab;
+      }
+    };
 
       root.preferences = function () {
         $state.go('preferences');
@@ -107,6 +126,10 @@
 
       function handleUri(uri) {
         console.log(`handleUri ${uri}`);
+        if (uri.match(PaymentRequest.PAYMENT_REQUEST_UNIVERSAL_LINK_REGEX)) {
+          console.log('URI is an http(s) paymentRequest. handleUri is ignoring.');
+          return;
+        }
 
         processMerchantPaymentRequestQrCode(uri).then((wasMerchantPayment) => {
           if (!wasMerchantPayment) {

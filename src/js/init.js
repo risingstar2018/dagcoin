@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (function () {
   'use strict';
 
@@ -52,7 +53,16 @@
          window.plugins.webintent.onNewIntent(handleBitcoinURI);
          window.handleOpenURL = handleBitcoinURI;
          */
-
+        universalLinks.subscribe('paymentRequest', (eventData) => {
+          window.initialTab = {
+            tab: 'wallet.send',
+            payload: eventData.params,
+            loaded: false // set as true when tab is loaded
+          };
+          const address = eventData.params.address;
+          const amount = eventData.params.amount;
+          console.log(`Payment Request from link ${amount}->${address}`);
+        });
         startAngular();
       }, false);
     } else {

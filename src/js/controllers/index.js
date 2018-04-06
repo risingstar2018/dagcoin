@@ -32,6 +32,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.bSwipeSuspended = false;
         // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
         self.usePushNotifications = false;
+        self.isCordova = isCordova;
 
         walletService.checkTestnetData();
         connectionService.init();
@@ -775,6 +776,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           $log.debug('### Resume event');
           const lightWallet = require('byteballcore/light_wallet.js');
           lightWallet.refreshLightClientHistory();
+          go.redirectToTabIfNeeded();
         });
 
         $rootScope.$on('Local/BackupDone', () => {
@@ -859,12 +861,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         });
 
         $rootScope.$on('Local/SetTab', (event, tab) => {
-          if (self.tab === tab) {
+          if (self.tab === tab && lodash.isEmpty(params)) {
             return;
           }
           $rootScope.tab = tab;
           self.tab = tab;
-          $state.go(tab);
+          $state.go(tab, params);
         });
 
         $rootScope.$on('Local/RequestTouchid', (event, client, cb) => {
@@ -895,7 +897,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
-          $state.go('wallet.send', {
+          $rootScope.$emit('Local/SetTab', 'wallet.send', {
             type: PaymentRequest.PAYMENT_REQUEST,
             address,
             amount,
@@ -907,7 +909,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
           console.log(`merchantPaymentRequest event ${address}, ${amount}`);
-          $state.go('wallet.send', {
+          $rootScope.$emit('Local/SetTab', 'wallet.send', {
             type: PaymentRequest.MERCHANT_PAYMENT_REQUEST,
             address,
             amount,
@@ -916,7 +918,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             merchantName,
             state
           });
-          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
         $rootScope.$on('paymentUri', (event, uri) => {
