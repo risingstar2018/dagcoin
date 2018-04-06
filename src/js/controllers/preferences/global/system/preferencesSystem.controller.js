@@ -13,6 +13,7 @@
     const vm = this;
     vm.isLight = conf.bLight;
     vm.canChangeWalletType = changeWalletTypeService.canChange();
+    vm.canChangeHubSettings = true;
     vm.type = conf.bLight ? gettextCatalog.getString('light wallet') : gettextCatalog.getString('full wallet');
     vm.currentLanguageName = uxLanguage.getCurrentLanguageName();
     vm.deviceName = config.deviceName;
@@ -53,6 +54,10 @@
       } else {
         changeWalletTypeService.change();
       }
+    };
+
+    vm.changeHubSettings = () => {
+
     };
   }
 })();

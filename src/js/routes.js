@@ -316,6 +316,17 @@
             },
           },
         })
+        .state('preferencesHubSettings', {
+          url: '/preferencesHubSettings',
+          walletShouldBeComplete: false,
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'controllers/preferences/global/hub/preferencesHubSettings.template.html',
+              controller: 'PreferencesHubSettingsCtrl as prefHubSettings'
+            },
+          },
+        })
         .state('preferencesAdvanced', {
           url: '/preferencesAdvanced',
           walletShouldBeComplete: true,
