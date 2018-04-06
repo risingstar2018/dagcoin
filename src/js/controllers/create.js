@@ -23,6 +23,8 @@
       this.isWindowsPhoneApp = isMobile.Windows() && isCordova;
       $scope.account = 1;
       $scope.derivationPath = derivationPathHelper.default;
+      self.requiredCosignersNumber = 0;
+      self.totalCosignersNumber = 0;
 
       // ng-repeat defined number of times instead of repeating over array?
       this.getNumber = function (num) {
@@ -30,10 +32,10 @@
       };
 
       const updateRCSelect = function (n) {
-        $scope.totalCosigners = n;
+        self.totalCosignersNumber = n;
         self.RCValues = lodash.range(1, n + 1);
-        if ($scope.requiredCosigners > n || !$scope.requiredCosigners) {
-          $scope.requiredCosigners = parseInt((n / 2) + 1, 10);
+        if (self.requiredCosignersNumber > n || !self.requiredCosignersNumber) {
+          self.requiredCosignersNumber = parseInt((n / 2) + 1, 10);
         }
       };
 
@@ -49,9 +51,9 @@
       };
 
       this.TCValues = lodash.range(2, defaults.limits.totalCosigners + 1);
-      $scope.totalCosigners = defaults.wallet.totalCosigners;
-      this.cosigners = [];// Array($scope.totalCosigners);
-      for (let i = 0; i < $scope.totalCosigners - 1; i += 1) {
+      self.totalCosignersNumber = defaults.wallet.totalCosigners;
+      this.cosigners = [];// Array(self.totalCosignersNumber);
+      for (let i = 0; i < self.totalCosignersNumber - 1; i += 1) {
         this.cosigners.push({});
       }
       correspondentListService.list((err, ab) => {
@@ -77,7 +79,7 @@
 
       this.setMultisig = function () {
         this.setTotalCosigners(3);
-        $scope.requiredCosigners = 2;
+        self.requiredCosignersNumber = 2;
       };
 
       this.onCorrespondentSelected = function (deviceAddress) {
@@ -141,7 +143,7 @@
           this.error = gettextCatalog.getString('Please enter the required fields');
           return;
         }
-        if (self.cosigners.length !== $scope.totalCosigners - 1) {
+        if (self.cosigners.length !== self.totalCosignersNumber - 1) {
           setError('invalid number of cosigners');
           return;
         }
@@ -153,16 +155,16 @@
         }
 
         const opts = {
-          m: $scope.requiredCosigners,
-          n: $scope.totalCosigners,
+          m: self.requiredCosignersNumber,
+          n: self.totalCosignersNumber,
           name: form.walletName.$modelValue,
           networkName: 'livenet',
           cosigners: [],
           isSingleAddress: form.isSingleAddress.$viewValue
         };
-        if ($scope.totalCosigners > 1) {
+        if (self.totalCosignersNumber > 1) {
           opts.cosigners = lodash.uniq(self.cosigners.map(cosigner => cosigner.device_address));
-          if (opts.cosigners.length !== $scope.totalCosigners - 1) {
+          if (opts.cosigners.length !== self.totalCosignersNumber - 1) {
             setError('Please select different co-signers');
             return;
           }

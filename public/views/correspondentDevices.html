@@ -2,12 +2,12 @@
   <span translate>Wallet seed not backed up</span>
 </div>
 <dag-nav-bar title="{{ 'Paired devices' | translate}}">
-    <a dag-state-transition="slide-left" ui-sref="addCorrespondentDevice">
+    <a title="{{ 'Add a new device' | translate }}" dag-state-transition="slide-left" ui-sref="addCorrespondentDevice">
         <svg-icon name="add"></svg-icon>
     </a>
 </dag-nav-bar>
 
-<div class="content chats" ng-init="readList()">
+<div class="content chats" ng-init="readList()" ng-scrollbars>
     <ul class="correspondentList">
 
         <li ng-repeat="correspondent in list" ng-class="{'noclick': !correspondent.clickable}">

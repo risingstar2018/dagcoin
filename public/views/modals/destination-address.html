@@ -59,8 +59,8 @@
       <li class="p10 line-b" ng-repeat="(addr, contact) in list">
         <div class="cursor-pointer" ng-click="selectAddressbook(addr)">
           <div class="div-with-top-right-img">
-            {{contact.first_name}} {{contact.last_name}}
-            <svg-icon ng-if="contact.favorite" class="star" name="star"></svg-icon>
+            <div class="text">{{contact.first_name}} {{contact.last_name}}</div>
+            <div class="star"><svg-icon ng-if="contact.favorite" name="star"></svg-icon></div>
           </div>
           <div class="size-10 text-gray ellipsis">{{addr}}</div>
         </div>

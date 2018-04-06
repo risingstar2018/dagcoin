@@ -176,7 +176,7 @@
     }
 
     function sendResponse(deviceAddress, request, messageBody) {
-      root.sendMessage(deviceAddress, 'response', request.title.split('.').pop(), messageBody, request.id);
+      root.sendMessage(deviceAddress, 'response', (request.title || '').split('.').pop(), messageBody, request.id);
     }
 
     function sendMessage(deviceAddress, messageType, subject, messageBody, messageId) {

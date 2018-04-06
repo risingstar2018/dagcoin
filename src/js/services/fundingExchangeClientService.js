@@ -10,7 +10,8 @@
                                               promiseService,
                                               addressService,
                                               profileService,
-                                              proofingService) => {
+                                              proofingService,
+                                              ENV) => {
       const self = {};
 
       // Statuses
@@ -43,58 +44,6 @@
         }
 
         return fundingPairAvailable;
-      }
-
-      function askForFundingNode() {
-        console.log('ASKING FOR A FUNDING NODE');
-
-        const promise = promiseService.listeningTimedPromise(
-          `dagcoin.response.${discoveryService.messages.listTraders}`,
-          (message, fromAddress) => {
-            if (!discoveryService.isDiscoveryServiceAddress(fromAddress)) {
-              console.log(`RECEIVED A LIST OF TRADERS FROM AN ADDRESS THAT IS NOT MY DISCOVERY SERVICE: ${fromAddress}`);
-              return false;
-            }
-
-            console.log(`THE DISCOVERY SERVICE (${fromAddress}) SENT A MESSAGE: ${JSON.stringify(message)}`);
-
-            const body = message.messageBody;
-
-            if (!body) {
-              console.log(`DISCOVERY SERVICE (${fromAddress}) SENT A TRADERS LIST WITH NO BODY`);
-              return false;
-            }
-
-            const traders = body.traders;
-
-            if (!traders) {
-              console.log(`DISCOVERY SERVICE (${fromAddress}) SENT A TRADERS LIST MESSAGE BODY WITH NO TRADERS' SECTION`);
-              return false;
-            }
-
-            if (traders.length === 0) {
-              console.log(`DISCOVERY SERVICE (${fromAddress}) HAS NO TRADERS AVAILABLE`);
-              return false;
-            }
-
-            traders.sort((a, b) => {
-              if (a.exchangeFee > b.exchangeFee) {
-                return 1;
-              }
-              return -1;
-            });
-
-            return traders[0];
-          },
-          30 * 1000,
-          'NO LIST OF TRADERS FROM THE DISCOVERY SERVICE'
-        );
-
-        console.log('BEFORE SENDING A MESSAGE TO THE DISCOVERY SERVICE');
-        discoveryService.sendMessage(discoveryService.messages.listTraders);
-        console.log('AFTER SENDING A MESSAGE TO THE DISCOVERY SERVICE');
-
-        return promise;
       }
 
       function activate() {
@@ -164,13 +113,10 @@
       }
 
       function queryDiscoveryService() {
-        return askForFundingNode().then((fundingNode) => {
-          console.log(`TRADERS AVAILABLE: ${JSON.stringify(fundingNode)}`);
+        return dagcoinProtocolService.pairAndConnectDevice(ENV.fundingNodePairingCode)
+        .then(() => {
+          self.bytesProviderDeviceAddress = ENV.fundingNodeDeviceAddress;
 
-          self.bytesProviderDeviceAddress = fundingNode.deviceAddress;
-
-          return dagcoinProtocolService.pairAndConnectDevice(fundingNode.pairCode);
-        }).then(() => {
           console.log(`SUCCESSFULLY PAIRED WITH ${self.bytesProviderDeviceAddress}`);
 
           if (self.dagcoinOrigin) {

@@ -9,6 +9,8 @@
     "discoveryServicePairingCode": "A9H9+e43QH6kqD2HGO9wr1JHliAJuvn9s6KH4/xwbzwt@byteball.org/bb#0000",
     "protocolPrefix": "dagcoin",
     "DATABASE_MIGRATION_TOOL": "native-queries",
-    "MERCHANT_INTEGRATION_API" : "https://api.dagpay.io/api/invoices"
+    "MERCHANT_INTEGRATION_API" : "https://api.dagpay.io/api/invoices",
+    "fundingNodePairingCode": "An+Z8I3eReTOxqcNvTf7soa6JVK6gEBs1fgQAXYEKy/j@byteball.org/bb#9oHh6ZuMimx3",
+    "fundingNodeDeviceAddress": "0565VHSI4BBNETCMSXLBZKYS5SAVB5ZK2"
   }
 }

@@ -866,6 +866,7 @@ ul.manage li {
   font-size: 14px;
   font-weight: 400;
   padding-top: 0 !important;
+  min-height: 30px;
 }
 
 .tab-bar {
@@ -1893,6 +1894,28 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
               font-size: 12px;
               text-transform: uppercase;
             }
+          }
+        }
+      }
+
+      .transaction-status-list {
+        .first-row {
+          svg-icon {
+            top: -5px;
+          }
+          .tx-status-list-title {
+            position: relative;
+            top: -4px;
+          }
+        }
+
+        .last-row {
+          svg-icon {
+            top: 5px;
+          }
+          .tx-status-list-title {
+            position: relative;
+            top: 5px;
           }
         }
       }
@@ -3301,11 +3324,16 @@ p.color_red {
   width: 100%;
 }
 
+.div-with-top-right-img > .text {
+  width: -webkit-calc(100% - 24px);
+}
+
 .div-with-top-right-img > .star {
   position: absolute;
   right: 0;
   top: 0;
   color: $gold;
+  width: 24px;
 }
 
 .seed-words {
@@ -3314,24 +3342,4 @@ p.color_red {
   padding: 15px;
   border-radius: 10px;
   border: 1px dashed #ddd;
-}
-
-.password {
-  -webkit-text-security: disc;
-  -moz-text-security: disc;
-}
-
-.password-container {
-  input {
-    padding-right: 37px;
-  }
-
-  .pass-svg {
-    width: 25px;
-    top: 6px;
-    right: 6px;
-    position: absolute;
-    pointer-events: auto;
-    cursor: pointer;
-  }
 }

@@ -38,8 +38,6 @@
         correspondentListService.getCorrespondentsOrderedByMessageDate().then((correspondents) => {
           correspondentListService.getPendingSharedAddresses().then(() => {
             wallet.readDeviceAddressesUsedInSigningPaths((arrNotRemovableDeviceAddresses) => {
-              // adding manually discovery service, because it doesn't exists in signing paths
-              arrNotRemovableDeviceAddresses.push(ENV.discoveryDeviceAddress);
               // add a new property indicating whether the device can be removed or not
               for (let i = 0, { length } = correspondents; i < length; i += 1) {
                 const corrDev = correspondents[i];
