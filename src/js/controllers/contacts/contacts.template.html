@@ -34,7 +34,7 @@
                        on-ready="contacts.onReadySwiper(swiper)"
                        override-parameters="{'slidesPerView': 1, 'spaceBetween': 0, 'centeredSlides': true}">
     <ks-swiper-slide class="swiper-slide">
-      <div class="contacts_list" ng-scrollbars>
+      <div class="contacts_list dag-scroll">
         <div class="contacts_list_group" ng-repeat="(letter, list) in contacts.list">
           <h4 class="contacts_list_letter">{{letter}}</h4>
           <table>
@@ -61,7 +61,7 @@
       </div>
     </ks-swiper-slide>
     <ks-swiper-slide class="swiper-slide">
-      <div class="contacts_list" ng-if="contacts.existsAnyFavContact" ng-scrollbars>
+      <div class="contacts_list dag-scroll" ng-if="contacts.existsAnyFavContact" ng-scrollbars>
         <div class="contacts_list_group" ng-repeat="(letter, list) in contacts.favoriteList">
           <h4 class="contacts_list_letter">{{letter}}</h4>
           <table>

@@ -20,8 +20,7 @@ const modules = [
   'ngDialog',
   'ngAnimate',
   'swipe',
-  'ksSwiper',
-  'ngScrollbars'
+  'ksSwiper'
 ];
 
 const copayApp = angular.module('copayApp', modules);

@@ -3347,14 +3347,28 @@ p.color_red {
   &::-webkit-scrollbar { width: 0 !important }
 
   width: 100%;
-  max-height: calc(100% - 100px); //skip navbar
+  max-height: calc(100% - 50px); //skip navbar
   overflow-x: hidden;
   overflow-y: auto;
+
+  &.splash {
+    max-height: 100%;
+  }
+
+  &.wallet {
+    max-height: calc(100% - 100px); //skip navbar & menu
+  }
+
+  &.create-wallet-form {
+    max-height: calc(100vh - 170px);
+  }
 }
 
 .has-notification {
   .dag-scroll {
-    max-height: calc(100% - 124px);
+    &.wallet {
+      max-height: calc(100% - 124px);
+    }
   }
 }
 

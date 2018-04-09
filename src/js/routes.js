@@ -4,21 +4,7 @@
 
   angular
     .module('copayApp')
-    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider, ngDialogProvider) => {
-      ScrollBarsProvider.defaults = {
-        autoHideScrollbar: true,
-        scrollButtons: {
-          scrollAmount: 'auto',
-          enable: true
-        },
-        scrollInertia: 400,
-        theme: 'dark',
-        advanced: {
-          updateOnContentResize: true
-        },
-        axis: 'y'
-      };
-
+    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ngDialogProvider) => {
       ngDialogProvider.setDefaults({
         showClose: false,
         closeByDocument: true,

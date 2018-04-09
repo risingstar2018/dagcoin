@@ -16,6 +16,53 @@
     }
   }
 
+  function elementFocusDirective($interval, Device) {
+    return {
+      restrict: 'E',
+      link: (scope, element) => {
+        const e = window.$(element);
+        const input = e[0];
+        const height = window.innerHeight;
+        const maxTimes = 10;
+        let scrollInterval = null;
+        let times = 0;
+
+        e.bind('focus', () => {
+          function clearInterval() {
+            if (scrollInterval) {
+              $interval.cancel(scrollInterval);
+            }
+          }
+
+          function scrollToInput() {
+            input.scrollIntoView({
+              block: 'end',
+              behavior: 'smooth'
+            });
+          }
+
+          times = 0;
+          clearInterval();
+
+          if (!Device.cordova) {
+            scrollToInput();
+          } else {
+            scrollInterval = $interval(() => {
+              if (height !== window.innerHeight) {
+                scrollToInput();
+                clearInterval();
+              } else if (times > maxTimes) {
+                clearInterval();
+              } else {
+                times += 1;
+              }
+            }, 300);
+          }
+        });
+      }
+    };
+  }
+
   angular.module('copayApp.directives')
   .directive('validUrl', [
 
@@ -247,39 +294,8 @@
       }
     };
   }])
-  .directive('ngScrollbarsFocus', ['$interval', function ($interval) {
-    return {
-      restrict: 'A',
-      link: (scope, element) => {
-        const e = window.$(element);
-        const height = window.innerHeight;
-
-        let scrollInterval = null;
-
-        // Focus In
-        e.bind('focus', () => {
-          const scrollbar = e.closest('.mCustomScrollbar');
-
-          if (!scrollbar.length) {
-            return;
-          }
-
-          scrollInterval = $interval(() => {
-            if (height !== window.innerHeight && scrollbar.find('.mCSB_scrollTools').length) {
-              scrollbar.mCustomScrollbar('scrollTo', e);
-              $interval.cancel(scrollInterval);
-            }
-          }, 300);
-        });
-        // Focus Out
-        e.bind('blur', () => {
-          if (scrollInterval) {
-            $interval.cancel(scrollInterval);
-          }
-        });
-      }
-    };
-  }])
+  .directive('input', ['$interval', 'Device', elementFocusDirective])
+  .directive('textarea', ['$interval', 'Device', elementFocusDirective])
   .directive('ngEnter', () => (scope, element, attrs) => {
     element.bind('keydown', (e) => {
       if (e.which === 13 && !e.shiftKey) {

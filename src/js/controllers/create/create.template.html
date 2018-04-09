@@ -14,7 +14,7 @@
   </div>
   <dag-tabset ng-show="!create.loading">
     <dag-tab heading="{{'Plain Wallet' | translate}}" tab-click="create.setTotalCosigners(1)">
-      <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
+      <form name="setupForm" ng-submit="create.create(setupForm)" class="create-wallet-form dag-scroll" novalidate>
         <div class="box-notification" ng-show="create.error">
           <span class="text-warning size-14">{{create.error|translate}}</span>
         </div>
@@ -44,7 +44,7 @@
     </dag-tab>
     <dag-tab heading="{{'Multidevice Wallet' | translate}}" tab-click="create.setMultisig()"
              selected="create.multisigSelected">
-      <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
+      <form name="setupForm" ng-submit="create.create(setupForm)" class="create-wallet-form dag-scroll" novalidate>
         <div id="error-area" class="box-notification" ng-show="create.error">
           <span class="text-warning size-14">{{create.error|translate}}</span>
         </div>
