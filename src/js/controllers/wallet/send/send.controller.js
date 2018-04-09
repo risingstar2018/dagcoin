@@ -34,7 +34,7 @@
     const assocDeviceAddressesByPaymentAddress = {};
 
     $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
-
+    $scope.hasContact = false;
     /**
      * Runs when the view of controller is rendered
      * Make all initialization of controller in this method
@@ -369,6 +369,7 @@
             lodash.forEach(sortedContactArray, (contact) => {
               $scope.list[contact.address] = contact;
             });
+            $scope.hasContact = lodash.size($scope.list) > 0;
           });
         };
 

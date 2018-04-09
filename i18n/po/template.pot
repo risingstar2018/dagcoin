@@ -1858,6 +1858,15 @@ msgstr ""
 msgid "Field is too long"
 msgstr ""
 
-+#: csvHistory method
-+msgid "Download completed"
-+msgstr ""
+#: csvHistory method
+msgid "Download completed"
+msgstr ""
+
+#: contacts.template.html:59
+#: contacts.template.html:83
+msgid "No contact"
+msgstr ""
+
+#: destination-address.html:70
+msgid "You don't have any contacts in address book"
+msgstr ""
