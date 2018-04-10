@@ -8,9 +8,9 @@
   .module('copayApp.directives')
   .directive('dagPasswordInput', dagPassword);
 
-  dagPassword.$inject = ['$timeout'];
+  dagPassword.$inject = ['$timeout', 'utilityService'];
 
-  function dagPassword($timeout) {
+  function dagPassword($timeout, utilityService) {
     return {
       restrict: 'E',
       templateUrl: 'directives/dagPasswordInput/dagPasswordInput.template.html',
@@ -31,7 +31,14 @@
         $scope.id = $scope.id || '';
         $scope.placeholder = $scope.placeholder || '';
         $scope.name = $scope.name || '';
-        $scope.inputType = $scope.inputType || 'text';
+
+        // force password field's type to 'password', ignore inputType parameter of directive
+        // Phones do not suggest words for fields whose type is 'password'
+        if (utilityService.isCordova) {
+          $scope.inputType = 'password';
+        } else {
+          $scope.inputType = $scope.inputType || 'text';
+        }
 
         $scope.canSetVisible = $scope.canSetVisible !== false;
         $scope.autoFocus = $scope.autoFocus === true;

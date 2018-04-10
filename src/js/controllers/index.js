@@ -860,7 +860,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           go.walletHome();
         });
 
-        $rootScope.$on('Local/SetTab', (event, tab) => {
+        $rootScope.$on('Local/SetTab', (event, tab, params) => {
           if (self.tab === tab && lodash.isEmpty(params)) {
             return;
           }

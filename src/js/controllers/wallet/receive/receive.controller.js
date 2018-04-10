@@ -85,8 +85,13 @@
           }, 1);
         };
 
-        $scope.shareAddress = function (uri) {
-          const options = {
+        /**
+         * 'Payment request: ' + amount+ ' DAG to ' + addr
+         * @param address
+         * @param amount
+         */
+        $scope.shareAddress = function (address, amount) {
+           const options = {
             message: `Payment request: ${amount} DAG to ${address}`, // not supported on some apps (Facebook, Instagram)
             subject: 'Payment Request', // fi. for email
             url: `https://${ENV.universalLinkHost}/paymentRequest?address=${address}&amount=${amount}`,
