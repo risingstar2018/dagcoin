@@ -31,6 +31,7 @@
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.btx = btx;
         $scope.settings = walletSettings;
+        $scope.isCordova = utilityService.isCordova;
 
         $scope.transactionAddress = function (address) {
           return root.getTransactionAddress(address);
