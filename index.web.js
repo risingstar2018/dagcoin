@@ -1,13 +1,8 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import { AppRegistry } from 'react-native';
-import { App } from './App/View/App';
+import Main from './app/mainWeb';
 
-AppRegistry.registerComponent('App', () => App);
-AppRegistry.runApplication('App', {
-  rootTag: document.getElementById('react-root')
+AppRegistry.registerComponent('dagcoin', () => Main);
+
+AppRegistry.runApplication('dagcoin', {
+    rootTag: document.getElementById('react-root')
 });
