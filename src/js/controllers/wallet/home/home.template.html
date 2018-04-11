@@ -2,8 +2,9 @@
   <div class="p-wallet js-introduction">
     <div class="p-wallet__price-block">
       <div ng-if="!index.anyOnGoingProcess || 1">
-        <div ng-show="index.walletScanStatus != 'error'"
-             ng-click='index.updateAll(); homeCtrl.updateHistoryFromNetwork()'>
+        <div ng-show="index.walletScanStatus != 'error' && !homeCtrl.balanceIsHidden"
+             ng-click='index.updateAll(); homeCtrl.updateHistoryFromNetwork()'
+             on-long-press="homeCtrl.hideBalance()" long-press-duration="1200">
           <div class="price-wrapper">
             <div class="price">
               <svg-icon name="icon-d-home" class="icon price-icon"></svg-icon>
@@ -42,6 +43,15 @@
               <span class="show-for-medium-up" translate>Definition</span>
             </a>
           </div>
+          <span class="hint-span" translate>Tap and hold balance to hide it</span>
+        </div>
+        <div class="hidden-balance" ng-show="homeCtrl.balanceIsHidden">
+          <div class="hidden-balance-icon" on-long-press="homeCtrl.showBalance()" 
+             prevent-click="true" long-press-duration="1200">
+            <svg-icon name="hidden"></svg-icon>
+          </div>
+          <p translate>Balance hidden</p>
+          <span class="hint-span" translate>Tap and hold icon to make visible</span>
         </div>
       </div>
     </div>
@@ -69,7 +79,8 @@
     </div>
 
     <div class="oh text-center p20 text-gray"
-         ng-if="!index.updatingTxHistory && !index.txHistory[0] && !index.txHistoryError">
+         ng-if="!index.updatingTxHistory && !index.txHistory[0] && !index.txHistoryError"
+         ng-show="!homeCtrl.balanceIsHidden">
       <span translate>No transactions yet</span>
     </div>
 

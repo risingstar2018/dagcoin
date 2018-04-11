@@ -187,6 +187,7 @@ module.exports = function (grunt) {
           'bower_components/ng-dialog/js/ngDialog.min.js',
           'bower_components/angular-animate/angular-animate.js',
           'bower_components/gsap/src/minified/TweenMax.min.js',
+          'bower_components/angular-long-press/dist/angular-long-press.min.js',
 
           /* Angular-Swipe | Swipes gestures library (e.g ng-swipe-up) */
           'bower_components/angular-swipe/dist/angular-swipe.min.js',

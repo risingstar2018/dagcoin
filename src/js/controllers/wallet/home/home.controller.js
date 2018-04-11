@@ -11,6 +11,7 @@
   function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash, go) {
     const vm = this;
     const breadcrumbs = require('core/breadcrumbs.js');
+    vm.balanceIsHidden = true;
 
     const viewContentLoaded = function () {
       go.redirectToTabIfNeeded();
@@ -151,6 +152,14 @@
         return { 'font-size': `${(!type ? size : size / 2)}px` };
       }
       return { 'font-size': '80px' };
+    };
+
+    vm.showBalance = () => {
+      vm.balanceIsHidden = false;
+    };
+
+    vm.hideBalance = () => {
+      vm.balanceIsHidden = true;
     };
 
     // for light clients only

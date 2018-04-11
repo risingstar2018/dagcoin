@@ -1862,6 +1862,18 @@ msgstr ""
 msgid "Download completed"
 msgstr ""
 
+#: home.template.html:53
+msgid "Balance hidden"
+msgstr ""
+
+#: home.template.html:46
+msgid "Tap and hold balance to hide it"
+msgstr ""
+
+#: home.template.html:54
+msgid "Tap and hold icon to make visible"
+msgstr ""
+
 #: logSettings.template.html:15
 msgid "Copy to clipboard"
 msgstr ""
