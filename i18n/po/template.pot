@@ -1862,6 +1862,14 @@ msgstr ""
 msgid "Download completed"
 msgstr ""
 
+#: logSettings.template.html:15
+msgid "Copy to clipboard"
+msgstr ""
+
+#: logSettings.template.html:4
+msgid "Log Levels"
+msgstr ""
+
 #: contacts.template.html:59
 #: contacts.template.html:83
 msgid "No contact"

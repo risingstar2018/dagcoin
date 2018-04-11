@@ -68,6 +68,7 @@
         },
       },
       autoUpdateWitnessesList: true,
+      logLevel: 'debug'
     };
 
     let configCache = null;

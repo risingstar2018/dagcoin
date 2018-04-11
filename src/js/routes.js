@@ -58,10 +58,11 @@
                 return value;
               });
               try {
+                // Send on our enhanced message to the original debug method.
                 if (window.cordova) {
                   console.log(args.join(' '));
                 }
-                historicLog.add(level, args.join(' '));
+                historicLog.add(level, args.join(' '), new Date());
                 orig(...args);
               } catch (e) {
                 console.log('ERROR (at log decorator):', e, args[0]);
