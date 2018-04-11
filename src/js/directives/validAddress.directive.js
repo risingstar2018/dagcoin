@@ -18,7 +18,7 @@
       require: 'ngModel',
       link(scope, elem, attrs, ctrl) {
         const validator = (value) => {
-          const validationUtils = require('byteballcore/validation_utils.js');
+          const validationUtils = require('core/validation_utils.js');
           if (!profileService.focusedClient) {
             return '';
           }

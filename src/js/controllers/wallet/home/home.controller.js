@@ -10,7 +10,7 @@
 
   function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash, go) {
     const vm = this;
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
 
     const viewContentLoaded = function () {
       go.redirectToTabIfNeeded();
@@ -26,8 +26,8 @@
         $scope.color = fc.backgroundColor;
         $scope.address = address;
 
-        const walletGeneral = require('byteballcore/wallet_general.js');
-        const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+        const walletGeneral = require('core/wallet_general.js');
+        const walletDefinedByAddresses = require('core/wallet_defined_by_addresses.js');
         walletGeneral.readMyAddresses((arrMyAddresses) => {
           walletDefinedByAddresses.readSharedAddressDefinition(address, (arrDefinition, creationTs) => {
             $scope.humanReadableDefinition = correspondentListService.getHumanReadableDefinition(arrDefinition, arrMyAddresses, [], true);
@@ -107,7 +107,7 @@
         $scope.selectSubwallet = function (sharedAddress) {
           $scope.indexCtl.shared_address = sharedAddress;
           if (sharedAddress) {
-            const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+            const walletDefinedByAddresses = require('core/wallet_defined_by_addresses.js');
             walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
               $scope.indexCtl.bHasMerkle = bHasMerkle;
               $rootScope.$apply();
@@ -162,7 +162,7 @@
           return;
         }
         console.log('== updateHistoryFromNetwork');
-        const lightWallet = require('byteballcore/light_wallet.js');
+        const lightWallet = require('core/light_wallet.js');
         lightWallet.refreshLightClientHistory();
       }, 500);
     }, 5000);

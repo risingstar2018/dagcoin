@@ -19,7 +19,7 @@
       vm.error = null;
       correspondent.name = vm.name;
       correspondent.hub = vm.hub;
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.updateCorrespondentProps(correspondent, () => {
         go.path('correspondentDevice');
       });
@@ -53,7 +53,7 @@
 
       modalInstance.result.then((ok) => {
         if (ok) {
-          const chatStorage = require('byteballcore/chat_storage.js');
+          const chatStorage = require('core/chat_storage.js');
           chatStorage.purge(correspondent.device_address);
           correspondentListService.messageEventsByCorrespondent[correspondent.device_address] = [];
         }

@@ -11,8 +11,8 @@
     root.checkChangeWitnesses = function () {
       if (!root.autoUpdate) return;
 
-      const device = require('byteballcore/device.js');
-      const myWitnesses = require('byteballcore/my_witnesses.js');
+      const device = require('core/device.js');
+      const myWitnesses = require('core/my_witnesses.js');
       device.getWitnessesFromHub((err, arrWitnessesFromHub) => {
         if (arrWitnessesFromHub) {
           myWitnesses.readMyWitnesses((arrWitnesses) => {

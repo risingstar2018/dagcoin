@@ -22,7 +22,7 @@
       const fc = profileService.focusedClient;
       const recipientDeviceAddress = sendCoinRequest.recipientDeviceAddress;
       const address = sendCoinRequest.address;
-      const breadcrumbs = require('byteballcore/breadcrumbs.js');
+      const breadcrumbs = require('core/breadcrumbs.js');
       const asset = 'base';
       const invoiceId = sendCoinRequest.invoiceId;
       const bSendAll = sendCoinRequest.bSendAll;
@@ -33,13 +33,13 @@
           return;
         }
         let myAddress;
-        const device = require('byteballcore/device.js');
-        const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+        const device = require('core/device.js');
+        const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
         if (sendCoinRequest.binding) {
           if (!recipientDeviceAddress) {
             throw Error(gettextCatalog.getString('recipient device address not known'));
           }
-          const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+          const walletDefinedByAddresses = require('core/wallet_defined_by_addresses.js');
 
           // never reuse addresses as the required output could be already present
           walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, (addressInfo) => {
@@ -188,7 +188,7 @@
 
           merchantPromise.then(() => {
             if (invoiceId !== null) {
-              const objectHash = require('byteballcore/object_hash');
+              const objectHash = require('core/object_hash');
               const payload = JSON.stringify({ invoiceId });
               opts.messages = [{
                 app: 'text',
@@ -307,9 +307,9 @@
 
 
     root.checkTestnetData = () => {
-      const constants = require('byteballcore/constants.js');
+      const constants = require('core/constants.js');
       if (isCordova && constants.version === '1.0') {
-        const db = require('byteballcore/db.js');
+        const db = require('core/db.js');
         db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
           if (rows.length > 0) {
             $rootScope.$emit('Local/ShowErrorAlert', 'Looks like you have testnet data.  Please remove the app and reinstall.', () => {

@@ -16,7 +16,7 @@
 
     vm.saveDeviceName = () => {
       $log.debug(`saveDeviceName: ${vm.deviceName}`);
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.setDeviceName(vm.deviceName);
       const opts = { deviceName: vm.deviceName };
       configService.set(opts, (err) => {

@@ -11,16 +11,16 @@
 
   function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
                        $modal, animationService, addressService, ENV) {
-    const eventBus = require('byteballcore/event_bus.js');
+    const eventBus = require('core/event_bus.js');
     const isCordova = utilityService.isCordova;
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
     const config = configService.getSync();
     const vm = this;
 
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
-      const conf = require('byteballcore/conf.js');
+      const conf = require('core/conf.js');
       vm.addr = {};
       vm.setAddress();
       vm.isCordova = isCordova;
@@ -48,7 +48,7 @@
       $rootScope.modalOpened = true;
       const fc = profileService.focusedClient;
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
-        const conf = require('byteballcore/conf.js');
+        const conf = require('core/conf.js');
         const configWallet = config.wallet;
         const walletSettings = configWallet.settings;
         $scope.addr = addr;

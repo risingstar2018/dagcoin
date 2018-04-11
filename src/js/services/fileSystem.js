@@ -10,7 +10,7 @@
     const fs = require('fs');
     let desktopApp;
     try {
-      desktopApp = require('byteballcore/desktop_app.js');
+      desktopApp = require('core/desktop_app.js');
     } catch (e) {
       // continue regardless of error
     }

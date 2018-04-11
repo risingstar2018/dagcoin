@@ -9,6 +9,6 @@
 
   function PreferencesAboutDeviceCtrl() {
     const vm = this;
-    vm.myDeviceAddress = require('byteballcore/device.js').getMyDeviceAddress();
+    vm.myDeviceAddress = require('core/device.js').getMyDeviceAddress();
   }
 })();

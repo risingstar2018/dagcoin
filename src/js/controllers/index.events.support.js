@@ -4,8 +4,8 @@
  * It adds listeners of eventBus
  */
 function IndexEventsSupport(params) {
-  const eventBus = require('byteballcore/event_bus.js');
-  const breadcrumbs = require('byteballcore/breadcrumbs.js');
+  const eventBus = require('core/event_bus.js');
+  const breadcrumbs = require('core/breadcrumbs.js');
   const Device = params.Device;
   const Raven = params.Raven;
   const go = params.go;
@@ -106,7 +106,7 @@ function IndexEventsSupport(params) {
   };
   this.initRefusedToSign = (cb) => {
     eventBus.on('refused_to_sign', (deviceAddress) => {
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.readCorrespondent(deviceAddress, (correspondent) => {
         notification.success(gettextCatalog.getString('Refused'), gettextCatalog.getString(`${correspondent.name} refused to sign the transaction`));
       });
@@ -156,7 +156,7 @@ function IndexEventsSupport(params) {
       }
       const walletName = client.credentials.walletName;
       profileService.updatePublicKeyRing(client);
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.readCorrespondent(deviceAddress, (correspondent) => {
         notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString(`Wallet ${walletName} approved by ${correspondent.name}`));
       });
@@ -172,7 +172,7 @@ function IndexEventsSupport(params) {
         return;
       }
       const walletName = client.credentials.walletName;
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.readCorrespondent(deviceAddress, (correspondent) => {
         notification.info(gettextCatalog.getString('Declined'), gettextCatalog.getString(`Wallet ${walletName} declined by ${correspondent.name}`));
       });

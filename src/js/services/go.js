@@ -185,10 +185,10 @@
       }
 
       function processGenericPaymentRequestQrCode(uri) {
-        require('byteballcore/uri.js').parseUri(uri, {
+        require('core/uri.js').parseUri(uri, {
           ifError(err) {
             console.log(err);
-            const conf = require('byteballcore/conf.js');
+            const conf = require('core/conf.js');
             const noPrefixRegex = new RegExp(`.*no.*${conf.program}.*prefix.*`, 'i');
             if (noPrefixRegex.test(err.toString())) {
               notification.error(gettextCatalog.getString('Incorrect Dagcoin Address'));
@@ -217,7 +217,7 @@
       }
 
       function extractByteballArgFromCommandLine(commandLine) {
-        const conf = require('byteballcore/conf.js');
+        const conf = require('core/conf.js');
         const re = new RegExp(`^${conf.program}:`, 'i');
         const arrParts = commandLine.split(' '); // on windows includes exe and all args, on mac just our arg
         for (let i = 0; i < arrParts.length; i += 1) {
@@ -316,7 +316,7 @@
         /* var win = gui.Window.get();
          win.on('close', function(){
          console.log('close event');
-         var db = require('byteballcore/db.js');
+         var db = require('core/db.js');
          db.close(function(err){
          console.log('close err: '+err);
          });
@@ -353,7 +353,7 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
-    const eventBus = require('byteballcore/event_bus.js');
+    const eventBus = require('core/event_bus.js');
     const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
@@ -375,7 +375,7 @@
   }
 
   window.onerror = function (msg, url, line, col, error) {
-    const eventBus = require('byteballcore/event_bus.js');
+    const eventBus = require('core/event_bus.js');
     console.log(`Javascript error: ${msg}`, error);
     eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
   };

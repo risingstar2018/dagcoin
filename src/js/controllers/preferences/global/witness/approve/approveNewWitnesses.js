@@ -15,7 +15,7 @@
       const l = newWitnesses.length;
 
       function replaceWitness(index, oldW, newW) {
-        const myWitnesses = require('byteballcore/my_witnesses.js');
+        const myWitnesses = require('core/my_witnesses.js');
         myWitnesses.replaceWitness(oldWitnesses[index], newWitnesses[index], () => {
           if (l < index) {
             let i = index;

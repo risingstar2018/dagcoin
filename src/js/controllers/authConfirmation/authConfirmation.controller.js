@@ -23,8 +23,8 @@
 
   function AuthConfirmationCtrl($scope, profileService, go, authService, lodash) {
     const Bitcore = require('bitcore-lib');
-    const ecdsaSig = require('byteballcore/signature.js');
-    const bbWallet = require('byteballcore/wallet.js');
+    const ecdsaSig = require('core/signature.js');
+    const bbWallet = require('core/wallet.js');
 
     const vm = this;
     const objRequest = authService.objRequest;

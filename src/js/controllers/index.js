@@ -9,11 +9,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 $state, addressbookService, notification, animationService, $modal, bwcService, backButton, faucetService, changeWalletTypeService,
                 autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService, navigationService) {
         const async = require('async');
-        const mutex = require('byteballcore/mutex.js');
-        const eventBus = require('byteballcore/event_bus.js');
-        const objectHash = require('byteballcore/object_hash.js');
-        const ecdsaSig = require('byteballcore/signature.js');
-        const breadcrumbs = require('byteballcore/breadcrumbs.js');
+        const mutex = require('core/mutex.js');
+        const eventBus = require('core/event_bus.js');
+        const objectHash = require('core/object_hash.js');
+        const ecdsaSig = require('core/signature.js');
+        const breadcrumbs = require('core/breadcrumbs.js');
         const Bitcore = require('bitcore-lib');
         const isCordova = Device.cordova;
         const acceptMessage = gettextCatalog.getString('Yes');
@@ -165,8 +165,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         // in arrOtherCosigners, 'other' is relative to the initiator
         eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
-          const device = require('byteballcore/device.js');
-          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+          const device = require('core/device.js');
+          const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
           device.readCorrespondentsByDeviceAddresses(arrDeviceAddresses, (arrCorrespondentInfos) => {
             // my own address is not included in arrCorrespondentInfos because I'm not my correspondent
             const arrNames = arrCorrespondentInfos.map(correspondent => correspondent.name);
@@ -241,18 +241,18 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             const bufToSign = objectHash.getUnitHashToSign(objUnit);
             const signature = ecdsaSig.sign(bufToSign, privKeyBuf);
             console.log(`sent signature ${signature}`);
-            const bbWallet = require('byteballcore/wallet.js');
+            const bbWallet = require('core/wallet.js');
             return bbWallet.sendSignature(fromAddress, bufToSign.toString('base64'), signature, signingPath, topAddress);
           }
 
           function refuseSignature() {
             const bufToSign = objectHash.getUnitHashToSign(objUnit);
-            const bbWallet = require('byteballcore/wallet.js');
+            const bbWallet = require('core/wallet.js');
             bbWallet.sendSignature(fromAddress, bufToSign.toString('base64'), '[refused]', signingPath, topAddress);
             console.log('refused signature');
           }
 
-          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+          const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
           const unit = objUnit.unit;
           const credentials = lodash.find(profileService.profile.credentials, { walletId: objAddress.wallet });
           mutex.lock([`signing_request-${unit}`], (unlock) => {
@@ -378,7 +378,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             self.setAddressbook();
 
             console.log('reading cosigners');
-            const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+            const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
             walletDefinedByKeys.readCosigners(self.walletId, (arrCosignerInfos) => {
               self.copayers = arrCosignerInfos;
               $timeout(() => {
@@ -417,7 +417,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
 
           // reconnect if lost connection
-          const device = require('byteballcore/device.js');
+          const device = require('core/device.js');
           device.loginToHub();
 
           return $timeout(() => {
@@ -774,7 +774,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/Resume', () => {
           $log.debug('### Resume event');
-          const lightWallet = require('byteballcore/light_wallet.js');
+          const lightWallet = require('core/light_wallet.js');
           lightWallet.refreshLightClientHistory();
           go.redirectToTabIfNeeded();
         });

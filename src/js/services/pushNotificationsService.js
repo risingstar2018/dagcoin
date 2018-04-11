@@ -9,10 +9,10 @@
     let projectNumber;
     let wsLocal;
 
-    const eventBus = require('byteballcore/event_bus.js');
+    const eventBus = require('core/event_bus.js');
 
     function sendRequestEnableNotification(ws, registrationId) {
-      const network = require('byteballcore/network.js');
+      const network = require('core/network.js');
       network.sendRequest(ws, 'hub/enable_notification', registrationId, false, (ws, request, response) => {
         if (!response || (response && response !== 'ok')) {
           return $log.error('Error sending push info');
@@ -62,7 +62,7 @@
     function disableNotification() {
       storageService.getPushInfo((err, pushInfo) => {
         storageService.removePushInfo(() => {
-          const network = require('byteballcore/network.js');
+          const network = require('core/network.js');
           network.sendRequest(wsLocal, 'hub/disable_notification', pushInfo.registrationId, false, (ws, request, response) => {
             if (!response || (response && response !== 'ok')) {
               return $log.error('Error sending push info');

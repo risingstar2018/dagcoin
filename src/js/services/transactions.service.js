@@ -7,7 +7,7 @@
                                                                       gettextCatalog, $rootScope, $modal, txFormatService,
                                                                       notification, configService) => {
     const root = {};
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
 
     /**
      * This will be moved into tx directive
@@ -38,7 +38,7 @@
         };
 
         $scope.openInExplorer = function () {
-          const url = `https://${ENV.explorerPrefix}explorer.dagcoin.org/#${btx.unit}`;
+          const url = `https://${ENV.explorerUrl}/#${btx.unit}`;
           if (typeof nw !== 'undefined') {
             // todo: we already have method for this
             nw.Shell.openExternal(url);
@@ -102,8 +102,8 @@
         };
 
         $scope.sendPrivatePayments = function (correspondent) {
-          const indivisibleAsset = require('byteballcore/indivisible_asset');
-          const walletGeneral = require('byteballcore/wallet_general');
+          const indivisibleAsset = require('core/indivisible_asset');
+          const walletGeneral = require('core/wallet_general');
           indivisibleAsset.restorePrivateChains(btx.asset, btx.unit, btx.addressTo, (arrRecipientChains) => {
             walletGeneral.sendPrivatePayments(correspondent.device_address, arrRecipientChains, true, null, () => {
               modalInstance.dismiss('cancel');

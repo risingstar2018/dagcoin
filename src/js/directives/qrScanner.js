@@ -5,7 +5,7 @@
 (() => {
   'use strict';
 
-  const breadcrumbs = require('byteballcore/breadcrumbs.js');
+  const breadcrumbs = require('core/breadcrumbs.js');
 
   /**
    * @desc qr-code scanner directive

@@ -3,7 +3,7 @@
 
   angular.module('copayApp.services')
   .factory('newVersion', ($modal, $timeout, $rootScope, $q, configService) => {
-    const eventBus = require('byteballcore/event_bus.js');
+    const eventBus = require('core/event_bus.js');
     const root = {};
     root.shown = false;
     root.timerNextShow = false;
@@ -32,7 +32,7 @@
     }
 
     function askForVersion() {
-      const device = require('byteballcore/device');
+      const device = require('core/device');
       const config = configService.getSync();
 
       updateHubLocation().then(() => { device.setDeviceHub(config.hub); });

@@ -13,8 +13,8 @@
   function SendCtrl($scope, $rootScope, $timeout, lodash, profileService,
                     configService, addressService, addressbookService, animationService, gettextCatalog,
                     utilityService, transactionsService, walletService, ENV, $modal, $state, $stateParams) {
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
-    const eventBus = require('byteballcore/event_bus.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
+    const eventBus = require('core/event_bus.js');
 
     const indexScope = $scope.index;
     const config = configService.getSync();
@@ -219,7 +219,7 @@
 
     vm.setFromUri = function (uri) {
       let objRequest = {};
-      require('byteballcore/uri.js').parseUri(uri, {
+      require('core/uri.js').parseUri(uri, {
         ifError() {
         },
         ifOk(_objRequest) {
@@ -541,7 +541,7 @@
 
       indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
       $timeout(() => {
-        const device = require('byteballcore/device.js');
+        const device = require('core/device.js');
         const sendCoinRequest = new SendCoinRequestBuilder()
           .binding(vm.binding)
           .recipientDeviceAddress(recipientDeviceAddress)

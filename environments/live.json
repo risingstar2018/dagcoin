@@ -1,10 +1,11 @@
 {
   "ENV": {
     "environment": "live",
-    "explorerPrefix": "",
+    "isTestnet": true,
+    "explorerUrl": "tbd",
     "TIMESTAMPER_ADDRESS": "I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT",
-    "hub": "byteball.org/bb",
-    "universalLinkHost": "dagcoin.org",
-
+    "hub": "tbd",
+    "MERCHANT_INTEGRATION_API" : "tbd",
+    "universalLinkHost": "dagcoin.org"
   }
 }

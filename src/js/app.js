@@ -32,7 +32,7 @@ angular.module('copayApp.controllers', []);
 angular.module('copayApp.directives', []);
 angular.module('copayApp.addons', []);
 
-const constants = require('byteballcore/constants.js');
+const constants = require('core/constants.js');
 const fs = require('fs');
 
 let app = null;

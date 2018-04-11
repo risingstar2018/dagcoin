@@ -8,7 +8,7 @@
   CorrespondentDevicesCtrl.$inject = ['$scope', 'profileService', 'go', 'correspondentListService', '$state', '$rootScope', '$log'];
 
   function CorrespondentDevicesCtrl($scope, profileService, go, correspondentListService, $state, $rootScope, $log) {
-    const wallet = require('byteballcore/wallet.js');
+    const wallet = require('core/wallet.js');
     const vm = this;
     vm.editCorrespondentList = false;
     vm.selectedCorrespondentList = {};
@@ -58,7 +58,7 @@
 
     vm.remove = (deviceAddress) => {
       wallet.determineIfDeviceCanBeRemoved(deviceAddress, (bRemovable) => {
-        const device = require('byteballcore/device.js');
+        const device = require('core/device.js');
         if (!bRemovable) {
           $log.info(`device ${deviceAddress} is not removable`);
           return;
