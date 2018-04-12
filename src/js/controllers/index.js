@@ -41,10 +41,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.isOffline = !isOnline;
         });
 
-        if (autoRefreshClientService) {
-          autoRefreshClientService.initHistoryAutoRefresh();
-        }
-
         self.showPopup = function (msg, msgIcon, cb) {
           if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
             return false;
@@ -132,36 +128,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             modalRequestApproval(question, callbacks);
           }
         };
-
-        const indexEventsSupport = new IndexEventsSupport({
-          Device,
-          Raven,
-          go,
-          $rootScope,
-          changeWalletTypeService,
-          self,
-          $timeout,
-          profileService,
-          notification,
-          gettextCatalog,
-          newVersion
-        });
-        indexEventsSupport.initNotFatalError();
-        indexEventsSupport.initUncaughtError();
-        indexEventsSupport.initCatchingUpStarted();
-        indexEventsSupport.initCatchupBallsLeft();
-        indexEventsSupport.initCatchingUpDone();
-        indexEventsSupport.initRefreshLightStarted();
-        indexEventsSupport.initRefreshLightDone();
-        indexEventsSupport.initRefusedToSign();
-        indexEventsSupport.initNewMyTransactions();
-        indexEventsSupport.initMyTransactionsBecameStable();
-        indexEventsSupport.initMciBecameStable();
-        indexEventsSupport.initMaybeNewTransactions();
-        indexEventsSupport.initWalletApproved();
-        indexEventsSupport.initWalletDeclined();
-        indexEventsSupport.initWalletCompleted();
-        indexEventsSupport.initConfirmOnOtherDevice();
 
         // in arrOtherCosigners, 'other' is relative to the initiator
         eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
@@ -932,6 +898,45 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         $rootScope.$on('Local/generatingCSV', (event, state) => {
           console.log(`generatingCSV event ${state}`);
           self.setOngoingProcess('generatingCSV', state);
+        });
+
+        $rootScope.$on('Local/ProfileBound', () => {
+          $log.info('Profile bounded and all eventBus events will be registered.');
+          const indexEventsSupport = new IndexEventsSupport({
+            Device,
+            Raven,
+            go,
+            $rootScope,
+            changeWalletTypeService,
+            self,
+            $timeout,
+            profileService,
+            notification,
+            gettextCatalog,
+            newVersion
+          });
+
+          indexEventsSupport.initNotFatalError();
+          indexEventsSupport.initUncaughtError();
+          indexEventsSupport.initCatchingUpStarted();
+          indexEventsSupport.initCatchupBallsLeft();
+          indexEventsSupport.initCatchingUpDone();
+          indexEventsSupport.initRefreshLightStarted();
+          indexEventsSupport.initRefreshLightDone();
+          indexEventsSupport.initRefusedToSign();
+          indexEventsSupport.initNewMyTransactions();
+          indexEventsSupport.initMyTransactionsBecameStable();
+          indexEventsSupport.initMciBecameStable();
+          indexEventsSupport.initMaybeNewTransactions();
+          indexEventsSupport.initWalletApproved();
+          indexEventsSupport.initWalletDeclined();
+          indexEventsSupport.initWalletCompleted();
+          indexEventsSupport.initConfirmOnOtherDevice();
+
+          $log.info('Profile bounded and autoRefreshClientService auto refresh starting...');
+          if (autoRefreshClientService) {
+            autoRefreshClientService.initHistoryAutoRefresh();
+          }
         });
       });
 }());

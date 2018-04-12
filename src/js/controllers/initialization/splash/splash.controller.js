@@ -56,8 +56,7 @@
         return;
       }
 
-      const appDataDir = fileSystemService.getDatabaseDirPath();
-      const userConfFile = `${appDataDir}/conf.json`;
+      const userConfFile = fileSystemService.getUserConfFilePath();
       fileSystemService.writeFile(userConfFile, JSON.stringify({
         bLight
       }, null, '\t'), 'utf8', (err) => {
