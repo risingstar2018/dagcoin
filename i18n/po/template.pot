@@ -1890,3 +1890,23 @@ msgstr ""
 #: destination-address.html:70
 msgid "You don't have any contacts in address book"
 msgstr ""
+
+#: preferencesGlobal.html:26
+msgid "Configure notifications"
+msgstr ""
+
+#: preferencesNotifications.html:7
+msgid "Enable push notifications"
+msgstr ""
+
+#: preferencesNotifications.js:50
+msgid "Push notifications enabled"
+msgstr ""
+
+#: preferencesNotifications.js:51
+msgid "Push notifications disabled"
+msgstr ""
+
+#: csvHistory method
+msgid "Download completed"
+msgstr ""

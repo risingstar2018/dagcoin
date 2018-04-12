@@ -6,6 +6,7 @@
     "TIMESTAMPER_ADDRESS": "OPNUXBRSSQQGHKQNEPD2GLWQYEUY5XLD",
     "hub": "test-hub.dagcoin.org/spoon/",
     "MERCHANT_INTEGRATION_API" : "https://test-api.dagpay.io/api/invoices",
+    "projectNumber": "459454964929",
     "universalLinkHost": "testnetexplorer.dagcoin.org",
     "FAUCET_CORRESPONDENCE_CODE": "A6thOoiPnsPGKgMj4G/OYkh4d7WR/MX3r1k2tG/WJPof@test-hub.dagcoin.org/spoon/#0000",
     "FAUCET_ADDRESS": "0JMVEW6BBLT26R5C66HRN7YAP2Z77XCX7"

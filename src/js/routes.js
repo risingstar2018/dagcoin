@@ -369,6 +369,17 @@
             },
           },
         })
+        .state('notifications', {
+          url: '/notifications',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/preferences/global/notifications/preferencesNotifications.template.html',
+              controller: 'PreferencesNotificationsCtrl as notifications'
+            },
+          },
+        })
         .state('about', {
           url: '/about',
           walletShouldBeComplete: true,

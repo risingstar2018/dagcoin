@@ -1,14 +1,12 @@
 #! /bin/bash
-
-Green='\033[0;32m'
-Red='\033[0;31m'
-CloseColor='\033[0m'
-
 #
 # Usage:
 # sh ./build.sh --android --reload
 #
 #
+Green='\033[0;32m'
+Red='\033[0;31m'
+CloseColor='\033[0m'
 # Check function OK
 checkOK() {
 	if [ $? != 0 ]; then
@@ -17,12 +15,26 @@ checkOK() {
 	fi
 }
 
+# Check cordova vesion, in order to run push notifications on android, cordova version must be 7.1.0
+checkCordovaVersion() {
+  if [ $CURRENT_OS == "ANDROID" ]; then
+    CordovaVersion=$(cordova -v)
+    if [ $CordovaVersion != "7.1.0" ]; then
+      echo -e "${Red}ERROR Cordova version must be 7.1.0 ${CloseColor}"
+      exit 1
+    fi
+  fi
+  echo -e "${Green}OK Cordova Version: ${CordovaVersion}${CloseColor}"
+}
+
 # Configs
 BUILDDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 
 CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
+
+checkCordovaVersion
 
 if [ -z "CURRENT_OS" ]
 then
@@ -50,7 +62,7 @@ else
 fi
 echo -e "${Green}OK UNIVERSAL_LINK_HOST is set to ${UNIVERSAL_LINK_HOST}...${CloseColor}"
 
-echo "${Green}* Checking dependencies...${CloseColor}"
+echo -e "${OpenColor}${Green}* Checking dependencies...${CloseColor}"
 command -v cordova >/dev/null 2>&1 || { echo >&2 "Cordova is not present, please install it: sudo npm install -g cordova."; exit 1; }
 #command -v xcodebuild >/dev/null 2>&1 || { echo >&2 "XCode is not present, install it or use [--android]."; exit 1; }
 
@@ -68,14 +80,14 @@ echo "Project directory is $PROJECT"
 
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
-	echo "${Green}* Creating project... ${CloseColor}"
+	echo -e "${OpenColor}${Green}* Creating project... ${CloseColor}"
 	cordova create ../../byteballbuilds/project-$1 org.dagcoin Dagcoin
 	checkOK
 
 	cd $PROJECT
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
-		echo "${Green}* Adding Android platform... ${CloseColor}"
+		echo -e "${OpenColor}${Green}* Adding Android platform... ${CloseColor}"
 		cordova platforms add android
 		checkOK
 	fi
@@ -92,7 +104,7 @@ if [ ! -d $PROJECT ]; then
 		checkOK
 	fi
 
-	echo "${Green}* Installing plugins... ${CloseColor}"
+	echo -e "${OpenColor}${Green}* Installing plugins... ${CloseColor}"
 
 #  cordova plugin add https://github.com/florentvaldelievre/virtualartifacts-webIntent.git
 #  checkOK
@@ -100,10 +112,16 @@ if [ ! -d $PROJECT ]; then
 	if [ $CURRENT_OS == "IOS" ]; then
 		cordova plugin add https://github.com/phonegap/phonegap-plugin-barcodescanner.git
 	else
-		cordova plugin add cordova-plugin-android-support-v4-jar
+	  #commented because android-23 to 26
+		#cordova plugin add cordova-plugin-android-support-v4-jar
+		#checkOK
+		#cordova plugin add https://github.com/jrontend/phonegap-plugin-barcodescanner.git
+		cordova plugin add https://github.com/phonegap/phonegap-plugin-barcodescanner.git
 		checkOK
+		# cordova plugin add phonegap-plugin-barcodescanner@5.0.0
+		#cordova plugin add cordova-plugin-barcodescanner
+		#cordova plugin add cordova-plugin-qrscanner
 
-		cordova plugin add https://github.com/jrontend/phonegap-plugin-barcodescanner.git
 	fi
 	checkOK
 
@@ -165,9 +183,12 @@ if [ ! -d $PROJECT ]; then
 	checkOK
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
-	cordova plugin add https://github.com/phonegap/phonegap-plugin-push
-	checkOK
+	  cordova plugin add phonegap-plugin-push@2.1.3
+	  checkOK
 	fi
+
+	#phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
+	#checkOK
 
 	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
 	checkOK
@@ -191,12 +212,12 @@ else
 	checkOK
 fi
 
-echo "${Green}* Copying files...${CloseColor}"
+echo -e "${OpenColor}${Green}* Copying files...${CloseColor}"
 cd $BUILDDIR/..
 cp -af public/** $PROJECT/www
 checkOK
 
-echo "${Green}* Copying initial database...${CloseColor}"
+echo -e "${OpenColor}${Green}* Copying initial database...${CloseColor}"
 cp node_modules/byteballcore/initial.byteball.sqlite $PROJECT/www
 cp node_modules/byteballcore/initial.byteball-light.sqlite $PROJECT/www
 checkOK
@@ -218,6 +239,15 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 
 	mkdir -p $PROJECT/platforms/android/res/xml/
 	checkOK
+
+  # gcm needs google-services.json. google-services.json is downloaded from firebase web site.
+	cp android/google-services.json $PROJECT/platforms/android/google-services.json
+	checkOK
+
+  # new cordova-android needs colors.xml
+	cp android/colors.xml $PROJECT/platforms/android/res/values
+	checkOK
+
 
 #  cp android/AndroidManifest.xml $PROJECT/platforms/android/AndroidManifest.xml
 #  checkOK

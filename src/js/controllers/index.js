@@ -7,7 +7,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       function ($rootScope, $scope, $log, $filter, $timeout, $interval, lodash, go, fingerprintService, profileService, configService,
                 Device, storageService, addressService, gettextCatalog, amMoment, nodeWebkit, txFormatService, uxLanguage,
                 $state, addressbookService, notification, animationService, $modal, bwcService, backButton, faucetService, changeWalletTypeService,
-                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService, navigationService) {
+                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService, navigationService,
+                pushNotificationsService) {
         const async = require('async');
         const mutex = require('core/mutex.js');
         const eventBus = require('core/event_bus.js');
@@ -30,8 +31,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.onGoingProcess = {};
         self.updatingTxHistory = true;
         self.bSwipeSuspended = false;
-        // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
-        self.usePushNotifications = false;
+        self.usePushNotifications = isCordova && !Device.window && Device.android;
+        self.pushIsAvailableOnSystem = pushNotificationsService.pushIsAvailableOnSystem;
         self.isCordova = isCordova;
 
         walletService.checkTestnetData();
