@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, Text, Image
+    StyleSheet, View, Text
 } from 'react-native';
 
 import DagButton from '../controls/dagButton';
 import DagRadioGroup from '../controls/dagRadioGroup';
-import { container, control, text, font } from "../styles/main";
-import Splash from "./splash";
+import { container, text, font } from "../styles/main";
+import MainPageLayout from "../general/mainPageLayout";
 
 class SplashWalletType extends Component {
     constructor(){
@@ -51,7 +51,7 @@ class SplashWalletType extends Component {
         ];
 
         return (
-            <Splash>
+            <MainPageLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size14, container.m20b])}>{"Please choose the type of this wallet".toUpperCase()}</Text>
 
@@ -61,7 +61,7 @@ class SplashWalletType extends Component {
 
                     <DagButton buttonText={"CONTINUE"} onClick={() => this.onSetWalletTypeClick()}></DagButton>
                 </View>
-            </Splash>
+            </MainPageLayout>
         );
     }
 }

@@ -4,12 +4,12 @@ import {
     StyleSheet, View, Image
 } from 'react-native';
 
-import { container } from "../styles/main";
+import BasePageLayout from "./basePageLayout";
 
-class Splash extends Component {
+class MainPageLayout extends Component {
     render() {
         return (
-            <View style={StyleSheet.flatten([container.p40, styles.container])}>
+            <BasePageLayout style={this.props.style}>
                 <View style={styles.contentContainer}>
                     {this.props.children}
                 </View>
@@ -17,16 +17,12 @@ class Splash extends Component {
                     <Image source={require('../../img/bgshape1.png')} style={styles.bgshape1}></Image>
                     <Image source={require('../../img/bgshape2.png')} style={styles.bgshape2}></Image>
                 </View>
-            </View>
+            </BasePageLayout>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fafafa'
-    },
     bgContainer: {
         position: 'absolute',
         zIndex: 0,
@@ -54,4 +50,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Splash;
+export default MainPageLayout;

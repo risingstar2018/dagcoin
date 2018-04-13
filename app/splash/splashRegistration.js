@@ -6,8 +6,8 @@ import {
 
 import DagButton from '../controls/dagButton';
 import DagRadioGroup from '../controls/dagRadioGroup';
-import { container, control, text, font } from "../styles/main";
-import Splash from "./splash";
+import { container, text, font } from "../styles/main";
+import MainPageLayout from "../general/mainPageLayout";
 
 class SplashRegistration extends Component {
     constructor(){
@@ -42,7 +42,7 @@ class SplashRegistration extends Component {
         ];
 
         return (
-            <Splash>
+            <MainPageLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size14, container.m20b])}>{"Please choose registration type".toUpperCase()}</Text>
 
@@ -52,7 +52,7 @@ class SplashRegistration extends Component {
 
                     <DagButton buttonText={"CONTINUE"} onClick={() => this.onSetRegistrationTypeClick()}></DagButton>
                 </View>
-            </Splash>
+            </MainPageLayout>
         );
     }
 }

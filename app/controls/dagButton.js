@@ -3,15 +3,14 @@ import React, { Component } from 'react';
 import {
     StyleSheet, TouchableOpacity, View, Text
 } from 'react-native';
+import {container} from "../styles/main";
 
 class DagButton extends Component {
     render() {
         return (
             <TouchableOpacity onPress={() => this.props.onClick()}
                               disabled={this.props.disabled}>
-                <View>
-                    <Text style={StyleSheet.flatten([styles.button, this.props.disabled ? styles.buttonDisabled : styles.buttonEnabled])}>{ this.props.buttonText }</Text>
-                </View>
+                <Text style={StyleSheet.flatten([styles.button, container.p15, this.props.style, this.props.disabled ? styles.disabled : styles.enabled])}>{ this.props.buttonText }</Text>
             </TouchableOpacity>
         );
     }
@@ -19,20 +18,19 @@ class DagButton extends Component {
 
 const styles = StyleSheet.create({
     button: {
-        color: '#fff',
-        padding: 15,
         textAlign: 'center',
+        color: '#fff',
         fontWeight: '600',
-        borderRadius: 5,
+        borderRadius: 5
     },
-    buttonEnabled: {
+    enabled: {
         backgroundColor: '#a8191e',
-        shadowColor: '#a8191e',
-        shadowOffset: { width: 1, height: -1 },
+        shadowColor: '#d51f26',
+        shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.8,
         shadowRadius: 2
     },
-    buttonDisabled: {
+    disabled: {
         backgroundColor: '#ccc'
     }
 });
