@@ -5,8 +5,8 @@ import {
 } from 'react-native';
 
 import DagButton from '../controls/dagButton';
-import Splash from './splash';
 import { container, text, font } from "../styles/main";
+import MainPageLayout from "../general/mainPageLayout";
 
 class SplashDeviceName extends Component {
     constructor(){
@@ -72,7 +72,7 @@ class SplashDeviceName extends Component {
 
     render() {
         return (
-            <Splash>
+            <MainPageLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size16])}>{"WELCOME TO DAGCOIN"}</Text>
                     <Text style={StyleSheet.flatten([text.textGray, font.weight200, font.size14])}>{"A wallet for decentralized value"}</Text>
@@ -81,7 +81,7 @@ class SplashDeviceName extends Component {
 
                     {this.renderSubView()}
                 </View>
-            </Splash>
+            </MainPageLayout>
         );
     }
 }
