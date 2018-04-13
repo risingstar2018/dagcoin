@@ -218,8 +218,8 @@ cp -af public/** $PROJECT/www
 checkOK
 
 echo -e "${OpenColor}${Green}* Copying initial database...${CloseColor}"
-cp node_modules/byteballcore/initial.byteball.sqlite $PROJECT/www
-cp node_modules/byteballcore/initial.byteball-light.sqlite $PROJECT/www
+cp node_modules/core/initial.byteball.sqlite $PROJECT/www
+cp node_modules/core/initial.byteball-light.sqlite $PROJECT/www
 checkOK
 
 sed "s/<\!-- PLACEHOLDER: CORDOVA SRIPT -->/<script type='text\/javascript' charset='utf-8' src='cordova.js'><\/script>/g" public/index.html > $PROJECT/www/index.html
