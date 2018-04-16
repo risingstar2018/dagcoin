@@ -2131,7 +2131,9 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     &.success {
       border-color: $green;
     }
+  }
 
+  input.ng-valid, textarea.ng-valid, select.ng-valid {
     &:focus {
       background: #fafafa;
       border-color: #999;
