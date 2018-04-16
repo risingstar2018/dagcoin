@@ -189,6 +189,7 @@
               note += ` Moved:${it.amount}`;
             }
             dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${formatString((amount / unitValue).toString())},dag`;
+            dataString = dataString.replace(/"/g, '');
             csvContent += `${dataString}\n`;
           });
 
