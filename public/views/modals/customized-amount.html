@@ -45,7 +45,7 @@
             ng-class="{'error': amountForm.amount.$invalid && !amountForm.amount.$error.required, 'success': !amountForm.amount.$invalid}"
             ng-attr-placeholder="{{'Amount'|translate}}"
             ng-model="_customAmount" required autocomplete="off"
-            min="0.000001" ng-minlength="1" ng-maxlength="16" normalize-amount>
+            min="0.000001" ng-minlength="1" ng-maxlength="16" input-validator>
             <svg class="icon icon-d">
               <use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
             </svg>

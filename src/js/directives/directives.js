@@ -260,40 +260,19 @@
     // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
     template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
   }))
-  .directive('normalizeAmount', ['utilityService', function (utilityService) {
-    return {
+  .directive('inputValidator', () => ({
       require: 'ngModel',
-      link: (scope, element, attrs, ctrl) => {
-        const normalizeAmount = function (inputValue) {
-          let normalized;
-          if (inputValue === undefined || inputValue === null) {
-            return '';
-          }
-
+      link(scope, element, attrs, ctrl) {
+        ctrl.$validators.inputValidator = function (inputValue) {
+          const ZERO_BEHIND_REGEX = /^0[^.]\d*/;
           // when amount is set by javascript (not by user action in form, set by barcode scan), element.val() returns ''
           // So that, below comparison is made
           let rawValue = element.val();
           rawValue = rawValue && rawValue !== '' ? rawValue : `${inputValue}`;
-
-          const attrMaxLength = attrs['ng-maxlength'];
-          const maxLength = attrMaxLength ? parseInt(attrMaxLength, 10) : 16;
-          normalized = utilityService.normalizeAmount(rawValue).substring(0, maxLength);
-          if (normalized !== inputValue) {
-            if (normalized.indexOf('.') >= 0) {
-              normalized = normalized.substring(0, normalized.indexOf('.') + 7);
-            }
-            if (normalized.charAt(normalized.length - 1) === '.') {
-              normalized = normalized.substring(0, normalized.length - 2);
-            }
-            ctrl.$setViewValue(normalized);
-            ctrl.$render();
-          }
-          return normalized;
+          return !ZERO_BEHIND_REGEX.test(rawValue);
         };
-        ctrl.$parsers.push(normalizeAmount);
-      }
-    };
-  }])
+      },
+    }))
   .directive('input', ['$interval', 'Device', elementFocusDirective])
   .directive('textarea', ['$interval', 'Device', elementFocusDirective])
   .directive('ngEnter', () => (scope, element, attrs) => {
