@@ -1832,9 +1832,11 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 .reveal-modal {
   overflow-y: auto;
   position: fixed;
-  height: 100%;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.5);
+  height: auto;
+  min-height: min-content;
+  margin: 20px;
+  width: 90%;
+  background: rgba(0, 0, 0, 0);
   color: #3e4042;
 
   .close_modal {
