@@ -15,6 +15,7 @@
      *  btx transaction
      *  walletSettings can be get from configService.getSync().wallet.settings
      *  indexScope $scope.indexScope
+     *  showMakeNewPayment if true MakeNewPayment button is displayed
      */
     root.openTxModal = function (params) {
       const btx = params.btx;
@@ -32,6 +33,7 @@
         $scope.btx = btx;
         $scope.settings = walletSettings;
         $scope.isCordova = utilityService.isCordova;
+        $scope.showMakeNewPayment = params.showMakeNewPayment;
 
         $scope.transactionAddress = function (address) {
           return root.getTransactionAddress(address);
@@ -58,6 +60,18 @@
           } catch (e) {
             // continue regardless of error
           }
+        };
+
+        $scope.makeNewPayment = function () {
+          const amount = btx.amount;
+          let receiverAddress;
+          if (btx.action === 'received') {
+            receiverAddress = btx.arrPayerAddresses[0];
+          } else if (btx.action === 'sent' || btx.action === 'moved') {
+            receiverAddress = btx.addressTo;
+          }
+          $modalInstance.dismiss('done');
+          $rootScope.$emit('paymentRequest', receiverAddress, amount, 'base');
         };
       };
 

@@ -186,7 +186,7 @@
             note = formatString(`${it.message ? it.message : ''} unit: ${it.unit}`);
 
             if (it.action === 'moved') {
-              note += ` Moved:${it.amount}`;
+              note += ` Moved:${it.amount / unitValue}`;
             }
             dataString = `${formatDate(it.time * 1000)},${formatString(it.addressTo)},${note},${formatString((amount / unitValue).toString())},dag`;
             dataString = dataString.replace(/"/g, '');
