@@ -833,7 +833,17 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
           $rootScope.tab = tab;
           self.tab = tab;
-          $state.go(tab, params);
+          if (sharedService.inJustShowReceiveAddressMode && tab !== 'wallet.receive') {
+            profileService.insistUnlockFC(null, (err) => {
+              if (!err) {
+                $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', () => { });
+                $state.go(tab, params);
+                $rootScope.$emit('Local/ResetVisibility', () => { });
+              }
+            });
+          } else {
+            $state.go(tab, params);
+          }
         });
 
         $rootScope.$on('Local/RequestTouchid', (event, client, cb) => {

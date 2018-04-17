@@ -10,9 +10,10 @@
   .module('copayApp.directives')
   .directive('dagPassword', dagPassword);
 
-  dagPassword.$inject = ['$rootScope', '$timeout', 'gettextCatalog', 'configService', 'profileService'];
+  dagPassword.$inject = ['$rootScope', '$timeout', '$modalStack', 'go', 'gettextCatalog', 'configService',
+    'profileService', 'sharedService'];
 
-  function dagPassword($rootScope, $timeout, gettextCatalog, configService, profileService) {
+  function dagPassword($rootScope, $timeout, $modalStack, go, gettextCatalog, configService, profileService, sharedService) {
     return {
       restrict: 'E',
       transclude: true,
@@ -71,6 +72,17 @@
           return self.validationErrors.length <= 0;
         };
 
+        self.showReceive = function () {
+          self.walletInfoVisibility.justShowReceive = true;
+          // const ap = self.askPassword;
+          self.askPassword = null;
+          go.path('wallet.receive');
+          $timeout(() => {
+            sharedService.askPasswordDisabledTemporarilyForReceive = true;
+            sharedService.inJustShowReceiveAddressMode = true;
+            }, 500);
+        };
+
         $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
           self.walletInfoVisibility.setPasswordSuccess(true);
           $timeout(() => { $rootScope.$apply(); });
@@ -93,9 +105,21 @@
               return cb(err, pass);
             }
           };
-          $timeout(() => {
-            $rootScope.$apply();
-          });
+        });
+
+        /**
+         * When click to received is clicked, some variables are set.
+         * If any restricted page is clicked password is requested again. In this case
+         * all variables according to click to receive event must be reset.
+         */
+        $rootScope.$on('Local/ResetVisibility', () => {
+          sharedService.askPasswordDisabledTemporarilyForReceive = null;
+          sharedService.inJustShowReceiveAddressMode = null;
+          self.walletInfoVisibility.justShowReceive = null;
+        });
+
+        $timeout(() => {
+          $rootScope.$apply();
         });
 
         /**
@@ -111,6 +135,7 @@
           if (!(self.walletInfoVisibility instanceof WalletInfoVisibility)) {
             self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
           }
+          self.showReceiveOnPassword = config.enableShowReceiveOnPassword;
         });
       }
     };

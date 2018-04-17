@@ -69,7 +69,8 @@
         },
       },
       autoUpdateWitnessesList: true,
-      logLevel: 'debug'
+      logLevel: 'debug',
+      enableShowReceiveOnPassword: false
     };
 
     let configCache = null;

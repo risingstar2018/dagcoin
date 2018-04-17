@@ -21,6 +21,10 @@
           <div translate>Set password</div>
           <switch id="network-name" name="encrypt" ng-model="security.encrypt" class="green right"></switch>
         </li>
+        <li class="cursor-default">
+          <div translate>Show Click to Receive</div>
+          <switch id="enableShowReceiveOnPassword" name="enableShowReceiveOnPassword" ng-model="security.enableShowReceiveOnPassword" class="green right"></switch>
+        </li>
         <li ng-show="security.touchidAvailable">
           <switch id="touchid" name="touchid" ng-model="security.touchid" class="green right"></switch>
           <div translate>Scan Fingerprint</div>

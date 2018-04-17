@@ -1911,6 +1911,14 @@ msgstr ""
 msgid "Download completed"
 msgstr ""
 
+#: preferencesSecurity.template.html:25
+msgid "Show Click to Receive"
+msgstr ""
+
+#: dagPassword.template.html:49
+msgid "Click to Receive"
+msgstr ""
+
 #: tx-details.html:128
 msgid "Make new payment"
 msgstr ""

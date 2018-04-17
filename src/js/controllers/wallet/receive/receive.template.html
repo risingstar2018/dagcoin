@@ -13,11 +13,11 @@
                 </span>
       </div>
 
-      <div ng-click="receive.copyAddress(receive.addr[index.walletId])"
-           ng-show="receive.addr[index.walletId] || receive.generatingAddress">
-        <dag-qr-code url="{{receive.protocol}}:{{receive.addr[index.walletId]}}"></dag-qr-code>
+      <div ng-click="receive.copyAddress(receive.addr[receive.walletId])"
+           ng-show="receive.addr[receive.walletId] || receive.generatingAddress">
+        <dag-qr-code url="{{receive.protocol}}:{{receive.addr[receive.walletId]}}"></dag-qr-code>
 
-        <div ng-show="home.generatingAddress" style="position:relative; top:-226px; height:0px">
+        <div ng-show="receive.generatingAddress" style="position:relative; top:-226px; height:0px">
           <div style="height:220px; width:220px; margin:auto; background: url(img/qr.png) white">
             <div class="spinner" style="margin-top:80px">
               <div class="rect1"></div>
@@ -36,12 +36,12 @@
       </div>
       <div class="m10t" ng-hide>
         <h4 ng-class="{'enable_text_select': !receive.isCordova}" class="size-12">
-          {{index.shared_address || (home.generatingAddress ? '...' : receive.addr[index.walletId])}}
+          {{index.shared_address || (receive.generatingAddress ? '...' : receive.addr[receive.walletId])}}
         </h4>
       </div>
     </div>
     <a class="size-14"
-       ng-click="receive.openCustomizedAmountModal(index.shared_address || receive.addr[index.walletId])">
+       ng-click="receive.openCustomizedAmountModal(index.shared_address || receive.addr[receive.walletId])">
       <span translate>Request a specific amount</span>
     </a>
   </div>

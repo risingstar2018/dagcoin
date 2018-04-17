@@ -22,9 +22,10 @@
     const viewContentLoaded = function () {
       const conf = require('core/conf.js');
       vm.addr = {};
-      vm.setAddress();
+      vm.walletId = indexScope.walletId;
       vm.isCordova = isCordova;
       vm.protocol = conf.program;
+      vm.setAddress();
     };
 
     function onNewWalletAddress(newAddress) {
@@ -163,6 +164,15 @@
         });
       });
     };
+
+    /**
+     * If click to swipe is clicked, just receive page is displayed.
+     * This wallet change event is triggered in dag left bar side component.
+     */
+    $rootScope.$on('Local/WalletChanged', (event, walletId) => {
+      vm.walletId = walletId;
+      vm.setAddress();
+    });
 
     $scope.$on('$viewContentLoaded', viewContentLoaded);
     $scope.$on('$destroy', destroy);
