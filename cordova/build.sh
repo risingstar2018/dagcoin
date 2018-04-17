@@ -10,21 +10,9 @@ CloseColor='\033[0m'
 # Check function OK
 checkOK() {
 	if [ $? != 0 ]; then
-		echo "${Red}* ERROR. Exiting...${CloseColor}"
+		echo -e "${Red}* ERROR. Exiting...${CloseColor}"
 		exit 1
 	fi
-}
-
-# Check cordova vesion, in order to run push notifications on android, cordova version must be 7.1.0
-checkCordovaVersion() {
-  if [ $CURRENT_OS == "ANDROID" ]; then
-    CordovaVersion=$(cordova -v)
-    if [ $CordovaVersion != "7.1.0" ]; then
-      echo -e "${Red}ERROR Cordova version must be 7.1.0 ${CloseColor}"
-      exit 1
-    fi
-  fi
-  echo -e "${Green}OK Cordova Version: ${CordovaVersion}${CloseColor}"
 }
 
 # Configs
@@ -33,8 +21,6 @@ PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 
 CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
-
-checkCordovaVersion
 
 if [ -z "CURRENT_OS" ]
 then
@@ -56,9 +42,9 @@ fi
 
 if $DBGJS
 then
-  UNIVERSAL_LINK_HOST=$(node -p -e "require('./environments/testnet.json').ENV.universalLinkHost")
+  UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/testnet.json').ENV.universalLinkHost")
 else
-  UNIVERSAL_LINK_HOST=$(node -p -e "require('./environments/live.json').ENV.universalLinkHost")
+  UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/live.json').ENV.universalLinkHost")
 fi
 echo -e "${Green}OK UNIVERSAL_LINK_HOST is set to ${UNIVERSAL_LINK_HOST}...${CloseColor}"
 
@@ -112,17 +98,8 @@ if [ ! -d $PROJECT ]; then
 	if [ $CURRENT_OS == "IOS" ]; then
 		cordova plugin add https://github.com/phonegap/phonegap-plugin-barcodescanner.git
 	else
-	  #commented because android-23 to 26
-		#cordova plugin add cordova-plugin-android-support-v4-jar
-		#checkOK
-		#cordova plugin add https://github.com/jrontend/phonegap-plugin-barcodescanner.git
-    cordova plugin add phonegap-plugin-barcodescanner@7.1.0
-		# cordova plugin add https://github.com/phonegap/phonegap-plugin-barcodescanner.git
+		phonegap plugin add phonegap-plugin-barcodescanner
 		checkOK
-		# cordova plugin add phonegap-plugin-barcodescanner@5.0.0
-		#cordova plugin add cordova-plugin-barcodescanner
-		#cordova plugin add cordova-plugin-qrscanner
-
 	fi
 	checkOK
 
@@ -188,25 +165,19 @@ if [ ! -d $PROJECT ]; then
 	  checkOK
 	fi
 
-	#phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
-	#checkOK
-
-	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
-	checkOK
-
-	cordova plugin add https://github.com/nordnet/cordova-universal-links-plugin.git
+	cordova plugin add cordova-universal-links-plugin
 	checkOK
 
 fi
 
 if $DBGJS
 then
-	echo "${Green}* Generating byteball bundle (debug js)...${CloseColor}"
+	echo -e "${Green}* Generating bundle (debug js)...${CloseColor}"
 	cd $BUILDDIR/..
 	grunt cordova:$4
 	checkOK
 else
-	echo "${Green}* Generating byteball bundle...${CloseColor}"
+	echo -e "${Green}* Generating bundle...${CloseColor}"
 	cd $BUILDDIR/..
 	#grunt cordova-prod byteball core has some error, so uglify doesn't work.
 	grunt cordova:$4
@@ -229,12 +200,11 @@ checkOK
 cd $BUILDDIR
 
 cp config.xml $PROJECT/config.xml
-UNIVERSAL_LINK_HOST_EXP='s/@UNIVERSAL_LINK_HOST/'${UNIVERSAL_LINK_HOST}'/g'
-sed -i ${UNIVERSAL_LINK_HOST_EXP} $PROJECT/config.xml
+sed  's/@UNIVERSAL_LINK_HOST/'${UNIVERSAL_LINK_HOST}'/g' config.xml > $PROJECT/config.xml
 checkOK
 
 if [ $CURRENT_OS == "ANDROID" ]; then
-	echo "Android project!!!"
+	echo -e "Android project!!!"
 
 	cat $BUILDDIR/android/android.css >> $PROJECT/www/css/dagcoin.css
 
@@ -286,24 +256,4 @@ if [ $CURRENT_OS == "IOS" ]; then
 #
 #  cp -R ios/splash/* $PROJECT/platforms/ios/Byteball/Resources/splash
 #  checkOK
-fi
-
-if [ $CURRENT_OS == "WP8" ]; then
-	echo "Wp8 project!!!"
-	cp -R $PROJECT/www/* $PROJECT/platforms/wp8/www
-	checkOK
-	if ! $CLEAR
-	then
-		cp -vf wp/Properties/* $PROJECT/platforms/wp8/Properties/
-		checkOK
-		cp -vf wp/MainPage.xaml $PROJECT/platforms/wp8/
-		checkOK
-		cp -vf wp/Package.appxmanifest $PROJECT/platforms/wp8/
-		checkOK
-		cp -vf wp/Assets/* $PROJECT/platforms/wp8/Assets/
-		cp -vf wp/SplashScreenImage.jpg $PROJECT/platforms/wp8/
-		cp -vf wp/ApplicationIcon.png $PROJECT/platforms/wp8/
-		cp -vf wp/Background.png $PROJECT/platforms/wp8/
-		checkOK
-	fi
 fi
