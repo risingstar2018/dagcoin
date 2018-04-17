@@ -10,7 +10,7 @@
         ng-repeat="item in sidebar.wallets track by $index"
         ng-class="{'selected': item.id == index.walletId}"
         class="wallets">
-      <a ng-click="sidebar.switchWallet(item.id, index.walletId, 'wallet.home');">
+      <a ng-click="sidebar.switchWallet(item.id, index.walletId, !pass.walletInfoVisibility.justShowReceive ? 'wallet.home' : 'wallet.receive');">
         <div class="avatar-wallet" ng-style="{'background-color':item.color}">
           {{(item.name || item.id) | limitTo: 1}}
         </div>
@@ -18,12 +18,13 @@
         <div class="size-12" ng-show="item.n > 1" translate>{{item.m}}-of-{{item.n}}</div>
       </a>
 
-      <div class="custom_edit_icon" ng-click="sidebar.switchWalletOpenPreferences(item.id, index.walletId);">
+      <div class="custom_edit_icon" ng-click="sidebar.switchWalletOpenPreferences(item.id, index.walletId);"
+        ng-show="!pass.walletInfoVisibility.justShowReceive">
         <span></span></div>
     </li>
   </ul>
 
-  <ul class="off-canvas-list">
+  <ul class="off-canvas-list" ng-show="!pass.walletInfoVisibility.justShowReceive">
     <li class="menu_links">
       <a ui-sref="create">
         <i class="fi-plus size-24 icon"></i>

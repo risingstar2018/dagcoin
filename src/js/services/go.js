@@ -48,8 +48,8 @@
           if (cb) {
             return cb();
           }
-        }, () => {
-          console.log(`transition failed ${path}`);
+        }, (err) => {
+          console.log(`transition failed ${path}, err: ${err}`);
           if (cb) {
             return cb('animation in progress');
           }
@@ -353,8 +353,8 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
-    const eventBus = require('core/event_bus.js');
-    const exHandler = (exception, cause) => {
+      const eventBus = require('core/event_bus.js');
+      const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
         eventBus.emit('uncaught_error', `An e xception occurred: ${exception}; cause: ${cause}`, exception);
@@ -380,10 +380,12 @@
     eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
   };
 
-  /*
   process.on('uncaughtException', (e) => {
-    console.log('uncaughtException');
+    if (e.stack) {
+      console.error('uncaughtException: ', e.stack);
+    } else {
+      console.error('uncaughtException: ', e);
+    }
     eventBus.emit('uncaught_error', `Uncaught exception: ${e}`, e);
   });
-  */
 }());

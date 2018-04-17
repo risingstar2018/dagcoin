@@ -1,7 +1,8 @@
 <dag-backup-notification ng-if="pass.walletInfoVisibility.visible && index.needsBackup">
 </dag-backup-notification>
 
-<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}" ng-show="pass.walletInfoVisibility.visible">
+<dag-nav-bar title="{{index.alias ? index.alias : index.walletName}}"
+             ng-show="pass.walletInfoVisibility.visible || pass.walletInfoVisibility.justShowReceive">
   <qr-scanner ng-if="tab === 'wallet.send' && index.isComplete"
               on-scan="index.onQrCodeScanned(data)"
               title="{{ 'Scan address' | translate }}">

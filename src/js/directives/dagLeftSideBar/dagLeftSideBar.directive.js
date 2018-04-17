@@ -9,9 +9,10 @@
   .module('copayApp.directives')
   .directive('dagLeftSideBar', dagLeftSideBar);
 
-  dagLeftSideBar.$inject = ['$rootScope', 'lodash', 'profileService', 'configService', 'backButton', '$state', 'utilityService', 'Device'];
+  dagLeftSideBar.$inject = ['$rootScope', 'lodash', 'profileService', 'configService', 'backButton', '$state', 'utilityService',
+    'Device', 'sharedService'];
 
-  function dagLeftSideBar($rootScope, lodash, profileService, configService, backButton, $state, utilityService, Device) {
+  function dagLeftSideBar($rootScope, lodash, profileService, configService, backButton, $state, utilityService, Device, sharedService) {
     return {
       restrict: 'E',
       transclude: true,
@@ -49,8 +50,11 @@
           }
           self.walletSelection = false;
           return profileService.setAndStoreFocus(selectedWalletId, () => {
-            $state.go(state);
-            $rootScope.$emit('Local/SetTab', state);
+            if (sharedService.inJustShowReceiveAddressMode) {
+              $rootScope.$emit('Local/WalletChanged', selectedWalletId);
+            } else {
+              $rootScope.$emit('Local/SetTab', state);
+            }
           });
         };
 
