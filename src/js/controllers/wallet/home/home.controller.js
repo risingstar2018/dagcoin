@@ -11,7 +11,7 @@
   function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash, go) {
     const vm = this;
     const breadcrumbs = require('core/breadcrumbs.js');
-    vm.balanceIsHidden = true;
+    vm.balanceIsHidden = $rootScope.balanceIsHidden;
 
     const viewContentLoaded = function () {
       go.redirectToTabIfNeeded();
@@ -155,10 +155,12 @@
     };
 
     vm.showBalance = () => {
+      $rootScope.balanceIsHidden = false;
       vm.balanceIsHidden = false;
     };
 
     vm.hideBalance = () => {
+      $rootScope.balanceIsHidden = true;
       vm.balanceIsHidden = true;
     };
 

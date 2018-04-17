@@ -1910,3 +1910,7 @@ msgstr ""
 #: csvHistory method
 msgid "Download completed"
 msgstr ""
+
+#: tx-details.html:128
+msgid "Make new payment"
+msgstr ""

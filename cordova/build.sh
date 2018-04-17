@@ -116,7 +116,8 @@ if [ ! -d $PROJECT ]; then
 		#cordova plugin add cordova-plugin-android-support-v4-jar
 		#checkOK
 		#cordova plugin add https://github.com/jrontend/phonegap-plugin-barcodescanner.git
-		cordova plugin add https://github.com/phonegap/phonegap-plugin-barcodescanner.git
+    cordova plugin add phonegap-plugin-barcodescanner@7.1.0
+		# cordova plugin add https://github.com/phonegap/phonegap-plugin-barcodescanner.git
 		checkOK
 		# cordova plugin add phonegap-plugin-barcodescanner@5.0.0
 		#cordova plugin add cordova-plugin-barcodescanner
@@ -125,7 +126,7 @@ if [ ! -d $PROJECT ]; then
 	fi
 	checkOK
 
-	cordova plugin add cordova-plugin-splashscreen
+	cordova plugin add cordova-plugin-splashscreen@5.0.2
 	checkOK
 
 	cordova plugin add cordova-plugin-statusbar
@@ -193,7 +194,7 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
 	checkOK
 
-	cordova plugin add cordova-universal-links-plugin
+	cordova plugin add https://github.com/nordnet/cordova-universal-links-plugin.git
 	checkOK
 
 fi
