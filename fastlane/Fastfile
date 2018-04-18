@@ -1,0 +1,41 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+setup_travis
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Submit a new Build with testnet configuration to hockey app"
+  lane :beta do
+
+    sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
+
+    sh "cd ../../byteballbuilds/project-ANDROID && cordova build android"
+
+
+    apk_location = sh('cd ../../byteballbuilds/project-ANDROID/platforms/android/build/outputs/apk/ && echo "$(pwd)/android-debug.apk\c"')
+    # This '\c' at the end of the line needed to remove the last character (new line) from the echo result. Path is not recognizable by hokey plugin with it.
+
+    hockey(
+      api_token: ENV['HOCKEY_TOKEN'],
+      notes: "Package is built from " + sh("git rev-parse --abbrev-ref HEAD"),
+      release_type: "beta",
+      apk: "#{apk_location.to_s}"
+    )
+
+    slack(
+      message: "Successfully deployed new Android app. Package is built from " + sh("git rev-parse --abbrev-ref HEAD"),
+      slack_url: ENV['SLACK_URL']
+    )
+  end
+end
