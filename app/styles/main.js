@@ -136,6 +136,9 @@ const font = StyleSheet.create({
     size16: {
         fontSize: 16
     },
+    size24: {
+        fontSize: 24
+    },
     weight400: {
         fontWeight: '400'
     },
