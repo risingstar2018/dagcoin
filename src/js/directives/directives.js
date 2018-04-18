@@ -266,8 +266,8 @@
     require: 'ngModel',
     link(scope, element, attrs, ctrl) {
       function eventIsNumeric(e) {
-        const charCode = (typeof e.which === 'number') ? e.which : e.keyCode;
-        return (charCode >= 48 && charCode <= 57) || e.key === '.' || e.key === ',';
+        const charCode = parseInt(e.key, 10);
+        return (charCode >= 0 && charCode <= 9) || e.key === '.' || e.key === ',';
       }
 
       element.bind('keydown', (e) => {

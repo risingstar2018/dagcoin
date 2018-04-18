@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: setup_travis" time="0.013664">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000813">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: ../cordova/build.sh ANDROID dagcoin --dbgjs testnet" time="14.137676">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: cd ../../byteballbuilds/project-ANDROID &amp;&amp; cordova build android" time="3.502288">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: cd ../../byteballbuilds/project-ANDROID/platforms/android/build/outputs/apk/ &amp;&amp; echo &quot;$(pwd)/android-debug.apk\c&quot;" time="0.006732">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: git rev-parse --abbrev-ref HEAD" time="0.010192">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="6: hockey" time="14.008331">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="7: git rev-parse --abbrev-ref HEAD" time="0.020619">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="8: slack" time="0.383703">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

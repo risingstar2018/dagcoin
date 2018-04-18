@@ -11,8 +11,8 @@
     const isCordova = Device.cordova;
     return {
       modalAnimated: {
-        slideUp: isCordova ? 'full animated slideInUp' : 'tiny',
-        slideRight: isCordova ? 'full animated slideInRight' : 'tiny',
+        slideUp: isCordova ? 'tiny animated slideInUp' : 'tiny',
+        slideRight: isCordova ? 'tiny animated slideInRight' : 'tiny',
         slideOutDown: isCordova ? 'slideOutDown' : 'hideModal',
         slideOutRight: isCordova ? 'slideOutRight' : 'hideModal'
       }
