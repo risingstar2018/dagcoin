@@ -40,7 +40,7 @@ class IntroScreen extends Component {
                     <Button onClick={this.changeSlide.bind(this, 1)} style={container.m15l}/>
                     <Button onClick={this.changeSlide.bind(this, 2)} style={container.m15l}/>
                 </View>
-                <View style={StyleSheet.flatten([container.m40t, container.m40t, styles.nextButton])}>
+                <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
                     <DagButton onClick={this.changeSlide.bind(this, 1)} style={styles.nextButton} buttonText={"GOT IT"}></DagButton>
                 </View>
             </View>,
@@ -61,7 +61,7 @@ class IntroScreen extends Component {
                     <Button onClick={this.changeSlide.bind(this, 1)} style={StyleSheet.flatten([container.m15l, styles.enabled])}/>
                     <Button onClick={this.changeSlide.bind(this, 2)} style={container.m15l}/>
                 </View>
-                <View style={StyleSheet.flatten([container.m40t, container.m40t, styles.nextButton])}>
+                <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
                     <DagButton onClick={this.changeSlide.bind(this, 2)} style={styles.nextButton} buttonText={"AWESOME"}></DagButton>
                 </View>
             </View>,
@@ -82,7 +82,7 @@ class IntroScreen extends Component {
                     <Button onClick={this.changeSlide.bind(this, 1)} style={container.m15l}/>
                     <Button onClick={this.changeSlide.bind(this, 2)} style={StyleSheet.flatten([container.m15l, styles.enabled])}/>
                 </View>
-                <View style={StyleSheet.flatten([container.m40t, container.m40t, styles.nextButton])}>
+                <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
                     <DagButton onClick={this.navigate.bind(this)} buttonText={"CREATE WALLET"}></DagButton>
                 </View>
             </View>
