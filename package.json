@@ -16,6 +16,7 @@
     "react-native": "^0.55.2",
     "react-native-cli": "^2.0.1",
     "react-native-radio-buttons": "1.0.0",
+    "react-native-tab-view": "0.0.77",
     "react-native-web": "^0.4.0",
     "react-navigation": "^1.5.11",
     "react-redux": "^5.0.7",
