@@ -8,6 +8,7 @@ module.exports = {
         contentBase: path.join(__dirname, 'src'),
         historyApiFallback: true
     },
+    devtool: 'source-map',
     entry: [
         path.join(__dirname, '../index.web.js')
     ],
@@ -44,7 +45,8 @@ module.exports = {
             path.join(__dirname, '..', 'node_modules')
         ],
         alias: {
-            'react-native': 'react-native-web'
+            'react-native': 'react-native-web',
+            'Navigator': path.resolve(__dirname, '../app/routers/navigatorWeb')
         }
     }
 };

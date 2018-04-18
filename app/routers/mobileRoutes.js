@@ -1,6 +1,6 @@
 import { StackNavigator } from 'react-navigation';
 
-import Intro from "../intro/index";
+import Intro from "../intro/introScreen";
 
 const router = StackNavigator(
     {
@@ -13,6 +13,5 @@ const router = StackNavigator(
         mode: 'modal'
     }
 );
-
 
 export default router;

@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'found';
-import Intro from "../intro/index";
+
+import Intro from "../intro/introScreen";
 import SplashRegistration from "../splash/splashRegistration";
 import SplashWalletType from "../splash/splashWalletType";
 import SplashDeviceName from "../splash/splashDeviceName";
@@ -11,11 +12,16 @@ import AboutDagcoinSettings from "../settings/aboutDagcoin/aboutDagcoinSettings"
 import Terms from "../terms/terms";
 import SecuritySettings from "../settings/security/securitySettings";
 import BackupSettings from "../settings/security/backup/backupSettings";
+import ConfirmationScreen from "../intro/confirmationScreen";
 
 const routeConfig = [
     {
         path: '/',
         Component: Intro
+    },
+    {
+        path: '/confirmation',
+        Component: ConfirmationScreen
     },
     {
         path: '/splash/registration',
