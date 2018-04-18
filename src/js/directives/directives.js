@@ -63,6 +63,8 @@
     };
   }
 
+  const DAG_AMOUNT_REGEX = /^[\d]{1,10}(\.[\d]{1,6})?$/;
+
   angular.module('copayApp.directives')
   .directive('validUrl', [
 
@@ -261,18 +263,35 @@
     template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
   }))
   .directive('inputValidator', () => ({
-      require: 'ngModel',
-      link(scope, element, attrs, ctrl) {
-        ctrl.$validators.inputValidator = function (inputValue) {
-          const ZERO_BEHIND_REGEX = /^0[^.]\d*/;
-          // when amount is set by javascript (not by user action in form, set by barcode scan), element.val() returns ''
-          // So that, below comparison is made
-          let rawValue = element.val();
-          rawValue = rawValue && rawValue !== '' ? rawValue : `${inputValue}`;
-          return !ZERO_BEHIND_REGEX.test(rawValue);
-        };
-      },
-    }))
+    require: 'ngModel',
+    link(scope, element, attrs, ctrl) {
+      function eventIsNumeric(e) {
+        const charCode = (typeof e.which === 'number') ? e.which : e.keyCode;
+        return (charCode >= 48 && charCode <= 57) || e.key === '.' || e.key === ',';
+      }
+
+      element.bind('keydown', (e) => {
+        const attrMaxLength = attrs['ng-maxlength'];
+        const maxLength = attrMaxLength ? parseInt(attrMaxLength, 10) : 16;
+        const charIsNumeric = eventIsNumeric(e);
+        const rawValue = element.val();
+        const newValue = rawValue + (charIsNumeric ? e.key : '');
+
+        if (charIsNumeric && (newValue.length > maxLength || (e.key !== '.' && e.key !== ',' && !DAG_AMOUNT_REGEX.test(newValue)))) {
+          e.preventDefault();
+        }
+      });
+
+      ctrl.$validators.inputValidator = function (inputValue) {
+        const ZERO_BEHIND_REGEX = /^0[^.]\d*/;
+        // when amount is set by javascript (not by user action in form, set by barcode scan), element.val() returns ''
+        // So that, below comparison is made
+        let rawValue = element.val();
+        rawValue = rawValue && rawValue !== '' ? rawValue : `${inputValue}`;
+        return !ZERO_BEHIND_REGEX.test(rawValue) && DAG_AMOUNT_REGEX.test(rawValue);
+      };
+    },
+  }))
   .directive('input', ['$interval', 'Device', elementFocusDirective])
   .directive('textarea', ['$interval', 'Device', elementFocusDirective])
   .directive('ngEnter', () => (scope, element, attrs) => {
