@@ -11,6 +11,7 @@ import AboutDagcoinSettings from "../settings/aboutDagcoin/aboutDagcoinSettings"
 import Terms from "../terms/terms";
 import SecuritySettings from "../settings/security/securitySettings";
 import BackupSettings from "../settings/security/backup/backupSettings";
+import RecoverSettings from "../settings/security/recover/recoverSettings";
 
 const routeConfig = [
     {
@@ -48,6 +49,10 @@ const routeConfig = [
     {
         path: '/settings/security/backup',
         Component: BackupSettings
+    },
+    {
+        path: '/settings/security/recovery',
+        Component: RecoverSettings
     },
     {
         path: '/settings/about-device',

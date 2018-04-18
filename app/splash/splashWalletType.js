@@ -16,9 +16,6 @@ class SplashWalletType extends Component {
         this.state = {
             selectedType: 'light'
         };
-
-        this.onSetWalletTypeClick = this.onSetWalletTypeClick.bind(this);
-        this.onWalletTypeChange = this.onWalletTypeChange.bind(this)
     }
 
     onSetWalletTypeClick() {
@@ -56,10 +53,10 @@ class SplashWalletType extends Component {
                     <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size14, container.m20b])}>{"Please choose the type of this wallet".toUpperCase()}</Text>
 
                     <DagRadioGroup options={options}
-                                   onSelect={(index, value) => this.onWalletTypeChange(index, value)}
+                                   onSelect={this.onWalletTypeChange.bind(this)}
                                    selectedOption={this.state.selectedType}></DagRadioGroup>
 
-                    <DagButton buttonText={"CONTINUE"} onClick={() => this.onSetWalletTypeClick()}></DagButton>
+                    <DagButton buttonText={"CONTINUE"} onClick={this.onSetWalletTypeClick.bind(this)}></DagButton>
                 </View>
             </MainPageLayout>
         );

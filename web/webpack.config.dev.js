@@ -46,5 +46,6 @@ module.exports = {
         alias: {
             'react-native': 'react-native-web'
         }
-    }
+    },
+    devtool: 'source-map'
 };
