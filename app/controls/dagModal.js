@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 
 import {
-    StyleSheet, Switch
+    Modal, Text, StyleSheet
 } from 'react-native';
 
-class DagSwitch extends Component {
+class DagModal extends Component {
     constructor() {
         super();
     }
 
     render() {
         return (
-            <Switch style={this.props.style} value={this.props.value} onValueChange={this.props.onValueChange} />
+            <Modal visible={this.props.visible}>
+                {this.props.children}
+            </Modal>
         );
     }
 }
@@ -20,4 +22,6 @@ const styles = StyleSheet.create({
 
 });
 
-export default DagSwitch;
+export default DagModal;
+
+
