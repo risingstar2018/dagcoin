@@ -16,9 +16,6 @@ class SplashRegistration extends Component {
         this.state = {
             selectedType: 'default'
         };
-
-        this.onSetRegistrationTypeClick = this.onSetRegistrationTypeClick.bind(this);
-        this.onRegistrationTypeChange = this.onRegistrationTypeChange.bind(this)
     }
 
     onSetRegistrationTypeClick() {
@@ -47,10 +44,10 @@ class SplashRegistration extends Component {
                     <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size14, container.m20b])}>{"Please choose registration type".toUpperCase()}</Text>
 
                     <DagRadioGroup options={options}
-                                   onSelect={(value) => this.onRegistrationTypeChange(value)}
+                                   onSelect={this.onRegistrationTypeChange.bind(this)}
                                    selectedOption={this.state.selectedType}></DagRadioGroup>
 
-                    <DagButton buttonText={"CONTINUE"} onClick={() => this.onSetRegistrationTypeClick()}></DagButton>
+                    <DagButton buttonText={"CONTINUE"} onClick={this.onSetRegistrationTypeClick.bind(this)}></DagButton>
                 </View>
             </MainPageLayout>
         );

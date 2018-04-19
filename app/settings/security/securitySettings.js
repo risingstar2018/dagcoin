@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 
 import {
-    Platform, StyleSheet, Text, Switch
+    Platform, StyleSheet, Text
 } from 'react-native';
 
-import {container} from "../../styles/main";
+import {container, text} from "../../styles/main";
 import DagListView from "../../controls/dagListView/dagListView";
 import SettingsPageLayout from "../settingsPageLayout";
+import DagSwitch from "../../controls/dagSwitch";
 
 class SecuritySettings extends Component {
     constructor() {
@@ -37,7 +38,7 @@ class SecuritySettings extends Component {
 
     renderBackupWarning() {
         if (this.state.needBackup) {
-            return (<Text style={StyleSheet.flatten([styles.backupWarning, container.p10r])}>
+            return (<Text style={StyleSheet.flatten([text.textRed, container.p10r])}>
                 Still not done
             </Text>);
         }
@@ -46,11 +47,11 @@ class SecuritySettings extends Component {
     }
 
     renderPasswordSwitch() {
-        return (<Switch value={this.state.setPassword} onValueChange={this.onSetPasswordChanged} />);
+        return (<DagSwitch value={this.state.setPassword} onValueChange={this.onSetPasswordChanged} />);
     }
 
     renderFingerprintSwitch() {
-        return (<Switch value={this.state.setFingerprint} onValueChange={this.onSetFingerprintChanged} />);
+        return (<DagSwitch value={this.state.setFingerprint} onValueChange={this.onSetFingerprintChanged} />);
     }
 
     render() {
@@ -98,9 +99,7 @@ class SecuritySettings extends Component {
 }
 
 const styles = StyleSheet.create({
-    backupWarning: {
-        color: 'rgb(237, 74, 67)'
-    }
+
 });
 
 export default SecuritySettings;

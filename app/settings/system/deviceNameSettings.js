@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, Text, View, TextInput
+    StyleSheet, Text, View
 } from 'react-native';
 
 import {container, text, font} from "../../styles/main";
 import SettingsPageLayout from "../settingsPageLayout";
 import DagButton from "../../controls/dagButton";
+import DagTextInput  from "../../controls/dagTextInput";
+import {validators} from "../../controls/dagForm";
+import DagForm from "../../controls/dagForm";
 
 class DeviceNameSettings extends Component {
     constructor() {
@@ -15,9 +18,6 @@ class DeviceNameSettings extends Component {
         this.state = {
             deviceName: 'Stub Device Name'
         };
-
-        this.onSaveClick = this.onSaveClick.bind(this);
-        this.onDeviceNameChange = this.onDeviceNameChange.bind(this);
     }
 
     onSaveClick() {
@@ -35,14 +35,14 @@ class DeviceNameSettings extends Component {
             <SettingsPageLayout canBack={true} title={'Device Name'.toUpperCase()}>
                 <View style={styles.container}>
                     <View style={StyleSheet.flatten([styles.controlsContainer, container.p40t, container.p40l, container.p40r, container.m20b])}>
-                        <Text style={StyleSheet.flatten([text.textGray, font.weight700, font.size11])}>Device name</Text>
+                        <Text style={StyleSheet.flatten([text.textGray, font.weight700, font.size11])}></Text>
 
-                        <TextInput
-                            style={StyleSheet.flatten([container.m20b, container.m5t, styles.input, font.size14])}
-                            onChangeText={(text) => this.onDeviceNameChange(text)}
-                            value={this.state.deviceName}
-                        />
-                        <DagButton buttonText={"SAVE"} disabled={!this.state.deviceName} onClick={() => this.onSaveClick()}></DagButton>
+                        <DagForm>
+                            <DagTextInput label={'Device name'} validators={[validators.required()]} style={StyleSheet.flatten([container.m20b])}
+                                          onValueChange={this.onDeviceNameChange.bind(this)}
+                                          value={this.state.deviceName}/>
+                            <DagButton buttonText={"SAVE"} type={'submit'} onClick={this.onSaveClick.bind(this)} />
+                        </DagForm>
                     </View>
 
                     <Text style={StyleSheet.flatten([text.textGray, font.weight700, font.size11])}>Device name is visible to other devices you communicate with.</Text>

@@ -48,5 +48,6 @@ module.exports = {
             'react-native': 'react-native-web',
             'Navigator': path.resolve(__dirname, '../app/routers/navigatorWeb')
         }
-    }
+    },
+    devtool: 'source-map'
 };

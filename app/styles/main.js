@@ -67,6 +67,9 @@ const container = StyleSheet.create({
     p40: {
         padding: 40
     },
+    p10t: {
+        paddingTop: 10
+    },
     p15t: {
         paddingTop: 15
     },
@@ -79,11 +82,17 @@ const container = StyleSheet.create({
     p10l: {
         paddingLeft: 10
     },
+    p15l: {
+        paddingLeft: 15
+    },
     p40l: {
         paddingLeft: 40
     },
     p10r: {
         paddingRight: 10
+    },
+    p15r: {
+        paddingRight: 15
     },
     p40r: {
         paddingRight: 40
@@ -96,6 +105,9 @@ const container = StyleSheet.create({
 const text = StyleSheet.create({
     textGray: {
         color: '#8597a7'
+    },
+    textRed: {
+        color: '#d51f26'
     },
     textLeft: {
         textAlign: 'left'

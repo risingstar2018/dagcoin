@@ -6,11 +6,27 @@ import {
 import {container} from "../styles/main";
 
 class DagButton extends Component {
+    constructor() {
+        super();
+
+        this.renderContent = this.renderContent.bind(this);
+    }
+
+    renderContent() {
+        if (this.props.children) {
+            return this.props.children;
+        } else {
+            return (<Text style={StyleSheet.flatten([styles.button, container.p15, this.props.style, this.props.disabled ? styles.disabled : styles.enabled])}>
+                { this.props.buttonText }
+                </Text>);
+        }
+    }
+
     render() {
         return (
             <TouchableOpacity onPress={() => this.props.onClick()}
                               disabled={this.props.disabled}>
-                <Text style={StyleSheet.flatten([styles.button, container.p15, this.props.style, this.props.disabled ? styles.disabled : styles.enabled])}>{ this.props.buttonText }</Text>
+                {this.renderContent()}
             </TouchableOpacity>
         );
     }
