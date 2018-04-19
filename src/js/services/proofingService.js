@@ -382,7 +382,7 @@
 
       const eventBus = require('byteballcore/event_bus.js');
 
-      eventBus.on('dagcoin.request.have-dagcoins', (request, fromAddress) => {
+      eventBus.on('dagcoin.request.have-dagcoins', (fromAddress, request) => {
         console.log(`NEW DAGCOIN CARRYING ADDRESS LIST REQUEST FROM ${fromAddress}: ${JSON.stringify(request)}`);
 
         const response = {};
@@ -412,7 +412,7 @@
         );
       });
 
-      eventBus.on('dagcoin.request.proofing', (request, fromAddress) => {
+      eventBus.on('dagcoin.request.proofing', (fromAddress, request) => {
         console.log(`NEW PROOFING REQUEST FROM ${fromAddress}: ${JSON.stringify(request)}`);
 
         const response = {};
