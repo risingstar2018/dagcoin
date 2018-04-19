@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View
+    StyleSheet, View, Text
 } from 'react-native';
+import {container, font, text} from "../styles/main";
 
 const validators = {
     required: (error) => (text) => {
@@ -33,10 +34,13 @@ const validate = (value, validators) => {
 };
 
 const validateChilds = (children) => {
-    if (children.props && children.props.validators) {
+    if (children.props && children.props.validators) { //check validators
         const validationResult = validate(children.props.value, children.props.validators);
         return validationResult.isValid;
-    } else if (children.length) {
+    } else if (children.props && children.props.children && children.props.children.filter) { //nested childrens
+        const validationResult = children.props.children.filter((c) => validateChilds(c)).length === children.props.children.length;
+        return validationResult;
+    } else if (children.length) { //root childrens
         const validationResult = children.filter((c) => validateChilds(c)).length === children.length;
         return validationResult;
     } else {
@@ -55,6 +59,7 @@ class DagForm extends Component {
         this.validate = this.validate.bind(this);
         this.onFormChange = this.onFormChange.bind(this);
         this.submit = this.submit.bind(this);
+        this.renderErrors = this.renderErrors.bind(this);
         this.renderWrappedComponents = this.renderWrappedComponents.bind(this);
     }
 
@@ -63,7 +68,7 @@ class DagForm extends Component {
             isSubmitted: true
         });
 
-        const isValid = this.validate();
+        const isValid = this.validate(true);
 
         if (!isValid) {
             return;
@@ -78,21 +83,57 @@ class DagForm extends Component {
         this.validate();
     }
 
-    validate() {
-        return validateChilds(this.props.children);
+    validate(isSubmitted) {
+        const isFormValid = !isSubmitted || validate(null, this.props.validators).isValid;
+        const isChildrenValid = validateChilds(this.props.children);
+        return isFormValid && isChildrenValid;
+    }
+
+    renderErrors() {
+        if (!this.state.isSubmitted){
+            return null;
+        }
+
+        const formValidationResult = validate(null, this.props.validators);
+
+        if (formValidationResult.isValid || !(formValidationResult.errors && formValidationResult.errors.length)) {
+            return null;
+        }
+
+        return (
+            <View style={container.m15b}>
+                {formValidationResult.errors.map((err, i) => {
+                    return (
+                        <Text key={'form-error-'+i} style={StyleSheet.flatten([text.textRed, font.size10, font.weight700, container.m5t, this.props.errorStyle])}>
+                            {err}
+                        </Text>
+                    );
+                })}
+            </View>);
     }
 
     renderWrappedComponents() {
-        const isValid = validateChilds(this.props.children);
+        const isValid = this.validate(this.state.isSubmitted);
 
-        const wrappedControls = React.Children.map(this.props.children, (child) => {
+        const wrappedControls = (child) => {
+            if (!child) {
+                return null;
+            }
+
+            if (!child.props) {
+                return child;
+            }
+
             if (child.props.validators) {
                 const validationResult = validate(child.props.value, child.props.validators);
 
                 return React.cloneElement(child, {
                     errors: validationResult.errors,
                     invalid: !validationResult.isValid,
-                    isSubmitted: this.state.isSubmitted
+                    isSubmitted: this.state.isSubmitted,
+                    children: React.Children.map(child.props.children, (c) => {
+                        return wrappedControls(c);
+                    })
                 });
             }
 
@@ -101,19 +142,29 @@ class DagForm extends Component {
                     onClick: () => {
                         this.submit(child.props.onClick);
                     },
-                    disabled: !isValid
+                    disabled: !isValid,
+                    children: React.Children.map(child.props.children, (c) => {
+                        return wrappedControls(c);
+                    })
                 });
             }
 
-            return child;
-        });
+            return React.cloneElement(child, {
+                children: React.Children.map(child.props.children, (c) => {
+                    return wrappedControls(c);
+                })
+            });
+        };
 
-        return wrappedControls;
+        return React.Children.map(this.props.children, (c) => {
+            return wrappedControls(c);
+        });
     }
 
     render() {
         return (
             <View style={StyleSheet.flatten([styles.container, this.props.style])}>
+                {this.renderErrors()}
                 {this.renderWrappedComponents()}
             </View>
         );
