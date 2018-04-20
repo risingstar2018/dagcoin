@@ -2,7 +2,7 @@
   <div class="p-wallet js-introduction">
     <div class="p-wallet__price-block">
       <div ng-if="!index.anyOnGoingProcess || 1">
-        <div ng-show="index.walletScanStatus != 'error' && !homeCtrl.balanceIsHidden"
+        <div ng-show="index.walletScanStatus != 'error' && !homeCtrl.balanceIsHidden && !homeCtrl.balanceIsZero()"
              ng-click='index.updateAll(); homeCtrl.updateHistoryFromNetwork()'
              on-long-press="homeCtrl.hideBalance()" long-press-duration="1200">
           <div class="price-wrapper">
@@ -45,7 +45,7 @@
           </div>
           <span class="hint-span" translate>Tap and hold balance to hide it</span>
         </div>
-        <div class="hidden-balance" ng-show="homeCtrl.balanceIsHidden">
+        <div class="hidden-balance" ng-show="homeCtrl.balanceIsHidden && !homeCtrl.balanceIsZero()">
           <div class="hidden-balance-icon" on-long-press="homeCtrl.showBalance()" 
              prevent-click="true" long-press-duration="1200">
             <svg-icon name="hidden"></svg-icon>
@@ -53,10 +53,15 @@
           <p translate>Balance hidden</p>
           <span class="hint-span" translate>Tap and hold icon to make visible</span>
         </div>
+        <div class="start-sending" ng-show="homeCtrl.balanceIsZero()">
+          <div class="start-sending-icon">
+            <svg-icon name="paperplane-buy"></svg-icon>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="dag_transactions row m20t text-gray text-center" ng-if="index.updatingTxHistory">
+    <div class="dag_transactions row m20t text-gray text-center" ng-if="index.updatingTxHistory" ng-show="!homeCtrl.balanceIsZero()">
       <div ng-if="index.txProgress > 6">
         <div translate class="oh text-center p20 text-gray">
           Initial transaction history synchronization can take some minutes for wallets with many transactions.<br/>
@@ -77,14 +82,26 @@
         <button class="btn btn_red tiny" translate>Tap to retry</button>
       </div>
     </div>
+    
+    <div class="start-sending-text" ng-show="homeCtrl.balanceIsZero()">
+      <p class="heading" translate>Start sending Dagcoin</p>
+      <p class="explanation" translate>
+        To get started, buy Dagcoin or share your address.
+        You can receive Dagcoin from other Dagcoin wallets.
+      </p>
+      <button class="btn btn_red-full" ng-click="homeCtrl.buyDagcoin()" translate>
+        <span>Buy Dagcoin</span>
+      </button>
+      <p class="show-address" ng-click="homeCtrl.showAddress()" translate>Show wallet address</p>
+    </div>
 
     <div class="oh text-center p20 text-gray"
          ng-if="!index.updatingTxHistory && !index.txHistory[0] && !index.txHistoryError"
-         ng-show="!homeCtrl.balanceIsHidden">
+         ng-show="!homeCtrl.balanceIsHidden && !homeCtrl.balanceIsZero()">
       <span translate>No transactions yet</span>
     </div>
 
-    <div class="dag_transactions" ng-show="index.txHistory[0] && !index.updatingTxHistory"
+    <div class="dag_transactions" ng-show="index.txHistory[0] && !index.updatingTxHistory && !homeCtrl.balanceIsZero()"
          ng-if="pass.walletInfoVisibility.visible">
       <div class="dag_transactions_list">
         <div class="dag_transactions_list_triggers">
