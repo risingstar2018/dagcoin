@@ -23,6 +23,8 @@
     // For now if system is in product push notifications disabled.
     // After product hub is established remove !isProduction control.
     root.pushIsAvailableOnSystem = usePushNotifications && !isProduction;
+    root.pushProjectNumberReceived = false;
+
     let projectNumber;
     let wsLocal;
 
@@ -33,12 +35,18 @@
       $log.info(`receivedPushProjectNumber: ${data.projectNumber}`);
       wsLocal = ws;
       if (data && data.projectNumber !== undefined) {
+        projectNumber = `${data.projectNumber}`;
+
+        if (projectNumber === ENV.projectNumber) {
+          $rootScope.$emit('Local/ReceivedPushProjectNumber', projectNumber);
+        }
+
         storageService.getPushInfo((err, pushInfo) => {
-          projectNumber = `${data.projectNumber}`;
           // projectNumber must be same with ENV.projectNumber
           if (pushInfo && projectNumber !== ENV.projectNumber) {
             root.pushNotificationsUnregister(() => { });
           } else if (projectNumber === ENV.projectNumber) {
+            root.pushProjectNumberReceived = true;
             const config = configService.getSync();
             if (config.pushNotifications.enabledNew) {
               $log.info('pushNotification is being initialized');
@@ -56,6 +64,8 @@
     root.pushNotificationsRegister = function (cb) {
       pushNotificationWrapper.init(cb);
     };
+
+    root.isPushProjectNumberReceived = () => root.pushProjectNumberReceived;
 
     /**
      *
@@ -90,7 +100,7 @@
             },
             windows: {}
           });
-          console.log('registering push notifications');
+          $log.info('registering push notifications');
           this.push.on('registration', onRegistration(cb));
           this.push.on('notification', onNotification);
           this.push.on('error', (e) => {
@@ -168,12 +178,12 @@
      * @param data data members: message, title, count, sound, image, additionalData
      */
     function onNotification(data) {
-      console.log(`Push Notification Received: ${data.message}`);
+       $log.debug(`Push Notification Received: ${data.message}`);
 
       // If notifications type is "msg" and app is started via push notifications open chat tab.
       // "type" property is coming from hub. It is added manually into the message data
       if (data.additionalData.coldstart && data.additionalData.type === 'msg') {
-        $state.go('correspondentDevices');
+        $state.go('wallet.correspondentDevices');
         $timeout(() => { $rootScope.$apply(); });
       }
     }
@@ -181,7 +191,7 @@
     function onRegistration(cb) {
       return (data) => {
         // data members: registrationId
-        console.log(`Push Notification RegId: ${data.registrationId}`);
+        $log.info(`Push Notification RegId: ${data.registrationId}`);
         storageService.getPushInfo((err, pushInfo) => {
           if (!pushInfo) {
             storageService.setPushInfo(projectNumber, data.registrationId, true, () => {

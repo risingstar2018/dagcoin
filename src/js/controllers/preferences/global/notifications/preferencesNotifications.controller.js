@@ -2,9 +2,11 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('PreferencesNotificationsCtrl',
-    function ($scope, $q, $rootScope, $log, $modal, configService, uxLanguage, pushNotificationsService, lodash, gettextCatalog) {
+    function ($scope, $q, $rootScope, $log, $modal, configService, uxLanguage, pushNotificationsService, lodash) {
       const vm = this;
       $scope.pushNotifications = false;
+
+      vm.pushProjectNumberReceived = pushNotificationsService.isPushProjectNumberReceived();
 
       vm.init = function () {
         const config = configService.getSync();
@@ -39,15 +41,11 @@
         if (lodash.isEmpty(err)) {
           configService.set(opts, (errInSet) => {
             if (errInSet) {
-              $log.debug(errInSet);
+              $log.error(errInSet);
               $rootScope.$emit('Local/ShowAlert', errInSet, 'fi-alert', () => { });
               revertPushNotificationCheck();
             } else {
-              $rootScope.$emit('Local/ShowAlert',
-                opts.pushNotifications.enabledNew ?
-                  gettextCatalog.getString('Push Notifications enabled.') :
-                  gettextCatalog.getString('Push Notifications disabled.'),
-                'fi-check', () => { });
+              $log.info(opts.pushNotifications.enabledNew ? 'Push Notifications enabled' : 'Push Notifications disabled');
             }
           });
         } else {
@@ -56,12 +54,16 @@
         }
       }
 
-      // TODO shoud be proper way to revert value in $watch method
+      // TODO should be proper way to revert value in $watch method
       function revertPushNotificationCheck() {
         unwatchPushNotifications();
         $scope.pushNotifications = !$scope.pushNotifications;
         unwatchPushNotifications = $scope.$watch('pushNotifications', watchPushNotifications);
       }
+
+      $rootScope.$on('Local/ReceivedPushProjectNumber', () => {
+        vm.pushProjectNumberReceived = true;
+      });
 
       $scope.$on('$destroy', () => {
         unwatchPushNotifications();
