@@ -33,18 +33,6 @@ angular.module('copayApp.services').factory('correspondentListService',
       $rootScope.totalNewMsgCnt = lodash.sum(lodash.values(counters));
     }, true);
 
-    function addIncomingMessageEvent(fromAddress, body) {
-      const walletGeneral = require('byteballcore/wallet_general.js');
-      let newBody = body;
-
-      walletGeneral.readMyAddresses((arrMyAddresses) => {
-        newBody = highlightActions(escapeHtml(newBody), arrMyAddresses);
-        newBody = text2html(newBody);
-        console.log(`body with markup: ${newBody}`);
-        addMessageEvent(true, fromAddress, newBody);
-      });
-    }
-
     function addMessageEvent(bIncoming, peerAddress, body) {
       if (!root.messageEventsByCorrespondent[peerAddress]) {
         root.messageEventsByCorrespondent[peerAddress] = [];
@@ -470,67 +458,6 @@ angular.module('copayApp.services').factory('correspondentListService',
       return message;
     }
 
-    function sendMessageToCorrespondentChat(correspondent, fromAddress, body) {
-      return new Promise(() => {
-        if (!root.messageEventsByCorrespondent[correspondent.device_address]) {
-          loadMoreHistory(correspondent);
-        }
-
-        addIncomingMessageEvent(correspondent.device_address, body);
-
-        if (correspondent.my_record_pref && correspondent.peer_record_pref) {
-          chatStorage.store(fromAddress, body, 1);
-        }
-      });
-    }
-
-    /**
-     * Process a message considering the possibility it is a Dagcoin message.
-     * It tries to parse it, if it succeeds and if a protocol property is present (and set to dagcoin) then it
-     * emits the appropriate event.
-     * @param correspondent The message sender record in the local database
-     * @param fromAddress The message sender address
-     * @param body The message body as pure text
-     * @returns {Promise}
-     */
-    function processAsDagcoinMessage(correspondent, fromAddress, body) {
-      return new Promise(() => {
-        let message = null;
-
-        try {
-          message = JSON.parse(body);
-        } catch (err) {
-          console.log(`NEW MESSAGE FROM ${fromAddress}: ${body} NOT A JSON MESSAGE: ${err}`);
-        }
-
-        if (message !== null) {
-          if (message.protocol === 'dagcoin') {
-            console.log(`DAGCOIN MESSAGE RECEIVED FROM ${fromAddress} WITH TITLE ${message.title} AND BODY ${JSON.stringify(message)}`);
-            eventBus.emit(`dagcoin.${message.title}`, message, fromAddress);
-            return Promise.resolve(true);
-          }
-
-          console.log(`JSON MESSAGE RECEIVED FROM ${fromAddress} WITH UNEXPECTED PROTOCOL: ${message.protocol}`);
-        }
-
-        return sendMessageToCorrespondentChat(correspondent, fromAddress, body);
-      });
-    }
-
-    function readCorrespondentAndForwardMessage(fromAddress, body) {
-      return new Promise((resolve) => {
-        device.readCorrespondent(fromAddress, (correspondent) => {
-          resolve(correspondent);
-        });
-      }).then((correspondent) => {
-        if (correspondent === null) {
-          return Promise.reject(`CORRESPONDENT WITH ADDRESS ${fromAddress} NOT FOUND`);
-        }
-
-        return processAsDagcoinMessage(correspondent, fromAddress, body);
-      });
-    }
-
     function getCorrespondentsOrderedByMessageDate() {
       return deviceManager.getCorrespondentList();
     }
@@ -548,11 +475,6 @@ angular.module('copayApp.services').factory('correspondentListService',
         );
       });
     }
-
-    eventBus.on('text', (fromAddress, body) => {
-      console.log(`NEW TEXT MESSAGE FROM ${fromAddress}`);
-      return readCorrespondentAndForwardMessage(fromAddress, body);
-    });
 
     eventBus.on('chat_recording_pref', (correspondentAddress, enabled) => {
       device.readCorrespondent(correspondentAddress, (correspondent) => {

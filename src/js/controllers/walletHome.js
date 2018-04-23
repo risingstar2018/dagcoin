@@ -94,6 +94,12 @@
               case 'FAILED':
                 errorMessage = gettextCatalog.getString('Merchant payment request failed');
                 break;
+              case 'WAITING_FOR_CONFIRMATION':
+                errorMessage = gettextCatalog.getString('There is already a pending payment for this invoice');
+                break;
+              case 'PAID':
+                errorMessage = gettextCatalog.getString('The invoice has already been paid');
+                break;
               default:
                 errorMessage = gettextCatalog.getString('An error occurred during merchant request processing');
                 break;
