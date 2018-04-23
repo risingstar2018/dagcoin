@@ -10,13 +10,13 @@
 
   function CorrespondentDeviceCtrl($scope, $rootScope, $timeout, $modal, configService, profileService, animationService, Device, go,
                                     correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService, ENV, gettextCatalog) {
-    const chatStorage = require('byteballcore/chat_storage.js');
-    const device = require('byteballcore/device.js');
-    const eventBus = require('byteballcore/event_bus.js');
-    const storage = require('byteballcore/storage.js');
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
-    const network = require('byteballcore/network.js');
-    const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+    const chatStorage = require('core/chat_storage.js');
+    const device = require('core/device.js');
+    const eventBus = require('core/event_bus.js');
+    const storage = require('core/storage.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
+    const network = require('core/network.js');
+    const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
 
     const chatScope = $scope;
     const indexScope = $scope.index;
@@ -176,7 +176,7 @@
 
 
     $scope.offerContract = function (address) {
-      const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+      const walletDefinedByAddresses = require('core/wallet_defined_by_addresses.js');
       $rootScope.modalOpened = true;
       const fc = profileService.focusedClient;
 
@@ -443,8 +443,8 @@
 
     $scope.sendMultiPayment = function (paymentJsonBase64) {
       const async = require('async');
-      const db = require('byteballcore/db.js');
-      const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+      const db = require('core/db.js');
+      const walletDefinedByAddresses = require('core/wallet_defined_by_addresses.js');
       const paymentJson = new Buffer(paymentJsonBase64, 'base64').toString('utf8');
       console.log(`multi ${paymentJson}`);
       const objMultiPaymentRequest = JSON.parse(paymentJson);
@@ -737,7 +737,7 @@
     }
 
     function readLastMainChainIndex(cb) {
-      const conf = require('byteballcore/conf.js');
+      const conf = require('core/conf.js');
       if (conf.bLight) {
         network.requestFromLightVendor('get_last_mci', null, (ws, request, responseFlv) => {
           if (responseFlv.error) {

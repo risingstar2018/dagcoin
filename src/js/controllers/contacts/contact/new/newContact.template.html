@@ -3,12 +3,12 @@
   </qr-scanner>
 </dag-nav-bar>
 
-<div class="content" ng-scrollbars>
+<div class="content dag-scroll">
   <div class="contact_form">
     <form name="newContact" ng-submit="contact.create()" novalidate>
         <div class="input-wrap">
           <label class="required" for="address">{{ 'Wallet address' | translate}}</label>
-          <input id="address" class="animated"
+          <input id="address" class="animated" type="text"
                  ng-class="{'shake error' : (newContact.address.$dirty && newContact.address.$invalid || contact.address_error)}"
                  valid-address ng-maxlength="32" type="text" ng-model="contact.data.address" name="address" required>
           <div class="has-error" ng-if="contact.address_error">{{contact.address_error}}</div>
@@ -16,14 +16,14 @@
 
         <div class="input-wrap">
           <label class="required" for="first_name">{{ 'First name' | translate}}</label>
-          <input id="first_name" class="animated"
+          <input id="first_name" class="animated" type="text"
                  ng-class="{'shake error' : newContact.first_name.$dirty && newContact.first_name.$invalid}"
                  ng-maxlength="50" type="text" ng-model="contact.data.first_name" name="first_name" required>
         </div>
 
         <div class="input-wrap">
           <label for="last_name">{{ 'Last name' | translate}}</label>
-          <input id="last_name"
+          <input id="last_name" type="text"
                  ng-class="{'shake error' : newContact.last_name.$invalid}"
                  ng-maxlength="50" type="text" ng-model="contact.data.last_name" name="last_name">
         </div>
@@ -39,7 +39,7 @@
         <div class="input-wrap">
           <label for="description">{{ 'Description' | translate}}</label>
           <textarea name="description" id="description" ng-model="contact.data.description"
-                    cols="30" rows="3" ng-maxlength="300"
+                    cols="30" rows="3" ng-maxlength="300" type="text"
                     ng-class="{'shake error' : newContact.description.$invalid}">
           </textarea>
           <div class="has-error" ng-show="newContact.description.$invalid" translate>

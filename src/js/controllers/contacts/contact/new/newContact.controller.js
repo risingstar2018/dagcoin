@@ -14,9 +14,9 @@
     contact.onQrCodeScanned = (uri) => {
       contact.address_error = '';
 
-      require('byteballcore/uri.js').parseUri(uri, {
+      require('core/uri.js').parseUri(uri, {
         ifError(err) {
-          const conf = require('byteballcore/conf.js');
+          const conf = require('core/conf.js');
           const noPrefixRegex = new RegExp(`.*no.*${conf.program}.*prefix.*`, 'i');
           if (noPrefixRegex.test(err.toString())) {
             contact.address_error = gettextCatalog.getString('Incorrect Dagcoin Address');

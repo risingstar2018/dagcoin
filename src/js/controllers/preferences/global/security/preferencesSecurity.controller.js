@@ -13,6 +13,7 @@
     vm.encrypt = !!profileService.profile.xPrivKeyEncrypted;
     vm.touchidAvailable = fingerprintService.isAvailable();
     vm.touchid = !!config.touchId;
+    vm.enableShowReceiveOnPassword = config.enableShowReceiveOnPassword;
 
     const unwatchEncrypt = $scope.$watch('security.encrypt', (val) => {
       const fc = profileService.focusedClient;
@@ -26,6 +27,17 @@
       } else if (!val && fc.hasPrivKeyEncrypted()) {
         unlock();
       }
+    });
+
+    const unwatchEnableShowReceiveOnPassword = $scope.$watch('security.enableShowReceiveOnPassword', (val) => {
+      const opts = {
+        enableShowReceiveOnPassword: val
+      };
+      configService.set(opts, (err) => {
+        if (err) {
+          $rootScope.$emit('Local/ShowAlert', JSON.stringify(err), 'fi-alert', () => { });
+        }
+      });
     });
 
     const unwatchRequestTouchid = $scope.$watch('security.touchid', (newVal, oldVal) => {
@@ -111,6 +123,7 @@
 
     $scope.$on('$destroy', () => {
       unwatchEncrypt();
+      unwatchEnableShowReceiveOnPassword();
       unwatchRequestTouchid();
     });
   }

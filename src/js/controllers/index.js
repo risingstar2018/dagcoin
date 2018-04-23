@@ -7,13 +7,14 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       function ($rootScope, $scope, $log, $filter, $timeout, $interval, lodash, go, fingerprintService, profileService, configService,
                 Device, storageService, addressService, gettextCatalog, amMoment, nodeWebkit, txFormatService, uxLanguage,
                 $state, addressbookService, notification, animationService, $modal, bwcService, backButton, faucetService, changeWalletTypeService,
-                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService, navigationService) {
+                autoRefreshClientService, connectionService, sharedService, newVersion, ENV, moment, walletService, transactionsService, navigationService,
+                pushNotificationsService) {
         const async = require('async');
-        const mutex = require('byteballcore/mutex.js');
-        const eventBus = require('byteballcore/event_bus.js');
-        const objectHash = require('byteballcore/object_hash.js');
-        const ecdsaSig = require('byteballcore/signature.js');
-        const breadcrumbs = require('byteballcore/breadcrumbs.js');
+        const mutex = require('core/mutex.js');
+        const eventBus = require('core/event_bus.js');
+        const objectHash = require('core/object_hash.js');
+        const ecdsaSig = require('core/signature.js');
+        const breadcrumbs = require('core/breadcrumbs.js');
         const Bitcore = require('bitcore-lib');
         const isCordova = Device.cordova;
         const acceptMessage = gettextCatalog.getString('Yes');
@@ -30,8 +31,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.onGoingProcess = {};
         self.updatingTxHistory = true;
         self.bSwipeSuspended = false;
-        // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
-        self.usePushNotifications = false;
+        self.usePushNotifications = isCordova && !Device.window && Device.android;
+        self.pushIsAvailableOnSystem = pushNotificationsService.pushIsAvailableOnSystem;
+        self.isCordova = isCordova;
 
         walletService.checkTestnetData();
         connectionService.init();
@@ -39,10 +41,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         $rootScope.$on('connection:state-changed', (ev, isOnline) => {
           self.isOffline = !isOnline;
         });
-
-        if (autoRefreshClientService) {
-          autoRefreshClientService.initHistoryAutoRefresh();
-        }
 
         self.showPopup = function (msg, msgIcon, cb) {
           if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
@@ -132,40 +130,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
         };
 
-        const indexEventsSupport = new IndexEventsSupport({
-          Device,
-          Raven,
-          go,
-          $rootScope,
-          changeWalletTypeService,
-          self,
-          $timeout,
-          profileService,
-          notification,
-          gettextCatalog,
-          newVersion
-        });
-        indexEventsSupport.initNotFatalError();
-        indexEventsSupport.initUncaughtError();
-        indexEventsSupport.initCatchingUpStarted();
-        indexEventsSupport.initCatchupBallsLeft();
-        indexEventsSupport.initCatchingUpDone();
-        indexEventsSupport.initRefreshLightStarted();
-        indexEventsSupport.initRefreshLightDone();
-        indexEventsSupport.initRefusedToSign();
-        indexEventsSupport.initNewMyTransactions();
-        indexEventsSupport.initMyTransactionsBecameStable();
-        indexEventsSupport.initMciBecameStable();
-        indexEventsSupport.initMaybeNewTransactions();
-        indexEventsSupport.initWalletApproved();
-        indexEventsSupport.initWalletDeclined();
-        indexEventsSupport.initWalletCompleted();
-        indexEventsSupport.initConfirmOnOtherDevice();
-
         // in arrOtherCosigners, 'other' is relative to the initiator
         eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
-          const device = require('byteballcore/device.js');
-          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+          const device = require('core/device.js');
+          const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
           device.readCorrespondentsByDeviceAddresses(arrDeviceAddresses, (arrCorrespondentInfos) => {
             // my own address is not included in arrCorrespondentInfos because I'm not my correspondent
             const arrNames = arrCorrespondentInfos.map(correspondent => correspondent.name);
@@ -240,18 +208,18 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             const bufToSign = objectHash.getUnitHashToSign(objUnit);
             const signature = ecdsaSig.sign(bufToSign, privKeyBuf);
             console.log(`sent signature ${signature}`);
-            const bbWallet = require('byteballcore/wallet.js');
+            const bbWallet = require('core/wallet.js');
             return bbWallet.sendSignature(fromAddress, bufToSign.toString('base64'), signature, signingPath, topAddress);
           }
 
           function refuseSignature() {
             const bufToSign = objectHash.getUnitHashToSign(objUnit);
-            const bbWallet = require('byteballcore/wallet.js');
+            const bbWallet = require('core/wallet.js');
             bbWallet.sendSignature(fromAddress, bufToSign.toString('base64'), '[refused]', signingPath, topAddress);
             console.log('refused signature');
           }
 
-          const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+          const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
           const unit = objUnit.unit;
           const credentials = lodash.find(profileService.profile.credentials, { walletId: objAddress.wallet });
           mutex.lock([`signing_request-${unit}`], (unlock) => {
@@ -377,7 +345,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             self.setAddressbook();
 
             console.log('reading cosigners');
-            const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+            const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
             walletDefinedByKeys.readCosigners(self.walletId, (arrCosignerInfos) => {
               self.copayers = arrCosignerInfos;
               $timeout(() => {
@@ -416,7 +384,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
 
           // reconnect if lost connection
-          const device = require('byteballcore/device.js');
+          const device = require('core/device.js');
           device.loginToHub();
 
           return $timeout(() => {
@@ -773,8 +741,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('Local/Resume', () => {
           $log.debug('### Resume event');
-          const lightWallet = require('byteballcore/light_wallet.js');
+          const lightWallet = require('core/light_wallet.js');
           lightWallet.refreshLightClientHistory();
+          go.redirectToTabIfNeeded();
         });
 
         $rootScope.$on('Local/BackupDone', () => {
@@ -858,13 +827,23 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           go.walletHome();
         });
 
-        $rootScope.$on('Local/SetTab', (event, tab) => {
-          if (self.tab === tab) {
+        $rootScope.$on('Local/SetTab', (event, tab, params) => {
+          if (self.tab === tab && lodash.isEmpty(params)) {
             return;
           }
           $rootScope.tab = tab;
           self.tab = tab;
-          $state.go(tab);
+          if (sharedService.inJustShowReceiveAddressMode && tab !== 'wallet.receive') {
+            profileService.insistUnlockFC(null, (err) => {
+              if (!err) {
+                $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', () => { });
+                $state.go(tab, params);
+                $rootScope.$emit('Local/ResetVisibility', () => { });
+              }
+            });
+          } else {
+            $state.go(tab, params);
+          }
         });
 
         $rootScope.$on('Local/RequestTouchid', (event, client, cb) => {
@@ -895,7 +874,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
           console.log(`paymentRequest event ${address}, ${amount}`);
-          $state.go('wallet.send', {
+          $rootScope.$emit('Local/SetTab', 'wallet.send', {
             type: PaymentRequest.PAYMENT_REQUEST,
             address,
             amount,
@@ -907,7 +886,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
           console.log(`merchantPaymentRequest event ${address}, ${amount}`);
-          $state.go('wallet.send', {
+          $rootScope.$emit('Local/SetTab', 'wallet.send', {
             type: PaymentRequest.MERCHANT_PAYMENT_REQUEST,
             address,
             amount,
@@ -916,7 +895,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             merchantName,
             state
           });
-          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
         $rootScope.$on('paymentUri', (event, uri) => {
@@ -931,6 +909,45 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         $rootScope.$on('Local/generatingCSV', (event, state) => {
           console.log(`generatingCSV event ${state}`);
           self.setOngoingProcess('generatingCSV', state);
+        });
+
+        $rootScope.$on('Local/ProfileBound', () => {
+          $log.info('Profile bounded and all eventBus events will be registered.');
+          const indexEventsSupport = new IndexEventsSupport({
+            Device,
+            Raven,
+            go,
+            $rootScope,
+            changeWalletTypeService,
+            self,
+            $timeout,
+            profileService,
+            notification,
+            gettextCatalog,
+            newVersion
+          });
+
+          indexEventsSupport.initNotFatalError();
+          indexEventsSupport.initUncaughtError();
+          indexEventsSupport.initCatchingUpStarted();
+          indexEventsSupport.initCatchupBallsLeft();
+          indexEventsSupport.initCatchingUpDone();
+          indexEventsSupport.initRefreshLightStarted();
+          indexEventsSupport.initRefreshLightDone();
+          indexEventsSupport.initRefusedToSign();
+          indexEventsSupport.initNewMyTransactions();
+          indexEventsSupport.initMyTransactionsBecameStable();
+          indexEventsSupport.initMciBecameStable();
+          indexEventsSupport.initMaybeNewTransactions();
+          indexEventsSupport.initWalletApproved();
+          indexEventsSupport.initWalletDeclined();
+          indexEventsSupport.initWalletCompleted();
+          indexEventsSupport.initConfirmOnOtherDevice();
+
+          $log.info('Profile bounded and autoRefreshClientService auto refresh starting...');
+          if (autoRefreshClientService) {
+            autoRefreshClientService.initHistoryAutoRefresh();
+          }
         });
       });
 }());

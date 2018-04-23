@@ -10,8 +10,8 @@
 
   function InviteCorrespondentDeviceCtrl($scope, $timeout, profileService, go, Device, correspondentListService,
                                          gettextCatalog, nodeWebkit, $log) {
-    const eventBus = require('byteballcore/event_bus.js');
-    const conf = require('byteballcore/conf.js');
+    const eventBus = require('core/event_bus.js');
+    const conf = require('core/conf.js');
     const vm = this;
     const fc = profileService.focusedClient;
     vm.protocol = conf.program;

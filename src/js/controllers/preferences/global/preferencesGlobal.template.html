@@ -1,6 +1,6 @@
 <dag-nav-bar title="{{ 'Global preferences' | translate }}" invert></dag-nav-bar>
 
-<div class="content preferences" ng-scrollbars>
+<div class="content preferences dag-scroll">
 
   <div class="dag_tip no_icon backup_error" ng-show="index.needsBackup">
     <h4 class="ng-binding">Wallet Backup</h4>
@@ -19,6 +19,13 @@
       <div translate>Security</div>
       <div class="description" translate>Backup your wallets and configure restrictions.</div>
     </li>
+
+    <li ui-sref="notifications" dag-left-icon="notifications" dag-right-icon="chevron-thin-right"
+        ng-if="index.pushIsAvailableOnSystem">
+      <div translate>Notifications</div>
+      <div class="description" translate>Configure notifications</div>
+    </li>
+
   </ul>
 
   <h4 translate>Other</h4>

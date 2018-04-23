@@ -13,8 +13,8 @@
   function SendCtrl($scope, $rootScope, $timeout, lodash, profileService,
                     configService, addressService, addressbookService, animationService, gettextCatalog,
                     utilityService, transactionsService, walletService, ENV, $modal, $state, $stateParams) {
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
-    const eventBus = require('byteballcore/event_bus.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
+    const eventBus = require('core/event_bus.js');
 
     const indexScope = $scope.index;
     const config = configService.getSync();
@@ -34,7 +34,7 @@
     const assocDeviceAddressesByPaymentAddress = {};
 
     $scope.currentSpendUnconfirmed = configWallet.spendUnconfirmed;
-
+    $scope.hasContact = false;
     /**
      * Runs when the view of controller is rendered
      * Make all initialization of controller in this method
@@ -50,7 +50,7 @@
         console.log(`A payment requested. Form will be rendered with these values ${JSON.stringify(request)}`);
         if (PaymentRequest.PAYMENT_REQUEST === request.type) {
           vm.setForm(request.address, request.amount, request.comment, request.asset, request.recipientDeviceAddress);
-          if (form.address.$invalid && !vm.blockUx) {
+          if (!form.address.$isValid && !vm.blockUx) {
             console.error('Payment Request :: invalid address, resetting form');
             vm.resetForm();
             vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
@@ -160,11 +160,9 @@
         return console.log('form.address has disappeared');
       }
       if (to) {
-        $timeout(() => {
           form.address.$setViewValue(to);
           form.address.$isValid = true;
           form.address.$render();
-        }, 100);
 
         if (recipientDeviceAddress) {
           // must be already paired
@@ -185,7 +183,6 @@
       } else {
         vm.lockAmount = false;
         form.amount.$pristine = true;
-        form.amount.$render();
 
         // send.controller is called whether from payment request from chat, or from scanning barcode
         // If just address barcode is scanned and there is an already entered amount, this amount value is read
@@ -193,6 +190,7 @@
           form.amount.$setViewValue(`${$rootScope.alreadyEnteredAmount}`);
           form.amount.$isValid = true;
         }
+        form.amount.$render();
       }
 
       if (form.merkle_proof) {
@@ -219,7 +217,7 @@
 
     vm.setFromUri = function (uri) {
       let objRequest = {};
-      require('byteballcore/uri.js').parseUri(uri, {
+      require('core/uri.js').parseUri(uri, {
         ifError() {
         },
         ifOk(_objRequest) {
@@ -369,6 +367,7 @@
             lodash.forEach(sortedContactArray, (contact) => {
               $scope.list[contact.address] = contact;
             });
+            $scope.hasContact = lodash.size($scope.list) > 0;
           });
         };
 
@@ -540,7 +539,7 @@
 
       indexScope.setOngoingProcess(gettextCatalog.getString('sending'), true);
       $timeout(() => {
-        const device = require('byteballcore/device.js');
+        const device = require('core/device.js');
         const sendCoinRequest = new SendCoinRequestBuilder()
           .binding(vm.binding)
           .recipientDeviceAddress(recipientDeviceAddress)

@@ -12,20 +12,20 @@
   function RecoveryCtrl($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService,
                         configService, storageService, Device) {
     const async = require('async');
-    const conf = require('byteballcore/conf.js');
-    const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
-    const objectHash = require('byteballcore/object_hash.js');
+    const conf = require('core/conf.js');
+    const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
+    const objectHash = require('core/object_hash.js');
     let ecdsa;
     try {
       ecdsa = require('secp256k1');
     } catch (e) {
-      ecdsa = require('byteballcore/node_modules/secp256k1' + '');
+      ecdsa = require('core/node_modules/secp256k1' + '');
     }
     const Mnemonic = require('bitcore-mnemonic');
     const Bitcore = require('bitcore-lib');
-    const db = require('byteballcore/db.js');
-    const network = require('byteballcore/network');
-    const myWitnesses = require('byteballcore/my_witnesses');
+    const db = require('core/db.js');
+    const network = require('core/network');
+    const myWitnesses = require('core/my_witnesses');
 
     const self = this;
     const JSZip = require('jszip');
@@ -90,7 +90,7 @@
           self.scanning = true;
 
           if (self.isInitial) {
-            const device = require('byteballcore/device.js');
+            const device = require('core/device.js');
             const opts = { deviceName: 'RECOVER_FROM_SEED' };
             device.setDeviceName(opts.deviceName);
             configService.set(opts, () => {
@@ -165,7 +165,7 @@
     if (self.iOs) generateListFilesForIos();
 
     function writeDBAndFileStorageMobile(zipfiles, cb) {
-      const db = require('byteballcore/db');
+      const db = require('core/db');
       const dbDirPath = `${fileSystemService.getDatabaseDirPath()}/`;
       db.close(() => {
         async.forEachOfSeries(zipfiles.files, (objFile, key, callback) => {
@@ -192,7 +192,7 @@
     }
 
     function writeDBAndFileStoragePC(cb) {
-      const db = require('byteballcore/db');
+      const db = require('core/db');
       const dbDirPath = `${fileSystemService.getDatabaseDirPath()}/`;
       db.close(() => {
         async.series([
@@ -228,7 +228,7 @@
           function (callback) {
             const existsConfJson = fileSystemService.nwExistsSync(`${dbDirPath}temp/conf.json`);
             const existsLight = fileSystemService.nwExistsSync(`${dbDirPath}temp/light`);
-            const conf = require('byteballcore/conf');
+            const conf = require('core/conf');
             if (existsConfJson) {
               fileSystemService.nwMoveFile(`${dbDirPath}temp/conf.json`, `${dbDirPath}conf.json`, callback);
             } else if (existsLight && !existsConfJson) {
@@ -514,7 +514,7 @@
             witnesses: arrWitnesses
           }, (ws, request, response) => {
             if (response && response.error) {
-              const breadcrumbs = require('byteballcore/breadcrumbs.js');
+              const breadcrumbs = require('core/breadcrumbs.js');
               breadcrumbs.add(`Error scanForAddressesAndWalletsInLightClient: ${response.error}`);
               self.error = gettextCatalog.getString('When scanning an error occurred, please try again later.');
               self.scanning = false;
@@ -557,7 +557,7 @@
     }
 
     function cleanAndAddWalletsAndAddresses(assocMaxAddressIndexes) {
-      const device = require('byteballcore/device');
+      const device = require('core/device');
       const arrWalletIndexes = Object.keys(assocMaxAddressIndexes);
       if (arrWalletIndexes.length) {
         removeAddressesAndWallets(() => {

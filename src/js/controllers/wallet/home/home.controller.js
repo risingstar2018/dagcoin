@@ -6,24 +6,45 @@
     .module('copayApp.controllers')
     .controller('HomeCtrl', HomeCtrl);
 
-  HomeCtrl.$inject = ['$scope', '$rootScope', 'animationService', '$timeout', 'profileService', 'correspondentListService', '$modal', 'lodash'];
+  HomeCtrl.$inject = ['$scope', '$rootScope', 'animationService', '$timeout', 'profileService', 'correspondentListService', '$modal', 'lodash', 'go'];
 
-  function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash) {
+  function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash, go) {
     const vm = this;
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
+    const indexScope = $scope.index;
+    vm.balanceIsHidden = $rootScope.balanceIsHidden;
+
+    const viewContentLoaded = function () {
+      go.redirectToTabIfNeeded();
+    };
+
+    vm.balanceIsZero = function () {
+      return (indexScope.baseBalance && indexScope.baseBalance.pending === 0 &&
+        indexScope.baseBalance.total === 0 && indexScope.baseBalance.stable === 0 &&
+        !indexScope.txHistory[0]);
+    };
+
+    vm.buyDagcoin = function () {
+      const buyDagcoinUrl = 'https://daguniversity.com/en';
+
+      go.openExternalLink(buyDagcoinUrl);
+    };
+
+    vm.showAddress = function () {
+      go.receive();
+    };
 
     vm.openSharedAddressDefinitionModal = function (address) {
       $rootScope.modalOpened = true;
       // todo: refactor me
-      const indexScope = $scope.index;
       const fc = profileService.focusedClient;
 
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.color = fc.backgroundColor;
         $scope.address = address;
 
-        const walletGeneral = require('byteballcore/wallet_general.js');
-        const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+        const walletGeneral = require('core/wallet_general.js');
+        const walletDefinedByAddresses = require('core/wallet_defined_by_addresses.js');
         walletGeneral.readMyAddresses((arrMyAddresses) => {
           walletDefinedByAddresses.readSharedAddressDefinition(address, (arrDefinition, creationTs) => {
             $scope.humanReadableDefinition = correspondentListService.getHumanReadableDefinition(arrDefinition, arrMyAddresses, [], true);
@@ -103,7 +124,7 @@
         $scope.selectSubwallet = function (sharedAddress) {
           $scope.indexCtl.shared_address = sharedAddress;
           if (sharedAddress) {
-            const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses.js');
+            const walletDefinedByAddresses = require('core/wallet_defined_by_addresses.js');
             walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
               $scope.indexCtl.bHasMerkle = bHasMerkle;
               $rootScope.$apply();
@@ -149,6 +170,16 @@
       return { 'font-size': '80px' };
     };
 
+    vm.showBalance = () => {
+      $rootScope.balanceIsHidden = false;
+      vm.balanceIsHidden = false;
+    };
+
+    vm.hideBalance = () => {
+      $rootScope.balanceIsHidden = true;
+      vm.balanceIsHidden = true;
+    };
+
     // for light clients only
     vm.updateHistoryFromNetwork = lodash.throttle(() => {
       setTimeout(() => {
@@ -158,9 +189,11 @@
           return;
         }
         console.log('== updateHistoryFromNetwork');
-        const lightWallet = require('byteballcore/light_wallet.js');
+        const lightWallet = require('core/light_wallet.js');
         lightWallet.refreshLightClientHistory();
       }, 500);
     }, 5000);
+
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
   }
 })();

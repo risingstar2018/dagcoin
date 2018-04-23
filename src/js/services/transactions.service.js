@@ -7,7 +7,7 @@
                                                                       gettextCatalog, $rootScope, $modal, txFormatService,
                                                                       notification, configService) => {
     const root = {};
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
 
     /**
      * This will be moved into tx directive
@@ -15,6 +15,7 @@
      *  btx transaction
      *  walletSettings can be get from configService.getSync().wallet.settings
      *  indexScope $scope.indexScope
+     *  showMakeNewPayment if true MakeNewPayment button is displayed
      */
     root.openTxModal = function (params) {
       const btx = params.btx;
@@ -31,13 +32,15 @@
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
         $scope.btx = btx;
         $scope.settings = walletSettings;
+        $scope.isCordova = utilityService.isCordova;
+        $scope.showMakeNewPayment = params.showMakeNewPayment;
 
         $scope.transactionAddress = function (address) {
           return root.getTransactionAddress(address);
         };
 
         $scope.openInExplorer = function () {
-          const url = `https://${ENV.explorerPrefix}explorer.dagcoin.org/#${btx.unit}`;
+          const url = `https://${ENV.explorerUrl}/#${btx.unit}`;
           if (typeof nw !== 'undefined') {
             // todo: we already have method for this
             nw.Shell.openExternal(url);
@@ -58,11 +61,23 @@
             // continue regardless of error
           }
         };
+
+        $scope.makeNewPayment = function () {
+          const amount = btx.amount;
+          let receiverAddress;
+          if (btx.action === 'received') {
+            receiverAddress = btx.arrPayerAddresses[0];
+          } else if (btx.action === 'sent' || btx.action === 'moved') {
+            receiverAddress = btx.addressTo;
+          }
+          $modalInstance.dismiss('done');
+          $rootScope.$emit('paymentRequest', receiverAddress, amount, 'base');
+        };
       };
 
       const modalInstance = $modal.open({
         templateUrl: 'views/modals/tx-details.html',
-        windowClass: 'modal-transaction-detail',
+        windowClass: animationService.modalAnimated.slideUp,
         controller: ModalInstanceCtrl
       });
 
@@ -101,8 +116,8 @@
         };
 
         $scope.sendPrivatePayments = function (correspondent) {
-          const indivisibleAsset = require('byteballcore/indivisible_asset');
-          const walletGeneral = require('byteballcore/wallet_general');
+          const indivisibleAsset = require('core/indivisible_asset');
+          const walletGeneral = require('core/wallet_general');
           indivisibleAsset.restorePrivateChains(btx.asset, btx.unit, btx.addressTo, (arrRecipientChains) => {
             walletGeneral.sendPrivatePayments(correspondent.device_address, arrRecipientChains, true, null, () => {
               modalInstance.dismiss('cancel');

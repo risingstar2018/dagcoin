@@ -107,6 +107,15 @@
       }
     };
 
+    this.shareAddress = function (addr) {
+      if (isCordova) {
+        if (Device.android || Device.windows) {
+          window.ignoreMobilePause = true;
+        }
+        window.plugins.socialsharing.share(addr, null, null, null);
+      }
+    };
+
     /* Start setup */
 
     this.bindTouchDown();

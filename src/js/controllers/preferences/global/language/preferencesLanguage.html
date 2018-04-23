@@ -1,6 +1,6 @@
 <dag-nav-bar title="{{ 'Language' | translate}}" go-back="system" invert></dag-nav-bar>
 
-<div class="content preferences" ng-scrollbars>
+<div class="content preferences dag-scroll">
   <ul class="preferences_links">
   <li ng-repeat="lang in prefLang.availableLanguages" ng-click="prefLang.save(lang.isoCode)">
     <span>{{lang.name}}</span>

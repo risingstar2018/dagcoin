@@ -4,21 +4,7 @@
 
   angular
     .module('copayApp')
-    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ScrollBarsProvider, ngDialogProvider) => {
-      ScrollBarsProvider.defaults = {
-        autoHideScrollbar: true,
-        scrollButtons: {
-          scrollAmount: 'auto',
-          enable: true
-        },
-        scrollInertia: 400,
-        theme: 'dark',
-        advanced: {
-          updateOnContentResize: true
-        },
-        axis: 'y'
-      };
-
+    .config((historicLogProvider, $provide, $logProvider, $stateProvider, $urlRouterProvider, $compileProvider, ngDialogProvider) => {
       ngDialogProvider.setDefaults({
         showClose: false,
         closeByDocument: true,
@@ -72,10 +58,11 @@
                 return value;
               });
               try {
+                // Send on our enhanced message to the original debug method.
                 if (window.cordova) {
                   console.log(args.join(' '));
                 }
-                historicLog.add(level, args.join(' '));
+                historicLog.add(level, args.join(' '), new Date());
                 orig(...args);
               } catch (e) {
                 console.log('ERROR (at log decorator):', e, args[0]);
@@ -390,6 +377,17 @@
             main: {
               templateUrl: 'controllers/preferences/global/security/preferencesSecurity.template.html',
               controller: 'PreferencesSecurityCtrl as security'
+            },
+          },
+        })
+        .state('notifications', {
+          url: '/notifications',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          views: {
+            main: {
+              templateUrl: 'controllers/preferences/global/notifications/preferencesNotifications.template.html',
+              controller: 'PreferencesNotificationsCtrl as notifications'
             },
           },
         })

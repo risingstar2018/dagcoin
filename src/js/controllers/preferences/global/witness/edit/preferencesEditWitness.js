@@ -11,7 +11,7 @@
         if (newAddress === witnessListService.currentWitness) {
           return goBack();
         }
-        const myWitnesses = require('byteballcore/my_witnesses.js');
+        const myWitnesses = require('core/my_witnesses.js');
         myWitnesses.replaceWitness(witnessListService.currentWitness, newAddress, (err) => {
           console.log(err);
           if (err) {

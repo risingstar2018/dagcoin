@@ -16,7 +16,7 @@
     </ul>
   </div>
 
-  <div ng-if="contacts.existsAnyContact" class="input-wrap input-icon search-container">
+  <div ng-if="contacts.showSearchBox" class="input-wrap input-icon search-container">
     <input type="text" ng-model="contacts.search" id="search" name="search" ng-attr-placeholder="{{'Search' | translate}}">
     <a>
       <i class="icon icon-d fi-magnifying-glass"></i>
@@ -29,13 +29,12 @@
     <p translate>Press "+" in the right upper corner to add new contact.</p>
   </div>
 
-  <ks-swiper-container ng-if="contacts.listTotal" pagination-is-active="false"
+  <ks-swiper-container ng-if="contacts.existsAnyContact" pagination-is-active="false"
                        swiper="swiper"
                        on-ready="contacts.onReadySwiper(swiper)"
                        override-parameters="{'slidesPerView': 1, 'spaceBetween': 0, 'centeredSlides': true}">
-
     <ks-swiper-slide class="swiper-slide">
-      <div class="contacts_list" ng-scrollbars>
+      <div class="contacts_list dag-scroll">
         <div class="contacts_list_group" ng-repeat="(letter, list) in contacts.list">
           <h4 class="contacts_list_letter">{{letter}}</h4>
           <table>
@@ -56,39 +55,42 @@
             </tbody>
           </table>
         </div>
+        <div class="no_contacts_message" ng-if="contacts.listTotal == 0">
+          <p translate>No contact</p>
+        </div>
       </div>
-
     </ks-swiper-slide>
     <ks-swiper-slide class="swiper-slide">
-
-      <div class="contacts_list" ng-if="contacts.favoriteListTotal" ng-scrollbars>
+      <div class="contacts_list dag-scroll" ng-if="contacts.existsAnyFavContact" ng-scrollbars>
         <div class="contacts_list_group" ng-repeat="(letter, list) in contacts.favoriteList">
           <h4 class="contacts_list_letter">{{letter}}</h4>
           <table>
-            <tbody>
-            <tr ng-repeat="contact in list">
-              <td class="contacts_list_contact_info">
-                <div class="avatar"></div>
-                <a class="contacts_list_contact_info_full_name" ui-sref="contact({address: '{{contact.address}}'})">{{contact.first_name}}
-                  {{contact.last_name}}</a>
-              </td>
-              <td class="contacts_list_contact_favorite" ng-click="contacts.toggleFavorite(contact)">
-                <div class="contacts_list_contact_favorite_trigger" ng-class="{'selected' : contact.favorite}">
-                  <svg-icon name="star"></svg-icon>
-                  <svg-icon name="star_border"></svg-icon>
-                </div>
-              </td>
-            </tr>
-            </tbody>
+              <tbody>
+              <tr ng-repeat="contact in list">
+                <td class="contacts_list_contact_info">
+                  <div class="avatar"></div>
+                  <a class="contacts_list_contact_info_full_name" ui-sref="contact({address: '{{contact.address}}'})">{{contact.first_name}}
+                    {{contact.last_name}}</a>
+                </td>
+                <td class="contacts_list_contact_favorite" ng-click="contacts.toggleFavorite(contact)">
+                  <div class="contacts_list_contact_favorite_trigger" ng-class="{'selected' : contact.favorite}">
+                    <svg-icon name="star"></svg-icon>
+                    <svg-icon name="star_border"></svg-icon>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
           </table>
         </div>
+        <div class="no_contacts_message" ng-if="contacts.favoriteListTotal == 0">
+          <p translate>No contact</p>
+        </div>
       </div>
-      <div class="no_contacts_message" ng-if="contacts.favoriteListTotal === 0">
+      <div class="no_contacts_message" ng-if="!contacts.existsAnyFavContact">
         <svg-icon name="favorite_star"></svg-icon>
         <p>You don't have any favorite contacts selected.</p>
         <p>To select a favorite contact press <svg-icon name="star_border"></svg-icon> next to contact's name.</p>
       </div>
-
     </ks-swiper-slide>
   </ks-swiper-container>
 

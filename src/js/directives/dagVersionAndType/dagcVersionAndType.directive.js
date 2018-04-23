@@ -21,7 +21,7 @@
       controllerAs: 'versionAndType',
       controller() {
         const self = this;
-        const conf = require('byteballcore/conf.js');
+        const conf = require('core/conf.js');
         self.type = conf.bLight ? gettextCatalog.getString('light wallet') : gettextCatalog.getString('full wallet');
         self.version = window.version;
         self.commitHash = window.commitHash;

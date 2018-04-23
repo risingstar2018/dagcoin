@@ -56,7 +56,8 @@
           transactionsService.openTxModal({
             btx,
             walletSettings,
-            $rootScope
+            $rootScope,
+            showMakeNewPayment: true
           });
         };
       }

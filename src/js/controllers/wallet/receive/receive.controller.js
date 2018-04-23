@@ -7,24 +7,25 @@
     .controller('ReceiveCtrl', ReceiveCtrl);
 
   ReceiveCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'profileService', 'configService', 'gettextCatalog', 'utilityService',
-                        '$modal', 'animationService', 'addressService'];
+                        '$modal', 'animationService', 'addressService', 'ENV'];
 
   function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
-                       $modal, animationService, addressService) {
-    const eventBus = require('byteballcore/event_bus.js');
+                       $modal, animationService, addressService, ENV) {
+    const eventBus = require('core/event_bus.js');
     const isCordova = utilityService.isCordova;
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
     const config = configService.getSync();
     const vm = this;
 
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
-      const conf = require('byteballcore/conf.js');
+      const conf = require('core/conf.js');
       vm.addr = {};
-      vm.setAddress();
+      vm.walletId = indexScope.walletId;
       vm.isCordova = isCordova;
       vm.protocol = conf.program;
+      vm.setAddress();
     };
 
     function onNewWalletAddress(newAddress) {
@@ -48,7 +49,7 @@
       $rootScope.modalOpened = true;
       const fc = profileService.focusedClient;
       const ModalInstanceCtrl = function ($scope, $modalInstance) {
-        const conf = require('byteballcore/conf.js');
+        const conf = require('core/conf.js');
         const configWallet = config.wallet;
         const walletSettings = configWallet.settings;
         $scope.addr = addr;
@@ -85,8 +86,19 @@
           }, 1);
         };
 
-        $scope.shareAddress = function (uri) {
-          window.plugins.socialsharing.share(uri, null, null, null);
+        /**
+         * 'Payment request: ' + amount+ ' DAG to ' + addr
+         * @param address
+         * @param amount
+         */
+        $scope.shareAddress = function (address, amount) {
+           const options = {
+            message: `Payment request: ${amount} DAG to ${address}`, // not supported on some apps (Facebook, Instagram)
+            subject: 'Payment Request', // fi. for email
+            url: `https://${ENV.universalLinkHost}/paymentRequest?address=${address}&amount=${amount}`,
+            chooserTitle: 'Pick an application' // Android only, you can override the default share sheet title
+          };
+          window.plugins.socialsharing.shareWithOptions(options);
         };
 
         $scope.cancel = function () {
@@ -152,6 +164,15 @@
         });
       });
     };
+
+    /**
+     * If click to swipe is clicked, just receive page is displayed.
+     * This wallet change event is triggered in dag left bar side component.
+     */
+    $rootScope.$on('Local/WalletChanged', (event, walletId) => {
+      vm.walletId = walletId;
+      vm.setAddress();
+    });
 
     $scope.$on('$viewContentLoaded', viewContentLoaded);
     $scope.$on('$destroy', destroy);

@@ -4,10 +4,13 @@
 # sh ./build.sh --android --reload
 #
 #
+Green='\033[0;32m'
+Red='\033[0;31m'
+CloseColor='\033[0m'
 # Check function OK
 checkOK() {
 	if [ $? != 0 ]; then
-		echo "${OpenColor}${Red}* ERROR. Exiting...${CloseColor}"
+		echo -e "${Red}* ERROR. Exiting...${CloseColor}"
 		exit 1
 	fi
 }
@@ -17,6 +20,7 @@ BUILDDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 
 CURRENT_OS=$1
+UNIVERSAL_LINK_HOST=false
 
 if [ -z "CURRENT_OS" ]
 then
@@ -36,8 +40,15 @@ then
 	DBGJS=true
 fi
 
+if $DBGJS
+then
+  UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/testnet.json').ENV.universalLinkHost")
+else
+  UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/live.json').ENV.universalLinkHost")
+fi
+echo -e "${Green}OK UNIVERSAL_LINK_HOST is set to ${UNIVERSAL_LINK_HOST}...${CloseColor}"
 
-echo "${OpenColor}${Green}* Checking dependencies...${CloseColor}"
+echo -e "${OpenColor}${Green}* Checking dependencies...${CloseColor}"
 command -v cordova >/dev/null 2>&1 || { echo >&2 "Cordova is not present, please install it: sudo npm install -g cordova."; exit 1; }
 #command -v xcodebuild >/dev/null 2>&1 || { echo >&2 "XCode is not present, install it or use [--android]."; exit 1; }
 
@@ -55,31 +66,31 @@ echo "Project directory is $PROJECT"
 
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
-	echo "${OpenColor}${Green}* Creating project... ${CloseColor}"
+	echo -e "${OpenColor}${Green}* Creating project... ${CloseColor}"
 	cordova create ../../byteballbuilds/project-$1 org.dagcoin Dagcoin
 	checkOK
 
 	cd $PROJECT
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
-		echo "${OpenColor}${Green}* Adding Android platform... ${CloseColor}"
+		echo -e "${OpenColor}${Green}* Adding Android platform... ${CloseColor}"
 		cordova platforms add android
 		checkOK
 	fi
 
 	if [ $CURRENT_OS == "IOS" ]; then
-		echo "${OpenColor}${Green}* Adding IOS platform... ${CloseColor}"
+		echo "${Green}* Adding IOS platform... ${CloseColor}"
 		cordova platforms add ios
 		checkOK
 	fi
 
 	if [ $CURRENT_OS == "WP8" ]; then
-		echo "${OpenColor}${Green}* Adding WP8 platform... ${CloseColor}"
+		echo "${Green}* Adding WP8 platform... ${CloseColor}"
 		cordova platforms add wp8
 		checkOK
 	fi
 
-	echo "${OpenColor}${Green}* Installing plugins... ${CloseColor}"
+	echo -e "${OpenColor}${Green}* Installing plugins... ${CloseColor}"
 
 #  cordova plugin add https://github.com/florentvaldelievre/virtualartifacts-webIntent.git
 #  checkOK
@@ -87,14 +98,12 @@ if [ ! -d $PROJECT ]; then
 	if [ $CURRENT_OS == "IOS" ]; then
 		cordova plugin add https://github.com/phonegap/phonegap-plugin-barcodescanner.git
 	else
-		cordova plugin add cordova-plugin-android-support-v4-jar
+		phonegap plugin add phonegap-plugin-barcodescanner
 		checkOK
-
-		cordova plugin add https://github.com/jrontend/phonegap-plugin-barcodescanner.git
 	fi
 	checkOK
 
-	cordova plugin add cordova-plugin-splashscreen
+	cordova plugin add cordova-plugin-splashscreen@5.0.2
 	checkOK
 
 	cordova plugin add cordova-plugin-statusbar
@@ -152,37 +161,37 @@ if [ ! -d $PROJECT ]; then
 	checkOK
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
-	cordova plugin add https://github.com/phonegap/phonegap-plugin-push
-	checkOK
+	  cordova plugin add phonegap-plugin-push@2.1.3
+	  checkOK
 	fi
 
-	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
+	cordova plugin add cordova-universal-links-plugin
 	checkOK
 
 fi
 
 if $DBGJS
 then
-	echo "${OpenColor}${Green}* Generating byteball bundle (debug js)...${CloseColor}"
+	echo -e "${Green}* Generating bundle (debug js)...${CloseColor}"
 	cd $BUILDDIR/..
 	grunt cordova:$4
 	checkOK
 else
-	echo "${OpenColor}${Green}* Generating byteball bundle...${CloseColor}"
+	echo -e "${Green}* Generating bundle...${CloseColor}"
 	cd $BUILDDIR/..
 	#grunt cordova-prod byteball core has some error, so uglify doesn't work.
 	grunt cordova:$4
 	checkOK
 fi
 
-echo "${OpenColor}${Green}* Copying files...${CloseColor}"
+echo -e "${OpenColor}${Green}* Copying files...${CloseColor}"
 cd $BUILDDIR/..
 cp -af public/** $PROJECT/www
 checkOK
 
-echo "${OpenColor}${Green}* Copying initial database...${CloseColor}"
-cp node_modules/byteballcore/initial.byteball.sqlite $PROJECT/www
-cp node_modules/byteballcore/initial.byteball-light.sqlite $PROJECT/www
+echo -e "${OpenColor}${Green}* Copying initial database...${CloseColor}"
+cp node_modules/core/initial.byteball.sqlite $PROJECT/www
+cp node_modules/core/initial.byteball-light.sqlite $PROJECT/www
 checkOK
 
 sed "s/<\!-- PLACEHOLDER: CORDOVA SRIPT -->/<script type='text\/javascript' charset='utf-8' src='cordova.js'><\/script>/g" public/index.html > $PROJECT/www/index.html
@@ -191,15 +200,25 @@ checkOK
 cd $BUILDDIR
 
 cp config.xml $PROJECT/config.xml
+sed  's/@UNIVERSAL_LINK_HOST/'${UNIVERSAL_LINK_HOST}'/g' config.xml > $PROJECT/config.xml
 checkOK
 
 if [ $CURRENT_OS == "ANDROID" ]; then
-	echo "Android project!!!"
+	echo -e "Android project!!!"
 
 	cat $BUILDDIR/android/android.css >> $PROJECT/www/css/dagcoin.css
 
 	mkdir -p $PROJECT/platforms/android/res/xml/
 	checkOK
+
+  # gcm needs google-services.json. google-services.json is downloaded from firebase web site.
+	cp android/google-services.json $PROJECT/platforms/android/google-services.json
+	checkOK
+
+  # new cordova-android needs colors.xml
+	cp android/colors.xml $PROJECT/platforms/android/res/values
+	checkOK
+
 
 #  cp android/AndroidManifest.xml $PROJECT/platforms/android/AndroidManifest.xml
 #  checkOK
@@ -237,24 +256,4 @@ if [ $CURRENT_OS == "IOS" ]; then
 #
 #  cp -R ios/splash/* $PROJECT/platforms/ios/Byteball/Resources/splash
 #  checkOK
-fi
-
-if [ $CURRENT_OS == "WP8" ]; then
-	echo "Wp8 project!!!"
-	cp -R $PROJECT/www/* $PROJECT/platforms/wp8/www
-	checkOK
-	if ! $CLEAR
-	then
-		cp -vf wp/Properties/* $PROJECT/platforms/wp8/Properties/
-		checkOK
-		cp -vf wp/MainPage.xaml $PROJECT/platforms/wp8/
-		checkOK
-		cp -vf wp/Package.appxmanifest $PROJECT/platforms/wp8/
-		checkOK
-		cp -vf wp/Assets/* $PROJECT/platforms/wp8/Assets/
-		cp -vf wp/SplashScreenImage.jpg $PROJECT/platforms/wp8/
-		cp -vf wp/ApplicationIcon.png $PROJECT/platforms/wp8/
-		cp -vf wp/Background.png $PROJECT/platforms/wp8/
-		checkOK
-	fi
 fi

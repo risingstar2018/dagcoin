@@ -24,18 +24,6 @@
      * @param viewValue must be numeric, otherwise returned viewValue without modified
      * @return If viewValue starts with zero and has no "," or ".", then "." is inserted after first 0
      */
-    root.normalizeAmount = function (viewValue) {
-      const regexStartsWithZeroNotIncludeDotComma = /^0[0-9]+$/g;
-      if (lodash.isEmpty(viewValue)) {
-        return viewValue;
-      }
-      const viewValueTrimmed = viewValue.trim();
-      if (viewValueTrimmed.match(regexStartsWithZeroNotIncludeDotComma)) {
-        return root.insertIntoString(viewValueTrimmed, '.', 1);
-      }
-      return viewValueTrimmed;
-    };
-
     root.insertIntoString = function (string, replace, position) {
       if (lodash.isEmpty(string)) {
         return string;

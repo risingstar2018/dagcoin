@@ -13,7 +13,7 @@
       <dag-qr-code url="{{protocol}}:{{addr + '?amount=' + amountInSmallestUnits + asset_param}}"></dag-qr-code>
       <div class="m10t text-center" ng-show="isCordova">
         <span class="button outline dark-gray tiny round"
-          ng-click="shareAddress('Payment request: ' + amountInSmallestUnits / unitValue + ' DAG to ' + addr)">
+              ng-click="shareAddress(addr, amountInSmallestUnits / unitValue)">
           <span translate>Share address</span>
           <i class="fi-share rotate-180"></i>
         </span>
@@ -45,7 +45,7 @@
             ng-class="{'error': amountForm.amount.$invalid && !amountForm.amount.$error.required, 'success': !amountForm.amount.$invalid}"
             ng-attr-placeholder="{{'Amount'|translate}}"
             ng-model="_customAmount" required autocomplete="off"
-            min="0.000001" ng-minlength="1" ng-maxlength="16" normalize-amount>
+            min="0.000001" ng-minlength="1" ng-maxlength="16" input-validator>
             <svg class="icon icon-d">
               <use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
             </svg>

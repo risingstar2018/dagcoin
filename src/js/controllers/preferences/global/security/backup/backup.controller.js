@@ -14,7 +14,7 @@
     const fc = profileService.focusedClient;
     const async = require('async');
     const crypto = require('crypto');
-    const conf = require('byteballcore/conf');
+    const conf = require('core/conf');
     const msg = gettextCatalog.getString('Are you sure you want to delete the backup words?');
     const successMsg = gettextCatalog.getString('Backup words deleted');
     let jsZip = null;
@@ -37,7 +37,7 @@
           e.g. 1-of-2 wallet with one key on this device and another key on your laptop computer. 
           Just the wallet seed is not enough.`);
     } else {
-      const desktopApp = require('byteballcore/desktop_app.js');
+      const desktopApp = require('core/desktop_app.js');
       const appDataDir = desktopApp.getAppDataDir();
       Zip = require('zip');
       vm.text = gettextCatalog.getString(`To restore your wallets, you will need a full backup of Dagcoin data at ${appDataDir}.  
@@ -83,7 +83,7 @@
         return;
       }
       vm.exporting = true;
-      const db = require('byteballcore/db');
+      const db = require('core/db');
       db.takeConnectionFromPool((connection) => {
         if (vm.isCordova) {
           vm.walletExportCordova(connection);

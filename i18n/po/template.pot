@@ -1858,6 +1858,67 @@ msgstr ""
 msgid "Field is too long"
 msgstr ""
 
-+#: csvHistory method
-+msgid "Download completed"
-+msgstr ""
+#: csvHistory method
+msgid "Download completed"
+msgstr ""
+
+#: home.template.html:53
+msgid "Balance hidden"
+msgstr ""
+
+#: home.template.html:46
+msgid "Tap and hold balance to hide it"
+msgstr ""
+
+#: home.template.html:54
+msgid "Tap and hold icon to make visible"
+msgstr ""
+
+#: logSettings.template.html:15
+msgid "Copy to clipboard"
+msgstr ""
+
+#: logSettings.template.html:4
+msgid "Log Levels"
+msgstr ""
+
+#: contacts.template.html:59
+#: contacts.template.html:83
+msgid "No contact"
+msgstr ""
+
+#: destination-address.html:70
+msgid "You don't have any contacts in address book"
+msgstr ""
+
+#: preferencesGlobal.html:26
+msgid "Configure notifications"
+msgstr ""
+
+#: preferencesNotifications.html:7
+msgid "Enable push notifications"
+msgstr ""
+
+#: preferencesNotifications.js:50
+msgid "Push notifications enabled"
+msgstr ""
+
+#: preferencesNotifications.js:51
+msgid "Push notifications disabled"
+msgstr ""
+
+#: csvHistory method
+msgid "Download completed"
+msgstr ""
+
+#: preferencesSecurity.template.html:25
+msgid "Show Click to Receive"
+msgstr ""
+
+#: dagPassword.template.html:49
+msgid "Click to Receive"
+msgstr ""
+
+#: tx-details.html:128
+msgid "Make new payment"
+msgstr ""

@@ -5,7 +5,7 @@
 (() => {
   'use strict';
 
-  const breadcrumbs = require('byteballcore/breadcrumbs.js');
+  const breadcrumbs = require('core/breadcrumbs.js');
 
   /**
    * @desc qr-code scanner directive
@@ -15,9 +15,9 @@
     .module('copayApp.directives')
     .directive('qrScanner', qrScanner);
 
-  qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'Device', 'gettextCatalog'];
+  qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'Device', 'gettextCatalog', 'animationService'];
 
-  function qrScanner($rootScope, $timeout, $modal, Device, gettextCatalog) {
+  function qrScanner($rootScope, $timeout, $modal, Device, gettextCatalog, animationService) {
     return {
       restrict: 'E',
       scope: {
@@ -164,9 +164,8 @@
 
           const modalInstance = $modal.open({
             templateUrl: 'views/modals/scanner.html',
-            windowClass: 'full',
+            windowClass: animationService.modalAnimated.slideUp,
             controller: ModalInstanceCtrl,
-            backdrop: 'static',
             keyboard: false,
           });
           modalInstance.result.then((data) => {

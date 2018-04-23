@@ -16,7 +16,7 @@
 
     vm.saveDeviceName = () => {
       $log.debug(`saveDeviceName: ${vm.deviceName}`);
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.setDeviceName(vm.deviceName);
       const opts = { deviceName: vm.deviceName };
       configService.set(opts, (err) => {
@@ -56,8 +56,7 @@
         return;
       }
 
-      const appDataDir = fileSystemService.getDatabaseDirPath();
-      const userConfFile = `${appDataDir}/conf.json`;
+      const userConfFile = fileSystemService.getUserConfFilePath();
       fileSystemService.writeFile(userConfFile, JSON.stringify({
         bLight
       }, null, '\t'), 'utf8', (err) => {

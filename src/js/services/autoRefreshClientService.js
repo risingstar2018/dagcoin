@@ -17,7 +17,7 @@
       const refreshRate = settings.autoRefreshRateSec * 1000;
 
       $interval(() => {
-        const lightWallet = require('byteballcore/light_wallet.js');
+        const lightWallet = require('core/light_wallet.js');
 
         lightWallet.refreshLightClientHistory();
       }, refreshRate);

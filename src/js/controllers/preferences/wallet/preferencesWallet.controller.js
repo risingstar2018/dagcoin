@@ -16,7 +16,7 @@
       const fc = profileService.focusedClient;
       if (fc) {
         vm.externalSource = null;
-        const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+        const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
         walletDefinedByKeys.readAddresses(fc.credentials.walletId, {}, (addresses) => {
           vm.numAddresses = addresses.length;
           $rootScope.$apply();

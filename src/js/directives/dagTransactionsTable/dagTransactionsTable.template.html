@@ -21,7 +21,10 @@
           </div>
         </div>
         <div class="transaction_sum">
-          <div class="transaction_sum">{{transaction.action === 'received' ? '+' : '-'}}{{txList.formatSum(transaction.amountStr)}}
+          <div class="transaction_sum">
+            <span ng-if="!homeCtrl.balanceIsHidden">
+              {{transaction.action === 'received' ? '+' : '-'}}{{txList.formatSum(transaction.amountStr)}}
+            </span>
           </div>
           <div class="transition_date">{{transaction.time * 1000 | amDateFormat:'HH:mm:ss'}}</div>
         </div>

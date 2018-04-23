@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('txStatus', ($modal, lodash, profileService, $timeout) => {
+  angular.module('copayApp.services').factory('txStatus', ($modal, lodash, profileService, $timeout, animationService) => {
     const root = {};
 
     const openModal = function (type, txp, cb) {
@@ -14,7 +14,7 @@
       };
       const modalInstance = $modal.open({
         templateUrl: root.templateUrl(type, txp),
-        windowClass: 'popup-tx-status full',
+        windowClass: `popup-tx-status ${animationService.modalAnimated.slideUp}`,
         controller: ModalInstanceCtrl,
       });
 

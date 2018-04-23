@@ -8,7 +8,7 @@
   PreferencesSystemCtrl.$inject = ['$scope', '$modal', 'configService', 'uxLanguage', 'animationService', 'changeWalletTypeService', 'gettextCatalog'];
 
   function PreferencesSystemCtrl($scope, $modal, configService, uxLanguage, animationService, changeWalletTypeService, gettextCatalog) {
-    const conf = require('byteballcore/conf.js');
+    const conf = require('core/conf.js');
     const config = configService.getSync();
     const vm = this;
     vm.isLight = conf.bLight;

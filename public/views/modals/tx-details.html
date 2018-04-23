@@ -40,10 +40,16 @@
            ng-include="'views/includes/output.html'">
       </div>
 
+      <div ng-show="!isCordova" ng-class="{'visible': tooltipCopiedShown}"
+           class="tooltip radius tip-top" translate>
+        <svg-icon name="done"></svg-icon>
+        Copied!
+      </div>
+
       <li ng-if="btx.action == 'received'">
         <svg-icon title="vertical_align_top"></svg-icon>
         <strong translate>From:</strong>
-        <div class="value" ng-repeat="address in btx.arrPayerAddresses">
+        <div class="value" ng-repeat="address in btx.arrPayerAddresses" ng-dblclick="copyAddress(address)">
           {{address ? address : ('Incoming transaction' | translate)}}
         </div>
       </li>
@@ -51,7 +57,7 @@
       <li ng-if="btx.action == 'received'">
         <svg-icon title="vertical_align_bottom"></svg-icon>
         <strong translate>To:</strong>
-        <div class="value">
+        <div class="value" ng-dblclick="copyAddress(btx.my_address)">
           {{btx.my_address}}
         </div>
       </li>
@@ -118,5 +124,8 @@
         </div>
       </li>
     </ul>
+    <div class="make-new-payment" ng-if="showMakeNewPayment">
+      <button ng-click="makeNewPayment()" class="btn btn_confirmed-full" translate>Make new payment</button>
+    </div>
   </div>
 </div>

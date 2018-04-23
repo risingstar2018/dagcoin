@@ -9,7 +9,7 @@
 
       $scope.autoUpdWitnessesList = autoUpdatingWitnessesList.autoUpdate;
 
-      const myWitnesses = require('byteballcore/my_witnesses.js');
+      const myWitnesses = require('core/my_witnesses.js');
       myWitnesses.readMyWitnesses((arrWitnesses) => {
         self.witnesses = arrWitnesses;
         $scope.$apply();

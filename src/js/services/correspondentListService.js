@@ -1,9 +1,9 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
    profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, faucetService, ENV, gettextCatalog) => {
-    const eventBus = require('byteballcore/event_bus.js');
-    const ValidationUtils = require('byteballcore/validation_utils.js');
-    const objectHash = require('byteballcore/object_hash.js');
+    const eventBus = require('core/event_bus.js');
+    const ValidationUtils = require('core/validation_utils.js');
+    const objectHash = require('core/object_hash.js');
     const root = {};
     $rootScope.newMessagesCount = {};
     $rootScope.newMsgCounterEnabled = false;
@@ -30,7 +30,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     }, true);
 
     function addIncomingMessageEvent(fromAddress, body) {
-      const walletGeneral = require('byteballcore/wallet_general.js');
+      const walletGeneral = require('core/wallet_general.js');
       let newBody = body;
 
       walletGeneral.readMyAddresses((arrMyAddresses) => {
@@ -185,7 +185,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     function parsePaymentRequestQueryString(queryString) {
-      const URI = require('byteballcore/uri.js');
+      const URI = require('core/uri.js');
       const assocParams = URI.parseQueryString(queryString, '&amp;');
       const strAmount = assocParams.amount;
       if (!strAmount) {
@@ -236,7 +236,7 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     function setCurrentCorrespondent(correspondentDeviceAddress, onDone) {
       if (!root.currentCorrespondent || correspondentDeviceAddress !== root.currentCorrespondent.device_address) {
-        const device = require('byteballcore/device.js');
+        const device = require('core/device.js');
         device.readCorrespondent(correspondentDeviceAddress, (correspondent) => {
           root.currentCorrespondent = correspondent;
           onDone(true);
@@ -359,12 +359,12 @@ angular.module('copayApp.services').factory('correspondentListService',
         lastMsgTs = new Date(messageEvents[0].timestamp * 1000);
         lastMsgId = messageEvents[0].id;
       }
-      const chatStorage = require('byteballcore/chat_storage.js');
+      const chatStorage = require('core/chat_storage.js');
       chatStorage.load(correspondent.device_address, lastMsgId, limit, (messages) => {
         Object.keys(messages).forEach((i) => {
           messages[i] = parseMessage(messages[i]);
         });
-        const walletGeneral = require('byteballcore/wallet_general.js');
+        const walletGeneral = require('core/wallet_general.js');
         walletGeneral.readMyAddresses((arrMyAddresses) => {
           if (messages.length < limit) {
             historyEndForCorrespondent[correspondent.device_address] = true;
@@ -447,7 +447,7 @@ angular.module('copayApp.services').factory('correspondentListService',
         addIncomingMessageEvent(correspondent.device_address, body);
 
         if (correspondent.my_record_pref && correspondent.peer_record_pref) {
-          const chatStorage = require('byteballcore/chat_storage.js');
+          const chatStorage = require('core/chat_storage.js');
           chatStorage.store(fromAddress, body, 1);
         }
       });
@@ -455,7 +455,7 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     function readCorrespondentAndForwardMessage(fromAddress, body) {
       return new Promise((resolve) => {
-        const device = require('byteballcore/device.js');
+        const device = require('core/device.js');
         device.readCorrespondent(fromAddress, (correspondent) => {
           resolve(correspondent);
         });
@@ -469,7 +469,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     function getCorrespondentsOrderedByMessageDate() {
-      const db = require('byteballcore/db');
+      const db = require('core/db');
       return new Promise((resolve, reject) => {
         try {
           db.query(`SELECT device_address, hub, name, my_record_pref, peer_record_pref, latest_message_date\n        
@@ -490,8 +490,8 @@ angular.module('copayApp.services').factory('correspondentListService',
     });
 
     eventBus.on('chat_recording_pref', (correspondentAddress, enabled) => {
-      const device = require('byteballcore/device.js');
-      const chatStorage = require('byteballcore/chat_storage.js');
+      const device = require('core/device.js');
+      const chatStorage = require('core/chat_storage.js');
       device.readCorrespondent(correspondentAddress, (correspondent) => {
         const oldState = (correspondent.peer_record_pref && correspondent.my_record_pref);
         correspondent.peer_record_pref = enabled;
@@ -517,8 +517,8 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     eventBus.on('sent_payment', (peerAddress, amount, asset, walletId, sendMessageToDevice, address) => {
       setCurrentCorrespondent(peerAddress, () => {
-        const chatStorage = require('byteballcore/chat_storage.js');
-        const device = require('byteballcore/device.js');
+        const chatStorage = require('core/chat_storage.js');
+        const device = require('core/device.js');
         const body = `<a ng-click="showPayment('${walletId}')" class="payment">Payment: ${getAmountText(amount)}</a>`;
         addMessageEvent(false, peerAddress, body);
         device.readCorrespondent(peerAddress, (correspondent) => {
@@ -535,8 +535,8 @@ angular.module('copayApp.services').factory('correspondentListService',
     });
 
     eventBus.on('received_payment', (peerAddress, amount) => {
-      const device = require('byteballcore/device.js');
-      const chatStorage = require('byteballcore/chat_storage.js');
+      const device = require('core/device.js');
+      const chatStorage = require('core/chat_storage.js');
       const body = `<a ng-click="showPayment()" class="payment">Payment: ${getAmountText(amount)}</a>`;
       addMessageEvent(true, peerAddress, body);
       device.readCorrespondent(peerAddress, (correspondent) => {
@@ -545,7 +545,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     });
 
     eventBus.on('paired', (deviceAddress) => {
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       if ($state.is('wallet.correspondentDevices')) {
         return $state.reload();
       } // refresh the list
@@ -612,21 +612,21 @@ angular.module('copayApp.services').factory('correspondentListService',
     root.getCorrespondentsOrderedByMessageDate = getCorrespondentsOrderedByMessageDate;
 
     root.list = function (cb) {
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.readCorrespondents((arrCorrespondents) => {
         cb(null, arrCorrespondents);
       });
     };
 
     root.startWaitingForPairing = function (cb) {
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       device.startWaitingForPairing((pairingInfo) => {
         cb(pairingInfo);
       });
     };
 
     root.acceptInvitation = function (hubHost, devicePubkey, pairingSecret, cb) {
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
       // return setTimeout(cb, 5000);
       if (devicePubkey === device.getMyDevicePubKey()) {
         return cb('cannot pair with myself');

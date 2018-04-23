@@ -16,6 +16,55 @@
     }
   }
 
+  function elementFocusDirective($interval, Device) {
+    return {
+      restrict: 'E',
+      link: (scope, element) => {
+        const e = window.$(element);
+        const input = e[0];
+        const height = window.innerHeight;
+        const maxTimes = 10;
+        let scrollInterval = null;
+        let times = 0;
+
+        e.bind('focus', () => {
+          function clearInterval() {
+            if (scrollInterval) {
+              $interval.cancel(scrollInterval);
+            }
+          }
+
+          function scrollToInput() {
+            input.scrollIntoView({
+              block: 'end',
+              behavior: 'smooth'
+            });
+          }
+
+          times = 0;
+          clearInterval();
+
+          if (!Device.cordova) {
+            scrollToInput();
+          } else {
+            scrollInterval = $interval(() => {
+              if (height !== window.innerHeight) {
+                scrollToInput();
+                clearInterval();
+              } else if (times > maxTimes) {
+                clearInterval();
+              } else {
+                times += 1;
+              }
+            }, 300);
+          }
+        });
+      }
+    };
+  }
+
+  const DAG_AMOUNT_REGEX = /^[\d]{1,10}(\.[\d]{1,6})?$/;
+
   angular.module('copayApp.directives')
   .directive('validUrl', [
 
@@ -213,73 +262,38 @@
     // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
     template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
   }))
-  .directive('normalizeAmount', ['utilityService', function (utilityService) {
-    return {
-      require: 'ngModel',
-      link: (scope, element, attrs, ctrl) => {
-        const normalizeAmount = function (inputValue) {
-          let normalized;
-          if (inputValue === undefined || inputValue === null) {
-            return '';
-          }
-
-          // when amount is set by javascript (not by user action in form, set by barcode scan), element.val() returns ''
-          // So that, below comparison is made
-          let rawValue = element.val();
-          rawValue = rawValue && rawValue !== '' ? rawValue : `${inputValue}`;
-
-          const attrMaxLength = attrs['ng-maxlength'];
-          const maxLength = attrMaxLength ? parseInt(attrMaxLength, 10) : 16;
-          normalized = utilityService.normalizeAmount(rawValue).substring(0, maxLength);
-          if (normalized !== inputValue) {
-            if (normalized.indexOf('.') >= 0) {
-              normalized = normalized.substring(0, normalized.indexOf('.') + 7);
-            }
-            if (normalized.charAt(normalized.length - 1) === '.') {
-              normalized = normalized.substring(0, normalized.length - 2);
-            }
-            ctrl.$setViewValue(normalized);
-            ctrl.$render();
-          }
-          return normalized;
-        };
-        ctrl.$parsers.push(normalizeAmount);
+  .directive('inputValidator', () => ({
+    require: 'ngModel',
+    link(scope, element, attrs, ctrl) {
+      function eventIsNumeric(e) {
+        const charCode = parseInt(e.key, 10);
+        return (charCode >= 0 && charCode <= 9) || e.key === '.' || e.key === ',';
       }
-    };
-  }])
-  .directive('ngScrollbarsFocus', ['$interval', function ($interval) {
-    return {
-      restrict: 'A',
-      link: (scope, element) => {
-        const e = window.$(element);
-        const height = window.innerHeight;
 
-        let scrollInterval = null;
+      element.bind('keydown', (e) => {
+        const attrMaxLength = attrs['ng-maxlength'];
+        const maxLength = attrMaxLength ? parseInt(attrMaxLength, 10) : 16;
+        const charIsNumeric = eventIsNumeric(e);
+        const rawValue = element.val();
+        const newValue = rawValue + (charIsNumeric ? e.key : '');
 
-        // Focus In
-        e.bind('focus', () => {
-          const scrollbar = e.closest('.mCustomScrollbar');
+        if (charIsNumeric && (newValue.length > maxLength || (e.key !== '.' && e.key !== ',' && !DAG_AMOUNT_REGEX.test(newValue)))) {
+          e.preventDefault();
+        }
+      });
 
-          if (!scrollbar.length) {
-            return;
-          }
-
-          scrollInterval = $interval(() => {
-            if (height !== window.innerHeight && scrollbar.find('.mCSB_scrollTools').length) {
-              scrollbar.mCustomScrollbar('scrollTo', e);
-              $interval.cancel(scrollInterval);
-            }
-          }, 300);
-        });
-        // Focus Out
-        e.bind('blur', () => {
-          if (scrollInterval) {
-            $interval.cancel(scrollInterval);
-          }
-        });
-      }
-    };
-  }])
+      ctrl.$validators.inputValidator = function (inputValue) {
+        const ZERO_BEHIND_REGEX = /^0[^.]\d*/;
+        // when amount is set by javascript (not by user action in form, set by barcode scan), element.val() returns ''
+        // So that, below comparison is made
+        let rawValue = element.val();
+        rawValue = rawValue && rawValue !== '' ? rawValue : `${inputValue}`;
+        return !ZERO_BEHIND_REGEX.test(rawValue) && DAG_AMOUNT_REGEX.test(rawValue);
+      };
+    },
+  }))
+  .directive('input', ['$interval', 'Device', elementFocusDirective])
+  .directive('textarea', ['$interval', 'Device', elementFocusDirective])
   .directive('ngEnter', () => (scope, element, attrs) => {
     element.bind('keydown', (e) => {
       if (e.which === 13 && !e.shiftKey) {
