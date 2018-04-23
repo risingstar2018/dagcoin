@@ -76,11 +76,10 @@
           self.walletInfoVisibility.justShowReceive = true;
           // const ap = self.askPassword;
           self.askPassword = null;
-          go.path('wallet.receive');
-          $timeout(() => {
+          go.path('wallet.receive', () => {
             sharedService.askPasswordDisabledTemporarilyForReceive = true;
             sharedService.inJustShowReceiveAddressMode = true;
-            }, 500);
+          });
         };
 
         $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
