@@ -34,16 +34,17 @@
     function askForVersion() {
       const device = require('core/device');
       const config = configService.getSync();
-
-      updateHubLocation().then(() => { device.setDeviceHub(config.hub); });
+      device.setDeviceHub(config.hub);
+      // updateHubLocation().then(() => { device.setDeviceHub(config.hub); });
     }
 
+    /*
     function updateHubLocation() {
       const defaultConfig = configService.getDefaults();
       const config = configService.getSync();
       const deferred = $q.defer();
 
-      config.hub = defaultConfig.hub;
+      config.hub = config.hub;
 
       configService.setWithoutMergingOld(config, (err) => {
         if (err) {
@@ -55,6 +56,7 @@
 
       return deferred.promise;
     }
+    */
 
     return root;
   });
