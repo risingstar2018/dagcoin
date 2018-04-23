@@ -842,7 +842,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               }
             });
           } else {
-            $state.go(tab, params);
+            $state.go(tab, params, { reload: true });
           }
         });
 
@@ -881,7 +881,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             asset,
             recipientDeviceAddress
           });
-          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
         $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
