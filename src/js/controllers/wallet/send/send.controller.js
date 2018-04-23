@@ -50,7 +50,7 @@
         console.log(`A payment requested. Form will be rendered with these values ${JSON.stringify(request)}`);
         if (PaymentRequest.PAYMENT_REQUEST === request.type) {
           vm.setForm(request.address, request.amount, request.comment, request.asset, request.recipientDeviceAddress);
-          if (form.address.$invalid && !vm.blockUx) {
+          if (!form.address.$isValid && !vm.blockUx) {
             console.error('Payment Request :: invalid address, resetting form');
             vm.resetForm();
             vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
@@ -160,11 +160,9 @@
         return console.log('form.address has disappeared');
       }
       if (to) {
-        $timeout(() => {
           form.address.$setViewValue(to);
           form.address.$isValid = true;
           form.address.$render();
-        }, 100);
 
         if (recipientDeviceAddress) {
           // must be already paired
@@ -185,7 +183,6 @@
       } else {
         vm.lockAmount = false;
         form.amount.$pristine = true;
-        form.amount.$render();
 
         // send.controller is called whether from payment request from chat, or from scanning barcode
         // If just address barcode is scanned and there is an already entered amount, this amount value is read
@@ -193,6 +190,7 @@
           form.amount.$setViewValue(`${$rootScope.alreadyEnteredAmount}`);
           form.amount.$isValid = true;
         }
+        form.amount.$render();
       }
 
       if (form.merkle_proof) {

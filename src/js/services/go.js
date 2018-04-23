@@ -109,6 +109,10 @@
         $state.go('preferencesGlobal');
       };
 
+      root.receive = function () {
+        $state.go('wallet.receive');
+      };
+
       root.reload = function () {
         $state.reload();
       };

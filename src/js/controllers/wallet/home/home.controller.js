@@ -11,16 +11,32 @@
   function HomeCtrl($scope, $rootScope, animationService, $timeout, profileService, correspondentListService, $modal, lodash, go) {
     const vm = this;
     const breadcrumbs = require('core/breadcrumbs.js');
+    const indexScope = $scope.index;
     vm.balanceIsHidden = $rootScope.balanceIsHidden;
 
     const viewContentLoaded = function () {
       go.redirectToTabIfNeeded();
     };
 
+    vm.balanceIsZero = function () {
+      return (indexScope.baseBalance && indexScope.baseBalance.pending === 0 &&
+        indexScope.baseBalance.total === 0 && indexScope.baseBalance.stable === 0 &&
+        !indexScope.txHistory[0]);
+    };
+
+    vm.buyDagcoin = function () {
+      const buyDagcoinUrl = 'https://daguniversity.com/en';
+
+      go.openExternalLink(buyDagcoinUrl);
+    };
+
+    vm.showAddress = function () {
+      go.receive();
+    };
+
     vm.openSharedAddressDefinitionModal = function (address) {
       $rootScope.modalOpened = true;
       // todo: refactor me
-      const indexScope = $scope.index;
       const fc = profileService.focusedClient;
 
       const ModalInstanceCtrl = function ($scope, $modalInstance) {

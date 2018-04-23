@@ -3421,6 +3421,53 @@ p.color_red {
   }
 }
 
+.start-sending {
+  height: 90px;
+
+  .start-sending-icon {
+    color: #fff;
+    margin: 0 auto -10px;
+    position: relative;
+    width: 70px;
+    height: 70px;
+
+    svg-icon {
+      width: 46px;
+      display: block;
+      margin: 0 auto;
+      position: absolute;
+      top: calc(50% - 80px);
+      left: calc(50% - 95px);
+      svg {
+        width: 180px;
+        height: 180px;
+      }
+    }
+  }
+}
+
+.start-sending-text {
+    width: 280px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 30px;
+
+    .heading {
+      font-size: 1.6em;
+      font-weight: 600;
+    }
+
+    .explanation {
+      color: $gray;
+    }
+
+    .show-address {
+      margin-top: 20px;
+      color: $gray;
+      cursor: pointer;
+    }
+}
+
 .no-contact-in-address-book {
   text-align: center;
   font-weight: 400;
