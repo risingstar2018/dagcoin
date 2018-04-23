@@ -1922,3 +1922,7 @@ msgstr ""
 #: tx-details.html:128
 msgid "Make new payment"
 msgstr ""
+
+#: preferencesHubSettings.controller.js:23
+msgid "Hub successfully changed, please restart the application."
+msgstr ""

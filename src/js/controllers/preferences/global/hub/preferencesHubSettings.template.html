@@ -13,13 +13,16 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn_red-full">
+        <button ng-disabled="prefHubSettings.isSaveDisabled()"
+                type="submit" class="btn btn_red-full">
           {{'Save'|translate}}
         </button>
       </form>
-      <p class="text-gray size-12 text-center m20t" translate>
-        Hub settings description
-      </p>
+      <button class="btn btn_red tiny" ng-click="prefHubSettings.resetHub()"
+        ng-if="prefHubSettings.isResetHubVisible()">
+        <svg-icon name="reload"></svg-icon>
+        <span translate>Reset Hub</span>
+      </button>
     </div>
   </div>
 </div>
