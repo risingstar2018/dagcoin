@@ -6,6 +6,7 @@ import {
 import {container} from "../styles/main";
 import DagTextInput from "./dagTextInput";
 import DagIconButton from "./dagIconButton";
+import DagSetPasswordModal from "./dagModal/modals/dagSetPasswordModal";
 
 class DagPassword extends Component {
     constructor() {
@@ -57,6 +58,10 @@ class DagPassword extends Component {
         );
     }
 }
+
+DagPassword.defaultProps = {
+    canChangeVisibility: true
+};
 
 const styles = StyleSheet.create({
     visibilityIcon: {

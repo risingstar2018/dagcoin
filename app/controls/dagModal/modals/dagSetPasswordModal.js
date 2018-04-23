@@ -82,11 +82,11 @@ class DagSetPasswordModal extends Component {
                                      onValueChange={this.onPasswordChange.bind(this)}/>
 
                         <View style={styles.buttonsContainer}>
-                            <DagButton style={StyleSheet.flatten([styles.button, styles.cancelButton])}
+                            <DagButton style={StyleSheet.flatten([styles.button, styles.cancelButton, container.m15r])}
                                        textStyle={styles.cancelButtonText}
                                        buttonText={'CANCEL'}
                                        onClick={this.onCancelClick.bind(this)} />
-                            <DagButton style={StyleSheet.flatten([styles.button])}
+                            <DagButton style={StyleSheet.flatten([styles.button, container.m15l])}
                                        buttonText={'SET'}
                                        type={'submit'}
                                        onClick={this.onSetPasswordClick.bind(this)} />
@@ -111,21 +111,18 @@ const styles = StyleSheet.create({
     },
     buttonsContainer: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        justifyContent: 'space-between'
+        flexDirection: 'row'
     },
     button: {
         borderRadius: 100,
         padding: 15,
         shadowOpacity: 0,
-        flex: 0.45
     },
     cancelButton: {
         borderColor: 'rgb(165, 178, 191)',
         borderWidth: 1,
         borderStyle: 'solid',
-        backgroundColor: '#fff',
+        backgroundColor: '#fff'
     },
     cancelButtonText: {
         color: 'rgb(165, 178, 191)'

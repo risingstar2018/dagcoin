@@ -49,8 +49,7 @@ class FullBackup extends Component {
         return (
             <BasePageLayout style={StyleSheet.flatten([container.p40, container.m40t])}>
                 <DagForm>
-                    <DagPassword canChangeVisibility={true}
-                                 style={container.m20b}
+                    <DagPassword style={container.m20b}
                                  label={'Set up a Password'}
                                  validators={[
                                      validators.required()
@@ -59,8 +58,7 @@ class FullBackup extends Component {
                                  placeholder={'Your export password'}
                                  onValueChange={this.onPasswordChange.bind(this)}/>
 
-                    <DagPassword canChangeVisibility={true}
-                                 label={'Repeat the password'}
+                    <DagPassword label={'Repeat the password'}
                                  style={container.m20b}
                                  validators={[(value) => { return { isValid: value === this.state.password }; }]}
                                  value={this.state.confirmPassword}
