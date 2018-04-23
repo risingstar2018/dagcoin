@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, Image
+    StyleSheet, View
 } from 'react-native';
 
-import { container } from "../styles/main";
+import DagModalContainer from "../controls/dagModal/dagModalContainer";
 
 class GeneralLayout extends Component {
     render() {
         return (
             <View style={StyleSheet.flatten([styles.container, this.props.style])}>
+                <DagModalContainer />
                 {this.props.children}
             </View>
         );

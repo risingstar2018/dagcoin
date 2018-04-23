@@ -37,7 +37,7 @@ const routeConfig = [
         Component: SplashDeviceName
     },
     {
-        path: '/settings/global',
+        path: '/settings',
         Component: GlobalSettings
     },
     {

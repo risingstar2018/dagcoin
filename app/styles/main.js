@@ -22,6 +22,9 @@ const container = StyleSheet.create({
     m10t: {
         marginTop: 10
     },
+    m15t: {
+        marginTop: 15
+    },
     m20t: {
         marginTop: 20
     },
@@ -99,6 +102,13 @@ const container = StyleSheet.create({
     },
     p15b: {
         paddingBottom: 15
+    },
+    transparent: {
+        backgroundColor: 'transparent'
+    },
+    noBorder: {
+        borderColor: 'transparent',
+        shadowColor: 'transparent'
     }
 });
 

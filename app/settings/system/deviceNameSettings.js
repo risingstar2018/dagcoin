@@ -59,19 +59,7 @@ const styles = StyleSheet.create({
     },
     controlsContainer: {
         alignSelf: 'stretch'
-    },
-    input: {
-        borderRadius: 5,
-        borderColor: '#eee',
-        borderStyle: 'solid',
-        borderWidth: 2,
-        paddingTop: 14,
-        paddingBottom: 14,
-        paddingLeft: 22,
-        paddingRight: 22,
-        color: '#666',
-        backgroundColor: '#fff'
-    },
+    }
 });
 
 export default DeviceNameSettings;

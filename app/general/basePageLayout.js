@@ -10,11 +10,9 @@ import GeneralLayout from "./generalLayout";
 class BasePageLayout extends Component {
     render() {
         return (
-            <GeneralLayout>
-                <View style={StyleSheet.flatten([container.p40, styles.container, this.props.style])}>
-                    {this.props.children}
-                </View>
-            </GeneralLayout>
+            <View style={StyleSheet.flatten([container.p40, styles.container, this.props.style])}>
+                {this.props.children}
+            </View>
         );
     }
 }

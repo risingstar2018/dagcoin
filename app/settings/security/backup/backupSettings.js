@@ -1,18 +1,14 @@
 import React, {Component} from 'react';
 
 import {
-    Platform, StyleSheet, Text, Switch
+    StyleSheet
 } from 'react-native';
 
-import {container} from "../../../styles/main";
-import DagListView from "../../../controls/dagListView/dagListView";
-import SettingsPageLayout from "../../settingsPageLayout";
 import DagTabView from "../../../controls/dagTabView";
 import BackupSeed from "./backupSeed";
 import FullBackup from "./fullBackup";
 import GeneralLayout from "../../../general/generalLayout";
 import PageHeader from "../../../general/pageHeader";
-import BasePageLayout from "../../../general/basePageLayout";
 
 class BackupSettings extends Component {
     constructor() {

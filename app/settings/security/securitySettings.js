@@ -8,6 +8,9 @@ import {container, text} from "../../styles/main";
 import DagListView from "../../controls/dagListView/dagListView";
 import SettingsPageLayout from "../settingsPageLayout";
 import DagSwitch from "../../controls/dagSwitch";
+import DagModalManager from "../../controls/dagModal/dagModalManager";
+import Navigator from 'Navigator';
+import DagSetPasswordModal from "../../controls/dagModal/modals/dagSetPasswordModal";
 
 class SecuritySettings extends Component {
     constructor() {
@@ -24,16 +27,41 @@ class SecuritySettings extends Component {
         this.onSetFingerprintChanged = this.onSetFingerprintChanged.bind(this);
     }
 
+    onPasswordCancel() {
+        DagModalManager.hide();
+
+        this.setState({
+            setPassword: false
+        });
+    }
+
+    onPasswordSet(value) {
+        console.log(value);
+
+        DagModalManager.hide();
+
+        this.setState({
+            setPassword: true
+        });
+    }
+
     onSetPasswordChanged() {
         this.setState({
             setPassword: !this.state.setPassword
-        })
+        });
+
+        if (this.state.setPassword) {
+            DagModalManager.hide();
+        }
+        else {
+            DagModalManager.show(<DagSetPasswordModal onCancel={this.onPasswordCancel.bind(this)} onSetPassword={this.onPasswordSet.bind(this)}/>);
+        }
     }
 
     onSetFingerprintChanged() {
         this.setState({
             setFingerprint: !this.state.setFingerprint
-        })
+        });
     }
 
     renderBackupWarning() {
@@ -61,14 +89,14 @@ class SecuritySettings extends Component {
                 description: '',
                 children: this.renderBackupWarning(),
                 onClick: () => {
-                    console.log('Backup wallet');
+                    Navigator.to('/settings/security/backup');
                 }
             },
             {
                 title: 'Recover wallet',
                 description: '',
                 onClick: () => {
-                    console.log('Recover wallet');
+                    Navigator.to('/settings/security/recovery');
                 }
             }
         ];
@@ -90,7 +118,7 @@ class SecuritySettings extends Component {
         }
 
         return (
-            <SettingsPageLayout canBack={true} title={'System'.toUpperCase()}>
+            <SettingsPageLayout canBack={true} title={'Security'.toUpperCase()}>
                 <DagListView style={container.m10b} options={options}/>
                 <DagListView title={'Authorization type'} style={container.m10b} options={authOptions}/>
             </SettingsPageLayout>

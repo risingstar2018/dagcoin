@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import {container} from "../styles/main";
 import DagTextInput from "./dagTextInput";
-import DagButton from "./dagButton";
+import DagIconButton from "./dagIconButton";
 
 class DagPassword extends Component {
     constructor() {
@@ -28,20 +28,19 @@ class DagPassword extends Component {
         if (this.props.canChangeVisibility) {
             if (this.state.isVisible) {
                 return (
-                    <DagButton onClick={this.onVisibilityToggle.bind(this)}>
+                    <DagIconButton onClick={this.onVisibilityToggle.bind(this)}>
                         <Image style={styles.visibilityIcon} source={require('../../img/hide_pass.png')} />
-                    </DagButton>
+                    </DagIconButton>
                 );
             }
             else {
                 return (
-                    <DagButton onClick={this.onVisibilityToggle.bind(this)}>
+                    <DagIconButton onClick={this.onVisibilityToggle.bind(this)}>
                         <Image style={styles.visibilityIcon} source={require('../../img/show_pass.png')} />
-                    </DagButton>
+                    </DagIconButton>
                 );
             }
         }
-
         return null;
     }
 
