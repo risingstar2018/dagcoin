@@ -66,7 +66,7 @@ class SecuritySettings extends Component {
 
     renderBackupWarning() {
         if (this.state.needBackup) {
-            return (<Text style={StyleSheet.flatten([text.textRed, container.p10r])}>
+            return (<Text style={StyleSheet.flatten([text.textRed, text.textRight, container.p10r])}>
                 Still not done
             </Text>);
         }

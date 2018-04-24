@@ -128,6 +128,9 @@ const text = StyleSheet.create({
     textCenter: {
         textAlign: 'center'
     },
+    textRight: {
+        textAlign: 'right'
+    },
     textBrand: {
         color: '#d52026'
     }

@@ -38,7 +38,7 @@ class DagSetPasswordModal extends Component {
             });
 
             return;
-        };
+        }
 
         this.props.onSetPassword(this.state.password);
     }
@@ -69,7 +69,8 @@ class DagSetPasswordModal extends Component {
 
     render() {
         return (
-            <DagModal onClose={this.onCancelClick.bind(this)}>
+            <DagModal onClose={this.onCancelClick.bind(this)}
+                      style={container.p20}>
                 <View style={styles.container}>
                     <Text style={StyleSheet.flatten([styles.header, text.textCenter, font.weight700, container.m20b])}>{this.getHeaderText().toUpperCase()}</Text>
 
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         padding: 15,
         shadowOpacity: 0,
+        flex: 1
     },
     cancelButton: {
         borderColor: 'rgb(165, 178, 191)',

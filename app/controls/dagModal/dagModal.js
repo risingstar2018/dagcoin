@@ -39,8 +39,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: '#000',
         opacity: 0.3,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         zIndex: 10
     },
     modal: {
@@ -49,9 +51,9 @@ const styles = StyleSheet.create({
         zIndex: 11,
         alignSelf: 'center',
         flex: 1,
-        width: Dimensions.get('window').width * 0.8,
         marginTop: 40,
-        padding: 40,
+        left: 20,
+        right: 20,
         borderRadius: 5
     }
 });
