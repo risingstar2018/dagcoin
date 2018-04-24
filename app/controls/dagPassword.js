@@ -21,7 +21,7 @@ class DagPassword extends Component {
 
     onVisibilityToggle() {
         this.setState({
-            isVisible: !  this.state.isVisible
+            isVisible: !this.state.isVisible
         });
     }
 
@@ -29,14 +29,16 @@ class DagPassword extends Component {
         if (this.props.canChangeVisibility) {
             if (this.state.isVisible) {
                 return (
-                    <DagIconButton onClick={this.onVisibilityToggle.bind(this)}>
+                    <DagIconButton style={styles.visibilityButtonContainer}
+                                   onClick={this.onVisibilityToggle.bind(this)}>
                         <Image style={styles.visibilityIcon} source={require('../../img/hide_pass.png')} />
                     </DagIconButton>
                 );
             }
             else {
                 return (
-                    <DagIconButton onClick={this.onVisibilityToggle.bind(this)}>
+                    <DagIconButton style={styles.visibilityButtonContainer}
+                                   onClick={this.onVisibilityToggle.bind(this)}>
                         <Image style={styles.visibilityIcon} source={require('../../img/show_pass.png')} />
                     </DagIconButton>
                 );
@@ -64,12 +66,16 @@ DagPassword.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-    visibilityIcon: {
-        width: 18,
-        height: 18,
+    visibilityButtonContainer: {
         position: 'absolute',
         right: 15,
-        bottom: 15
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center'
+    },
+    visibilityIcon: {
+        width: 18,
+        height: 18
     }
 });
 

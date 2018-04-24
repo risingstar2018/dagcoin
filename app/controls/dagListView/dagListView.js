@@ -46,7 +46,6 @@ class DagListView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#fff',
         borderRadius: 5,
         shadowOffset: { width: 1, height: 1 },

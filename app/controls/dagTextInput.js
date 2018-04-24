@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import {
-    StyleSheet, View, Text, TextInput
+    StyleSheet, View, Text, TextInput, Platform
 } from 'react-native';
 import {container, font, text} from "../styles/main";
 
@@ -29,6 +29,16 @@ class DagTextInput extends Component {
 
     isInvalid() {
         return this.props.invalid && (this.state.isDirty || this.props.isSubmitted);
+    }
+
+    getInputStyles() {
+        if (Platform.OS === 'web'){
+            return {
+                outline: 'none'
+            }
+        } else {
+            return null;
+        }
     }
 
     renderLabel() {
@@ -69,17 +79,19 @@ class DagTextInput extends Component {
 
     render() {
         return (
-            <View style={this.props.containerStyle}>
+            <View style={StyleSheet.flatten([this.props.containerStyle])}>
                 {this.renderLabel()}
 
                 <View style={StyleSheet.flatten([styles.inputContainer, this.props.inputContainerStyle])}>
                     <TextInput
+                        underlineColorAndroid='rgba(0,0,0,0)'
                         onFocus={() => this.setState({focused: true})}
                         onBlur={() => this.setState({focused: false})}
                         multiline={this.props.multiline}
                         style={StyleSheet.flatten([
                             styles.input,
                             font.size14,
+                            this.getInputStyles(),
                             this.props.style,
                             this.isInvalid() ? styles.invalid: null,
                             this.state.focused ? styles.focused: null
@@ -101,7 +113,6 @@ class DagTextInput extends Component {
 
 const styles = StyleSheet.create({
     inputContainer: {
-        position: 'relative'
     },
     label: {
         color: '#aaaaaa'
@@ -116,8 +127,7 @@ const styles = StyleSheet.create({
         paddingLeft: 22,
         paddingRight: 22,
         color: '#666',
-        backgroundColor: '#fff',
-        outline: 'none'
+        backgroundColor: '#fff'
     },
     focused: {
         borderColor: '#999',

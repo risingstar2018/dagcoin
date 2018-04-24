@@ -109,6 +109,9 @@ const container = StyleSheet.create({
     noBorder: {
         borderColor: 'transparent',
         shadowColor: 'transparent'
+    },
+    flex: {
+        flex: 1
     }
 });
 
