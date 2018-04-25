@@ -12,6 +12,11 @@
       <div translate>Change Wallet type</div>
       <div class="value">{{system.type}}</div>
     </li>
+    <li dag-state-transition="slide-left" dag-right-icon="chevron-thin-right" ui-sref="preferencesHubSettings"
+        ng-if="system.canChangeHubSettings">
+      <div translate>Hub Settings</div>
+      <div class="value">{{system.hub}}</div>
+    </li>
     <!--todo:temporary disable until we translate every language 100%-->
     <!--<li dag-state-transition="slide-left" dag-right-icon="chevron-thin-right" ui-sref="preferencesLanguage">-->
     <!--<div translate>Language</div>-->
