@@ -35,8 +35,7 @@ class RecoverBackup extends Component {
         return (
             <BasePageLayout style={StyleSheet.flatten([container.p40, container.m40t])}>
                 <DagForm style={container.m5b}>
-                    <DagPassword canChangeVisibility={true}
-                                 style={container.m20b}
+                    <DagPassword style={container.m20b}
                                  label={'Password'}
                                  validators={[
                                      validators.required()

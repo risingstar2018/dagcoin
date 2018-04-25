@@ -22,6 +22,9 @@ const container = StyleSheet.create({
     m10t: {
         marginTop: 10
     },
+    m15t: {
+        marginTop: 15
+    },
     m20t: {
         marginTop: 20
     },
@@ -99,6 +102,16 @@ const container = StyleSheet.create({
     },
     p15b: {
         paddingBottom: 15
+    },
+    transparent: {
+        backgroundColor: 'transparent'
+    },
+    noBorder: {
+        borderColor: 'transparent',
+        shadowColor: 'transparent'
+    },
+    flex: {
+        flex: 1
     }
 });
 
@@ -114,6 +127,9 @@ const text = StyleSheet.create({
     },
     textCenter: {
         textAlign: 'center'
+    },
+    textRight: {
+        textAlign: 'right'
     },
     textBrand: {
         color: '#d52026'

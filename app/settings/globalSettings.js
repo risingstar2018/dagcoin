@@ -4,6 +4,8 @@ import {
     StyleSheet, View, Text
 } from 'react-native';
 
+import Navigator from 'Navigator';
+
 import DagButton from '../controls/dagButton';
 import {container, control, text, font} from "../styles/main";
 import DagListView from "../controls/dagListView/dagListView";
@@ -36,7 +38,9 @@ class GlobalSettings extends Component {
                     <Text style={StyleSheet.flatten([container.m10b, font.weight400, text.size12, styles.backupDescription])}>
                         For security reasons we strongly recommend you to back your wallet seed up as soon as possible.
                     </Text>
-                    <DagButton style={StyleSheet.flatten([container.m20b, styles.backupButton])} buttonText={'Back Up'} onClick={() => this.onBackupClick()} />
+                    <DagButton style={StyleSheet.flatten([container.m20b, styles.backupButton])}
+                               buttonText={'Back Up'}
+                               onClick={() => this.onBackupClick()} />
                 </View>
             );
         }
@@ -49,7 +53,7 @@ class GlobalSettings extends Component {
                 title: 'System',
                 description: 'Setup your wallets.',
                 onClick: () => {
-                    console.log('System');
+                    Navigator.to('/settings/system');
                 },
                 icon: require('../../img/website.png')
             },
@@ -57,7 +61,7 @@ class GlobalSettings extends Component {
                 title: 'Security',
                 description: 'Backup your wallets and configure restrictions.',
                 onClick: () => {
-                    console.log('Security');
+                    Navigator.to('/settings/security');
                 },
                 icon: require('../../img/shield.png')
             },
@@ -68,7 +72,7 @@ class GlobalSettings extends Component {
                 title: 'About Device',
                 description: 'Information about device in use.',
                 onClick: () => {
-                    console.log('About Device');
+                    Navigator.to('/settings/about-device');
                 },
                 icon: require('../../img/responsive.png')
             },
@@ -76,7 +80,7 @@ class GlobalSettings extends Component {
                 title: 'About Dagcoin',
                 description: 'Information about changes and app in general.',
                 onClick: () => {
-                    console.log('About Dagcoin');
+                    Navigator.to('/settings/about-dagcoin');
                 },
                 icon: require('../../img/certificate.png')
             },
@@ -103,8 +107,8 @@ const styles = StyleSheet.create({
         color: '#979b9f'
     },
     backupButton: {
-        padding: 3,
-        width: 100
+        width: 100,
+        padding: 3
     }
 });
 

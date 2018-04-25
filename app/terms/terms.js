@@ -4,8 +4,6 @@ import {
     StyleSheet, View, Text
 } from 'react-native';
 
-import DagButton from '../controls/dagButton';
-import DagRadioGroup from '../controls/dagRadioGroup';
 import { container, text, font } from "../styles/main";
 import MainPageLayout from "../general/mainPageLayout";
 import PageHeader from "../general/pageHeader";

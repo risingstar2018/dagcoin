@@ -74,7 +74,8 @@ class BackupSeed extends Component {
                 </View>
 
                 <View>
-                    <DagButton onClick={this.onDeleteWordsClick.bind(this)}>
+                    <DagButton onClick={this.onDeleteWordsClick.bind(this)}
+                               style={StyleSheet.flatten([container.transparent, container.noBorder, container.p0])}>
                         <Text style={StyleSheet.flatten([text.textRed, font.size11, text.textCenter, font.weight600])}>{'Delete words'.toUpperCase()}</Text>
                     </DagButton>
                 </View>
@@ -96,8 +97,8 @@ class BackupSeed extends Component {
         return (
             <View>
                 <View style={container.m15b}>
-                    <DagButton onClick={this.onMnemonicToggle.bind(this)}>
-                        <Text style={StyleSheet.flatten([styles.buttonContent, font.size11, container.p10])}>{buttonText.toUpperCase()}</Text>
+                    <DagButton onClick={this.onMnemonicToggle.bind(this)} style={StyleSheet.flatten([container.p10, container.noBorder, container.transparent, styles.button])}>
+                        <Text style={StyleSheet.flatten([styles.buttonText, font.size11])}>{buttonText.toUpperCase()}</Text>
                     </DagButton>
                 </View>
 
@@ -121,11 +122,13 @@ class BackupSeed extends Component {
 }
 
 const styles = StyleSheet.create({
-    buttonContent: {
-        textAlign: 'center',
-        borderStyle: "solid",
+    button: {
+        borderStyle: 'solid',
         borderWidth: 1,
-        borderColor: '#ced5dc',
+        borderColor: '#ced5dc'
+    },
+    buttonText: {
+        textAlign: 'center',
         color: '#7a8c9e'
     },
     wordsContainer: {

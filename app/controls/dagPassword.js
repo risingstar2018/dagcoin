@@ -5,7 +5,8 @@ import {
 } from 'react-native';
 import {container} from "../styles/main";
 import DagTextInput from "./dagTextInput";
-import DagButton from "./dagButton";
+import DagIconButton from "./dagIconButton";
+import DagSetPasswordModal from "./dagModal/modals/dagSetPasswordModal";
 
 class DagPassword extends Component {
     constructor() {
@@ -20,7 +21,7 @@ class DagPassword extends Component {
 
     onVisibilityToggle() {
         this.setState({
-            isVisible: !  this.state.isVisible
+            isVisible: !this.state.isVisible
         });
     }
 
@@ -28,20 +29,21 @@ class DagPassword extends Component {
         if (this.props.canChangeVisibility) {
             if (this.state.isVisible) {
                 return (
-                    <DagButton onClick={this.onVisibilityToggle.bind(this)}>
+                    <DagIconButton style={styles.visibilityButtonContainer}
+                                   onClick={this.onVisibilityToggle.bind(this)}>
                         <Image style={styles.visibilityIcon} source={require('../../img/hide_pass.png')} />
-                    </DagButton>
+                    </DagIconButton>
                 );
             }
             else {
                 return (
-                    <DagButton onClick={this.onVisibilityToggle.bind(this)}>
+                    <DagIconButton style={styles.visibilityButtonContainer}
+                                   onClick={this.onVisibilityToggle.bind(this)}>
                         <Image style={styles.visibilityIcon} source={require('../../img/show_pass.png')} />
-                    </DagButton>
+                    </DagIconButton>
                 );
             }
         }
-
         return null;
     }
 
@@ -59,13 +61,21 @@ class DagPassword extends Component {
     }
 }
 
+DagPassword.defaultProps = {
+    canChangeVisibility: true
+};
+
 const styles = StyleSheet.create({
-    visibilityIcon: {
-        width: 18,
-        height: 18,
+    visibilityButtonContainer: {
         position: 'absolute',
         right: 15,
-        bottom: 15
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center'
+    },
+    visibilityIcon: {
+        width: 18,
+        height: 18
     }
 });
 

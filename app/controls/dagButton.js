@@ -16,7 +16,7 @@ class DagButton extends Component {
         if (this.props.children) {
             return this.props.children;
         } else {
-            return (<Text style={StyleSheet.flatten([styles.button, container.p15, this.props.style, this.props.disabled ? styles.disabled : styles.enabled])}>
+            return (<Text style={StyleSheet.flatten([styles.text, this.props.textStyle])}>
                 { this.props.buttonText }
                 </Text>);
         }
@@ -25,6 +25,11 @@ class DagButton extends Component {
     render() {
         return (
             <TouchableOpacity onPress={() => this.props.onClick()}
+                              style={StyleSheet.flatten([
+                                  styles.container,
+                                  container.p15,
+                                  this.props.disabled ? styles.disabled : styles.enabled,
+                                  this.props.style])}
                               disabled={this.props.disabled}>
                 {this.renderContent()}
             </TouchableOpacity>
@@ -33,13 +38,15 @@ class DagButton extends Component {
 }
 
 const styles = StyleSheet.create({
-    button: {
+    container: {
         backgroundColor: '#a8191e',
-        textAlign: 'center',
-        color: '#fff',
-        fontWeight: '600',
         borderRadius: 5,
         shadowRadius: 2
+    },
+    text: {
+        textAlign: 'center',
+        color: '#fff',
+        fontWeight: '600'
     },
     enabled: {
         shadowColor: '#d51f26',

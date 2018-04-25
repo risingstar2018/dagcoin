@@ -41,7 +41,10 @@ class IntroScreen extends Component {
                     <Button onClick={this.changeSlide.bind(this, 2)} style={container.m15l}/>
                 </View>
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
-                    <DagButton onClick={this.changeSlide.bind(this, 1)} style={styles.nextButton} buttonText={"GOT IT"}></DagButton>
+                    <DagButton onClick={this.changeSlide.bind(this, 1)}
+                               style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
+                               textStyle={styles.nextButtonText}
+                               buttonText={"GOT IT"}></DagButton>
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -62,7 +65,10 @@ class IntroScreen extends Component {
                     <Button onClick={this.changeSlide.bind(this, 2)} style={container.m15l}/>
                 </View>
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
-                    <DagButton onClick={this.changeSlide.bind(this, 2)} style={styles.nextButton} buttonText={"AWESOME"}></DagButton>
+                    <DagButton onClick={this.changeSlide.bind(this, 2)}
+                               style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
+                               textStyle={styles.nextButtonText}
+                               buttonText={"AWESOME"}></DagButton>
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -91,7 +97,10 @@ class IntroScreen extends Component {
             <MainPageLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <View style={StyleSheet.flatten([styles.skipContainer, container.m20b])}>
-                        <DagButton onClick={this.changeSlide.bind(this, 2)} style={styles.skipButton} buttonText={"SKIP"}></DagButton>
+                        <DagButton onClick={this.changeSlide.bind(this, 2)}
+                                   style={StyleSheet.flatten([container.transparent, container.noBorder, styles.skipButton])}
+                                   textStyle={styles.skipButtonText}
+                                   buttonText={"SKIP"}></DagButton>
                     </View>
                     {slides[this.state.activeSlide]}
                 </View>
@@ -147,15 +156,17 @@ const styles = StyleSheet.create({
     },
     nextButton: {
         width: 250,
-        color: "#a8191e",
-        backgroundColor: "transparent",
         shadowRadius: 0
+    },
+    nextButtonText: {
+        color: "#a8191e"
     },
     skipButton: {
         width: 70,
-        color: "#a8191e",
-        backgroundColor: "transparent",
         shadowRadius: 0
+    },
+    skipButtonText: {
+        color: "#a8191e",
     },
     enabled: {
         width: 20,

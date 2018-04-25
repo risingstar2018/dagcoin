@@ -7,6 +7,7 @@ import {
 import {container} from "../../styles/main";
 import DagListView from "../../controls/dagListView/dagListView";
 import SettingsPageLayout from "../settingsPageLayout";
+import Navigator from 'Navigator';
 
 class AboutDagcoinSettings extends Component {
     constructor() {
@@ -29,7 +30,9 @@ class AboutDagcoinSettings extends Component {
             {
                 title: 'Term of Use',
                 description: '',
-                onClick: () => { console.log('Term of Use'); }
+                onClick: () => {
+                    Navigator.to('/terms');
+                }
             },
             {
                 title: 'Session log',
