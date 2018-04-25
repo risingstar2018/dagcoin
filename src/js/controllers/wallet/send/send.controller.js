@@ -56,8 +56,8 @@
             vm.error = gettextCatalog.getString('Could not recognize a valid Dagcoin QR Code');
           }
         } else if (PaymentRequest.MERCHANT_PAYMENT_REQUEST === request.type) {
-          vm.invoiceId = invoiceId;
-          vm.validForSeconds = Math.floor(vm.validForSeconds - 10); // 10 is a security threshold ??
+          vm.invoiceId = request.invoiceId;
+          vm.validForSeconds = Math.floor(request.validForSeconds - 10); // 10 is a security threshold ??
           if (request.state === 'PENDING') {
             vm.setForm(request.address, request.amount, null, ENV.DAGCOIN_ASSET, null);
             if (form.address.$invalid && !vm.blockUx) {
@@ -72,7 +72,7 @@
             vm.countDown();
           } else {
             vm.resetForm();
-            vm.error = walletService.getStateErrorMessageForMerchantPayment(state);
+            vm.error = walletService.getStateErrorMessageForMerchantPayment(request.state);
           }
         } else if (PaymentRequest.URI === request.type) {
           vm.setFromUri(request.uri);
