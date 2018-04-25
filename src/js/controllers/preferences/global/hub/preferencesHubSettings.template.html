@@ -1,0 +1,28 @@
+<dag-nav-bar title="{{ 'Hub Settings' | translate }}" invert go-back="system"></dag-nav-bar>
+
+<div class="content preferences">
+  <div class="p-share js-introduction">
+    <div class="p-wrap">
+      <form name="settingsDeviceNameForm" ng-submit="prefHubSettings.save()" class="page-form">
+        <div class="form-group">
+          <div class="title clearfix">
+            <span class="name" translate>Hub Settings</span>
+          </div>
+          <div class="input-wrap">
+            <input id="hub" type="text" name="hub" ng-model="prefHubSettings.settings.hub">
+          </div>
+        </div>
+
+        <button ng-disabled="prefHubSettings.isSaveDisabled()"
+                type="submit" class="btn btn_red-full">
+          {{'Save'|translate}}
+        </button>
+      </form>
+      <button class="btn btn_red tiny" ng-click="prefHubSettings.resetHub()"
+        ng-if="prefHubSettings.isResetHubVisible()">
+        <svg-icon name="reload"></svg-icon>
+        <span translate>Reset Hub</span>
+      </button>
+    </div>
+  </div>
+</div>

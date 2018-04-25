@@ -824,7 +824,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.updatingTxHistory = true;
           self.setOngoingProcess('updatingHistory', true);
           self.updateTxHistory();
-          go.walletHome();
+          // If just show receive mode is active do nothing otherwise take user to new Wallet home
+          if (!sharedService.inJustShowReceiveAddressMode) {
+            go.walletHome();
+          }
         });
 
         $rootScope.$on('Local/SetTab', (event, tab, params) => {
@@ -842,7 +845,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
               }
             });
           } else {
-            $state.go(tab, params);
+            $state.go(tab, params, { reload: true });
           }
         });
 
@@ -881,7 +884,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             asset,
             recipientDeviceAddress
           });
-          $rootScope.$emit('Local/SetTab', 'wallet.send');
         });
 
         $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
