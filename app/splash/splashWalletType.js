@@ -56,7 +56,7 @@ class SplashWalletType extends Component {
                                    onSelect={this.onWalletTypeChange.bind(this)}
                                    selectedOption={this.state.selectedType}></DagRadioGroup>
 
-                    <DagButton buttonText={"CONTINUE"} onClick={this.onSetWalletTypeClick.bind(this)}></DagButton>
+                    <DagButton text={"CONTINUE"} onClick={this.onSetWalletTypeClick.bind(this)}></DagButton>
                 </View>
             </MainPageLayout>
         );

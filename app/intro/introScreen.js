@@ -44,7 +44,7 @@ class IntroScreen extends Component {
                     <DagButton onClick={this.changeSlide.bind(this, 1)}
                                style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
                                textStyle={styles.nextButtonText}
-                               buttonText={"GOT IT"}></DagButton>
+                               text={"GOT IT"}></DagButton>
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -68,7 +68,7 @@ class IntroScreen extends Component {
                     <DagButton onClick={this.changeSlide.bind(this, 2)}
                                style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
                                textStyle={styles.nextButtonText}
-                               buttonText={"AWESOME"}></DagButton>
+                               text={"AWESOME"}></DagButton>
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -89,7 +89,7 @@ class IntroScreen extends Component {
                     <Button onClick={this.changeSlide.bind(this, 2)} style={StyleSheet.flatten([container.m15l, styles.enabled])}/>
                 </View>
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
-                    <DagButton onClick={this.navigate.bind(this)} buttonText={"CREATE WALLET"}></DagButton>
+                    <DagButton onClick={this.navigate.bind(this)} text={"CREATE WALLET"}></DagButton>
                 </View>
             </View>
         ];
@@ -100,7 +100,7 @@ class IntroScreen extends Component {
                         <DagButton onClick={this.changeSlide.bind(this, 2)}
                                    style={StyleSheet.flatten([container.transparent, container.noBorder, styles.skipButton])}
                                    textStyle={styles.skipButtonText}
-                                   buttonText={"SKIP"}></DagButton>
+                                   text={"SKIP"}></DagButton>
                     </View>
                     {slides[this.state.activeSlide]}
                 </View>

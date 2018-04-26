@@ -51,7 +51,7 @@ class SplashDeviceName extends Component {
                     Also in the Settings menu, you will find security options such as setting a password.
                 </Text>
                 <View style={StyleSheet.flatten([styles.controlsContainer])}>
-                    <DagButton buttonText={"GET STARTED"} onClick={this.onGetStartedClick.bind(this)}></DagButton>
+                    <DagButton text={"GET STARTED"} onClick={this.onGetStartedClick.bind(this)}></DagButton>
                 </View>
             </View>);
         } else {
@@ -66,7 +66,7 @@ class SplashDeviceName extends Component {
                                       onValueChange={this.onDeviceNameChange.bind(this)}
                                       value={this.state.deviceName}/>
 
-                        <DagButton buttonText={"CONTINUE"} disabled={!this.state.deviceName}
+                        <DagButton text={"CONTINUE"} disabled={!this.state.deviceName}
                                    onClick={this.onSetDeviceNameClick.bind(this)}></DagButton>
                     </DagForm>
                 </View>

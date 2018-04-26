@@ -47,7 +47,7 @@ class SplashRegistration extends Component {
                                    onSelect={this.onRegistrationTypeChange.bind(this)}
                                    selectedOption={this.state.selectedType}></DagRadioGroup>
 
-                    <DagButton buttonText={"CONTINUE"} onClick={this.onSetRegistrationTypeClick.bind(this)}></DagButton>
+                    <DagButton text={"CONTINUE"} onClick={this.onSetRegistrationTypeClick.bind(this)}></DagButton>
                 </View>
             </MainPageLayout>
         );

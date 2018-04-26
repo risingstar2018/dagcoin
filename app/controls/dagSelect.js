@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 
 import {
-    StyleSheet, View, Text, TextInput, Platform
+    StyleSheet, Picker, View, Text, Platform
 } from 'react-native';
 import {container, font, text} from "../styles/main";
 
-class DagTextInput extends Component {
+class DagSelect extends Component {
     constructor() {
         super();
 
         this.state = {
-            isDirty: false,
-            focused: false
+            isDirty: false
         };
 
         this.renderLabel = this.renderLabel.bind(this);
@@ -28,14 +27,8 @@ class DagTextInput extends Component {
         return this.props.invalid && (this.state.isDirty || this.props.isSubmitted);
     }
 
-    getInputStyles() {
-        if (Platform.OS === 'web'){
-            return {
-                outline: 'none'
-            }
-        } else {
-            return null;
-        }
+    getSelectStyles() {
+        return null;
     }
 
     renderLabel() {
@@ -79,27 +72,25 @@ class DagTextInput extends Component {
             <View style={StyleSheet.flatten([this.props.containerStyle])}>
                 {this.renderLabel()}
 
-                <View style={StyleSheet.flatten([styles.inputContainer, this.props.inputContainerStyle])}>
-                    <TextInput
-                        underlineColorAndroid='rgba(0,0,0,0)'
-                        onFocus={() => this.setState({focused: true})}
-                        onBlur={() => this.setState({focused: false})}
-                        multiline={this.props.multiline}
-                        style={StyleSheet.flatten([
-                            styles.input,
-                            font.size14,
-                            this.getInputStyles(),
-                            this.props.style,
-                            this.isInvalid() ? styles.invalid: null,
-                            this.state.focused ? styles.focused: null
-                        ])}
-                        onChangeText={this.onValueChange.bind(this)}
-                        value={this.props.value}
-                        secureTextEntry={this.props.password}
-                        placeholder={this.props.placeholder}
-                        placeholderTextColor={this.props.placeholderTextColor || '#8597a7'}
-                    />
-                    {this.props.children}
+                <View style={StyleSheet.flatten([
+                    styles.selectContainer,
+                    this.props.selectContainerStyle,
+                    this.props.style,
+                    this.isInvalid() ? styles.invalid: null])}>
+                    <Picker selectedValue={this.props.value}
+                            onValueChange={this.onValueChange.bind(this)}
+                            itemStyle={StyleSheet.flatten([font.size14, this.props.itemStyle])}
+                            style={StyleSheet.flatten([
+                                styles.select,
+                                this.getSelectStyles()
+                            ])}
+                            enabled={!this.props.disabled}>
+                        {
+                            this.props.items.map((item, i) => {
+                                return (<Picker.Item key={i} label={item.label} value={item.value} />);
+                            })
+                        }
+                    </Picker>
                 </View>
 
                 {this.renderErrors()}
@@ -108,22 +99,23 @@ class DagTextInput extends Component {
     }
 }
 
-DagTextInput.defaultProps = {
-    onValueChange: (value) => {},
-    disabled: false
+DagSelect.defaultProps = {
+    disabled: false,
+    onValueChange: (value) => {}
 };
 
 const styles = StyleSheet.create({
-    inputContainer: {
-    },
-    label: {
-        color: '#aaaaaa'
-    },
-    input: {
+    selectContainer: {
         borderRadius: 5,
         borderColor: '#eee',
         borderStyle: 'solid',
         borderWidth: 2,
+    },
+    label: {
+        color: '#aaaaaa'
+    },
+    select: {
+        borderColor: 'transparent',
         paddingTop: 14,
         paddingBottom: 14,
         paddingLeft: 22,
@@ -131,12 +123,9 @@ const styles = StyleSheet.create({
         color: '#666',
         backgroundColor: '#fff'
     },
-    focused: {
-        borderColor: '#999',
-    },
     invalid: {
         borderColor: '#d51f26'
     }
 });
 
-export default DagTextInput;
+export default DagSelect;

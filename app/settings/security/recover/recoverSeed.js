@@ -34,7 +34,7 @@ class RecoverSeed extends Component {
                                   onValueChange={(value) => this.setState({seed: value})}
                                   validators={[validators.required()]}
                     />
-                    <DagButton buttonText={'Recover'.toUpperCase()}
+                    <DagButton text={'Recover'.toUpperCase()}
                                style={container.m15b}
                                type={'submit'}
                                onClick={this.onRecoverClick.bind(this)}

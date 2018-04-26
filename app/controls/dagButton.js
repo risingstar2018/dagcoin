@@ -17,7 +17,7 @@ class DagButton extends Component {
             return this.props.children;
         } else {
             return (<Text style={StyleSheet.flatten([styles.text, this.props.textStyle])}>
-                { this.props.buttonText }
+                { this.props.text }
                 </Text>);
         }
     }

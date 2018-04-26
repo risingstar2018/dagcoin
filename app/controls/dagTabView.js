@@ -2,14 +2,9 @@ import React, { Component } from 'react';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import {
-    StyleSheet, Dimensions
+    StyleSheet
 } from 'react-native';
-import {container, font} from "../styles/main";
-
-const initialLayout = {
-    height: 0,
-    width: Dimensions.get('window').width,
-};
+import {font} from "../styles/main";
 
 class DagTabView extends Component {
     constructor() {
@@ -72,7 +67,6 @@ class DagTabView extends Component {
                 renderScene={SceneMap(navigationState.scenesHash)}
                 renderHeader={this.renderHeader}
                 onIndexChange={this.onIndexChange}
-                initialLayout={initialLayout}
             />
         );
     }
