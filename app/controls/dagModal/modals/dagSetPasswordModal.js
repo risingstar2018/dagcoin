@@ -85,10 +85,10 @@ class DagSetPasswordModal extends Component {
                         <View style={styles.buttonsContainer}>
                             <DagButton style={StyleSheet.flatten([styles.button, styles.cancelButton, container.m15r])}
                                        textStyle={styles.cancelButtonText}
-                                       buttonText={'CANCEL'}
+                                       text={'CANCEL'}
                                        onClick={this.onCancelClick.bind(this)} />
                             <DagButton style={StyleSheet.flatten([styles.button, container.m15l])}
-                                       buttonText={'SET'}
+                                       text={'SET'}
                                        type={'submit'}
                                        onClick={this.onSetPasswordClick.bind(this)} />
                         </View>

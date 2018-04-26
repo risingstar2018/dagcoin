@@ -72,7 +72,7 @@ class FullBackup extends Component {
 
                     <DagButton onClick={this.onExportClick.bind(this)}
                                type={'submit'}
-                               buttonText={'Export'} />
+                               text={'Export'} />
                 </DagForm>
             </BasePageLayout>
         );

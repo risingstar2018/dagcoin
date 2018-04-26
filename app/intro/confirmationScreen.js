@@ -45,7 +45,7 @@ class ConfirmationScreen extends Component {
                         </View>
                     </View>
                     <View>
-                        <DagButton buttonText={"CONFIRM & FINISH"}></DagButton>
+                        <DagButton text={"CONFIRM & FINISH"}></DagButton>
                     </View>
                 </View>
             </MainPageLayout>

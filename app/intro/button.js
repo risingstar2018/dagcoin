@@ -10,7 +10,7 @@ class Button extends Component {
         return (
             <TouchableOpacity onPress={() => this.props.onClick()}
                               disabled={this.props.disabled}>
-                <Text style={StyleSheet.flatten([styles.button, container.p0, this.props.style, this.props.disabled ? styles.disabled : styles.enabled])}>{ this.props.buttonText }</Text>
+                <Text style={StyleSheet.flatten([styles.button, container.p0, this.props.style, this.props.disabled ? styles.disabled : styles.enabled])}>{ this.props.text }</Text>
             </TouchableOpacity>
         );
     }

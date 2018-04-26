@@ -46,7 +46,7 @@ class RecoverBackup extends Component {
 
                     <DagButton onClick={this.onImportClick.bind(this)}
                                type={'submit'}
-                               buttonText={'Import'.toUpperCase()} />
+                               text={'Import'.toUpperCase()} />
                 </DagForm>
                 <Text style={StyleSheet.flatten([font.size12, text.textRed, text.textCenter])}>WARNING: This will permanently delete all your existing wallets!</Text>
             </BasePageLayout>

@@ -39,7 +39,7 @@ class GlobalSettings extends Component {
                         For security reasons we strongly recommend you to back your wallet seed up as soon as possible.
                     </Text>
                     <DagButton style={StyleSheet.flatten([container.m20b, styles.backupButton])}
-                               buttonText={'Back Up'}
+                               text={'Back Up'}
                                onClick={() => this.onBackupClick()} />
                 </View>
             );
