@@ -12,18 +12,28 @@ class DagTabView extends Component {
 
         this.state = {
             index: 0,
-            routes: null,
-            scenesHash: null
+            routes: null
         };
 
         this.onIndexChange = this.onIndexChange.bind(this);
         this.getNavigationState = this.getNavigationState.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
+        this.renderPager = this.renderPager.bind(this);
     }
 
     onIndexChange(index){
         this.setState({ index });
     }
+
+    renderPager(props) {
+        props.swipeEnabled = false;
+
+        return (
+            TabViewAnimated.defaultProps.renderPager(props)
+        )
+    }
+
+    renderScene = ({ route }) => this.props.tabs[route.key].view;
 
     renderHeader(props) {
         return (
@@ -36,7 +46,6 @@ class DagTabView extends Component {
 
     getNavigationState() {
         let routes = [];
-        let scenesHash = {};
 
         if (!this.props.tabs) {
             this.props.tabs = [];
@@ -47,14 +56,11 @@ class DagTabView extends Component {
                 key: i.toString(),
                 title: tab.title
             });
-
-            scenesHash[i.toString()] = () => tab.view;
         });
 
         return {
             index: this.state.index,
-            routes: routes,
-            scenesHash: scenesHash
+            routes: routes
         };
     }
 
@@ -64,7 +70,7 @@ class DagTabView extends Component {
         return (
             <TabViewAnimated
                 navigationState={navigationState}
-                renderScene={SceneMap(navigationState.scenesHash)}
+                renderScene={this.renderScene}
                 renderHeader={this.renderHeader}
                 onIndexChange={this.onIndexChange}
             />
