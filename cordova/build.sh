@@ -21,6 +21,7 @@ PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 
 CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
+APPLICATION_NAME=Dagcoin
 
 if [ -z "CURRENT_OS" ]
 then
@@ -43,10 +44,13 @@ fi
 if $DBGJS
 then
   UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/testnet.json').ENV.universalLinkHost")
+  APPLICATION_NAME=$(node -p -e "require('$BUILDDIR/../environments/testnet.json').ENV.applicationName")
 else
   UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/live.json').ENV.universalLinkHost")
+  APPLICATION_NAME=$(node -p -e "require('$BUILDDIR/../environments/live.json').ENV.applicationName")
 fi
-echo -e "${Green}OK UNIVERSAL_LINK_HOST is set to ${UNIVERSAL_LINK_HOST}...${CloseColor}"
+echo -e "${Green}OK UNIVERSAL_LINK_HOST is set to ${UNIVERSAL_LINK_HOST}${CloseColor}"
+echo -e "${Green}OK APPLICATION_NAME is set to ${APPLICATION_NAME}${CloseColor}"
 
 echo -e "${OpenColor}${Green}* Checking dependencies...${CloseColor}"
 command -v cordova >/dev/null 2>&1 || { echo >&2 "Cordova is not present, please install it: sudo npm install -g cordova."; exit 1; }
@@ -199,8 +203,9 @@ checkOK
 
 cd $BUILDDIR
 
+echo -e "${Green}* Changing confix.xml...${CloseColor}"
 cp config.xml $PROJECT/config.xml
-sed  's/@UNIVERSAL_LINK_HOST/'${UNIVERSAL_LINK_HOST}'/g' config.xml > $PROJECT/config.xml
+sed "s/@UNIVERSAL_LINK_HOST/${UNIVERSAL_LINK_HOST}/g;s/@APPLICATION_NAME/${APPLICATION_NAME}/g" < config.xml > $PROJECT/config.xml
 checkOK
 
 if [ $CURRENT_OS == "ANDROID" ]; then

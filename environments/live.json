@@ -7,6 +7,7 @@
     "projectNumber": "21052017819",
     "hub": "tbd",
     "MERCHANT_INTEGRATION_API" : "tbd",
-    "universalLinkHost": "dagcoin.org"
+    "universalLinkHost": "dagcoin.org",
+    "applicationName": "Dagcoin Wallet"
   }
 }

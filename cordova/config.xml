@@ -3,7 +3,7 @@
         version="1.4.5"
         android-versionCode="1062"
         ios-CFBundleVersion="1.4.5">
-  <name>Dagcoin</name>
+  <name>@APPLICATION_NAME</name>
   <description>
     Dagcoin wallet.
   </description>
