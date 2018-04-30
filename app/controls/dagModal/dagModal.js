@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         zIndex: 11,
         alignSelf: 'center',
         flex: 1,
-        marginTop: 40,
+        marginTop: 50,
         left: 20,
         right: 20,
         borderRadius: 5
