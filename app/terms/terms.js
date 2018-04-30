@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, Text
+    StyleSheet, Text
 } from 'react-native';
 
 import { container, text, font } from "../styles/main";
 import MainPageLayout from "../general/mainPageLayout";
 import PageHeader from "../general/pageHeader";
+import BasePageLayout from "../general/basePageLayout";
 
 class Terms extends Component {
     constructor(){
@@ -15,9 +16,9 @@ class Terms extends Component {
 
     render() {
         return (
-            <MainPageLayout>
-                <PageHeader title={'Terms of Use'.toUpperCase()} canBack={true} style={StyleSheet.flatten(container.p0)} ></PageHeader>
-                <View style={container.p30t}>
+            <MainPageLayout style={container.p0}>
+                <PageHeader title={'Terms of Use'.toUpperCase()} canBack={true}></PageHeader>
+                <BasePageLayout style={container.p20t}>
                     <Text style={styles.paragraph}>Dagcoin wallet is a free, open source, multi-signature digital wallet.</Text>
                     <Text style={styles.paragraph}>The software does not constitute an account where the developer of this software or any third party serves as a financial intermediary or a custodian of the coins, bytes or other valuables.</Text>
                     <Text style={styles.paragraph}>While the software has undergone beta testing and continues to be improved and further developed, we cannot guarantee that there will be no bugs in the software.</Text>
@@ -32,7 +33,7 @@ class Terms extends Component {
                     <Text style={styles.paragraph}>In no event shall the developers of the software be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use of the software.</Text>
                     <Text style={styles.paragraph}>You assume any and all risks associated with the use of the software.</Text>
                     <Text style={styles.paragraph}>We reserve the right to modify these terms from time to time.</Text>
-                </View>
+                </BasePageLayout>
             </MainPageLayout>
         );
     }
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     container: {
     },
     header: {
-
+        position: 'fixed'
     },
     paragraph: StyleSheet.flatten([container.m20b, font.size16])
 });

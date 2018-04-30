@@ -26,7 +26,7 @@ class NewWallet extends Component {
 
         return (
             <GeneralLayout style={StyleSheet.flatten([styles.container, this.props.style])}>
-                <PageHeader color={'red'} hasMenu={true} title={'Create new wallet'.toUpperCase()}></PageHeader>
+                <PageHeader hasMenu={true} title={'Create new wallet'.toUpperCase()}></PageHeader>
                 <DagTabView tabs={tabs}/>
             </GeneralLayout>
         );

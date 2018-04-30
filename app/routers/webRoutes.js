@@ -14,6 +14,8 @@ import SecuritySettings from "../settings/security/securitySettings";
 import BackupSettings from "../settings/security/backup/backupSettings";
 import RecoverSettings from "../settings/security/recover/recoverSettings";
 import ConfirmationScreen from "../intro/confirmationScreen";
+import NewWallet from "../newWallet/newWallet";
+import Wallet from "../wallet/wallet";
 
 const routeConfig = [
     {
@@ -67,6 +69,14 @@ const routeConfig = [
     {
         path: '/settings/about-dagcoin',
         Component: AboutDagcoinSettings
+    },
+    {
+        path: '/new-wallet',
+        Component: NewWallet
+    },
+    {
+        path: '/wallet',
+        Component: Wallet
     },
     {
         path: '/terms',

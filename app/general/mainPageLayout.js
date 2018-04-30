@@ -4,20 +4,20 @@ import {
     StyleSheet, View, Image
 } from 'react-native';
 
-import BasePageLayout from "./basePageLayout";
+import { container } from '../styles/main';
 
 class MainPageLayout extends Component {
     render() {
         return (
-            <BasePageLayout style={this.props.style}>
-                <View style={styles.contentContainer}>
+            <View style={StyleSheet.flatten([container.p40, this.props.style, container.flex])}>
+                <View style={StyleSheet.flatten([styles.contentContainer])}>
                     {this.props.children}
                 </View>
                 <View style={styles.bgContainer}>
                     <Image source={require('../../img/bgshape1.png')} style={styles.bgshape1}></Image>
                     <Image source={require('../../img/bgshape2.png')} style={styles.bgshape2}></Image>
                 </View>
-            </BasePageLayout>
+            </View>
         );
     }
 }
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
         left: 0
     },
     contentContainer: {
-        zIndex: 1
+        zIndex: 1,
+        flex: 1
     },
     bgshape2: {
         position: 'absolute',

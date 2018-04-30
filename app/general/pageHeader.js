@@ -4,7 +4,8 @@ import {
     StyleSheet, View, Text, Image, TouchableOpacity
 } from 'react-native';
 
-import {container, font} from "../styles/main";
+import {container, font, text} from "../styles/main";
+import DagIconButton from "../controls/dagIconButton";
 
 class PageHeader extends Component {
     constructor() {
@@ -12,8 +13,7 @@ class PageHeader extends Component {
 
         this.renderBackIcon = this.renderBackIcon.bind(this);
         this.renderMenuIcon = this.renderMenuIcon.bind(this);
-        this.onBackClick = this.onBackClick.bind(this);
-        this.onMenuClick = this.onMenuClick.bind(this);
+        this.renderCustomAction = this.renderCustomAction.bind(this);
     }
 
     onBackClick() {
@@ -21,15 +21,27 @@ class PageHeader extends Component {
     }
 
     onMenuClick() {
-        console.log('back menu');
+        console.log('menu');
+    }
+
+    renderCustomAction() {
+        if (this.props.renderCustomAction) {
+            return this.props.renderCustomAction();
+        }
+
+        return null;
     }
 
     renderBackIcon() {
         if (!!this.props.canBack) {
+            const icon = this.props.color === 'red'
+                ? require('../../img/chevron-left-thin-white.png')
+                : require('../../img/chevron-left-thin-red.png');
+
             return (
-                <TouchableOpacity onPress={() => this.onBackClick()}>
-                    <Image style={styles.backIcon} source={require('../../img/chevron-left-thin-red.png')}></Image>
-                </TouchableOpacity>
+                <DagIconButton onClick={this.onBackClick.bind(this)}>
+                    <Image style={styles.backIcon} source={icon}></Image>
+                </DagIconButton>
             );
         }
         return null;
@@ -37,10 +49,14 @@ class PageHeader extends Component {
 
     renderMenuIcon() {
         if (!!this.props.hasMenu) {
+            const icon = this.props.color === 'red'
+                ? require('../../img/menu-white.png')
+                : require('../../img/menu-red.png');
+
             return (
-                <TouchableOpacity style={styles.actionButton} onPress={() => this.onMenuClick()}>
-                    <Image style={styles.menuIcon} source={require('../../img/menu-red.png')}></Image>
-                </TouchableOpacity>
+                <DagIconButton style={styles.actionButton} onClick={this.onMenuClick.bind(this)}>
+                    <Image style={styles.menuIcon} source={icon}></Image>
+                </DagIconButton>
             );
         }
         return null;
@@ -48,29 +64,41 @@ class PageHeader extends Component {
 
     render() {
         return (
-            <View style={StyleSheet.flatten([container.p15, styles.container, this.props.style])}>
+            <View style={StyleSheet.flatten([
+                container.p15,
+                this.props.color === 'red' ? container.backgroundRed : container.transparent,
+                styles.container,
+                this.props.style
+            ])}>
                 <View style={styles.actionButtonContainer}>
                     {this.renderBackIcon()}
                     {this.renderMenuIcon()}
                 </View>
                 <View style={StyleSheet.flatten([styles.textContainer])}>
-                    <Text style={StyleSheet.flatten([styles.title, font.size16, font.weight600])}>{this.props.title}</Text>
+                    <Text style={StyleSheet.flatten([
+                        font.size16,
+                        font.weight600,
+                        text.textCenter,
+                        this.props.color === 'red' ? text.textWhite : text.textRed
+                    ])}>{this.props.title}</Text>
                 </View>
                 <View style={styles.actionButtonContainer}>
+                    {this.renderCustomAction()}
                 </View>
             </View>
         );
     }
 }
 
+PageHeader.defaultProps = {
+    color: 'transparent'
+};
+
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    title: {
-        textAlign: 'center',
-        color: '#d51f26'
+        height: 50
     },
     backIcon: {
         width: 16,

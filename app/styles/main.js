@@ -76,6 +76,9 @@ const container = StyleSheet.create({
     p15t: {
         paddingTop: 15
     },
+    p20t: {
+        paddingTop: 20
+    },
     p30t: {
         paddingTop: 30
     },
@@ -112,6 +115,12 @@ const container = StyleSheet.create({
     },
     flex: {
         flex: 1
+    },
+    backgroundRed: {
+        backgroundColor: '#d51f26'
+    },
+    backgroundWhite: {
+        backgroundColor: '#ffffff'
     }
 });
 
@@ -121,6 +130,9 @@ const text = StyleSheet.create({
     },
     textRed: {
         color: '#d51f26'
+    },
+    textWhite: {
+        color: '#ffffff'
     },
     textLeft: {
         textAlign: 'left'
