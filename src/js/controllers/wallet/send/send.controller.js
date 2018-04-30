@@ -59,7 +59,7 @@
           vm.invoiceId = request.invoiceId;
           vm.validForSeconds = Math.floor(request.validForSeconds - 10); // 10 is a security threshold ??
           if (request.state === 'PENDING') {
-            vm.setForm(request.address, request.amount, null, ENV.DAGCOIN_ASSET, null);
+            vm.setForm(request.address, request.amount, null, ENV.DAGCOIN_ASSET, null, true);
             if (form.address.$invalid && !vm.blockUx) {
               console.error('Merchant Payment Request :: invalid address, resetting form');
               vm.resetForm();
