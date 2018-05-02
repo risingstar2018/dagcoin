@@ -24,7 +24,6 @@
       const address = sendCoinRequest.address;
       const breadcrumbs = require('core/breadcrumbs.js');
       const asset = 'base';
-      const invoiceId = sendCoinRequest.invoiceId;
       const publicId = sendCoinRequest.publicId;
       const bSendAll = sendCoinRequest.bSendAll;
 
