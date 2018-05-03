@@ -175,6 +175,7 @@
                 payload.walletAddress,
                 payload.coinAmount * 1000 * 1000,
                 payload.id,
+                payload.publicId,
                 payload.validForSeconds,
                 payload.merchantName,
                 payload.state

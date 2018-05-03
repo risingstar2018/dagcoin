@@ -11,6 +11,7 @@ function SendCoinRequest() {
   this.sharedAddress = null;
   this.copayers = null;
   this.invoiceId = null;
+  this.publicId = null;
   this.address = null;
   this.merkleProof = null;
   this.amount = null;
@@ -52,6 +53,10 @@ function SendCoinRequestBuilder() {
   };
   this.invoiceId = function (invoiceId) {
     this.request.invoiceId = invoiceId;
+    return this;
+  };
+  this.publicId = function (publicId) {
+    this.request.publicId = publicId;
     return this;
   };
   this.address = function (address) {

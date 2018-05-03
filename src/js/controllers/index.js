@@ -886,13 +886,14 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           });
         });
 
-        $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, validForSeconds, merchantName, state) => {
+        $rootScope.$on('merchantPaymentRequest', (event, address, amount, invoiceId, publicId, validForSeconds, merchantName, state) => {
           console.log(`merchantPaymentRequest event ${address}, ${amount}`);
           $rootScope.$emit('Local/SetTab', 'wallet.send', {
             type: PaymentRequest.MERCHANT_PAYMENT_REQUEST,
             address,
             amount,
             invoiceId,
+            publicId,
             validForSeconds,
             merchantName,
             state
