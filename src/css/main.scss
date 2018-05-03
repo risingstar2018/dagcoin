@@ -1860,6 +1860,12 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     position: relative;
     top: auto;
 
+    &.destination_address {
+      .destination_address_body {
+        max-height: 75vh;
+      }
+    }
+
     &.transactions_details {
       background: #efefef;
 
@@ -1881,6 +1887,9 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
       }
 
       .modal-content-body {
+
+        max-height: 75vh;
+
         > ul {
           background: #fff;
           padding: 10px;

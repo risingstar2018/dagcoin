@@ -1,4 +1,4 @@
-<div class="modal-content fix-modals-touch animated fasten slideInDown transactions_details">
+<div class="modal-content fix-modals-touch animated fasten slideInDown transactions_details dag-scroll">
 
   <a class="close_modal" ng-click="cancel()">
     <svg-icon title="close"></svg-icon>
@@ -8,7 +8,7 @@
     <svg-icon title="credit-card"></svg-icon>
   </div>
 
-  <div class="modal-content-body">
+  <div class="modal-content-body dag-scroll">
     <h4 translate>Transaction details</h4>
     <ul>
       <li ng-if="!btx.hasMultiplesOutputs && btx.addressTo && btx.addressTo != 'N/A'"
