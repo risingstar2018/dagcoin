@@ -1,27 +1,30 @@
 {
   "project_info": {
-    "project_number": "459454964929",
-    "firebase_url": "https://dagcoin-test-194315.firebaseio.com",
-    "project_id": "dagcoin-test-194315",
-    "storage_bucket": "dagcoin-test-194315.appspot.com"
+    "project_number": "21052017819",
+    "firebase_url": "https://dagcoin-8893b.firebaseio.com",
+    "project_id": "dagcoin-8893b",
+    "storage_bucket": "dagcoin-8893b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:459454964929:android:4ee747e290a6a0be",
+        "mobilesdk_app_id": "1:21052017819:android:8b33b16df5b909c9",
         "android_client_info": {
-          "package_name": "org.dagcoin"
+          "package_name": "org.dagcoin.client"
         }
       },
       "oauth_client": [
         {
-          "client_id": "459454964929-tbmfdcsg60rspn8ucjd51takv1kpv6t5.apps.googleusercontent.com",
+          "client_id": "21052017819-4eib80d16ehss8usso3mc69q70of1dao.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBUS_qtTevl1F7iUGjvSQEqZ-4NR88h8pE"
+          "current_key": "AIzaSyDxb8sZydGiAj2gZd7Fdad0Q8acPqeKIQE"
+        },
+        {
+          "current_key": "AIzaSyARnH07kh1t3bOCnOUxYwO85QM0ae4GPOQ"
         }
       ],
       "services": {

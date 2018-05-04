@@ -22,6 +22,7 @@ PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
 APPLICATION_NAME=Dagcoin
+ANDROID_PACKAGE=
 
 if [ -z "CURRENT_OS" ]
 then
@@ -45,12 +46,15 @@ if $DBGJS
 then
   UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/testnet.json').ENV.universalLinkHost")
   APPLICATION_NAME=$(node -p -e "require('$BUILDDIR/../environments/testnet.json').ENV.applicationName")
+  ANDROID_PACKAGE=org.dagcoin.client.tn
 else
   UNIVERSAL_LINK_HOST=$(node -p -e "require('$BUILDDIR/../environments/live.json').ENV.universalLinkHost")
   APPLICATION_NAME=$(node -p -e "require('$BUILDDIR/../environments/live.json').ENV.applicationName")
+  ANDROID_PACKAGE=org.dagcoin.client
 fi
 echo -e "${Green}OK UNIVERSAL_LINK_HOST is set to ${UNIVERSAL_LINK_HOST}${CloseColor}"
 echo -e "${Green}OK APPLICATION_NAME is set to ${APPLICATION_NAME}${CloseColor}"
+echo -e "${Green}OK ANDROID_PACKAGE is set to ${ANDROID_PACKAGE}${CloseColor}"
 
 echo -e "${OpenColor}${Green}* Checking dependencies...${CloseColor}"
 command -v cordova >/dev/null 2>&1 || { echo >&2 "Cordova is not present, please install it: sudo npm install -g cordova."; exit 1; }
@@ -71,7 +75,7 @@ echo "Project directory is $PROJECT"
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
 	echo -e "${OpenColor}${Green}* Creating project... ${CloseColor}"
-	cordova create ../../byteballbuilds/project-$1 org.dagcoin Dagcoin
+	cordova create ../../byteballbuilds/project-$1 ${ANDROID_PACKAGE} Dagcoin
 	checkOK
 
 	cd $PROJECT
@@ -205,7 +209,7 @@ cd $BUILDDIR
 
 echo -e "${Green}* Changing confix.xml...${CloseColor}"
 cp config.xml $PROJECT/config.xml
-sed "s/@UNIVERSAL_LINK_HOST/${UNIVERSAL_LINK_HOST}/g;s/@APPLICATION_NAME/${APPLICATION_NAME}/g" < config.xml > $PROJECT/config.xml
+sed "s/@UNIVERSAL_LINK_HOST/${UNIVERSAL_LINK_HOST}/g;s/@APPLICATION_NAME/${APPLICATION_NAME}/g;s/@ANDROID_PACKAGE/${ANDROID_PACKAGE}/g" < config.xml > $PROJECT/config.xml
 checkOK
 
 if [ $CURRENT_OS == "ANDROID" ]; then
@@ -217,8 +221,14 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 	checkOK
 
   # gcm needs google-services.json. google-services.json is downloaded from firebase web site.
-	cp android/google-services.json $PROJECT/platforms/android/google-services.json
-	checkOK
+  if $DBGJS
+  then
+    cp android/testnet/google-services.json $PROJECT/platforms/android/google-services.json
+    checkOK
+  else
+    cp android/live/google-services.json $PROJECT/platforms/android/google-services.json
+    checkOK
+  fi
 
   # new cordova-android needs colors.xml
 	cp android/colors.xml $PROJECT/platforms/android/res/values
