@@ -24,7 +24,7 @@
       const address = sendCoinRequest.address;
       const breadcrumbs = require('core/breadcrumbs.js');
       const asset = 'base';
-      const invoiceId = sendCoinRequest.invoiceId;
+      const publicId = sendCoinRequest.publicId;
       const bSendAll = sendCoinRequest.bSendAll;
 
       profileService.requestTouchid(null, (err) => {
@@ -187,9 +187,9 @@
           }
 
           merchantPromise.then(() => {
-            if (invoiceId !== null) {
+            if (publicId !== null) {
               const objectHash = require('core/object_hash');
-              const payload = JSON.stringify({ invoiceId });
+              const payload = JSON.stringify({ invoiceId: publicId });
               opts.messages = [{
                 app: 'text',
                 payload_location: 'inline',
@@ -216,20 +216,19 @@
                 }
                 const binding = sendCoinRequest.binding;
 
-                if (unit != null && sendCoinRequest.invoiceId != null) {
-                  // const invoiceId = sendCoinRequest.invoiceId;
-                  sendCoinRequest.invoiceId = null;
+                if (unit != null && sendCoinRequest.publicId != null) {
+                  sendCoinRequest.publicId = null;
 
                   const options = {
                     uri: `${ENV.MERCHANT_INTEGRATION_API}/payment-unit-updated`,
                     method: 'POST',
                     json: {
-                      invoiceId,
+                      invoiceId: publicId,
                       paymentUnitId: unit
                     }
                   };
 
-                  if (invoiceId != null) {
+                  if (publicId != null) {
                     const request = require('request');
                     request(options, (error, response, body) => {
                       if (error) {

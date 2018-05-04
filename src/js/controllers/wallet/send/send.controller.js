@@ -57,6 +57,7 @@
           }
         } else if (PaymentRequest.MERCHANT_PAYMENT_REQUEST === request.type) {
           vm.invoiceId = request.invoiceId;
+          vm.publicId = request.publicId;
           vm.validForSeconds = Math.floor(request.validForSeconds - 10); // 10 is a security threshold ??
           if (request.state === 'PENDING') {
             vm.setForm(request.address, request.amount, null, ENV.DAGCOIN_ASSET, null, true);
@@ -271,7 +272,9 @@
       }
 
       this.invoiceId = null;
+      this.publicId = null;
       this.validForSeconds = null;
+      this.publicId = null;
       this.lockAsset = false;
       this.lockAddress = false;
       this.lockAmount = false;
@@ -523,6 +526,7 @@
       const recipientDeviceAddress = assocDeviceAddressesByPaymentAddress[address];
       let amount = form.amount.$modelValue;
       const invoiceId = vm.invoiceId;
+      const publicId = vm.publicId;
       // const paymentId = 1;
       let merkleProof = '';
       if (form.merkle_proof && form.merkle_proof.$modelValue) {
@@ -547,6 +551,7 @@
           .sharedAddress(indexScope.shared_address)
           .copayers($scope.index.copayers)
           .invoiceId(invoiceId)
+          .publicId(publicId)
           .address(address)
           .merkleProof(merkleProof)
           .amount(amount)
