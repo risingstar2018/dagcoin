@@ -4,7 +4,7 @@
     "isTestnet": true,
     "explorerUrl": "experimental.dagcoin.org",
     "TIMESTAMPER_ADDRESS": "OPNUXBRSSQQGHKQNEPD2GLWQYEUY5XLD",
-    "hub": "test-hub.dagcoin.org/spoon-two/",
+    "hub": "test-hub.dagcoin.org/spoon/",
     "MERCHANT_INTEGRATION_API" : "https://dev-api.dagpay.io/api/invoices",
     "projectNumber": "459454964929",
     "universalLinkHost": "testnetexplorer.dagcoin.org",
