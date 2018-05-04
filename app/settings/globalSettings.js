@@ -4,7 +4,8 @@ import {
     StyleSheet, View, Text
 } from 'react-native';
 
-import Navigator from 'Navigator';
+import Navigator from '../navigator/navigationManager';
+import { routes } from '../navigator/routes';
 
 import DagButton from '../controls/dagButton';
 import {container, control, text, font} from "../styles/main";
@@ -53,7 +54,7 @@ class GlobalSettings extends Component {
                 title: 'System',
                 description: 'Setup your wallets.',
                 onClick: () => {
-                    Navigator.to('/settings/system');
+                    Navigator.to(this, routes.SystemSettings);
                 },
                 icon: require('../../img/website.png')
             },
@@ -61,7 +62,7 @@ class GlobalSettings extends Component {
                 title: 'Security',
                 description: 'Backup your wallets and configure restrictions.',
                 onClick: () => {
-                    Navigator.to('/settings/security');
+                    Navigator.to(this, routes.SecuritySettings);
                 },
                 icon: require('../../img/shield.png')
             },
@@ -72,7 +73,7 @@ class GlobalSettings extends Component {
                 title: 'About Device',
                 description: 'Information about device in use.',
                 onClick: () => {
-                    Navigator.to('/settings/about-device');
+                    Navigator.to(this, routes.AboutDeviceSettings);
                 },
                 icon: require('../../img/responsive.png')
             },
@@ -80,7 +81,7 @@ class GlobalSettings extends Component {
                 title: 'About Dagcoin',
                 description: 'Information about changes and app in general.',
                 onClick: () => {
-                    Navigator.to('/settings/about-dagcoin');
+                    Navigator.to(this, routes.AboutDagcoinSettings);
                 },
                 icon: require('../../img/certificate.png')
             },

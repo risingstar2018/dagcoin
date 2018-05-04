@@ -45,8 +45,7 @@ module.exports = {
             path.join(__dirname, '..', 'node_modules')
         ],
         alias: {
-            'react-native': 'react-native-web',
-            'Navigator': path.resolve(__dirname, '../app/routers/navigatorWeb')
+            'react-native': 'react-native-web'
         }
     }
 };

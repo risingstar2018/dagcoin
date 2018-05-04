@@ -4,10 +4,12 @@ import {
     StyleSheet, View, Text
 } from 'react-native';
 
+import Navigator from '../navigator/navigationManager';
+import { routes } from '../navigator/routes';
 import DagButton from '../controls/dagButton';
 import DagRadioGroup from '../controls/dagRadioGroup';
 import { container, text, font } from "../styles/main";
-import MainPageLayout from "../general/mainPageLayout";
+import BackgroundLayout from "../general/backgroundLayout";
 
 class SplashWalletType extends Component {
     constructor(){
@@ -19,7 +21,10 @@ class SplashWalletType extends Component {
     }
 
     onSetWalletTypeClick() {
-        console.log(this.state.selectedType);
+        Navigator.to(this, routes.SplashDeviceName, {
+            walletType: this.state.selectedType,
+            registrationType: this.props.navParams.registrationType
+        });
     }
 
     onWalletTypeChange(value) {
@@ -48,17 +53,17 @@ class SplashWalletType extends Component {
         ];
 
         return (
-            <MainPageLayout>
+            <BackgroundLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size14, container.m20b])}>{"Please choose the type of this wallet".toUpperCase()}</Text>
 
                     <DagRadioGroup options={options}
                                    onSelect={this.onWalletTypeChange.bind(this)}
-                                   selectedOption={this.state.selectedType}></DagRadioGroup>
+                                   selectedOption={this.state.selectedType} />
 
-                    <DagButton text={"CONTINUE"} onClick={this.onSetWalletTypeClick.bind(this)}></DagButton>
+                    <DagButton text={"CONTINUE"} onClick={this.onSetWalletTypeClick.bind(this)} />
                 </View>
-            </MainPageLayout>
+            </BackgroundLayout>
         );
     }
 }

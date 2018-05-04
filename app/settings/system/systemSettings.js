@@ -7,7 +7,8 @@ import {
 import {container} from "../../styles/main";
 import DagListView from "../../controls/dagListView/dagListView";
 import SettingsPageLayout from "../settingsPageLayout";
-import Navigator from 'Navigator';
+import Navigator from '../../navigator/navigationManager';
+import { routes } from '../../navigator/routes';
 
 class SystemSettings extends Component {
     constructor() {
@@ -20,7 +21,7 @@ class SystemSettings extends Component {
                 title: 'Device name',
                 description: 'Stub Device Name',
                 onClick: () => {
-                    Navigator.to('/settings/system/device-name');
+                    Navigator.to(this, routes.DeviceNameSettings);
                 }
             },
             {

@@ -10,6 +10,9 @@ const container = StyleSheet.create({
     m20: {
         margin: 20
     },
+    m30: {
+        margin: 30
+    },
     m40: {
         margin: 40
     },
@@ -43,14 +46,23 @@ const container = StyleSheet.create({
     m20b: {
         marginBottom: 20
     },
+    m30b: {
+        marginBottom: 30
+    },
     m40b: {
         marginBottom: 40
     },
     m15l: {
         marginLeft: 15
     },
+    m20l: {
+        marginLeft: 20
+    },
     m15r: {
         marginRight: 15
+    },
+    m20r: {
+        marginRight: 20
     },
     p0: {
         padding: 0
@@ -91,6 +103,9 @@ const container = StyleSheet.create({
     p15l: {
         paddingLeft: 15
     },
+    p20l: {
+        paddingLeft: 20
+    },
     p40l: {
         paddingLeft: 40
     },
@@ -100,11 +115,23 @@ const container = StyleSheet.create({
     p15r: {
         paddingRight: 15
     },
+    p20r: {
+        paddingRight: 20
+    },
     p40r: {
         paddingRight: 40
     },
+    p10b: {
+        paddingBottom: 10
+    },
     p15b: {
         paddingBottom: 15
+    },
+    p20b: {
+        paddingBottom: 20
+    },
+    p40b: {
+        paddingBottom: 40
     },
     transparent: {
         backgroundColor: 'transparent'
@@ -116,11 +143,20 @@ const container = StyleSheet.create({
     flex: {
         flex: 1
     },
+    flexRight: {
+        alignItems: 'flex-end'
+    },
+    flexLeft: {
+        alignItems: 'flex-start'
+    },
     backgroundRed: {
         backgroundColor: '#d51f26'
     },
     backgroundWhite: {
         backgroundColor: '#ffffff'
+    },
+    center: {
+        alignItems: 'center'
     }
 });
 
