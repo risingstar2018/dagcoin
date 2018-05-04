@@ -1,19 +1,20 @@
 <div class="modal-content">
 
-    <div class="modal-content-header">
-        <h3 translate>New version is available!</h3>
-        <p class="m20t" translate>Looks that there is a new version available.<br/>Would you like to update now?</p>
+    <div class="modal-content-header new-version">
+        <svg-icon name="new_version"></svg-icon>
+        <h2 translate>Transfer DAGs from<br/>your old app to new</h2>
+        <p class="lh155 m25all text-gray" translate>Looks like there is a new version available. Would you like to update now and transfer your DAGs?</p>
     </div>
 
-    <div class="modal-content-body p20h text-center">
+    <div class="modal-content-body p20h text-center new-version">
         <div id="buttons" class="row">
             <div class="columns">
-                <button class="btn btn_red-full" ng-click="openDownloadLink()" translate>
-                    Update to {{version}}
+                <button class="btn btn_red-full" ng-click="openEmailLink()" translate>
+                    Email Support
                 </button>
             </div>
-            <div class="columns">
-                <button class="btn btn_red" ng-click="later()" translate>Later</button>
+            <div class="columns m20t">
+                <a class="lh155 text-gray" ng-click="dontShow()" translate>I understand. Don't show this message again</a>
             </div>
         </div>
     </div>

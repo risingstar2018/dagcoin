@@ -36,6 +36,7 @@
 
       // wallet default config
       wallet: {
+        showNewVersionFlag: true,
         requiredCosigners: 2,
         totalCosigners: 3,
         spendUnconfirmed: false,

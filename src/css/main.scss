@@ -807,7 +807,9 @@ ul.manage li {
 .m30a {
   margin: 30px auto;
 }
-
+.m25all {
+  margin: 25px;
+}
 .m-negative-l {
   margin-left: -0.9375rem;
 }
@@ -823,6 +825,10 @@ ul.manage li {
 .lh140 {
   line-height: 140%;
 }
+.lh155 {
+  line-height: 155% !important;
+}
+
 
 .oh {
   overflow: hidden;
@@ -1856,6 +1862,10 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     position: relative;
     top: auto;
 
+    .new-version h2 {
+      font-weight: 500;
+    }
+
     &.transactions_details {
       background: #efefef;
 
@@ -1940,6 +1950,14 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
           height: 40px;
           width: 40px;
         }
+      }
+
+      .svg-icon-new_version {
+        svg {
+          width: 100px !important;
+          height: 100px !important;
+        }
+        margin: 35px 0;
       }
     }
 

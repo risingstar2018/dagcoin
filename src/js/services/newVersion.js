@@ -4,15 +4,19 @@
   const eventBus = require('byteballcore/event_bus.js');
 
   angular.module('copayApp.services')
-  .factory('newVersion', ($modal, $timeout, $rootScope, $q, configService) => {
+  .factory('newVersion', ($modal, $rootScope, configService, $q, $log) => {
     const root = {};
-    root.shown = false;
-    root.timerNextShow = false;
     root.askForVersion = askForVersion;
+    root.changeShowFlag = changeShowFlag;
+    configService.get((err, config) => {
+      if (err) {
+        throw Error('failed to read config for showNewVersionFlag');
+      }
+      root.show = config.wallet.showNewVersionFlag;
+    });
 
-    eventBus.on('new_version', (ws, data) => {
-      root.version = data.version;
-      if (!root.shown) {
+    eventBus.on('new_version', () => {
+      if (root.show) {
         const modalInstance = $modal.open({
           templateUrl: 'views/modals/newVersionIsAvailable.html',
           controller: 'newVersionIsAvailable'
@@ -20,16 +24,12 @@
         $rootScope.$on('closeModal', () => {
           modalInstance.dismiss('cancel');
         });
-        root.shown = true;
-        startTimerNextShow();
       }
     });
-
-    function startTimerNextShow() {
-      if (root.timerNextShow) $timeout.cancel(root.timerNextShow);
-      root.timerNextShow = $timeout(() => {
-        root.shown = false;
-      }, 1000 * 60 * 60 * 24);
+    function changeShowFlag(flag) {
+      configService.set({ wallet: { showNewVersionFlag: flag } }, (err) => {
+        if (err) $log.debug(err);
+      });
     }
 
     function askForVersion() {

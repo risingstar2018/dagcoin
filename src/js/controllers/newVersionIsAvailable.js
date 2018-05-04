@@ -1,24 +1,27 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.controllers').controller('newVersionIsAvailable', ($scope, $modalInstance, go, newVersion) => {
-    $scope.version = newVersion.version;
-
-    $scope.openDownloadLink = function () {
-      let link = '';
-      if (navigator && navigator.app) {
-        link = 'https://play.google.com/store/apps/details?id=org.dagcoin';
-        if (newVersion.version.match('t$')) {
-          link += '.testnet';
+  angular.module('copayApp.controllers').controller('newVersionIsAvailable', ($scope, $modalInstance, go, newVersion,
+    isCordova, isMobile) => {
+    $scope.openEmailLink = function () {
+      const subject = 'Transfer DAGs from old wallet';
+      const toEmail = 'info@dagcoin.org';
+      if (isCordova) {
+        if (isMobile.Android() || isMobile.Windows()) {
+          window.ignoreMobilePause = true;
         }
+        window.plugins.socialsharing.shareViaEmail(
+          '',
+          subject,
+          [toEmail], [], [] // empty recipients, CC and BCC
+        );
       } else {
-        link = `https://github.com/dagcoin/dagcoin/releases/tag/v${newVersion.version}`;
+        go.openExternalLink(`mailto:${toEmail}?subject=${subject}`);
       }
-      go.openExternalLink(link);
-      $modalInstance.close('closed result');
     };
 
-    $scope.later = function () {
+    $scope.dontShow = function () {
+      newVersion.changeShowFlag(false);
       $modalInstance.close('closed result');
     };
   });
