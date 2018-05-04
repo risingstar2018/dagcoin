@@ -2,10 +2,10 @@
   "ENV": {
     "environment": "live",
     "isTestnet": true,
-    "explorerUrl": "tbd",
+    "explorerUrl": "http://livenet-hub-explorer-alb-1014601309.eu-west-1.elb.amazonaws.com/",
     "TIMESTAMPER_ADDRESS": "I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT",
     "projectNumber": "21052017819",
-    "hub": "tbd",
+    "hub": "livenet-hub-explorer-alb-1014601309.eu-west-1.elb.amazonaws.com:81",
     "MERCHANT_INTEGRATION_API" : "tbd",
     "universalLinkHost": "dagcoin.org",
     "applicationName": "Dagcoin-Wallet"
