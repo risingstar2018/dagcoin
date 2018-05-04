@@ -14,6 +14,19 @@ const validators = {
     },
     minLength: (length, error) => (text) => {
         return {isValid: (text || '').length >= length, error: error};
+    },
+    validWalletAddress: (error) => (text) => { //todo byteballcore
+        return {isValid: true, error: error};
+    },
+    validEmail: (error) => (text) => {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        let isValid = true;
+
+        if (text){
+            isValid = re.test(text.toLowerCase());
+        }
+
+        return {isValid: isValid, error: error};
     }
 };
 

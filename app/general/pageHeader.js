@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, Text, Image, TouchableOpacity
+    StyleSheet, View, Text, Image
 } from 'react-native';
 
 import {container, font, text} from "../styles/main";
 import DagIconButton from "../controls/dagIconButton";
+import NavigationManager from "../navigator/navigationManager";
+import DagLeftMenuManager from "../controls/dagMenu/dagLeftMenu/dagLeftMenuManager";
 
 class PageHeader extends Component {
     constructor() {
@@ -17,11 +19,11 @@ class PageHeader extends Component {
     }
 
     onBackClick() {
-        console.log('back button');
+        NavigationManager.back();
     }
 
     onMenuClick() {
-        console.log('menu');
+        DagLeftMenuManager.toggle();
     }
 
     renderCustomAction() {
@@ -39,8 +41,8 @@ class PageHeader extends Component {
                 : require('../../img/chevron-left-thin-red.png');
 
             return (
-                <DagIconButton onClick={this.onBackClick.bind(this)}>
-                    <Image style={styles.backIcon} source={icon}></Image>
+                <DagIconButton style={StyleSheet.flatten([container.p20])} onClick={this.onBackClick.bind(this)}>
+                    <Image style={styles.backIcon} source={icon} />
                 </DagIconButton>
             );
         }
@@ -54,8 +56,8 @@ class PageHeader extends Component {
                 : require('../../img/menu-red.png');
 
             return (
-                <DagIconButton style={styles.actionButton} onClick={this.onMenuClick.bind(this)}>
-                    <Image style={styles.menuIcon} source={icon}></Image>
+                <DagIconButton style={StyleSheet.flatten([container.p20])} onClick={this.onMenuClick.bind(this)}>
+                    <Image style={styles.menuIcon} source={icon} />
                 </DagIconButton>
             );
         }
@@ -65,12 +67,11 @@ class PageHeader extends Component {
     render() {
         return (
             <View style={StyleSheet.flatten([
-                container.p15,
                 this.props.color === 'red' ? container.backgroundRed : container.transparent,
                 styles.container,
                 this.props.style
             ])}>
-                <View style={styles.actionButtonContainer}>
+                <View style={StyleSheet.flatten([styles.actionButtonContainer, container.flexLeft])}>
                     {this.renderBackIcon()}
                     {this.renderMenuIcon()}
                 </View>
@@ -82,7 +83,7 @@ class PageHeader extends Component {
                         this.props.color === 'red' ? text.textWhite : text.textRed
                     ])}>{this.props.title}</Text>
                 </View>
-                <View style={styles.actionButtonContainer}>
+                <View style={StyleSheet.flatten([styles.actionButtonContainer, container.flexRight])}>
                     {this.renderCustomAction()}
                 </View>
             </View>
@@ -102,23 +103,23 @@ const styles = StyleSheet.create({
     },
     backIcon: {
         width: 16,
-        height: 16
+        height: 16,
+        alignSelf: 'flex-start'
     },
     menuIcon: {
         width: 27,
-        height: 27
+        height: 27,
+        alignSelf: 'flex-start'
     },
     textContainer: {
         flex: 1,
         alignItems: 'center'
     },
     actionButtonContainer: {
-        width: 30,
-        height: 30,
+        width: 50,
+        height: 50,
         display: 'flex',
         justifyContent: 'center'
-    },
-    actionButton: {
     }
 });
 

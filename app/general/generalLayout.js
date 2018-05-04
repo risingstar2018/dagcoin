@@ -5,13 +5,16 @@ import {
 } from 'react-native';
 
 import DagModalContainer from "../controls/dagModal/dagModalContainer";
+import DagLeftMenu from "../controls/dagMenu/dagLeftMenu/dagLeftMenu";
 
 class GeneralLayout extends Component {
     render() {
         return (
             <View style={StyleSheet.flatten([styles.container, this.props.style])}>
                 <DagModalContainer />
-                {this.props.children}
+                <DagLeftMenu>
+                    {this.props.children}
+                </DagLeftMenu>
             </View>
         );
     }

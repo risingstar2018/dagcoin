@@ -1,107 +1,79 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import {
-    StyleSheet, Image
+    StyleSheet, Image, View, Text
 } from 'react-native';
 
 import GeneralLayout from "../general/generalLayout";
 import PageHeader from "../general/pageHeader";
 import BasePageLayout from "../general/basePageLayout";
-import DagForm, { validators } from "../controls/dagForm";
-import DagTextInput from "../controls/dagTextInput";
 import DagButton from "../controls/dagButton";
 
-import {container} from "../styles/main";
+import {container, font, text} from "../styles/main";
 import DagIconButton from "../controls/dagIconButton";
-import DagQrCodeButton from "../controls/dagQrCodeButton";
+import DagModalManager from "../controls/dagModal/dagModalManager";
+import DagActionsModal from "../controls/dagModal/modals/dagActionsModal";
+import { editContact, deleteContact } from '../actions/contactsActions';
+import Navigator from "../navigator/navigationManager";
 
-class NewContact extends Component {
+class ContactInfo extends Component {
     constructor() {
         super();
-
-        this.state = {
-            walletName: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            description: ''
-        };
     }
 
-    onSaveClick() {
+    onSendClick() {
         console.log(this.state);
     }
 
-    onQrCodeScan() {
-
+    onMoreButtonClick() {
+        DagModalManager.show(<DagActionsModal actions={[
+            {
+                label: 'Edit',
+                action: () => {
+                    DagModalManager.hide();
+                    this.props.editContact(this.props.navParams.contact);
+                }
+            },
+            {
+                label: 'Delete',
+                action: () => {
+                    DagModalManager.hide();
+                    this.props.deleteContact(this.props.navParams.contact);
+                    Navigator.back();
+                }
+            }
+        ]}/>);
     }
 
-    renderQrCodeButton() {
-        return (<DagQrCodeButton onScan={this.onQrCodeScan.bind(this)}/>);
+    renderMoreButton() {
+        return (
+            <DagIconButton style={container.p20} onClick={this.onMoreButtonClick.bind(this)}>
+                <Image style={styles.image} source={require('../../img/more_horiz-red.png')} />
+            </DagIconButton>
+        );
     }
 
     render() {
+        const contact = this.props.navParams.contact;
+
         return (
             <GeneralLayout style={StyleSheet.flatten([styles.container, this.props.style])}>
-                <PageHeader canBack={true} title={'New contact'.toUpperCase()} renderCustomAction={this.renderQrCodeButton.bind(this)}></PageHeader>
-                <BasePageLayout style={StyleSheet.flatten([container.p20, container.p15t, container.p15b])}>
-                    <DagForm>
-                        <DagTextInput label={'Wallet address'.toUpperCase()}
-                                      validators={[
-                                          validators.required(),
-                                          validators.validWalletAddress(),
-                                          validators.maxLength(32)
-                                      ]}
-                                      value={this.state.walletName}
-                                      style={container.m15b}
-                                      required={true}
-                                      maxLength={32}
-                                      onValueChange={(value) => {this.setState({walletName: value})}}/>
+                <PageHeader canBack={true} title={'Contact'.toUpperCase()} renderCustomAction={this.renderMoreButton.bind(this)} />
+                <BasePageLayout style={StyleSheet.flatten([container.p40, container.p15t, container.p15b])}>
+                    <View style={StyleSheet.flatten([container.m20b, container.m20t, container.center])}>
+                        <View style={StyleSheet.flatten([container.m10b, styles.avatarContainer])}>
+                            <Image style={StyleSheet.flatten([styles.avatar])} source={require('../../img/avatar.png')} />
+                        </View>
+                        <Text style={StyleSheet.flatten([font.size16, font.weight700])}>{contact.firstName} {contact.lastName}</Text>
+                    </View>
 
-                        <DagTextInput label={'First Name'.toUpperCase()}
-                                      validators={[
-                                          validators.required(),
-                                          validators.maxLength(50)
-                                      ]}
-                                      value={this.state.firstName}
-                                      style={container.m15b}
-                                      required={true}
-                                      maxLength={50}
-                                      onValueChange={(value) => {this.setState({firstName: value})}}/>
+                    <View style={StyleSheet.flatten([container.m30b, container.p15t, container.p15b, styles.infoContainer])}>
+                        <Text style={StyleSheet.flatten([text.textGray, font.size12, container.m5b])}>Address</Text>
+                        <Text>{contact.address}</Text>
+                    </View>
 
-                        <DagTextInput label={'Last Name'.toUpperCase()}
-                                      validators={[
-                                          validators.maxLength(50)
-                                      ]}
-                                      value={this.state.lastName}
-                                      style={container.m15b}
-                                      maxLength={50}
-                                      onValueChange={(value) => {this.setState({lastName: value})}}/>
-
-                        <DagTextInput label={'E-Mail'.toUpperCase()}
-                                      validators={[
-                                          validators.validEmail(),
-                                          validators.maxLength(254)
-                                      ]}
-                                      maxLength={254}
-                                      value={this.state.email}
-                                      style={container.m15b}
-                                      onValueChange={(value) => {this.setState({email: value})}}/>
-
-                        <DagTextInput label={'Description'.toUpperCase()}
-                                      validators={[
-                                          validators.maxLength(300)
-                                      ]}
-                                      maxLength={300}
-                                      value={this.state.description}
-                                      style={container.m15b}
-                                      multiline={true}
-                                      onValueChange={(value) => {this.setState({description: value})}}/>
-
-                        <DagButton onClick={this.onSaveClick.bind(this)}
-                                   text={'Save'.toUpperCase()}
-                                   type={'submit'}/>
-                    </DagForm>
+                    <DagButton text={'SEND'} onClick={this.onSendClick.bind(this)} />
                 </BasePageLayout>
             </GeneralLayout>
         );
@@ -111,7 +83,34 @@ class NewContact extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    image: {
+        width: 30,
+        height: 30
+    },
+    avatarContainer: {
+        borderRadius: 80,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#c2c6ca'
+    },
+    avatar: {
+        width: 80,
+        height: 80,
+        borderRadius: 80
+    },
+    infoContainer: {
+        borderStyle: 'solid',
+        borderTopColor: '#eeeeee',
+        borderBottomColor: '#eeeeee',
+        borderTopWidth: 1,
+        borderBottomWidth: 1
     }
 });
 
-export default NewContact;
+const mapDispatchToProps = {
+    editContact,
+    deleteContact
+};
+
+export default ContactInfoWrapper = connect(null, mapDispatchToProps)(ContactInfo);

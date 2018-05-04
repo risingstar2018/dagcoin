@@ -4,12 +4,14 @@ import {
     StyleSheet, View, Text, Image
 } from 'react-native';
 
+import Navigator from '../navigator/navigationManager';
+import { routes } from '../navigator/routes';
 import DagButton from '../controls/dagButton';
 import {container, text, font} from "../styles/main";
-import MainPageLayout from "../general/mainPageLayout";
 import DagTextInput from "../controls/dagTextInput";
 import {validators} from "../controls/dagForm";
 import DagForm from "../controls/dagForm";
+import BackgroundLayout from "../general/backgroundLayout";
 
 class SplashDeviceName extends Component {
     constructor() {
@@ -32,6 +34,7 @@ class SplashDeviceName extends Component {
 
     onGetStartedClick() {
         console.log(this.state.deviceName);
+        Navigator.to(this, routes.Wallet);
     }
 
     onDeviceNameChange(text) {
@@ -51,7 +54,7 @@ class SplashDeviceName extends Component {
                     Also in the Settings menu, you will find security options such as setting a password.
                 </Text>
                 <View style={StyleSheet.flatten([styles.controlsContainer])}>
-                    <DagButton text={"GET STARTED"} onClick={this.onGetStartedClick.bind(this)}></DagButton>
+                    <DagButton text={"GET STARTED"} onClick={this.onGetStartedClick.bind(this)} />
                 </View>
             </View>);
         } else {
@@ -67,7 +70,7 @@ class SplashDeviceName extends Component {
                                       value={this.state.deviceName}/>
 
                         <DagButton text={"CONTINUE"} disabled={!this.state.deviceName}
-                                   onClick={this.onSetDeviceNameClick.bind(this)}></DagButton>
+                                   onClick={this.onSetDeviceNameClick.bind(this)} />
                     </DagForm>
                 </View>
             </View>);
@@ -76,7 +79,7 @@ class SplashDeviceName extends Component {
 
     render() {
         return (
-            <MainPageLayout>
+            <BackgroundLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <Text
                         style={StyleSheet.flatten([text.textBrand, font.weight700, font.size16])}>{"WELCOME TO DAGCOIN"}</Text>
@@ -84,11 +87,11 @@ class SplashDeviceName extends Component {
                         style={StyleSheet.flatten([text.textGray, font.weight200, font.size14])}>{"A wallet for decentralized value"}</Text>
 
                     <Image style={StyleSheet.flatten([styles.brand, container.m40b, container.m40t])}
-                           source={require('../../img/icon-splash-brand.png')}></Image>
+                           source={require('../../img/icon-splash-brand.png')} />
 
                     {this.renderSubView()}
                 </View>
-            </MainPageLayout>
+            </BackgroundLayout>
         );
     }
 }

@@ -7,7 +7,7 @@ import {
 import GeneralLayout from "../general/generalLayout";
 import PageHeader from "../general/pageHeader";
 import DagBottomMenu from "../controls/dagMenu/dagBottomMenu";
-import MainPageLayout from "../general/mainPageLayout";
+import BackgroundLayout from "../general/backgroundLayout";
 import {container} from "../styles/main";
 
 class Wallet extends Component {
@@ -45,14 +45,14 @@ class Wallet extends Component {
         return (
             <GeneralLayout style={StyleSheet.flatten([styles.container])}>
                 <PageHeader color={'red'} hasMenu={true} title={'Wallet #1'.toUpperCase()}></PageHeader>
-                <MainPageLayout style={StyleSheet.flatten([styles.container, container.p0])}>
+                <BackgroundLayout style={StyleSheet.flatten([styles.container, container.p0])}>
                     {this.renderContent()}
                     <DagBottomMenu
                         onMenuChange={this.onMenuChange.bind(this)}
                         selectedItem={this.state.selectedItem}
                         items={this.state.menuItems}
                     />
-                </MainPageLayout>
+                </BackgroundLayout>
             </GeneralLayout>
         );
     }

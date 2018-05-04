@@ -9,7 +9,8 @@ import DagListView from "../../controls/dagListView/dagListView";
 import SettingsPageLayout from "../settingsPageLayout";
 import DagSwitch from "../../controls/dagSwitch";
 import DagModalManager from "../../controls/dagModal/dagModalManager";
-import Navigator from 'Navigator';
+import Navigator from '../../navigator/navigationManager';
+import { routes } from '../../navigator/routes';
 import DagSetPasswordModal from "../../controls/dagModal/modals/dagSetPasswordModal";
 
 class SecuritySettings extends Component {
@@ -89,14 +90,14 @@ class SecuritySettings extends Component {
                 description: '',
                 children: this.renderBackupWarning(),
                 onClick: () => {
-                    Navigator.to('/settings/security/backup');
+                    Navigator.to(this, routes.BackupSettings);
                 }
             },
             {
                 title: 'Recover wallet',
                 description: '',
                 onClick: () => {
-                    Navigator.to('/settings/security/recovery');
+                    Navigator.to(this, routes.RecoverSettings);
                 }
             }
         ];

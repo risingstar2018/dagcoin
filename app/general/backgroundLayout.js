@@ -6,7 +6,7 @@ import {
 
 import { container } from '../styles/main';
 
-class MainPageLayout extends Component {
+class BackgroundLayout extends Component {
     render() {
         return (
             <View style={StyleSheet.flatten([container.p40, this.props.style, container.flex])}>
@@ -51,4 +51,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MainPageLayout;
+export default BackgroundLayout;

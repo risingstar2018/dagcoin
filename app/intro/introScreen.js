@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import Navigator from '../navigator/navigationManager';
+import { routes } from '../navigator/routes';
 
 import {
     StyleSheet, View, Image, Text
@@ -6,11 +8,10 @@ import {
 
 import { container } from "../styles/main";
 
-import MainPageLayout from "../general/mainPageLayout";
 import Button from "./button";
 import DagButton from "../controls/dagButton";
 
-import Navigator from 'Navigator';
+import BackgroundLayout from "../general/backgroundLayout";
 
 class IntroScreen extends Component {
     constructor() {
@@ -44,7 +45,7 @@ class IntroScreen extends Component {
                     <DagButton onClick={this.changeSlide.bind(this, 1)}
                                style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
                                textStyle={styles.nextButtonText}
-                               text={"GOT IT"}></DagButton>
+                               text={"GOT IT"} />
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -68,7 +69,7 @@ class IntroScreen extends Component {
                     <DagButton onClick={this.changeSlide.bind(this, 2)}
                                style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
                                textStyle={styles.nextButtonText}
-                               text={"AWESOME"}></DagButton>
+                               text={"AWESOME"} />
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -89,22 +90,22 @@ class IntroScreen extends Component {
                     <Button onClick={this.changeSlide.bind(this, 2)} style={StyleSheet.flatten([container.m15l, styles.enabled])}/>
                 </View>
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
-                    <DagButton onClick={this.navigate.bind(this)} text={"CREATE WALLET"}></DagButton>
+                    <DagButton onClick={this.navigate.bind(this)} text={"CREATE WALLET"} />
                 </View>
             </View>
         ];
         return (
-            <MainPageLayout>
+            <BackgroundLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <View style={StyleSheet.flatten([styles.skipContainer, container.m20b])}>
                         <DagButton onClick={this.changeSlide.bind(this, 2)}
                                    style={StyleSheet.flatten([container.transparent, container.noBorder, styles.skipButton])}
                                    textStyle={styles.skipButtonText}
-                                   text={"SKIP"}></DagButton>
+                                   text={"SKIP"} />
                     </View>
                     {slides[this.state.activeSlide]}
                 </View>
-            </MainPageLayout>
+            </BackgroundLayout>
         );
     }
 
@@ -115,7 +116,7 @@ class IntroScreen extends Component {
     }
 
     navigate() {
-        Navigator.to('/confirmation');
+        Navigator.to(this, routes.ConfirmationScreen);
     }
 }
 

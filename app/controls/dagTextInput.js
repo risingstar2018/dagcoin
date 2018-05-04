@@ -43,9 +43,16 @@ class DagTextInput extends Component {
             return this.props.renderLabel();
         }
 
+        const renderAsterisk = () => {
+            if (this.props.required) {
+                return (<Text style={text.textRed}>*</Text>);
+            }
+            return null;
+        };
+
         if (this.props.label) {
             return (<Text style={StyleSheet.flatten([styles.label, font.size10, font.weight700, container.m5b, this.props.labelStyle])}>
-                {this.props.label}
+                {this.props.label} {renderAsterisk()}
             </Text>);
         }
 
@@ -98,6 +105,7 @@ class DagTextInput extends Component {
                         secureTextEntry={this.props.password}
                         placeholder={this.props.placeholder}
                         placeholderTextColor={this.props.placeholderTextColor || '#8597a7'}
+                        maxLength={this.props.maxLength}
                     />
                     {this.props.children}
                 </View>
@@ -110,7 +118,8 @@ class DagTextInput extends Component {
 
 DagTextInput.defaultProps = {
     onValueChange: (value) => {},
-    disabled: false
+    disabled: false,
+    required: false
 };
 
 const styles = StyleSheet.create({
@@ -133,6 +142,7 @@ const styles = StyleSheet.create({
     },
     focused: {
         borderColor: '#999',
+        backgroundColor: '#fafafa'
     },
     invalid: {
         borderColor: '#d51f26'

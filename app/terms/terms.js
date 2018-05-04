@@ -5,9 +5,9 @@ import {
 } from 'react-native';
 
 import { container, text, font } from "../styles/main";
-import MainPageLayout from "../general/mainPageLayout";
 import PageHeader from "../general/pageHeader";
 import BasePageLayout from "../general/basePageLayout";
+import BackgroundLayout from "../general/backgroundLayout";
 
 class Terms extends Component {
     constructor(){
@@ -16,7 +16,7 @@ class Terms extends Component {
 
     render() {
         return (
-            <MainPageLayout style={container.p0}>
+            <BackgroundLayout style={container.p0}>
                 <PageHeader title={'Terms of Use'.toUpperCase()} canBack={true}></PageHeader>
                 <BasePageLayout style={container.p20t}>
                     <Text style={styles.paragraph}>Dagcoin wallet is a free, open source, multi-signature digital wallet.</Text>
@@ -34,16 +34,13 @@ class Terms extends Component {
                     <Text style={styles.paragraph}>You assume any and all risks associated with the use of the software.</Text>
                     <Text style={styles.paragraph}>We reserve the right to modify these terms from time to time.</Text>
                 </BasePageLayout>
-            </MainPageLayout>
+            </BackgroundLayout>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-    },
-    header: {
-        position: 'fixed'
     },
     paragraph: StyleSheet.flatten([container.m20b, font.size16])
 });
