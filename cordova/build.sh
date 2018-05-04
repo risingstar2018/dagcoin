@@ -241,8 +241,14 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 	cp android/build-extras.gradle $PROJECT/platforms/android/build-extras.gradle
 	checkOK
 
-	cp android/project.properties $PROJECT/platforms/android/project.properties
-	checkOK
+  if $DBGJS
+  then
+  	cp android/testnet/project.properties $PROJECT/platforms/android/project.properties
+  	checkOK
+  else
+  	cp android/live/project.properties $PROJECT/platforms/android/project.properties
+  	checkOK
+  fi
 
 	cp -R android/res/* $PROJECT/platforms/android/res
 	checkOK
