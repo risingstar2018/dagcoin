@@ -26,7 +26,7 @@ else
   Action=linux64:live
 fi
 
-DEBIAN_FOLDER="../byteballbuilds/dagcoin${Type}-${PACKAGE_VERSION}"
+DEBIAN_FOLDER="../byteballbuilds/dagcoin-wallet${Type}-${PACKAGE_VERSION}"
 
 # prepare the folder for debian package
 rm -rf ${DEBIAN_FOLDER}
@@ -60,11 +60,11 @@ sed -i ${EXEC_POST_EXP} ${DEBIAN_FOLDER}/debian/dagcoin.desktop
 
 # IF type is -tn then rename all files begin with dagcoin in debian folder
 if [ ${Type} == "-tn" ]; then
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.install ${DEBIAN_FOLDER}/debian/dagcoin-tn.install
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.desktop ${DEBIAN_FOLDER}/debian/dagcoin-tn.desktop
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.links ${DEBIAN_FOLDER}/debian/dagcoin-tn.links
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.postinst ${DEBIAN_FOLDER}/debian/dagcoin-tn.postinst
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.postrm ${DEBIAN_FOLDER}/debian/dagcoin-tn.postrm
+  mv ${DEBIAN_FOLDER}/debian/dagcoin.install ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.install
+  mv ${DEBIAN_FOLDER}/debian/dagcoin.desktop ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.desktop
+  mv ${DEBIAN_FOLDER}/debian/dagcoin.links ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.links
+  mv ${DEBIAN_FOLDER}/debian/dagcoin.postinst ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.postinst
+  mv ${DEBIAN_FOLDER}/debian/dagcoin.postrm ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.postrm
   echo -e "${Green}OK renamed with -tn all files whose names begin with dagcoin in debian folder ${CloseColor}"
 fi
 
@@ -83,21 +83,22 @@ else
 fi
 
 # unzip the Dagcoin-(TN)-linux64.zip file into tree/.. folder
-unzip ${ZipFilePath} -d ${DEBIAN_FOLDER}/tree/usr/share/Dagcoin${Type} > /dev/null
+unzip ${ZipFilePath} -d ${DEBIAN_FOLDER}/tree/usr/share/Dagcoin-wallet${Type} > /dev/null
 
 # after unzip, replace dagcoin.desktop
-cp ${DEBIAN_FOLDER}/debian/dagcoin${Type}.desktop ${DEBIAN_FOLDER}/tree/usr/share/Dagcoin${Type}/
-echo -e "${Green}OK copied dagcoin${Type}.desktop file into tree/usr/share/Dagcoin${Type}/ ${CloseColor}"
+cp ${DEBIAN_FOLDER}/debian/dagcoin-wallet${Type}.desktop ${DEBIAN_FOLDER}/tree/usr/share/Dagcoin-wallet${Type}/
+echo -e "${Green}OK copied dagcoin-wallet${Type}.desktop file into tree/usr/share/Dagcoin-wallet${Type}/ ${CloseColor}"
 
-echo -e "${Green}OK ${ZipFilePath} extracted into tree/usr/share/Dagcoin${CloseColor}"
+echo -e "${Green}OK ${ZipFilePath} extracted into tree/usr/share/Dagcoin-wallet${Type}${CloseColor}"
 
 # go to the folder for debian package and run debuild
 cd ${DEBIAN_FOLDER}
+echo -e "${Green}* Go to Debian folder: ${DEBIAN_FOLDER}${CloseColor}"
 echo -e "${Green}* Starting debuild ${CloseColor}"
 debuild --no-lintian -uc -us
 
 # check if deb file created
-DebPackageFilePath="../dagcoin${Type}_${PACKAGE_VERSION}_all.deb" #amd64 comes from control file
+DebPackageFilePath="../dagcoin-wallet${Type}_${PACKAGE_VERSION}_all.deb" #amd64 comes from control file
 if [ -f "${DebPackageFilePath}" ]
 then
 	echo -e "${Green}\e[1mOK ${DebPackageFilePath} created.${CloseColor}"

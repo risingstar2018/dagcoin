@@ -1,12 +1,12 @@
 [Desktop Entry]
 Type=Application
 Version=@version
-Name=Dagcoin@type
+Name=Dagcoin@type Wallet
 Comment=A wallet for decentralized value
-Exec=/usr/share/Dagcoin@type/Dagcoin@exec-post
-Icon=/usr/share/Dagcoin@type/icon_256x256.png
+Exec=/usr/share/Dagcoin-wallet@type/Dagcoin@exec-post
+Icon=/usr/share/Dagcoin-wallet@type/icon_256x256.png
 Terminal=false
 Categories=Office;Finance;
-MimeType=x-scheme-handler/dagcoin@type;
+MimeType=x-scheme-handler/dagcoin-wallet@type;
 X-Ubuntu-Touch=true
 X-Ubuntu-StageHint=SideStage

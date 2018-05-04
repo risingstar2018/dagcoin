@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.dagcoin"
+<widget id="@ANDROID_PACKAGE"
         version="1.4.5"
         android-versionCode="1062"
         ios-CFBundleVersion="1.4.5">
-  <name>Dagcoin</name>
+  <name>@APPLICATION_NAME</name>
   <description>
     Dagcoin wallet.
   </description>
