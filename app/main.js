@@ -10,7 +10,7 @@ class Main extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Navigator initial='GlobalSettings'/>
+                <Navigator initial='Intro'/>
             </Provider>
         );
     }
