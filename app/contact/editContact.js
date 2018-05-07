@@ -13,55 +13,27 @@ import DagButton from "../controls/dagButton";
 import Navigator from "../navigator/navigationManager";
 
 import {container} from "../styles/main";
-import DagQrCodeButton from "../controls/dagQrCodeButton";
 import {connect} from "react-redux";
-import {addContact} from "../actions/contactsActions";
+import {editContact} from "../actions/contactsActions";
 
-class NewContact extends Component {
-    constructor() {
-        super();
+class EditContact extends Component {
+    constructor(props) {
+        super(props);
 
-        this.state = {
-            address: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            description: '',
-            isFavorite: false
-        };
+        this.state = this.props.navParams.contact;
     }
 
     onSaveClick() {
-        this.props.addContact(this.state);
+        this.props.editContact(this.state);
         Navigator.back();
-    }
-
-    onQrCodeScan() {
-        console.log('qrcode-scan');
-    }
-
-    renderQrCodeButton() {
-        return (<DagQrCodeButton onScan={this.onQrCodeScan.bind(this)}/>);
     }
 
     render() {
         return (
             <GeneralLayout style={StyleSheet.flatten([styles.container, this.props.style])}>
-                <PageHeader canBack={true} title={'New contact'.toUpperCase()} renderCustomAction={this.renderQrCodeButton.bind(this)} />
+                <PageHeader canBack={true} title={'Edit contact'.toUpperCase()} />
                 <BasePageLayout style={StyleSheet.flatten([container.p20, container.p15t, container.p15b])}>
                     <DagForm>
-                        <DagTextInput label={'Wallet address'.toUpperCase()}
-                                      validators={[
-                                          validators.required(),
-                                          validators.validWalletAddress(),
-                                          validators.maxLength(32)
-                                      ]}
-                                      value={this.state.address}
-                                      style={container.m15b}
-                                      required={true}
-                                      maxLength={32}
-                                      onValueChange={(value) => {this.setState({address: value})}}/>
-
                         <DagTextInput label={'First Name'.toUpperCase()}
                                       validators={[
                                           validators.required(),
@@ -119,7 +91,7 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-    addContact
+    editContact
 };
 
-export default NewContactWrapper = connect(null, mapDispatchToProps)(NewContact);
+export default EditContactWrapper = connect(null, mapDispatchToProps)(EditContact);

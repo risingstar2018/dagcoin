@@ -57,7 +57,7 @@ class ConfirmationScreen extends Component {
 
     render() {
         return (
-            <BasePageLayout withoutPadding={true}>
+            <BasePageLayout style={container.p0}>
                 <View style={container.p40}>
                     <Text style={StyleSheet.flatten([font.size24, text.textCenter])}>Almost done!</Text>
                     <Text style={StyleSheet.flatten([text.textCenter, container.m10t])}>As a security precaution we would like to go over some major points</Text>

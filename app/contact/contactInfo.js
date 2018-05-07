@@ -14,8 +14,9 @@ import {container, font, text} from "../styles/main";
 import DagIconButton from "../controls/dagIconButton";
 import DagModalManager from "../controls/dagModal/dagModalManager";
 import DagActionsModal from "../controls/dagModal/modals/dagActionsModal";
-import { editContact, deleteContact } from '../actions/contactsActions';
+import { deleteContact } from '../actions/contactsActions';
 import Navigator from "../navigator/navigationManager";
+import routes from "../navigator/routes";
 
 class ContactInfo extends Component {
     constructor() {
@@ -27,19 +28,20 @@ class ContactInfo extends Component {
     }
 
     onMoreButtonClick() {
+        const contact = this.props.navParams.contact;
         DagModalManager.show(<DagActionsModal actions={[
             {
                 label: 'Edit',
                 action: () => {
                     DagModalManager.hide();
-                    this.props.editContact(this.props.navParams.contact);
+                    Navigator.to(this, routes.EditContact, { contact });
                 }
             },
             {
                 label: 'Delete',
                 action: () => {
                     DagModalManager.hide();
-                    this.props.deleteContact(this.props.navParams.contact);
+                    this.props.deleteContact(contact);
                     Navigator.back();
                 }
             }
@@ -109,7 +111,6 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-    editContact,
     deleteContact
 };
 

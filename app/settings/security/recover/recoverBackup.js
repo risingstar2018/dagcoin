@@ -13,6 +13,7 @@ import DagPassword from "../../../controls/dagPassword";
 import DagButton from "../../../controls/dagButton";
 import DagForm from "../../../controls/dagForm";
 import DagFileInput from "../../../controls/dagFileInput";
+import NotImplemented from "../../../general/notImplemented";
 
 class RecoverBackup extends Component {
     constructor() {
@@ -51,7 +52,7 @@ class RecoverBackup extends Component {
 
     getFileInput() {
         if (Platform.OS === 'web') {
-            return null;
+            return <NotImplemented componentName='File Input' />;
         } else {
             return (
                 <DagFileInput
