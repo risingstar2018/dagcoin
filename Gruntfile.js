@@ -20,31 +20,31 @@ module.exports = function (grunt) {
       options: {},
       testnet: {
         // nwjs task
-        nwjsAppName: 'Dagcoin-TN',
+        nwjsAppName: 'Dagcoin-TN-Wallet',
         nwjsFlavor: 'sdk',
-        nwjsCFBundleURLName: 'Dagcoin-TN action',
-        nwjsCFBundleURLScheme: 'DAGCOIN-TN',
+        nwjsCFBundleURLName: 'Dagcoin-TN-Wallet action',
+        nwjsCFBundleURLScheme: 'DAGCOIN-TN-WALLET',
 
         // inno setup
-        innosetupTemplateMyAppName: 'Dagcoin-TN',
-        innosetupTemplateMyAppPackageName: 'Dagcoin-TN',
+        innosetupTemplateMyAppName: 'Dagcoin-TN-Wallet',
+        innosetupTemplateMyAppPackageName: 'Dagcoin-TN-Wallet',
         innosetupTemplateMyAppVersion: '<%= pkg.version %>',
-        innosetupTemplateMyAppExeName: 'Dagcoin-TN.exe',
-        innosetupTemplateMyAppFolderName: 'dagcoin-tn'
+        innosetupTemplateMyAppExeName: 'Dagcoin-TN-Wallet.exe',
+        innosetupTemplateMyAppFolderName: 'dagcoin-tn-wallet'
       },
       live: {
         // nwjs task
-        nwjsAppName: 'Dagcoin',
+        nwjsAppName: 'Dagcoin-Wallet',
         nwjsFlavor: 'normal',
-        nwjsCFBundleURLName: 'Dagcoin action',
-        nwjsCFBundleURLScheme: 'DAGCOIN',
+        nwjsCFBundleURLName: 'Dagcoin-Wallet action',
+        nwjsCFBundleURLScheme: 'DAGCOIN-WALLET',
 
         // inno setup
-        innosetupTemplateMyAppName: 'Dagcoin',
-        innosetupTemplateMyAppPackageName: 'Dagcoin',
+        innosetupTemplateMyAppName: 'Dagcoin-Wallet',
+        innosetupTemplateMyAppPackageName: 'Dagcoin-Wallet',
         innosetupTemplateMyAppVersion: '<%= pkg.version %>',
-        innosetupTemplateMyAppExeName: 'Dagcoin.exe',
-        innosetupTemplateMyAppFolderName: 'dagcoin'
+        innosetupTemplateMyAppExeName: 'Dagcoin-Wallet.exe',
+        innosetupTemplateMyAppFolderName: 'dagcoin-wallet'
       },
       functions: {}
     },

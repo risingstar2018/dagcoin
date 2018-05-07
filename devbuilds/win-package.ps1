@@ -1,4 +1,4 @@
-$isTestnet = $true
+$isTestnet = $false
 
 Write-Host "Started creation of Windows packages"
 
@@ -30,8 +30,8 @@ if ($isTestnet) {
   Write-Host "Grunt desktop completed"
   
   Write-Host "Started copying node_modules"
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-TN\win32\ -recurse -Force
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-TN\win64\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-TN-Wallet\win32\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-TN-Wallet\win64\ -recurse -Force
   Write-Host "Copied node_modules"
   
   Write-Host "Started grunt inno task"
@@ -43,8 +43,8 @@ if ($isTestnet) {
   Write-Host "Grunt desktop completed"
   
   Write-Host "Started copying node_modules"
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin\win32\ -recurse -Force
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin\win64\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-Wallet\win32\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-Wallet\win64\ -recurse -Force
   Write-Host "Copied node_modules"
   
   Write-Host "Started grunt inno task"

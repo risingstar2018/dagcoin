@@ -58,15 +58,18 @@ sed -i ${EXEC_POST_EXP} ${DEBIAN_FOLDER}/debian/dagcoin.postinst
 sed -i ${EXEC_POST_EXP} ${DEBIAN_FOLDER}/debian/dagcoin.postrm
 sed -i ${EXEC_POST_EXP} ${DEBIAN_FOLDER}/debian/dagcoin.desktop
 
+mv ${DEBIAN_FOLDER}/debian/dagcoin.install ${DEBIAN_FOLDER}/debian/dagcoin-wallet${Type}.install
+mv ${DEBIAN_FOLDER}/debian/dagcoin.desktop ${DEBIAN_FOLDER}/debian/dagcoin-wallet${Type}.desktop
+mv ${DEBIAN_FOLDER}/debian/dagcoin.links ${DEBIAN_FOLDER}/debian/dagcoin-wallet${Type}.links
+mv ${DEBIAN_FOLDER}/debian/dagcoin.postinst ${DEBIAN_FOLDER}/debian/dagcoin-wallet${Type}.postinst
+mv ${DEBIAN_FOLDER}/debian/dagcoin.postrm ${DEBIAN_FOLDER}/debian/dagcoin-wallet${Type}.postrm
 # IF type is -tn then rename all files begin with dagcoin in debian folder
-if [ ${Type} == "-tn" ]; then
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.install ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.install
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.desktop ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.desktop
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.links ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.links
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.postinst ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.postinst
-  mv ${DEBIAN_FOLDER}/debian/dagcoin.postrm ${DEBIAN_FOLDER}/debian/dagcoin-wallet-tn.postrm
-  echo -e "${Green}OK renamed with -tn all files whose names begin with dagcoin in debian folder ${CloseColor}"
+if [ "${Type}" == "-tn" ]; then
+  echo -e "${Green}OK renamed with all debian files with -wallet-tn whose names begin with dagcoin in debian folder ${CloseColor}"
+else
+  echo -e "${Green}OK renamed with all debian files with -wallet whose names begin with dagcoin in debian folder ${CloseColor}"
 fi
+
 
 echo -e "${Green}OK ${DEBIAN_FOLDER}/debian folder created${CloseColor}"
 echo -e "${Green}OK ${DEBIAN_FOLDER}/tree folder created${CloseColor}"
