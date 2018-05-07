@@ -8,8 +8,10 @@ import { container } from "../styles/main";
 
 class BasePageLayout extends Component {
     render() {
+        const { withoutPadding } = this.props;
+
         return (
-            <ScrollView style={StyleSheet.flatten([container.p40, styles.container, this.props.style])}>
+            <ScrollView style={StyleSheet.flatten([withoutPadding ? null : container.p40, styles.container, this.props.style])}>
                 {this.props.children}
             </ScrollView>
         );

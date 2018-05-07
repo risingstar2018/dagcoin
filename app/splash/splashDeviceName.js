@@ -64,13 +64,18 @@ class SplashDeviceName extends Component {
 
                 <View style={StyleSheet.flatten([styles.controlsContainer])}>
                     <DagForm>
-                        <DagTextInput validators={[validators.required()]}
-                                      style={StyleSheet.flatten([container.m40b, container.m20t])}
-                                      onValueChange={this.onDeviceNameChange.bind(this)}
-                                      value={this.state.deviceName}/>
+                        <DagTextInput
+                            validators={[validators.required()]}
+                            style={StyleSheet.flatten([container.m20t, container.m40b])}
+                            onValueChange={this.onDeviceNameChange.bind(this)}
+                            value={this.state.deviceName}
+                        />
 
-                        <DagButton text={"CONTINUE"} disabled={!this.state.deviceName}
-                                   onClick={this.onSetDeviceNameClick.bind(this)} />
+                        <DagButton
+                            text={"CONTINUE"}
+                            disabled={!this.state.deviceName}
+                            onClick={this.onSetDeviceNameClick.bind(this)}
+                        />
                     </DagForm>
                 </View>
             </View>);
@@ -102,8 +107,6 @@ const styles = StyleSheet.create({
     },
     deviceNameContainer: {
         width: 250,
-        flex: 1,
-        alignItems: 'center'
     },
     controlsContainer: {
         width: 250

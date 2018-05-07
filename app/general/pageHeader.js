@@ -7,7 +7,6 @@ import {
 import {container, font, text} from "../styles/main";
 import DagIconButton from "../controls/dagIconButton";
 import NavigationManager from "../navigator/navigationManager";
-import DagLeftMenuManager from "../controls/dagMenu/dagLeftMenu/dagLeftMenuManager";
 
 class PageHeader extends Component {
     constructor() {
@@ -23,7 +22,7 @@ class PageHeader extends Component {
     }
 
     onMenuClick() {
-        DagLeftMenuManager.toggle();
+        this.props.toggleMenu();
     }
 
     renderCustomAction() {

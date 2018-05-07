@@ -11,7 +11,9 @@ import { container } from "../styles/main";
 import Button from "./button";
 import DagButton from "../controls/dagButton";
 
-import BackgroundLayout from "../general/backgroundLayout";
+import BasePageLayout from "../general/basePageLayout";
+
+const SLIDES_COUNT = 3;
 
 class IntroScreen extends Component {
     constructor() {
@@ -22,10 +24,36 @@ class IntroScreen extends Component {
         }
     }
 
+    getButtons() {
+        const { activeSlide } = this.state;
+
+        const slides = [];
+
+        for (let i = 0; i < SLIDES_COUNT; i++) {
+            slides.push(
+                <Button
+                    onClick={this.changeSlide.bind(this, i)}
+                    style={StyleSheet.flatten([container.m15l, styles.dot, i === activeSlide ? styles.enabled : null])}
+                    key={i}
+                />
+            )
+        }
+
+        return (
+            <View style={StyleSheet.flatten([styles.buttonsContainer, container.m40t])}>
+                {slides}
+            </View>
+        );
+    }
+
     render() {
         const slides = [
             <View style={styles.slide}>
-                <Image style={styles.image} source={require('../../img/safe.png')} />
+                <Image
+                    style={styles.image}
+                    source={require('../../img/safe.png')}
+                    resizeMode="contain"
+                />
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
                     <Image style={styles.imageLogo} source={require('../../img/Dagcoin_logo.png')} />
                     <Text>is secure</Text>
@@ -33,14 +61,10 @@ class IntroScreen extends Component {
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
                     <Text>This app stores your dagcoins</Text>
                 </View>
-                <View style={styles.textContainer}>
+                <View style={StyleSheet.flatten([styles.textContainer])}>
                     <Text>with cutting-edge state of the art security</Text>
                 </View>
-                <View style={StyleSheet.flatten([styles.buttonsContainer, container.m40t])}>
-                    <Button onClick={this.changeSlide.bind(this, 0)} style={StyleSheet.flatten([container.m15l, styles.enabled])}/>
-                    <Button onClick={this.changeSlide.bind(this, 1)} style={container.m15l}/>
-                    <Button onClick={this.changeSlide.bind(this, 2)} style={container.m15l}/>
-                </View>
+                {this.getButtons()}
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
                     <DagButton onClick={this.changeSlide.bind(this, 1)}
                                style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
@@ -49,7 +73,7 @@ class IntroScreen extends Component {
                 </View>
             </View>,
             <View style={styles.slide}>
-                <Image style={styles.image} source={require('../../img/transfer.png')} />
+                <Image style={StyleSheet.flatten([styles.image])} source={require('../../img/transfer.png')} />
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
                     <Image style={styles.imageLogo} source={require('../../img/Dagcoin_logo.png')} />
                     <Text>is darn fast.</Text>
@@ -57,14 +81,10 @@ class IntroScreen extends Component {
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
                     <Text>Up to 300x faster</Text>
                 </View>
-                <View style={styles.textContainer}>
+                <View style={StyleSheet.flatten([styles.textContainer])}>
                     <Text>than most alternative solutions!</Text>
                 </View>
-                <View style={StyleSheet.flatten([styles.buttonsContainer, container.m40t])}>
-                    <Button onClick={this.changeSlide.bind(this, 0)} style={container.m15l}/>
-                    <Button onClick={this.changeSlide.bind(this, 1)} style={StyleSheet.flatten([container.m15l, styles.enabled])}/>
-                    <Button onClick={this.changeSlide.bind(this, 2)} style={container.m15l}/>
-                </View>
+                {this.getButtons()}
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
                     <DagButton onClick={this.changeSlide.bind(this, 2)}
                                style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
@@ -81,21 +101,17 @@ class IntroScreen extends Component {
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
                     <Text>We listen to our community</Text>
                 </View>
-                <View style={styles.textContainer}>
+                <View style={StyleSheet.flatten([styles.textContainer])}>
                     <Text>to deliver the best product on the market!</Text>
                 </View>
-                <View style={StyleSheet.flatten([styles.buttonsContainer, container.m40t])}>
-                    <Button onClick={this.changeSlide.bind(this, 0)} style={container.m15l}/>
-                    <Button onClick={this.changeSlide.bind(this, 1)} style={container.m15l}/>
-                    <Button onClick={this.changeSlide.bind(this, 2)} style={StyleSheet.flatten([container.m15l, styles.enabled])}/>
-                </View>
+                {this.getButtons()}
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
                     <DagButton onClick={this.navigate.bind(this)} text={"CREATE WALLET"} />
                 </View>
             </View>
         ];
         return (
-            <BackgroundLayout>
+            <BasePageLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <View style={StyleSheet.flatten([styles.skipContainer, container.m20b])}>
                         <DagButton onClick={this.changeSlide.bind(this, 2)}
@@ -103,9 +119,11 @@ class IntroScreen extends Component {
                                    textStyle={styles.skipButtonText}
                                    text={"SKIP"} />
                     </View>
-                    {slides[this.state.activeSlide]}
+                    <View style={container.m40t}>
+                        {slides[this.state.activeSlide]}
+                    </View>
                 </View>
-            </BackgroundLayout>
+            </BasePageLayout>
         );
     }
 
@@ -124,9 +142,7 @@ const styles = StyleSheet.create({
     slide: {
         flex: 1,
         flexDirection: 'column',
-        alignContent: 'center',
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'center'
     },
     skipContainer: {
         flex: 1,
@@ -171,6 +187,10 @@ const styles = StyleSheet.create({
     },
     enabled: {
         width: 20,
+        height: 10
+    },
+    dot: {
+        width: 10,
         height: 10
     }
 });
