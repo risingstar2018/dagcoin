@@ -31,6 +31,10 @@ $nav_bar_height: 50px;
       left: auto;
       right: 0;
     }
+
+    .navbar-preferences-icon, .navbar-back-icon, .navbar-notification-icon {
+      cursor: pointer;
+    }
   }
 
   .navbar-container-title {

@@ -113,6 +113,25 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           modalInstance.result.then(callbacks.ifYes, callbacks.ifNo);
         };
 
+        const modalNotifications = function () {
+          const ModalInstanceCtrl = function ($scope, $modalInstance) {
+            $scope.notifications = [];
+
+            $scope.close = function () {
+              $modalInstance.dismiss();
+            };
+          };
+          const modalInstance = $modal.open({
+            templateUrl: 'views/modals/notifications.html',
+            windowClass: animationService.modalAnimated.slideUp,
+            controller: ModalInstanceCtrl,
+          });
+          modalInstance.result.finally(() => {
+            const m = angular.element(document.getElementsByClassName('reveal-modal'));
+            m.addClass(animationService.modalAnimated.slideOutDown);
+          });
+        };
+
         const requestApproval = function (question, callbacks) {
           if (isCordova) {
             navigator.notification.confirm(
@@ -610,6 +629,14 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         $rootScope.openMenu = () => {
           self.openMenu();
+        };
+
+        self.openNotifications = () => {
+          modalNotifications();
+        };
+
+        $rootScope.openNotifications = () => {
+          self.openNotifications();
         };
 
         self.closeMenu = () => {

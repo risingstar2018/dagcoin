@@ -37,6 +37,7 @@
         };
 
         $scope.openMenu = () => $rootScope.openMenu();
+        $scope.openNotifications = () => $rootScope.openNotifications();
 
         /* document.addEventListener('backbutton', () => {
           back();

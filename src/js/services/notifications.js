@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('copayApp.services')
-  .factory('notification', ['$timeout',
-    function ($timeout) {
+  .factory('notification', ['$timeout', 'storageService', 'profileService',
+    function ($timeout, storageService, profileService) {
       let notifications = [];
 
       const queue = [];
@@ -41,10 +41,16 @@
           enabled: true,
         },
         details: true,
-        localStorage: false,
+        localStorage: true,
         html5Mode: false,
         html5DefaultIcon: 'img/icons/dagcoin.ico',
       };
+
+      function notificationsKey() {
+        const fc = profileService.focusedClient;
+        const network = fc.credentials.network;
+        return `notifications-${network}`;
+      }
 
       function html5Notify(icon, title, content, ondisplay, onclose) {
         if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
@@ -230,22 +236,30 @@
 
         /* ============ PERSISTENCE METHODS ============ */
 
-        save() {
+        save(cb) {
           // Save all the notifications into localStorage
           if (settings.localStorage) {
-            localStorage.setItem('notifications', JSON.stringify(notifications));
+            storageService.set(notificationsKey(), JSON.stringify(notifications), cb);
           }
         },
 
-        restore() {
-          // Load all notifications from localStorage
+        restore(cb) {
+          storageService.get(notificationsKey(), (error, notificationsList) => {
+            if (notificationsList) {
+              const json = JSON.parse(notificationsList);
+              notifications = json
+            } else {
+              notifications = {};
+            }
+
+            return cb(notifications);
+          });
         },
 
         clear() {
           notifications = [];
           this.save();
         },
-
       };
     },
   ]);
