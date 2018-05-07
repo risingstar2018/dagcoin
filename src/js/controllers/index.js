@@ -120,6 +120,17 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             $scope.close = function () {
               $modalInstance.dismiss();
             };
+
+            $scope.clearNotifications = function () {
+              notification.clear(() => {
+                $scope.notifications = [];
+              });
+            };
+
+            notification.restore((notificationList) => {
+              $scope.notifications = notificationList;
+              notification.markAllAsRead();
+            });
           };
           const modalInstance = $modal.open({
             templateUrl: 'views/modals/notifications.html',

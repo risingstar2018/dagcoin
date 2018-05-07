@@ -9,7 +9,8 @@
         </span>
 
         <span title="{{ 'Notifications' | translate }}" ng-click="openNotifications()" ng-show="!showBack" class="navbar-notification-icon">
-          <svg-icon name="notifications"></svg-icon>
+          <svg-icon ng-show="!hasUnreadNotifications" name="notifications"></svg-icon>
+          <svg-icon ng-show="hasUnreadNotifications" name="notifications_active"></svg-icon>
         </span>
     </div>
     <div class="navbar-container-title">{{title}}</div>

@@ -10,9 +10,9 @@
     .module('copayApp.directives')
     .directive('dagNavBar', dagNavBar);
 
-  dagNavBar.$inject = ['$state', '$rootScope', '$stateParams'];
+  dagNavBar.$inject = ['$state', '$rootScope', '$stateParams', 'notification'];
 
-  function dagNavBar($state, $rootScope, $stateParams) {
+  function dagNavBar($state, $rootScope, $stateParams, notification) {
     return {
       restrict: 'E',
       templateUrl: 'directives/dagNavBar/dagNavBar.template.html',
@@ -36,9 +36,22 @@
           }
         };
 
+        const eventBus = require('core/event_bus.js');
+
+        $scope.checkUnreadNotifications = () => {
+          notification.unreadNotifications((notifications) => {
+            $scope.hasUnreadNotifications = notifications.length > 0;
+          });
+        };
+
         $scope.openMenu = () => $rootScope.openMenu();
         $scope.openNotifications = () => $rootScope.openNotifications();
 
+        eventBus.on('notifications_updated', () => {
+          $scope.checkUnreadNotifications();
+        });
+
+        $scope.checkUnreadNotifications();
         /* document.addEventListener('backbutton', () => {
           back();
         }, false); */

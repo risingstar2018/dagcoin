@@ -1,10 +1,25 @@
 <div class="modal-content" style="padding: 30px;">
+  <a class="close_modal" ng-click="close()">
+    <svg-icon title="close"></svg-icon>
+  </a>
 
   <div class="modal-content-header">
     <h3 style="text-transform: uppercase;" translate>Notifications</h3>
   </div>
 
   <div class="modal-content-body text-center">
-
+    <div ng-show="notifications.length > 0" style="height: 350px; overflow-y: auto; margin-top: 20px; margin-bottom: 20px; text-align: left; margin-left: 5px;">
+      <div ng-repeat="notification in notifications | orderBy: '-timestamp'">
+        <span><b>{{notification.title}}</b> <i>{{notification.timestamp | date:'yyyy-MM-dd HH:mm:ss'}}</i></span>
+        <span ng-show="!notification.isRead" style="color: red; margin-left: 70px;">new</span> <br/>
+        <span>{{notification.content}}</span> <hr/>
+      </div>
+    </div>
+    <div ng-show="notifications.length > 0" class="notification-buttons">
+      <button ng-click="clearNotifications()" class="btn btn_confirmed-full" translate>Clear notifications</button>
+    </div>
+    <div ng-show="notifications.length <= 0" style="height: 350px;">
+      <p translate style="padding-top: 145px; font-weight: bold; font-size: 1.3em;">There are no notifications</p>
+    </div>
   </div>
 </div>
