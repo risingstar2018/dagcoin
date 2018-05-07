@@ -7,8 +7,8 @@ import {
 import BasePageLayout from "../../general/basePageLayout";
 import DagGroupList from "../../controls/dagGroupList";
 import DagTextInput from "../../controls/dagTextInput";
-import ContactListItem from "./contactListItem";
-import ContactListGroup from "./contactListGroup";
+import ContactListItem from "./components/contactListItem";
+import ContactListGroup from "./components/contactListGroup";
 
 import {container} from "../../styles/main";
 

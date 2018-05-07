@@ -4,7 +4,7 @@ import {
     StyleSheet, View, Text
 } from 'react-native';
 
-import {container, font, text} from "../../styles/main";
+import {container, font, text} from "../../../styles/main";
 
 class ContactListGroup extends Component {
     constructor() {

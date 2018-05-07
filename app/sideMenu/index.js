@@ -11,8 +11,8 @@ import { container, text, font } from '../styles/main';
 
 function getMenu() {
     return (
-        <View style={{flex: 1, flexDirection: 'column'}}>
-            <View style={StyleSheet.flatten([container.p10, styles.infoContainer])}>
+        <View style={{flexDirection: 'column'}}>
+            <View style={StyleSheet.flatten([container.p10, container.m20b, container.m20t, styles.infoContainer])}>
                 <View style={StyleSheet.flatten([styles.elementContainer])}>
                     <Image
                         style={StyleSheet.flatten([styles.logo])}
@@ -30,10 +30,10 @@ function getMenu() {
                     </Text>
                 </View>
             </View>
-            <View style={StyleSheet.flatten([container.m20t, container.m15l, container.p10t, styles.menuItemsContainer])}>
+            <View style={StyleSheet.flatten([container.m40t, container.m20l, container.p10t, styles.menuItemsContainer])}>
                 <TouchableOpacity
                     onPress={onPress.bind(this, 1, routes.NewWallet)}
-                    style={StyleSheet.flatten([container.m30b, styles.menuItem, font.size16, font.weight400])}
+                    style={StyleSheet.flatten([container.m30b, styles.menuItem])}
                 >
                     <View style={StyleSheet.flatten([container.m15r, styles.menuIcon])}>
                         <Image
@@ -42,12 +42,12 @@ function getMenu() {
                         />
                     </View>
                     <View style={StyleSheet.flatten([styles.menuItemText])}>
-                        <Text style={StyleSheet.flatten([text.textCenter, font.weight400])}>Add new wallet</Text>
+                        <Text style={StyleSheet.flatten([text.textCenter, font.size16, font.weight400])}>Add new wallet</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={onPress.bind(this, 1, routes.Contacts)}
-                    style={StyleSheet.flatten([container.m30b, styles.menuItem, font.size16, font.weight400])}
+                    style={StyleSheet.flatten([container.m30b, styles.menuItem])}
                 >
                     <View style={StyleSheet.flatten([container.m15r, styles.menuIcon])}>
                         <Image
@@ -56,12 +56,12 @@ function getMenu() {
                         />
                     </View>
                     <View style={StyleSheet.flatten([styles.menuItemText])}>
-                        <Text style={StyleSheet.flatten([text.textCenter, font.weight400])}>Address Book</Text>
+                        <Text style={StyleSheet.flatten([text.textCenter, font.size16, font.weight400])}>Address Book</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={onPress.bind(this, 1, routes.BackupSettings)}
-                    style={StyleSheet.flatten([container.m30b, styles.menuItem, font.size16, font.weight400])}
+                    style={StyleSheet.flatten([container.m30b, styles.menuItem])}
                 >
                     <View style={StyleSheet.flatten([container.m15r, styles.menuIcon])}>
                         <Image
@@ -70,12 +70,12 @@ function getMenu() {
                         />
                     </View>
                     <View style={StyleSheet.flatten([styles.menuItemText])}>
-                        <Text style={StyleSheet.flatten([text.textCenter, font.weight400])}>Paired Devices</Text>
+                        <Text style={StyleSheet.flatten([text.textCenter, font.size16, font.weight400])}>Paired Devices</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={onPress.bind(this, 1, routes.GlobalSettings)}
-                    style={StyleSheet.flatten([container.m30b, styles.menuItem, font.size16, font.weight400])}
+                    style={StyleSheet.flatten([container.m30b, styles.menuItem])}
                 >
                     <View style={StyleSheet.flatten([container.m15r, styles.menuIcon])}>
                         <Image
@@ -84,7 +84,7 @@ function getMenu() {
                         />
                     </View>
                     <View style={StyleSheet.flatten([styles.menuItemText])}>
-                        <Text style={StyleSheet.flatten([text.textCenter, font.weight400])}>Settings</Text>
+                        <Text style={StyleSheet.flatten([text.textCenter, font.size16, font.weight400])}>Settings</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -100,10 +100,7 @@ function onPress(menuItemIdx, action) {
 const styles = StyleSheet.create({
     infoContainer: {
         flex: 1,
-        alignContent: 'stretch',
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#aaaaaa'
+        alignContent: 'stretch'
     },
     elementContainer: {
         flex: 1,
@@ -116,8 +113,7 @@ const styles = StyleSheet.create({
     },
     menuItemsContainer: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center'
+        justifyContent: 'flex-start'
     },
     menuItem: {
         flex: 1,

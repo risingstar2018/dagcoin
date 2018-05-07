@@ -16,6 +16,7 @@ import ConfirmationScreen from "../intro/confirmationScreen";
 import Wallet from "../wallet/wallet";
 import Intro from "../intro/introScreen";
 import NewContact from "../contact/newContact";
+import EditContact from "../contact/editContact";
 import Terms from "../terms/terms";
 
 export const routes = {
@@ -40,6 +41,7 @@ export const routes = {
     Wallet: 'Wallet',
 
     NewContact: 'NewContact',
+    EditContact: 'EditContact',
     ContactInfo: 'ContactInfo',
     Contacts: 'Contacts',
 
@@ -85,6 +87,8 @@ export function getView(name) {
 
         case routes.NewContact:
             return NewContact;
+        case routes.EditContact:
+            return EditContact;
         case routes.ContactInfo:
             return ContactInfo;
         case routes.Contacts:

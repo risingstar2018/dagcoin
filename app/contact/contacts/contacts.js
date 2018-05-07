@@ -9,7 +9,7 @@ import {
 import DagTabView from "../../controls/dagTabView";
 import GeneralLayout from "../../general/generalLayout";
 import PageHeader from "../../general/pageHeader";
-import NoContacts from "./noContacts";
+import NoContacts from "./components/noContacts";
 import DagIconButton from "../../controls/dagIconButton";
 import ContactsList from "./contactsList";
 import FavoriteList from "./favoriteList";
