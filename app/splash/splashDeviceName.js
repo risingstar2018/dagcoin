@@ -72,8 +72,8 @@ class SplashDeviceName extends Component {
                         />
 
                         <DagButton
+                            type={'submit'}
                             text={"CONTINUE"}
-                            disabled={!this.state.deviceName}
                             onClick={this.onSetDeviceNameClick.bind(this)}
                         />
                     </DagForm>

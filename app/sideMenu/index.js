@@ -11,7 +11,7 @@ import { container, text, font } from '../styles/main';
 
 function getMenu() {
     return (
-        <View style={{flexDirection: 'column'}}>
+        <View style={container.flex}>
             <View style={StyleSheet.flatten([container.p10, container.m20b, container.m20t, styles.infoContainer])}>
                 <View style={StyleSheet.flatten([styles.elementContainer])}>
                     <Image
@@ -99,11 +99,9 @@ function onPress(menuItemIdx, action) {
 
 const styles = StyleSheet.create({
     infoContainer: {
-        flex: 1,
         alignContent: 'stretch'
     },
     elementContainer: {
-        flex: 1,
         alignContent: 'stretch',
         alignItems: 'center'
     },
@@ -112,11 +110,9 @@ const styles = StyleSheet.create({
         height: 24
     },
     menuItemsContainer: {
-        flex: 1,
         justifyContent: 'flex-start'
     },
     menuItem: {
-        flex: 1,
         justifyContent: 'flex-start',
         flexDirection: 'row'
     },
