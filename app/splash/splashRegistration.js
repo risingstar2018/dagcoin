@@ -10,6 +10,7 @@ import DagButton from '../controls/dagButton';
 import DagRadioGroup from '../controls/dagRadioGroup';
 import { container, text, font } from "../styles/main";
 import BackgroundLayout from "../general/backgroundLayout";
+import BasePageLayout from "../general/basePageLayout";
 
 class SplashRegistration extends Component {
     constructor(){
@@ -41,16 +42,18 @@ class SplashRegistration extends Component {
         ];
 
         return (
-            <BackgroundLayout>
-                <View style={StyleSheet.flatten([styles.container])}>
-                    <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size14, container.m20b])}>{"Please choose registration type".toUpperCase()}</Text>
+            <BackgroundLayout style={container.p0}>
+                <BasePageLayout>
+                    <View style={StyleSheet.flatten([styles.container])}>
+                        <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size14, container.m20b])}>{"Please choose registration type".toUpperCase()}</Text>
 
-                    <DagRadioGroup options={options}
-                                   onSelect={this.onRegistrationTypeChange.bind(this)}
-                                   selectedOption={this.state.selectedType} />
+                        <DagRadioGroup options={options}
+                                       onSelect={this.onRegistrationTypeChange.bind(this)}
+                                       selectedOption={this.state.selectedType} />
 
-                    <DagButton text={"CONTINUE"} onClick={this.onSetRegistrationTypeClick.bind(this)} />
-                </View>
+                        <DagButton text={"CONTINUE"} onClick={this.onSetRegistrationTypeClick.bind(this)} />
+                    </View>
+                </BasePageLayout>
             </BackgroundLayout>
         );
     }

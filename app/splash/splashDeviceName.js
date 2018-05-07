@@ -12,6 +12,7 @@ import DagTextInput from "../controls/dagTextInput";
 import {validators} from "../controls/dagForm";
 import DagForm from "../controls/dagForm";
 import BackgroundLayout from "../general/backgroundLayout";
+import BasePageLayout from "../general/basePageLayout";
 
 class SplashDeviceName extends Component {
     constructor() {
@@ -26,14 +27,12 @@ class SplashDeviceName extends Component {
     }
 
     onSetDeviceNameClick() {
-        console.log(this.state.deviceName);
         this.setState({
             deviceNameSet: true
         });
     }
 
     onGetStartedClick() {
-        console.log(this.state.deviceName);
         Navigator.to(this, routes.Wallet);
     }
 
@@ -84,18 +83,20 @@ class SplashDeviceName extends Component {
 
     render() {
         return (
-            <BackgroundLayout>
-                <View style={StyleSheet.flatten([styles.container])}>
-                    <Text
-                        style={StyleSheet.flatten([text.textBrand, font.weight700, font.size16])}>{"WELCOME TO DAGCOIN"}</Text>
-                    <Text
-                        style={StyleSheet.flatten([text.textGray, font.weight200, font.size14])}>{"A wallet for decentralized value"}</Text>
+            <BackgroundLayout style={container.p0}>
+                <BasePageLayout>
+                    <View style={StyleSheet.flatten([styles.container])}>
+                        <Text
+                            style={StyleSheet.flatten([text.textBrand, font.weight700, font.size16])}>{"WELCOME TO DAGCOIN"}</Text>
+                        <Text
+                            style={StyleSheet.flatten([text.textGray, font.weight200, font.size14])}>{"A wallet for decentralized value"}</Text>
 
-                    <Image style={StyleSheet.flatten([styles.brand, container.m40b, container.m40t])}
-                           source={require('../../img/icon-splash-brand.png')} />
+                        <Image style={StyleSheet.flatten([styles.brand, container.m40b, container.m40t])}
+                               source={require('../../img/icon-splash-brand.png')} />
 
-                    {this.renderSubView()}
-                </View>
+                        {this.renderSubView()}
+                    </View>
+                </BasePageLayout>
             </BackgroundLayout>
         );
     }
