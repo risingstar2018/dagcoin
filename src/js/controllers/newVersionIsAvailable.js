@@ -24,5 +24,9 @@
       newVersion.changeShowFlag(false);
       $modalInstance.close('closed result');
     };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
   });
 }());
