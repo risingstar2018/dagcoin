@@ -34,7 +34,7 @@ module.exports = function (grunt) {
       },
       live: {
         // nwjs task
-        nwjsAppName: 'Dagcoin-Wallet',
+        nwjsAppName: 'dagcoin-wallet',
         nwjsFlavor: 'normal',
         nwjsCFBundleURLName: 'Dagcoin-Wallet action',
         nwjsCFBundleURLScheme: 'DAGCOIN-WALLET',
@@ -371,7 +371,7 @@ module.exports = function (grunt) {
         appName: '<%= process.env.nwjsAppName %>',
         flavor: '<%= process.env.nwjsFlavor %>',
         buildDir: '../byteballbuilds',
-        version: '0.26.2',
+        version: '0.14.7',
         zip: false,
         macIcns: './public/img/icons/icon-white-outline.icns',
         winIco: './public/img/icons/dagcoin.ico',

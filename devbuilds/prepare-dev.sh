@@ -3,7 +3,7 @@ Green='\033[0;32m'
 Red='\033[0;31m'
 CloseColor='\033[0m'
 
-NodeVersion="v8.10.0"
+NodeVersion="v5.12.0"
 environment=$1
 
 echo "${Green}* Node version OK${CloseColor}"
@@ -32,18 +32,18 @@ if ! gem list sass -i; then
 fi
 
 if [ "$(uname)" == "Darwin" ]; then
-  if [ -d "${Sqlite3Path}/node-webkit-v0.26.2-darwin-x64" ]; then
+  if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64" ]; then
     grunt build:${environment}
     exit
   fi
-  mkdir "${Sqlite3Path}/node-webkit-v0.26.2-darwin-x64"
-  cp "${Sqlite3Path}/node-v57-darwin-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.26.2-darwin-x64"
+  mkdir "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
+  cp "${Sqlite3Path}/node-v47-darwin-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-  if [ -d "${Sqlite3Path}/node-webkit-v0.26.2-linux-x64" ]; then
+  if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64" ]; then
     grunt build:${environment}
     exit
   fi
-  mkdir "${Sqlite3Path}/node-webkit-v0.26.2-linux-x64"
-  cp "${Sqlite3Path}/node-v57-linux-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.26.2-linux-x64"
+  mkdir "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64"
+  cp "${Sqlite3Path}/node-v47-linux-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64"
 fi
 grunt build:${environment}

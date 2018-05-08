@@ -10,7 +10,7 @@ TBD
 
 ## Installation
 
-Download and install [NW.js v0.26.2 LTS](https://dl.nwjs.io/v0.26.2) and [Node.js v8.10.0](https://nodejs.org/download/release/v8.10.0/).  These versions are recommended for easiest install but newer versions will work too.  If you already have another version of Node.js installed, you can use [NVM](https://github.com/creationix/nvm) to keep both.
+Download and install [NW.js v0.14.7 LTS](https://dl.nwjs.io/v0.14.7) and [Node.js v5.12.0](https://nodejs.org/download/release/v5.12.0/).  These versions are recommended for easiest install but newer versions will work too.  If you already have another version of Node.js installed, you can use [NVM](https://github.com/creationix/nvm) to keep both.
 
 Clone the source:
 
