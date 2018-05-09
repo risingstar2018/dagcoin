@@ -27,7 +27,8 @@
       },
       link: ($scope, elem, attr) => {
         $scope.invert = ('invert' in attr);
-        $scope.showBack = (!!$stateParams.backTo || !!$scope.goBack);
+        $scope.showBack = (!!$stateParams.backTo || !!$scope.goBack);  
+        $scope.showNotificationIcon = !$rootScope.tab || $rootScope.tab === 'wallet.home';        
         $scope.goStateBack = () => {
           if ($scope.goBackParams) {
             $state.go($stateParams.backTo || $scope.goBack || 'wallet', JSON.parse($scope.goBackParams));
