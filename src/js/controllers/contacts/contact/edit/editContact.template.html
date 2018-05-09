@@ -1,0 +1,50 @@
+<dag-nav-bar title="{{ 'Edit Contact' | translate }}" go-back-params="{{contact.backParams}}" invert></dag-nav-bar>
+
+<div class="content dag-scroll">
+
+    <form name="editContact" ng-submit="contact.update()" novalidate>
+        <div class="contact_form">
+            <div class="input-wrap">
+                <label class="required" for="first_name">{{ 'First name' | translate}}</label>
+                <input id="first_name" class="animated" type="text"
+                       ng-class="{'shake error' : editContact.first_name.$invalid}"
+                       ng-maxlength="50" type="text" ng-model="contact.data.first_name" name="first_name" required>
+            </div>
+
+            <div class="input-wrap">
+                <label for="last_name">{{ 'Last name' | translate}}</label>
+                <input id="last_name" type="text"
+                       ng-class="{'shake error' : editContact.last_name.$invalid}"
+                       ng-maxlength="50" type="text" ng-model="contact.data.last_name" name="last_name">
+            </div>
+
+            <div class="input-wrap">
+                <label for="email">{{ 'E-mail' | translate}}</label>
+                <input id="email" ng-blur="visitedEmail = true" type="email"
+                       ng-maxlength="254" type="text"
+                       ng-class="{'shake error' : editContact.email.$invalid}"
+                       ng-model="contact.data.email" name="email">
+              <div class="has-error"
+                   ng-show="editContact.email.$invalid" translate>E-mail not valid</div>
+            </div>
+
+      <div class="input-wrap">
+        <label for="description">{{ 'Description' | translate}}</label>
+        <textarea name="description" id="description" ng-model="contact.data.description"
+                  cols="30" rows="4" ng-maxlength="contact.maxLengthOfDescription" type="text"
+                  ng-class="{'shake error' : editContact.description.$invalid}">
+        </textarea>
+        <div class="has-error" ng-show="editContact.description.$invalid" translate>
+          Field is too long
+        </div>
+      </div>
+
+            <div class="contact_form_button_div">
+                <button class="btn btn_red btn_red-full" ng-disabled="editContact.$invalid" type="submit">{{ 'Save' |
+                    translate }}
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>

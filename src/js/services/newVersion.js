@@ -1,10 +1,9 @@
 (function () {
   'use strict';
 
-  const eventBus = require('byteballcore/event_bus.js');
-
   angular.module('copayApp.services')
   .factory('newVersion', ($modal, $timeout, $rootScope, $q, configService) => {
+    const eventBus = require('core/event_bus.js');
     const root = {};
     root.shown = false;
     root.timerNextShow = false;
@@ -14,8 +13,8 @@
       root.version = data.version;
       if (!root.shown) {
         const modalInstance = $modal.open({
-          templateUrl: 'views/modals/newVersionIsAvailable.html',
-          controller: 'newVersionIsAvailable'
+          templateUrl: 'controllers/new-version/newVersionIsAvailable.template.html',
+          controller: 'NewVersionIsAvailableCtrl'
         });
         $rootScope.$on('closeModal', () => {
           modalInstance.dismiss('cancel');
@@ -33,18 +32,19 @@
     }
 
     function askForVersion() {
-      const device = require('byteballcore/device');
+      const device = require('core/device');
       const config = configService.getSync();
-
-      updateHubLocation().then(() => { device.setDeviceHub(config.hub); });
+      device.setDeviceHub(config.hub);
+      // updateHubLocation().then(() => { device.setDeviceHub(config.hub); });
     }
 
+    /*
     function updateHubLocation() {
       const defaultConfig = configService.getDefaults();
       const config = configService.getSync();
       const deferred = $q.defer();
 
-      config.hub = defaultConfig.hub;
+      config.hub = config.hub;
 
       configService.setWithoutMergingOld(config, (err) => {
         if (err) {
@@ -56,6 +56,7 @@
 
       return deferred.promise;
     }
+    */
 
     return root;
   });

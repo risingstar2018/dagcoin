@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-  .factory('autoUpdatingWitnessesList', ($timeout, $modal, $rootScope, configService) => {
+  .factory('autoUpdatingWitnessesList', ($timeout, $modal, $rootScope, configService, animationService) => {
     const root = {};
 
     root.autoUpdate = true;
@@ -11,8 +11,8 @@
     root.checkChangeWitnesses = function () {
       if (!root.autoUpdate) return;
 
-      const device = require('byteballcore/device.js');
-      const myWitnesses = require('byteballcore/my_witnesses.js');
+      const device = require('core/device.js');
+      const myWitnesses = require('core/my_witnesses.js');
       device.getWitnessesFromHub((err, arrWitnessesFromHub) => {
         if (arrWitnessesFromHub) {
           myWitnesses.readMyWitnesses((arrWitnesses) => {
@@ -21,6 +21,7 @@
 
             if (root.addWitnesses.length !== 0) {
               const modalInstance = $modal.open({
+                windowClass: animationService.modalAnimated.slideUp,
                 templateUrl: 'views/modals/approveNewWitnesses.html',
                 controller: 'approveNewWitnesses',
               });

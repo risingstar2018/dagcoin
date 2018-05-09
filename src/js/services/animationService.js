@@ -5,13 +5,14 @@
     .module('copayApp.services')
     .factory('animationService', animationService);
 
-  animationService.$inject = ['isCordova'];
+  animationService.$inject = ['Device'];
 
-  function animationService(isCordova) {
+  function animationService(Device) {
+    const isCordova = Device.cordova;
     return {
       modalAnimated: {
-        slideUp: isCordova ? 'full animated slideInUp' : 'full',
-        slideRight: isCordova ? 'full animated slideInRight' : 'full',
+        slideUp: isCordova ? 'tiny animated slideInUp' : 'tiny',
+        slideRight: isCordova ? 'tiny animated slideInRight' : 'tiny',
         slideOutDown: isCordova ? 'slideOutDown' : 'hideModal',
         slideOutRight: isCordova ? 'slideOutRight' : 'hideModal'
       }

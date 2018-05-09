@@ -5,7 +5,7 @@
 (() => {
   'use strict';
 
-  const breadcrumbs = require('byteballcore/breadcrumbs.js');
+  const breadcrumbs = require('core/breadcrumbs.js');
 
   /**
    * @desc qr-code scanner directive
@@ -15,9 +15,9 @@
     .module('copayApp.directives')
     .directive('qrScanner', qrScanner);
 
-  qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog'];
+  qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'Device', 'gettextCatalog', 'animationService'];
 
-  function qrScanner($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
+  function qrScanner($rootScope, $timeout, $modal, Device, gettextCatalog, animationService) {
     return {
       restrict: 'E',
       scope: {
@@ -25,6 +25,7 @@
         beforeScan: '&',
       },
       controller: ($scope) => {
+        const isCordova = Device.cordova;
         $scope.cordovaOpenScanner = function () {
           window.ignoreMobilePause = true;
           window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Preparing camera...'), true);
@@ -163,9 +164,8 @@
 
           const modalInstance = $modal.open({
             templateUrl: 'views/modals/scanner.html',
-            windowClass: 'full',
+            windowClass: animationService.modalAnimated.slideUp,
             controller: ModalInstanceCtrl,
-            backdrop: 'static',
             keyboard: false,
           });
           modalInstance.result.then((data) => {

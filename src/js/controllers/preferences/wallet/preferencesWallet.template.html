@@ -1,0 +1,35 @@
+<dag-nav-bar invert title="{{'Wallet Preferences' | translate}}"></dag-nav-bar>
+<div class="content preferences">
+  <ul class="preferences_links" ng-show="!index.noFocusedWallet">
+    <li dag-state-transition="slide-left" dag-right-icon="chevron-thin-right" ui-sref="preferencesAlias">
+      <div translate>Wallet Alias</div>
+      <div class="value">{{index.alias||index.walletName}}</div>
+    </li>
+    <li style="padding: 13px 30px 5px; display: flex; flex-direction: column;">
+      <div translate>Single address wallet</div>
+      <div class="right text-gray">
+        <switch ng-model="index.isSingleAddress" class="green right"
+                data-disabled="preferences.numAddresses > 1 || preferences.numCosigners > 1"></switch>
+      </div>
+      <div class="value m10b p70r" style="white-space: initial; text-align: left;">
+        <span ng-if="!(preferences.numAddresses > 1 || preferences.numCosigners > 1)" translate>
+          Single address wallets will not spawn new addresses for every transaction,
+          change will always go to the one and only address the wallet contains.
+        </span>
+        <span ng-if="preferences.numAddresses > 1 ||preferences.numCosigners > 1" translate>
+          Wallet cannot be converted to single address wallet as it consists of multiple addresses or is multidevice
+        </span>
+      </div>
+    </li>
+    <li ng-show="index.isPrivKeyExternal">
+      <div class="right text-gray">
+        {{preferences.externalSource}}
+      </div>
+      <div translate>Hardware wallet</div>
+    </li>
+    <li dag-state-transition="slide-left" dag-right-icon="chevron-thin-right" ui-sref="preferencesAdvanced">
+      <div translate>Advanced</div>
+    </li>
+  </ul>
+</div>
+<div class="extra-margin-bottom"></div>

@@ -26,14 +26,14 @@ fi
 Sqlite3Path='./node_modules/sqlite3/lib/binding'
 
 if [ "$(uname)" == "Darwin" ]; then
- PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
+ PackagePath='../byteballbuilds/dagcoin-wallet/osx64/dagcoin-wallet.app/Contents/Resources/app.nw/'
  Action=dmg
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
   if [ "$1" == "testnet" ]; then
-    PackagePath='../byteballbuilds/Dagcoin-TN/linux64/'
+    PackagePath='../byteballbuilds/dagcoin-TN-wallet/linux64/'
     Action=linux64:testnet
   else
-    PackagePath='../byteballbuilds/Dagcoin/linux64/'
+    PackagePath='../byteballbuilds/dagcoin-wallet/linux64/'
     Action=linux64:live
   fi
 fi

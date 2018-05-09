@@ -6,9 +6,9 @@
     .module('copayApp.services')
     .factory('changeWalletTypeService', changeWalletTypeService);
 
-  changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova', 'gettextCatalog'];
+  changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'Device', 'gettextCatalog'];
 
-  function changeWalletTypeService($rootScope, fileSystemService, isCordova, gettextCatalog) {
+  function changeWalletTypeService($rootScope, fileSystemService, Device, gettextCatalog) {
     const service = {};
 
     service.change = change;
@@ -36,7 +36,7 @@
     }
 
     function canChange() {
-      return !isCordova;
+      return !Device.cordova;
     }
 
     function change(msg) {
@@ -74,7 +74,7 @@
     }
 
     function loadTable(tableName, cb) {
-      const db = requireUncached('byteballcore/db.js');
+      const db = requireUncached('core/db.js');
       const query = `select * from ${tableName}`;
 
       db.query(query, (rows) => {
@@ -98,7 +98,7 @@
     }
 
     function saveTable(table, cb) {
-      const db = requireUncached('byteballcore/db.js');
+      const db = requireUncached('core/db.js');
 
       if (table.rows.length === 0) {
         cb();
@@ -144,13 +144,13 @@
     }
 
     function createDatabaseAndTransferData(data, cb) {
-      const oldDb = require('byteballcore/db.js');
+      const oldDb = require('core/db.js');
 
       oldDb.close(() => {
-        clearRequireCache('byteballcore/conf.js');
-        clearRequireCache('byteballcore/sqlite_pool.js');
-        clearRequireCache('byteballcore/mysql_pool.js');
-        const db = requireUncached('byteballcore/db.js');
+        clearRequireCache('core/conf.js');
+        clearRequireCache('core/sqlite_pool.js');
+        clearRequireCache('core/mysql_pool.js');
+        const db = requireUncached('core/db.js');
 
         // init database
         const interval = setInterval(() => {

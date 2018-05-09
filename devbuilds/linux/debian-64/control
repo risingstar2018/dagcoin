@@ -1,5 +1,5 @@
 Version: @version
-Source: dagcoin@type
+Source: dagcoin-wallet@type
 Section: finance
 Priority: optional
 Maintainer: Dagcoin <support@dagcoin.org>
@@ -9,7 +9,7 @@ Homepage: https://dagcoin.org
 #Vcs-Git: git://anonscm.debian.org/collab-maint/foo.git
 #Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/foo.git
 
-Package: dagcoin@type
+Package: dagcoin-wallet@type
 Architecture: all
 Depends: ${misc:Depends}
 Description: A wallet for decentralized value

@@ -5,43 +5,50 @@
   angular.module('copayApp.services').factory('nodeWebkit', () => {
     const root = {};
 
-    const isNodeWebkit = function () {
-      const isNode = (typeof process !== 'undefined' && typeof require !== 'undefined');
-      if (isNode) {
-        try {
-          return (typeof require('nw.gui') !== 'undefined');
-        } catch (e) {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    };
-
-
     root.isDefined = function () {
       return isNodeWebkit();
     };
 
     root.readFromClipboard = function () {
-      if (!isNodeWebkit()) return;
-      const gui = require('nw.gui');
-      const clipboard = gui.Clipboard.get();
+      if (!isNodeWebkit()) {
+        return;
+      }
+      const clipboard = getClipBoard();
       clipboard.get();
     };
 
     root.writeToClipboard = function (text) {
-      if (!isNodeWebkit()) return;
-      const gui = require('nw.gui');
-      const clipboard = gui.Clipboard.get();
+      if (!isNodeWebkit()) {
+        return;
+      }
+      const clipboard = getClipBoard();
       clipboard.set(text);
     };
 
     root.openExternalLink = function (url) {
-      if (!isNodeWebkit()) return;
+      if (!isNodeWebkit()) {
+        return;
+      }
       const gui = require('nw.gui');
       gui.Shell.openExternal(url);
     };
+
+    function getClipBoard() {
+      const gui = require('nw.gui');
+      return gui.Clipboard.get();
+    }
+
+    function isNodeWebkit() {
+      const isNode = (typeof process !== 'undefined' && typeof require !== 'undefined');
+      if (!isNode) {
+        return false;
+      }
+      try {
+        return (typeof require('nw.gui') !== 'undefined');
+      } catch (e) {
+        return false;
+      }
+    }
 
     return root;
   });

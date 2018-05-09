@@ -1,0 +1,25 @@
+<dag-nav-bar title="{{ 'About Dagcoin' | translate }}" go-back="preferencesGlobal" invert></dag-nav-bar>
+
+<div class="content preferences">
+  <h4 translate>Release Information</h4>
+  <div>
+    <ul class="preferences_links">
+      <li>
+        <div translate>Version</div>
+        <div class="value">v{{about.version}}</div>
+      </li>
+      <li>
+        <div translate>Commit hash</div>
+        <div class="value">v{{about.commitHash}}</div>
+      </li>
+    </ul>
+  </div>
+  <ul class="preferences_links">
+    <li dag-state-transition="slide-left" ng-click="about.showTermsOfUse()" dag-right-icon="chevron-thin-right">
+      <div translate>Terms of Use</div>
+    </li>
+    <li dag-state-transition="slide-left" ui-sref="logs" dag-right-icon="chevron-thin-right">
+      <div translate>Session log</div>
+    </li>
+  </ul>
+</div>

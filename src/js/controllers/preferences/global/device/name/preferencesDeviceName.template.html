@@ -1,0 +1,25 @@
+<dag-nav-bar title="{{ 'Device name' | translate }}" invert go-back="system"></dag-nav-bar>
+
+<div class="content preferences">
+  <div class="p-share js-introduction">
+    <div class="p-wrap">
+      <form name="settingsDeviceNameForm" ng-submit="prefDeviceName.save()" class="page-form">
+        <div class="form-group">
+          <div class="title clearfix">
+            <span class="name" translate>Device name</span>
+          </div>
+          <div class="input-wrap">
+            <input id="deviceName" type="text" name="deviceName" ng-model="prefDeviceName.deviceName">
+          </div>
+        </div>
+
+        <button ng-disabled="prefDeviceName.deviceName.trim() === ''" type="submit" class="btn btn_red-full">
+          {{'Save'|translate}}
+        </button>
+      </form>
+      <p class="text-gray size-12 text-center m20t" translate>
+        Device name is visible to other devices you communicate with.
+      </p>
+    </div>
+  </div>
+</div>

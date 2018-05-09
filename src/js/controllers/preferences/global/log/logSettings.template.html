@@ -1,0 +1,38 @@
+<ul>
+  <li style="cursor: default;">
+    <div class="logSettings">
+      <h4 translate>Log Levels</h4>
+      <div class="row">
+        <div class="line block" ng-class="levelClasses.error" ng-click="changeLevel('error')">
+          <span class="text">Error</span>
+        </div>
+        <div class="line block" ng-class="levelClasses.warn" ng-click="changeLevel('warn')">
+          <span class="text">Warn</span>
+        </div>
+        <div class="line block" ng-class="levelClasses.info" ng-click="changeLevel('info')">
+          <span class="text">Info</span>
+        </div>
+        <div class="line block" ng-class="levelClasses.debug" ng-click="changeLevel('debug')">
+          <span class="text">Debug</span>
+        </div>
+        <div ng-show="filteringLogs" class="onGoingProcess-content filtering-logs">
+          <dag-spinner></dag-spinner>
+        </div>
+      </div>
+    </div>
+  </li>
+  <li ng-click="logs.copyToClipboard()"
+      ng-disabled="!hasLogForCurrentLevel"
+      ng-class="!hasLogForCurrentLevel ? 'disabled' : ''">
+    <svg-icon name="content_copy"></svg-icon>
+    {{'Copy to clipboard' | translate}}
+  </li>
+  <li id="sendLogByEmail-li"
+      class="dni"
+      ng-click="logs.sendLogs()"
+      ng-disabled="!hasLogForCurrentLevel"
+      ng-class="!hasLogForCurrentLevel ? 'disabled' : ''">
+    <svg-icon name="mail_outline"></svg-icon>
+    {{'Send by email' | translate}}
+  </li>
+</ul>

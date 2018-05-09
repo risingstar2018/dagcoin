@@ -13,33 +13,27 @@
                               configService,
                               fingerprintService,
                               pushNotificationsService,
-                              isCordova,
+                              Device,
                               gettext,
                               gettextCatalog,
                               nodeWebkit,
                               uxLanguage) => {
     const root = {};
-    const breadcrumbs = require('byteballcore/breadcrumbs.js');
+    const breadcrumbs = require('core/breadcrumbs.js');
     root.profile = null;
     root.focusedClient = null;
     root.walletClients = {};
 
     root.Utils = bwcService.getUtils();
-    root.formatAmount = function (amount, asset) {
+    root.formatAmount = function (amount) {
       const options = { dontRound: true };
       const config = configService.getSync().wallet.settings;
-      // if (config.unitCode == 'byte') return amount;
-
       // TODO : now only works for english, specify opts to change thousand separator and decimal separator
-      if (asset.toLowerCase() === 'dag') {
-        return this.Utils.formatAmount(amount, config.dagUnitCode, options);
-      }
       return this.Utils.formatAmount(amount, config.unitCode, options);
     };
 
     root.setFocus = function (walletId, cb) {
       $log.debug('Set focus:', walletId);
-
       // Set local object
       if (walletId) {
         root.focusedClient = root.walletClients[walletId];
@@ -71,9 +65,7 @@
       if (root.walletClients[credentials.walletId] && root.walletClients[credentials.walletId].started) {
         return;
       }
-
       const client = bwcService.getClient(JSON.stringify(credentials));
-
       client.credentials.xPrivKey = root.profile.xPrivKey;
       client.credentials.mnemonic = root.profile.mnemonic;
       client.credentials.xPrivKeyEncrypted = root.profile.xPrivKeyEncrypted;
@@ -160,8 +152,8 @@
           }
           return root.setFocus(focusedWalletId, () => {
             console.log('focusedWalletId', focusedWalletId);
-            require('byteballcore/wallet.js');
-            const device = require('byteballcore/device.js');
+            require('core/wallet.js');
+            const device = require('core/device.js');
             const config = configService.getSync();
             const firstWc = root.walletClients[lodash.keys(root.walletClients)[0]];
             if (root.profile.xPrivKeyEncrypted) {
@@ -287,7 +279,7 @@
           return cb(seedWalletError);
         }
         const config = configService.getSync();
-        const device = require('byteballcore/device.js');
+        const device = require('core/device.js');
         const tempDeviceKey = device.genPrivKey();
         // initDeviceProperties sets my_device_address needed by walletClient.createWallet
         walletClient.initDeviceProperties(walletClient.credentials.xPrivKey, null, config.hub, config.deviceName);
@@ -327,7 +319,7 @@
         });
         return console.log('need password to create new wallet');
       }
-      const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+      const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
       return walletDefinedByKeys.readNextAccount((account) => {
         console.log(`next account = ${account}`);
         if (!opts.extendedPrivateKey && !opts.mnemonic) {
@@ -421,7 +413,7 @@
       root.setWalletClients();
 
       // assign wallet color based on first character of walletId
-      const color = configService.colorOpts[walletId.charCodeAt(0) % configService.colorOpts.length];
+      const color = configService.getWalletColor(walletId.charCodeAt(0));
       const configOpts = { colorFor: {} };
       configOpts.colorFor[walletId] = color;
       return configService.set(configOpts, configServiceError => root.setAndStoreFocus(walletId, () => {
@@ -590,10 +582,6 @@
         $log.debug('Wallet encrypted');
         return cb();
       });
-      /* root.updateCredentialsFC(function() {
-       $log.debug('Wallet encrypted');
-       return cb();
-       }); */
     };
 
 
@@ -621,10 +609,6 @@
         $log.debug('Wallet encryption disabled');
         return cb();
       });
-      /* root.updateCredentialsFC(function() {
-       $log.debug('Wallet encryption disabled');
-       return cb();
-       }); */
     };
 
     root.lockFC = function () {
@@ -746,7 +730,7 @@
     };
 
     root.replaceProfile = function (xPrivKey, mnemonic, myDeviceAddress, cb) {
-      const device = require('byteballcore/device.js');
+      const device = require('core/device.js');
 
       root.profile.credentials = [];
       root.profile.xPrivKey = xPrivKey;
@@ -758,7 +742,7 @@
     };
 
     root.getWalletByAddress = function (address) {
-      const db = require('byteballcore/db.js');
+      const db = require('core/db.js');
 
       return new Promise((resolve) => {
         db.query(
@@ -772,6 +756,30 @@
             }
           }
         );
+      });
+    };
+
+    root.updatePublicKeyRing = (walletClient, onDone) => {
+      const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
+      walletDefinedByKeys.readCosigners(walletClient.credentials.walletId, (arrCosigners) => {
+        const arrApprovedDevices = arrCosigners
+          .filter(cosigner => cosigner.approval_date)
+          .map(cosigner => cosigner.device_address);
+        console.log(`approved devices: ${arrApprovedDevices.join(', ')}`);
+        walletClient.credentials.addPublicKeyRing(arrApprovedDevices);
+
+        // save it to profile
+        const credentialsIndex = lodash.findIndex(root.profile.credentials, { walletId: walletClient.credentials.walletId });
+        if (credentialsIndex < 0) {
+          throw Error('failed to find our credentials in profile');
+        }
+        root.profile.credentials[credentialsIndex] = JSON.parse(walletClient.export());
+        console.log(`saving profile: ${JSON.stringify(root.profile)}`);
+        storageService.storeProfile(root.profile, () => {
+          if (onDone) {
+            onDone();
+          }
+        });
       });
     };
 

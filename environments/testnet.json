@@ -2,16 +2,14 @@
   "ENV": {
     "environment": "testnet",
     "isTestnet": true,
-    "discoveryDeviceAddress": "06HM3M45WJYU7EXIXWCYAKPXQS32ZNR6X",
-    "DAGCOIN_ASSET": "B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=",
-    "explorerPrefix": "testnet",
+    "explorerUrl": "experimental.dagcoin.org",
     "TIMESTAMPER_ADDRESS": "OPNUXBRSSQQGHKQNEPD2GLWQYEUY5XLD",
-    "hub": "testnetexplorer.dagcoin.org/wss/",
-    "discoveryServicePairingCode": "AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@testnetexplorer.dagcoin.org/wss/#0000",
-    "protocolPrefix": "dagcoin-tn",
-    "DATABASE_MIGRATION_TOOL": "native-queries",
-    "MERCHANT_INTEGRATION_API" : "https://test-api.dagpay.io/api/invoices",
-    "fundingNodePairingCode": "A5VED5YcHoX9S4ik6YufcYSAeAxXBExlVaZ00w3mDCHq@testnetexplorer.dagcoin.org/wss/#1G5kGcBcsfkH",
-    "fundingNodeDeviceAddress": "0A5DATV2A3XFAWFMHZUT7DJXZTZRAD6G2"
+    "hub": "test-hub.dagcoin.org/spoon/",
+    "MERCHANT_INTEGRATION_API" : "https://dev-api.dagpay.io/api/invoices",
+    "projectNumber": "459454964929",
+    "universalLinkHost": "testnetexplorer.dagcoin.org",
+    "FAUCET_CORRESPONDENCE_CODE": "A6thOoiPnsPGKgMj4G/OYkh4d7WR/MX3r1k2tG/WJPof@test-hub.dagcoin.org/spoon/#0000",
+    "FAUCET_ADDRESS": "0JMVEW6BBLT26R5C66HRN7YAP2Z77XCX7",
+    "applicationName": "Dagcoin-Tn-Wallet"
   }
 }

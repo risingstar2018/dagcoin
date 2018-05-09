@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('confirmDialog', ($log, $timeout, gettextCatalog, isCordova) => {
+  angular.module('copayApp.services').factory('confirmDialog', ($log, $timeout, gettextCatalog, Device) => {
     const root = {};
 
 
@@ -10,7 +10,7 @@
     const confirmMsg = gettextCatalog.getString('Confirm');
 
     root.show = function (msg, cb) {
-      if (isCordova) {
+      if (Device.cordova) {
         return navigator.notification.confirm(
           msg,
           (buttonIndex) => {

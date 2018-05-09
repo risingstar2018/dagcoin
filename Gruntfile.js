@@ -20,31 +20,31 @@ module.exports = function (grunt) {
       options: {},
       testnet: {
         // nwjs task
-        nwjsAppName: 'Dagcoin-TN',
+        nwjsAppName: 'DagWallet-tn',
         nwjsFlavor: 'sdk',
-        nwjsCFBundleURLName: 'Dagcoin-TN action',
-        nwjsCFBundleURLScheme: 'DAGCOIN-TN',
+        nwjsCFBundleURLName: 'DagWallet-tn action',
+        nwjsCFBundleURLScheme: 'DAGWALLET-TN',
 
         // inno setup
-        innosetupTemplateMyAppName: 'Dagcoin-TN',
-        innosetupTemplateMyAppPackageName: 'Dagcoin-TN',
+        innosetupTemplateMyAppName: 'DagWallet-tn',
+        innosetupTemplateMyAppPackageName: 'DagWallet-tn',
         innosetupTemplateMyAppVersion: '<%= pkg.version %>',
-        innosetupTemplateMyAppExeName: 'Dagcoin-TN.exe',
-        innosetupTemplateMyAppFolderName: 'dagcoin-tn'
+        innosetupTemplateMyAppExeName: 'DagWallet-tn.exe',
+        innosetupTemplateMyAppFolderName: 'DagWallet-tn'
       },
       live: {
         // nwjs task
-        nwjsAppName: 'Dagcoin',
+        nwjsAppName: 'DagWallet',
         nwjsFlavor: 'normal',
-        nwjsCFBundleURLName: 'Dagcoin action',
-        nwjsCFBundleURLScheme: 'DAGCOIN',
+        nwjsCFBundleURLName: 'DagWallet action',
+        nwjsCFBundleURLScheme: 'DAGWALLET',
 
         // inno setup
-        innosetupTemplateMyAppName: 'Dagcoin',
-        innosetupTemplateMyAppPackageName: 'Dagcoin',
+        innosetupTemplateMyAppName: 'DagWallet',
+        innosetupTemplateMyAppPackageName: 'DagWallet',
         innosetupTemplateMyAppVersion: '<%= pkg.version %>',
-        innosetupTemplateMyAppExeName: 'Dagcoin.exe',
-        innosetupTemplateMyAppFolderName: 'dagcoin'
+        innosetupTemplateMyAppExeName: 'DagWallet.exe',
+        innosetupTemplateMyAppFolderName: 'DagWallet'
       },
       functions: {}
     },
@@ -79,7 +79,7 @@ module.exports = function (grunt) {
             removeAttributeQuotes: true,
             removeComments: true,
             removeEmptyAttributes: true,
-            removeRedundantAttributes: true,
+            removeRedundantAttributes: false,
             removeScriptTypeAttributes: true,
             removeStyleLinkTypeAttributes: true
           }
@@ -99,6 +99,9 @@ module.exports = function (grunt) {
       },
       osx32: {
         command: '../byteballbuilds/build-osx.sh osx32 <%= pkg.name %>'
+      },
+      nwBackground: {
+        command: 'nw . &'
       }
     },
 
@@ -170,7 +173,6 @@ module.exports = function (grunt) {
           'bower_components/moment/min/moment-with-locales.js',
           'bower_components/angular/angular.js',
           'bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js',
-          'bower_components/ng-scrollbars/dist/scrollbars.min.js',
           'bower_components/angular-ui-router/release/angular-ui-router.js',
           'bower_components/angular-foundation/mm-foundation-tpls.js',
           'bower_components/angular-moment/angular-moment.js',
@@ -185,6 +187,7 @@ module.exports = function (grunt) {
           'bower_components/ng-dialog/js/ngDialog.min.js',
           'bower_components/angular-animate/angular-animate.js',
           'bower_components/gsap/src/minified/TweenMax.min.js',
+          'bower_components/angular-long-press/dist/angular-long-press.min.js',
 
           /* Angular-Swipe | Swipes gestures library (e.g ng-swipe-up) */
           'bower_components/angular-swipe/dist/angular-swipe.min.js',
@@ -212,10 +215,6 @@ module.exports = function (grunt) {
           '!src/js/**/*.spec.js'
         ],
         dest: 'public/dagcoin.js'
-      },
-      migrations: {
-        src: ['migrations/migrations.json'],
-        dest: 'public/migrations/migrations.json'
       },
       constants: {
         src: ['src/js/config.js'],
@@ -479,6 +478,7 @@ module.exports = function (grunt) {
       options: {
         dateFormat(time) {
           grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
+          grunt.log.writeln('Please ' + 'Reload app'.yellow + ' from browser');
           grunt.log.writeln('Waiting for more changes...');
         }
       },
@@ -539,7 +539,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-contrib-sass');
 
-  grunt.registerTask('dev', ['watch']);
+  grunt.registerTask('dev', ['build', 'exec:nwBackground', 'watch']);
   grunt.registerTask('build', (target) => {
     var ngconstantTask = 'ngconstant:testnet';
     if (target === 'live') {

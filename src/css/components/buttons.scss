@@ -88,6 +88,18 @@ button {
         @include gradientBackground(darken($main_color, 2), darken($main_color, 12), left, right);
       }
     }
+
+    &.btn_confirmed-full {
+      box-shadow: inset 0 2px 0 0 rgba(255, 255, 255, 0.4);
+      color: #fff;
+      @include gradientBackground($black, darken($black, 10), left, right);
+      text-shadow: 1px 1px 0 darken($black, 10);
+
+      &:hover, &:focus {
+        color: #fff;
+        @include gradientBackground(darken($black, 2), darken($black, 12), left, right);
+      }
+    }
   }
 
   &[disabled] {

@@ -1,0 +1,42 @@
+<dag-nav-bar title="{{ 'Accept invitation' | translate}}" invert go-back="addCorrespondentDevice">
+  <qr-scanner on-scan="acceptInvitation.onQrCodeScanned(data)"
+              before-scan="acceptInvitation.beforeQrCodeScan()"></qr-scanner>
+</dag-nav-bar>
+
+<div class="content">
+  <div class="onGoingProcess" ng-show="acceptInvitation.onGoingProcess">
+    <div class="onGoingProcess-content" ng-style="{'background-color': acceptInvitation.backgroundColor}">
+      <div class="spinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+      </div>
+      {{acceptInvitation.onGoingProcess | translate}}...
+    </div>
+  </div>
+
+  <div class="m20b">
+    <form name="pairingCodeForm" class="page-form" novalidate>
+      <p translate style="text-align: center">Enter the pairing code received from the other device, or use your camera
+        (icon at the upper right corner) to scan the QR code displayed on the other device.</p>
+      <div class="text-warning size-12 m10b" ng-show="acceptInvitation.error">{{acceptInvitation.error | translate}}
+      </div>
+
+      <div class="input-wrap m20t">
+        <input type="{{ 'text' }}" class="m0" id="code" name="code" ng-model="acceptInvitation.code" maxlength="200" required>
+      </div>
+      <div class="row">
+        <div ng-style="{'text-align':'center'}">
+          <button class="btn btn_red-full"
+                  ng-disabled="pairingCodeForm.$invalid"
+                  ng-click="acceptInvitation.pair()">{{'Pair' | translate}}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="extra-margin-bottom"></div>
+</div>

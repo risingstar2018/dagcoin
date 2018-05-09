@@ -1,8 +1,11 @@
-<div class="bottom_navbar">
+<div class="bottom_navbar" ng-show="!index.noFocusedWallet">
     <div class="bottom_navbar_buttons">
-        <a class="bottom_navbar_button" ng-repeat="link in ::links" ui-sref-active="active" ui-sref="{{::link.state}}" id="menu-{{::link.state}}">
-            <svg-icon name="{{::link.icon}}"></svg-icon>
-            <span>{{::link.title}}</span>
+        <a class="bottom_navbar_button" ng-repeat="item in ::menu" ui-sref-active="active" ui-sref="{{item.link}}" id="menu-{{item.link}}">
+            <svg-icon name="{{item.icon}}"></svg-icon>
+            <span>{{item.title}}</span>
+            <div ng-if="item.title == 'Paired Devices' && totalNewMsgCnt > 0" class="badge">
+              {{totalNewMsgCnt}}
+            </div>
         </a>
     </div>
 </div>
