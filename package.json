@@ -1,8 +1,8 @@
 {
-  "name": "dagcoin-wallet-tn",
+  "name": "dagcoin-wallet",
   "description": "A wallet for decentralized value",
   "author": "Dagcoin",
-  "version": "2.0.0t",
+  "version": "2.0.0",
   "keywords": [
     "wallet",
     "dagcoin",
