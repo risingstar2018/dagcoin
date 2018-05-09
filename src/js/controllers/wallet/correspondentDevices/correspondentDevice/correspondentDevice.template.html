@@ -1,0 +1,85 @@
+<dag-nav-bar title="{{correspondent.name}}" go-back-transition="false" invert go-back="wallet.correspondentDevices">
+  <a ui-sref="editCorrespondentDevice" translate>Edit</a>
+</dag-nav-bar>
+<div class="chat content">
+  <div class="onGoingProcess" ng-show="onGoingProcess">
+    <div class="onGoingProcess-content" ng-style="{'background-color': backgroundColor}">
+      <div class="spinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+      </div>
+      {{onGoingProcess|translate}}...
+    </div>
+  </div>
+
+  <div id="recording-drop" class="f-dropdown" data-dropdown-content>
+    <div class="text" ng-if="correspondent.my_record_pref && correspondent.peer_record_pref" translate>
+      Both you and {{correspondent.name}} enabled local chat history recording.
+    </div>
+    <div class="text" ng-if="!(correspondent.my_record_pref && correspondent.peer_record_pref)" translate>
+      Either you or {{correspondent.name}} have chat history recording disabled. History is not saved for anyone now.
+    </div>
+    <br>
+    <div>
+      <switch class="green right" ng-model="correspondent.my_record_pref"></switch>
+      <div translate>My recording preference</div>
+    </div>
+    <div class="clear"></div>
+    <div class="switch-line">
+      <switch  class="green right" ng-model="correspondent.peer_record_pref" data-disabled="true"></switch>
+      <div translate>Their recording preference</div>
+    </div>
+  </div>
+
+  <div class="message-log size-12 enable_text_select" scroll-bottom="messageEvents" when-scrolled="loadMoreHistory"
+       bind-to-height="['bottom','form[name=chatForm]']"
+       ng-mousemove="newMsgCounterEnabled ?'': newMessagesCount[correspondent.device_address] = 0">
+    <div class="chat-message" ng-repeat="messageEvent in messageEvents">
+      <div ng-class="messageEvent.bIncoming ? 'from-them' : (messageEvent.type == 'system' ? 'system' : 'from-me')"
+           class="bubble" dynamic="messageEvent.message"></div>
+      <div ng-class="(messageEvent.bIncoming ? 'left' : 'right')" class="msg-ts" ng-if="messageEvent.type != 'system'">
+        {{messageEvent.timestamp * 1000 | date:'shortTime'}}
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+
+
+  <div class="extra-margin-bottom"></div>
+  <div class="clear"></div>
+
+  <div class="send_form">
+
+    <div class="text-warning size-12 m10b" ng-show="error && !index.isOffline">{{error|translate}}</div>
+    <div class="text-warning size-12 m10b" ng-show="index.isOffline">{{'Application in Offline mode'|translate}}</div>
+
+    <span dropdown-toggle="#drop"></span>
+    <div class="send_form_message">
+
+      <button class="send_form_message_chat_button btn inline" ng-disabled="index.isOffline"
+              onclick="$('#drop').toggle()">
+        <svg-icon name="add"></svg-icon>
+      </button>
+
+      <ul id="drop" class="f-dropdown drop-top" style="top: -10px;">
+        <li><a ng-click="insertMyAddress()" onclick="$('#drop').hide()" translate>Insert my address</a></li>
+        <li><a ng-click="requestPayment()" onclick="$('#drop').hide()" translate>Request payment</a></li>
+      </ul>
+
+      <form name="chatForm" class="chatForm" no-validate
+            ng-mousemove="newMsgCounterEnabled ?'': newMessagesCount[correspondent.device_address] = 0">
+
+        <textarea rows="3" id="message" ng-disabled="index.isOffline" name="message" ng-model="message" autofocus
+                  required ng-enter="send()" class="textinput"
+                  placeholder="Type a message..."></textarea>
+        <button class="chatbutton btn inline btn_red" ng-disabled="index.isOffline" ng-click="send()">
+          <svg-icon name="paper-plane-o"></svg-icon>
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>

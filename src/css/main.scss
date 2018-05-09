@@ -1,6 +1,6 @@
 @import "variables";
 @import "mobile";
-@import "settings";
+@import "../js/controllers/preferences/preferences";
 /* Components */
 @import "components/buttons";
 @import "components/inputs";
@@ -1810,6 +1810,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   top: 50%;
   margin-top: -32px;
   opacity: 0;
+  z-index: -50;
 
   svg-icon {
     margin-right: 5px;
@@ -1822,6 +1823,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 
   &.visible {
     opacity: 1;
+    z-index: 50;
   }
 }
 
@@ -1832,9 +1834,11 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 .reveal-modal {
   overflow-y: auto;
   position: fixed;
-  height: 100%;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.5);
+  height: auto;
+  min-height: min-content;
+  margin: 20px;
+  width: 90%;
+  background: rgba(0, 0, 0, 0);
   color: #3e4042;
 
   .close_modal {
@@ -1855,6 +1859,12 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     padding: 20px;
     position: relative;
     top: auto;
+
+    &.destination_address {
+      .destination_address_body {
+        max-height: 75vh;
+      }
+    }
 
     &.transactions_details {
       background: #efefef;
@@ -1877,6 +1887,9 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
       }
 
       .modal-content-body {
+
+        max-height: 75vh;
+
         > ul {
           background: #fff;
           padding: 10px;
@@ -2003,6 +2016,9 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
           }
         }
       }
+      .make-new-payment {
+        margin-top: -25px;
+      }
     }
   }
 }
@@ -2128,6 +2144,14 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 
     &.success {
       border-color: $green;
+    }
+  }
+
+  input.ng-valid, textarea.ng-valid, select.ng-valid {
+    &:focus {
+      background: #fafafa;
+      border-color: #999;
+      outline: none;
     }
   }
 }
@@ -2825,7 +2849,6 @@ canvas {
 }
 
 .tab-view {
-  display: none;
   width: 100%;
   position: relative;
   overflow: auto;
@@ -2923,7 +2946,6 @@ input {
 }
 
 .title {
-  margin-left: 25px;
   margin-right: 25px;
   font-family: "Montserrat", sans-serif;
   font-size: 10px;
@@ -3110,11 +3132,6 @@ section {
 
 p.color_red {
   text-align: center;
-}
-
-.noclick {
-  pointer-events: none;
-  color: #8597a7;
 }
 
 .badge {
@@ -3342,4 +3359,136 @@ p.color_red {
   padding: 15px;
   border-radius: 10px;
   border: 1px dashed #ddd;
+}
+
+.dag-scroll {
+  &::-webkit-scrollbar { width: 0 !important }
+
+  width: 100%;
+  max-height: calc(100% - 50px); //skip navbar
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &.splash {
+    max-height: 100%;
+  }
+
+  &.wallet {
+    max-height: calc(100% - 100px); //skip navbar & menu
+  }
+
+  &.create-wallet-form {
+    max-height: calc(100vh - 170px);
+  }
+}
+
+.has-notification {
+  .dag-scroll {
+    &.wallet {
+      max-height: calc(100% - 124px);
+    }
+  }
+}
+
+#qr-scanner-camera-border {
+  position:absolute;
+  float:left;
+  width:165px;
+  min-height:165px;
+  left: 98px;
+  top: 72px;
+  z-index:300000;
+  background-image: url(../img/camera-background-red-165x165.png);
+}
+
+.disabled {
+  color: #9ea9b3 !important;
+}
+
+.hidden-balance {
+  .hidden-balance-icon {
+    border-radius: 50%;
+    color: $red;
+    background-color: #fff;
+    margin: 0 auto -10px;
+    position: relative;
+    width: 70px;
+    height: 70px;
+
+    svg-icon {
+      width: 46px;
+      display: block;
+      margin: 0 auto;
+      position: absolute;
+      top: calc(50% - 23px);
+      left: calc(50% - 23px);
+    }
+  }
+
+  p {
+    margin-top: 17px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+}
+
+.start-sending {
+  height: 90px;
+
+  .start-sending-icon {
+    color: #fff;
+    margin: 0 auto -10px;
+    position: relative;
+    width: 70px;
+    height: 70px;
+
+    svg-icon {
+      width: 46px;
+      display: block;
+      margin: 0 auto;
+      position: absolute;
+      top: calc(50% - 80px);
+      left: calc(50% - 95px);
+      svg {
+        width: 180px;
+        height: 180px;
+      }
+    }
+  }
+}
+
+.start-sending-text {
+    width: 280px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 30px;
+
+    .heading {
+      font-size: 1.6em;
+      font-weight: 600;
+    }
+
+    .explanation {
+      color: $gray;
+    }
+
+    .show-address {
+      margin-top: 20px;
+      color: $gray;
+      cursor: pointer;
+    }
+}
+
+.no-contact-in-address-book {
+  text-align: center;
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.hint-span {
+  text-transform: uppercase;
+  font-weight: 200;
+  font-size: 0.8rem;
 }

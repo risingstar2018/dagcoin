@@ -1,12 +1,11 @@
 // todo: suppressed new-cap rule, because coode is coming from byteball core, should be fixed later.
 /** @namespace Client.API */
 
-const ecdsaSig = require('byteballcore/signature.js');
-const breadcrumbs = require('byteballcore/breadcrumbs.js');
-const constants = require('byteballcore/constants.js');
+const ecdsaSig = require('core/signature.js');
+const breadcrumbs = require('core/breadcrumbs.js');
+const constants = require('core/constants.js');
 
 const isTestnet = constants.version.match(/t$/);
-constants.DAGCOIN_ASSET = isTestnet ? 'B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=' : 'j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=';
 const lodash = require('lodash');
 const $ = require('preconditions').singleton();
 const util = require('util');
@@ -20,7 +19,7 @@ const Credentials = require('./credentials');
 const Errors = require('./errors/errordefinitions');
 
 if (process.browser) {
-  const conf = require('byteballcore/conf.js');
+  const conf = require('core/conf.js');
   const appPackageJson = require('../../../package.json');
   conf.program = appPackageJson.name;
   conf.program_version = appPackageJson.version;
@@ -39,7 +38,7 @@ function API(opts) {
   const options = opts || {};
   this.verbose = !!options.verbose;
   this.timeout = options.timeout || 50000;
-  walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
+  walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
 
   if (this.verbose) {
     log.setLevel('debug');
@@ -489,21 +488,10 @@ API.prototype.createAddress = function (isChange, cb) {
   }
 };
 
-/*
- API.prototype.sendPayment = function(asset, to_address, amount, arrSigningDeviceAddresses, recipient_device_address, cb) {
- this.sendMultiPayment({
- asset: asset,
- to_address: to_address,
- amount: amount,
- arrSigningDeviceAddresses: arrSigningDeviceAddresses,
- recipient_device_address: recipient_device_address
- }, cb);
- } */
-
 API.prototype.sendMultiPayment = function (opts, cb) {
   const self = this;
   const coin = (this.credentials.network === 'livenet' ? '0' : '1');
-  const Wallet = require('byteballcore/wallet.js');
+  const Wallet = require('core/wallet.js');
 
   opts.signWithLocalPrivateKey = function (walletId, account, isChange, addressIndex, textToSign, handleSig) {
     const path = `m/44'/${coin}'/${account}'/${isChange}/${addressIndex}`;
@@ -520,9 +508,6 @@ API.prototype.sendMultiPayment = function (opts, cb) {
       opts.change_address = opts.main_address;
     } else {
       opts.change_address = opts.shared_address;
-    }
-    if (opts.asset && opts.asset !== 'base') {
-      opts.fee_paying_wallet = self.credentials.walletId;
     }
     Wallet.sendMultiPayment(opts, cb);
   } else {
@@ -554,13 +539,10 @@ API.prototype.getAddresses = function (opts, cb) {
  * @param {Callback} cb
  */
 API.prototype.getBalance = function (sharedAddress, cb) {
-  const Wallet = require('byteballcore/wallet.js');
+  const Wallet = require('core/wallet.js');
   $.checkState(this.credentials && this.credentials.isComplete());
   const walletId = this.credentials.walletId;
   Wallet.readBalance(sharedAddress || walletId, (assocBalances) => {
-    if (!assocBalances[constants.DAGCOIN_ASSET]) {
-      assocBalances[constants.DAGCOIN_ASSET] = { stable: 0, pending: 0 };
-    }
     Wallet.readSharedBalance(walletId, (assocSharedBalances) => {
       Object.keys(assocSharedBalances).forEach((asset) => {
         if (!assocBalances[asset]) {
@@ -573,7 +555,7 @@ API.prototype.getBalance = function (sharedAddress, cb) {
 };
 
 API.prototype.getListOfBalancesOnAddresses = function (cb) {
-  const Wallet = require('byteballcore/wallet.js');
+  const Wallet = require('core/wallet.js');
   $.checkState(this.credentials && this.credentials.isComplete());
   const walletId = this.credentials.walletId;
   Wallet.readBalancesOnAddresses(walletId, (assocBalances) => {
@@ -582,7 +564,7 @@ API.prototype.getListOfBalancesOnAddresses = function (cb) {
 };
 
 API.prototype.getTxHistory = function (asset, sharedAddress, cb) {
-  const Wallet = require('byteballcore/wallet.js');
+  const Wallet = require('core/wallet.js');
   $.checkState(this.credentials && this.credentials.isComplete());
   const opts = { asset };
   if (sharedAddress) {
@@ -597,8 +579,8 @@ API.prototype.getTxHistory = function (asset, sharedAddress, cb) {
 
 API.prototype.initDeviceProperties = function (xPrivKey, deviceAddress, hub, deviceName) {
   console.log('initDeviceProperties');
-  const device = require('byteballcore/device.js');
-  const lightWallet = require('byteballcore/light_wallet.js');
+  const device = require('core/device.js');
+  const lightWallet = require('core/light_wallet.js');
   if (deviceAddress) {
     device.setDeviceAddress(deviceAddress);
   }

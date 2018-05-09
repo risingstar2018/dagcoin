@@ -1,0 +1,195 @@
+$background: #fff;
+
+.chat {
+  background: $background;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  .send_form {
+    position: absolute;
+    width: 100%;
+    padding: 0 20px;
+    bottom: 0;
+    background-color: #fff;
+    z-index: 5;
+    white-space: nowrap;
+    text-align: center;
+
+    .send_form_message{
+      border-top: 2px solid #eee;
+    }
+
+    .textinput {
+      min-height: 30px;
+      width: 75%;
+      margin: 8px auto;
+      display: inline;
+      vertical-align: middle;
+      resize: none;
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .send_form_message_chat_button, .chatbutton {
+      position: absolute;
+      left: 20px;
+      padding: 10px;
+      top: 50%;
+      margin-top: -20px;
+    }
+
+    .send_form_message_chat_button{
+      color: #676c71;
+    }
+
+    .chatbutton{
+      right: 20px;
+      left: auto;
+    }
+  }
+
+  #drop {
+    max-width: 250px;
+    left: 15px;
+    margin-top: -45px;
+    margin-left: 5px;
+  }
+
+  #recording-drop {
+    max-width: 200px;
+    left: 140px !important;
+    padding: 15px;
+  }
+  .message-log {
+    position: absolute;
+    width: 100%;
+    bottom: 70px;
+    top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 13px;
+    padding-bottom: 20px;
+  }
+
+  .chat-message {
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+
+    .msg-ts {
+      color: #bcbebe;
+      font-size: 10px;
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      padding: 0;
+      margin-top: -7px;
+    }
+  }
+
+  .bubble {
+    padding: 10px 15px;
+    margin: 0 15px;
+    line-height: 1.6;
+    border-radius: 18px;
+    position: relative;
+    max-width: 75%;
+    text-align: left;
+    word-wrap: break-word;
+
+    &.from-them{
+      -webkit-border-radius: 10px;
+      -webkit-border-bottom-left-radius: 0;
+      -moz-border-radius: 10px;
+      -moz-border-radius-bottomleft: 0;
+      border-radius: 10px;
+      border-bottom-left-radius: 0;
+      background: #eff0f0;
+      color: #454545;
+      float: left;
+
+      & + .msg-ts{
+        right: 20px;
+        left: auto;
+      }
+    }
+
+    &.from-me{
+      -webkit-border-radius: 10px;
+      -webkit-border-bottom-right-radius: 0;
+      -moz-border-radius: 10px;
+      -moz-border-radius-bottomright: 0;
+      border-radius: 10px;
+      border-bottom-right-radius: 0;
+      color: #fff;
+      background: rgb(213, 31, 38);
+      float: right;
+
+      a {
+        color: #fff;
+      }
+    }
+  }
+  .top-drop-btn, .top-drop-btn:hover, .top-drop-btn:active, .top-drop-btn:focus {
+    padding: 0;
+    background: none;
+  }
+
+  #top-drop {
+    width: 150px;
+    left: 50%;
+    margin-left: -75px;
+  }
+
+  .bubble a.payment, .bubble a.external-link {
+    text-decoration: underline;
+  }
+  .bubble a.command {
+    line-height: 2;
+  }
+
+  .system {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 100%;
+
+    span {
+      color: #bcbebe;
+      padding: 0 10px;
+      font-size: 12px;
+      position: relative;
+      background: $background;
+
+      &.padding {
+        padding: 0 10px 0 0;
+      }
+    }
+
+    b {
+      border-bottom: 1px dashed #888;
+      cursor: pointer;
+    }
+
+    &:after{
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: #f1f1f1;
+      left: 0;
+      top: 50%;
+      z-index: -1;
+    }
+  }
+
+  .switch-line {
+    margin-top: 5px;
+  }
+
+  .send_form .textinput::-webkit-input-placeholder {
+    white-space: nowrap;
+  }
+}

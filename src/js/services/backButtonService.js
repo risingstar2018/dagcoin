@@ -16,8 +16,12 @@
       if (from.name === '' || (lastState && !(to.name === lastState.to && lodash.isEqual(toParams, lastState.toParams)))) {
         arrHistory.push({ to: to.name, toParams, from: from.name, fromParams });
       }
-      if (to.name === 'walletHome') {
-        $rootScope.$emit('Local/SetTab', 'walletHome', true);
+      if (to.name === 'wallet') {
+        $state.go('wallet.home');
+        $rootScope.$emit('Local/SetTab', 'wallet.home');
+      } else {
+        $state.go(to.name);
+        $rootScope.$emit('Local/SetTab', to.name);
       }
       root.menuOpened = false;
     });
@@ -35,12 +39,16 @@
           askAndExit();
         } else {
           const parentState = $state.get('^');
-          if (parentState.name) { // go up on state tree
+          const backTo = $state.current.params ? $state.current.params.backTo : null;
+          if (parentState.name && parentState.name !== 'wallet') { // go up on state tree unless name is wallet.
             $deepStateRedirect.reset(parentState.name);
             $state.go(parentState);
+          } else if (!lodash.isEmpty(backTo)) {
+            $deepStateRedirect.reset(backTo);
+            $state.go(backTo, currentState.fromParams);
           } else { // go back across history
             const targetState = $state.get(currentState.from);
-            if (targetState.modal || (currentState.to === 'walletHome' && $rootScope.tab === 'walletHome')) { // don't go to modal and don't go to anywhere wfom home screen
+            if (targetState.modal || (currentState.to === 'wallet.home' && $rootScope.tab === 'wallet.home')) { // don't go to modal and don't go to anywhere wfom home screen
               arrHistory.push(currentState);
               askAndExit();
             } else if (currentState.from.indexOf(currentState.to) !== -1) { // prev state is a child of current one

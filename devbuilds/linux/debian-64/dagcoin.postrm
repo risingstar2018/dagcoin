@@ -1,5 +1,5 @@
-rm -f /usr/share/applications/dagcoin@type.desktop
+rm -f /usr/share/applications/dagcoin-wallet@type.desktop
 for user in /home/*
 do
-    rm -rf ${user}//Desktop/dagcoin@type.desktop
+    rm -rf ${user}/Desktop/dagcoin-wallet@type.desktop
 done

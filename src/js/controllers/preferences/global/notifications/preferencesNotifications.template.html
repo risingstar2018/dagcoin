@@ -1,0 +1,12 @@
+<dag-nav-bar title="{{ 'Notifications' | translate}}" go-back="preferencesGlobal" invert></dag-nav-bar>
+
+<div class="content preferences" ng-init="notifications.init()">
+  <ul class="preferences_links">
+    <li class="cursor-default">
+      <div translate>Enable push notifications</div>
+      <switch id="pushNotifications" name="pushNotifications" ng-model="pushNotifications"
+              data-disabled="!notifications.pushProjectNumberReceived"
+              class="green right"/>
+    </li>
+  </ul>
+</div>

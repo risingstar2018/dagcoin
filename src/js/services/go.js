@@ -1,23 +1,11 @@
-/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
+/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved,no-undef */
 (function () {
-  'use strinct';
+  'use strict';
 
-  const eventBus = require('byteballcore/event_bus.js');
-  angular.module('copayApp.services')
-  .factory('go',
-    ($window,
-     $rootScope,
-     $location,
-     $state,
-     profileService,
-     nodeWebkit,
-     notification,
-     gettextCatalog,
-     authService,
-     $deepStateRedirect,
-     $stickyState,
-     ENV) => {
-      const root = {};
+  angular.module('copayApp.services').factory('go', ($window, $rootScope, $location, $state, profileService, nodeWebkit,
+                                                     notification, gettextCatalog, authService, $deepStateRedirect,
+                                                     $stickyState, ENV, configService, $modalStack) => {
+    const root = {};
       let removeListener;
       const hideSidebars = function () {
         if (typeof document === 'undefined') {
@@ -60,8 +48,8 @@
           if (cb) {
             return cb();
           }
-        }, () => {
-          console.log(`transition failed ${path}`);
+        }, (err) => {
+          console.log(`transition failed ${path}, err: ${err}`);
           if (cb) {
             return cb('animation in progress');
           }
@@ -78,34 +66,40 @@
         if (fc && !fc.isComplete()) {
           root.path('copayers');
         } else {
-          root.path('walletHome', () => {
-            $rootScope.$emit('Local/SetTab', 'walletHome', true);
+          root.path('wallet', () => {
+            $rootScope.$emit('Local/SetTab', 'wallet.home');
           });
         }
       };
 
       root.send = function (cb) {
-        $stickyState.reset('walletHome');
-        root.path('walletHome', () => {
-          $rootScope.$emit('Local/SetTab', 'send');
+        $stickyState.reset('wallet');
+        root.path('wallet', () => {
+          $rootScope.$emit('Local/SetTab', 'wallet.send');
           if (cb) {
             cb();
           }
         });
       };
 
-      root.history = function (cb) {
-        root.path('walletHome', () => {
-          $rootScope.$emit('Local/SetTab', 'history');
-          if (cb) {
-            cb();
-          }
-        });
-      };
-
-      root.addWallet = function () {
-        $state.go('add');
-      };
+    /**
+     * This redirect works in case window.initialTab is not empty and there is any tab to redirect.
+     * Otherwise no effect.
+     */
+    root.redirectToTabIfNeeded = function () {
+      if (window.initialTab) {
+        if (window.initialTab.tab === 'wallet.send') {
+          $modalStack.dismissAll();
+          const address = window.initialTab.payload.address;
+          const walletSettings = configService.getSync().wallet.settings;
+          const unitValue = walletSettings.unitValue;
+          let amount = window.initialTab.payload.amount;
+          amount *= unitValue;
+          $rootScope.$emit('paymentRequest', address, amount, 'base', null);
+        }
+        delete window.initialTab;
+      }
+    };
 
       root.preferences = function () {
         $state.go('preferences');
@@ -113,6 +107,10 @@
 
       root.preferencesGlobal = function () {
         $state.go('preferencesGlobal');
+      };
+
+      root.receive = function () {
+        $state.go('wallet.receive');
       };
 
       root.reload = function () {
@@ -132,6 +130,10 @@
 
       function handleUri(uri) {
         console.log(`handleUri ${uri}`);
+        if (uri.match(PaymentRequest.PAYMENT_REQUEST_UNIVERSAL_LINK_REGEX)) {
+          console.log('URI is an http(s) paymentRequest. handleUri is ignoring.');
+          return;
+        }
 
         processMerchantPaymentRequestQrCode(uri).then((wasMerchantPayment) => {
           if (!wasMerchantPayment) {
@@ -173,6 +175,7 @@
                 payload.walletAddress,
                 payload.coinAmount * 1000 * 1000,
                 payload.id,
+                payload.publicId,
                 payload.validForSeconds,
                 payload.merchantName,
                 payload.state
@@ -187,10 +190,10 @@
       }
 
       function processGenericPaymentRequestQrCode(uri) {
-        require('byteballcore/uri.js').parseUri(uri, {
+        require('core/uri.js').parseUri(uri, {
           ifError(err) {
             console.log(err);
-            const conf = require('byteballcore/conf.js');
+            const conf = require('core/conf.js');
             const noPrefixRegex = new RegExp(`.*no.*${conf.program}.*prefix.*`, 'i');
             if (noPrefixRegex.test(err.toString())) {
               notification.error(gettextCatalog.getString('Incorrect Dagcoin Address'));
@@ -219,7 +222,7 @@
       }
 
       function extractByteballArgFromCommandLine(commandLine) {
-        const conf = require('byteballcore/conf.js');
+        const conf = require('core/conf.js');
         const re = new RegExp(`^${conf.program}:`, 'i');
         const arrParts = commandLine.split(' '); // on windows includes exe and all args, on mac just our arg
         for (let i = 0; i < arrParts.length; i += 1) {
@@ -318,7 +321,7 @@
         /* var win = gui.Window.get();
          win.on('close', function(){
          console.log('close event');
-         var db = require('byteballcore/db.js');
+         var db = require('core/db.js');
          db.close(function(err){
          console.log('close err: '+err);
          });
@@ -355,6 +358,7 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
+      const eventBus = require('core/event_bus.js');
       const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
@@ -376,12 +380,17 @@
   }
 
   window.onerror = function (msg, url, line, col, error) {
+    const eventBus = require('core/event_bus.js');
     console.log(`Javascript error: ${msg}`, error);
     eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
   };
 
   process.on('uncaughtException', (e) => {
-    console.log('uncaughtException');
+    if (e.stack) {
+      console.error('uncaughtException: ', e.stack);
+    } else {
+      console.error('uncaughtException: ', e);
+    }
     eventBus.emit('uncaught_error', `Uncaught exception: ${e}`, e);
   });
 }());

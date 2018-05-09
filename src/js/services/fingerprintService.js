@@ -2,14 +2,13 @@
 
 'use strict';
 
-angular.module('copayApp.services').factory('fingerprintService', ($log, gettextCatalog, configService, isCordova,
-                                                                   isMobile, $rootScope) => {
+angular.module('copayApp.services').factory('fingerprintService', ($log, gettextCatalog, configService, Device, $rootScope) => {
   const root = {};
 
   let _isAvailable = false;
   let isOpen = false;
 
-  if (isCordova && !isMobile.Windows()) {
+  if (Device.cordova && !Device.windows) {
     window.plugins.touchid = window.plugins.touchid || {};
     window.plugins.touchid.isAvailable(
       () => {

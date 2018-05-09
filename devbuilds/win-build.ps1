@@ -32,7 +32,6 @@ Write-Host "Copied sqlite3 lib bindings"
 
 if ($isTestnet) {
   (Get-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js").replace("exports.version = '1.0';", "exports.version = '1.0t';") | Set-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js"
-  (Get-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js").replace("exports.alt = '1';", "exports.alt = '2';") | Set-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js"
   Write-Host "testnetified byteballcore constants"
 }
 

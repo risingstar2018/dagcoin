@@ -1,0 +1,57 @@
+<dag-nav-bar title="{{ 'New Contact' | translate }}" invert>
+  <qr-scanner on-scan="contact.onQrCodeScanned(data)">
+  </qr-scanner>
+</dag-nav-bar>
+
+<div class="content dag-scroll">
+  <div class="contact_form">
+    <form name="newContact" ng-submit="contact.create()" novalidate>
+        <div class="input-wrap">
+          <label class="required" for="address">{{ 'Wallet address' | translate}}</label>
+          <input id="address" class="animated" type="text"
+                 ng-class="{'shake error' : (newContact.address.$dirty && newContact.address.$invalid || contact.address_error)}"
+                 valid-address ng-maxlength="32" type="text" ng-model="contact.data.address" name="address" required>
+          <div class="has-error" ng-if="contact.address_error">{{contact.address_error}}</div>
+        </div>
+
+        <div class="input-wrap">
+          <label class="required" for="first_name">{{ 'First name' | translate}}</label>
+          <input id="first_name" class="animated" type="text"
+                 ng-class="{'shake error' : newContact.first_name.$dirty && newContact.first_name.$invalid}"
+                 ng-maxlength="50" type="text" ng-model="contact.data.first_name" name="first_name" required>
+        </div>
+
+        <div class="input-wrap">
+          <label for="last_name">{{ 'Last name' | translate}}</label>
+          <input id="last_name" type="text"
+                 ng-class="{'shake error' : newContact.last_name.$invalid}"
+                 ng-maxlength="50" type="text" ng-model="contact.data.last_name" name="last_name">
+        </div>
+
+        <div class="input-wrap">
+          <label for="email">{{ 'E-mail' | translate}}</label>
+          <input id="email" type="email"
+                 ng-maxlength="254"
+                 ng-class="{'shake error' : newContact.email.$invalid}"
+                 ng-model="contact.data.email" name="email">
+          <div class="has-error" ng-show="newContact.email.$invalid" translate>E-mail not valid</div>
+        </div>
+        <div class="input-wrap">
+          <label for="description">{{ 'Description' | translate}}</label>
+          <textarea name="description" id="description" ng-model="contact.data.description"
+                    cols="30" rows="3" ng-maxlength="300" type="text"
+                    ng-class="{'shake error' : newContact.description.$invalid}">
+          </textarea>
+          <div class="has-error" ng-show="newContact.description.$invalid" translate>
+            Field is too long
+          </div>
+        </div>
+
+      <div class="contact_form_button_div">
+        <button class="btn btn_red btn_red-full" ng-disabled="newContact.$invalid" type="submit">
+          {{ 'Save' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

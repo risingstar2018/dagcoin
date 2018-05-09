@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('txStatus', ($modal, lodash, profileService, $timeout) => {
+  angular.module('copayApp.services').factory('txStatus', ($modal, lodash, profileService, $timeout, animationService) => {
     const root = {};
 
     const openModal = function (type, txp, cb) {
@@ -14,7 +14,7 @@
       };
       const modalInstance = $modal.open({
         templateUrl: root.templateUrl(type, txp),
-        windowClass: 'popup-tx-status full',
+        windowClass: `popup-tx-status ${animationService.modalAnimated.slideUp}`,
         controller: ModalInstanceCtrl,
       });
 
@@ -34,27 +34,6 @@
         type = 'broadcasted';
       } else {
         throw Error('unsupported status');
-        /*
-         var n = txp.actions.length;
-         var action = lodash.find(txp.actions, {
-         copayerId: fc.credentials.copayerId
-         });
-
-         if (!action)  {
-         type = 'created';
-         } else if (action.type == 'accept') {
-         // created and accepted at the same time?
-         if ( n == 1 && action.createdOn - txp.createdOn < INMEDIATE_SECS ) {
-         type = 'created';
-         } else {
-         type = 'accepted';
-         }
-         } else if (action.type == 'reject') {
-         type = 'rejected';
-         } else {
-         throw new Error('Unknown type:' + type);
-         }
-         */
       }
 
       openModal(type, txp, cb);
