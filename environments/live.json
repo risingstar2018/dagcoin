@@ -7,6 +7,6 @@
     "hub": "hub.dagcoin.link",
     "MERCHANT_INTEGRATION_API" : "https://api.dagpay.io/api/invoices",
     "universalLinkHost": "dagcoin.org",
-    "applicationName": "Dagcoin-Wallet"
+    "applicationName": "DagWallet"
   }
 }
