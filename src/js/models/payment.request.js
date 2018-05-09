@@ -32,3 +32,4 @@ PaymentRequest.PAYMENT_REQUEST = 'paymentRequest';
 PaymentRequest.MERCHANT_PAYMENT_REQUEST = 'merchantPaymentRequest';
 PaymentRequest.URI = 'uri';
 PaymentRequest.PAYMENT_REQUEST_UNIVERSAL_LINK_REGEX = new RegExp(`^http.*/${PaymentRequest.PAYMENT_REQUEST}.*`, 'i');
+PaymentRequest.DUMMY_AMOUNT_FOR_CLEARING = -1;

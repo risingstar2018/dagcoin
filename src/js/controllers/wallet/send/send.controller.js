@@ -48,6 +48,14 @@
       if (request.isNotEmpty()) {
         const form = $scope.sendForm;
         console.log(`A payment requested. Form will be rendered with these values ${JSON.stringify(request)}`);
+
+        // if amount is sent -1, it means that remove last entered amount from rootscope so that clear the amount
+        if (parseInt(request.amount, 10) === PaymentRequest.DUMMY_AMOUNT_FOR_CLEARING) {
+          request.amount = '';
+          $rootScope.alreadyEnteredSendAll = null;
+          $rootScope.alreadyEnteredAmount = null;
+        }
+
         if (PaymentRequest.PAYMENT_REQUEST === request.type) {
           vm.setForm(request.address, request.amount, request.comment, request.asset, request.recipientDeviceAddress);
           if (!form.address.$isValid && !vm.blockUx) {
@@ -80,6 +88,7 @@
         }
       } else {
         $rootScope.alreadyEnteredAmount = '';
+        $rootScope.alreadyEnteredSendAll = null;
       }
     };
 
@@ -190,6 +199,12 @@
         if (!lodash.isEmpty($rootScope.alreadyEnteredAmount)) {
           form.amount.$setViewValue(`${$rootScope.alreadyEnteredAmount}`);
           form.amount.$isValid = true;
+          vm.bSendAll = $rootScope.alreadyEnteredSendAll;
+        }
+        if ($rootScope.alreadyEnteredSendAll) {
+          vm.setSendAll({
+            hideAlert: true
+          });
         }
         form.amount.$render();
       }
@@ -318,19 +333,34 @@
       }, 1);
     };
 
-    vm.setSendAll = () => {
+    vm.setSendAll = (pOpts) => {
+      const opts = pOpts || {};
       const form = $scope.sendForm;
       if (!form || !form.amount || indexScope.arrBalances.length === 0) {
         return;
       }
+      vm.lockAmount = true;
       let available = indexScope.baseBalance.stable;
-      $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('You are sending all your stable amount. Transaction fee will be automatically excluded!'), 'fi-alert', () => {
-        available /= vm.unitValue;
-        vm.bSendAll = true;
-        form.amount.$setViewValue(`${available}`);
-        form.amount.$render();
-        $scope.amountBlur();
-      });
+      $rootScope.alreadyEnteredSendAll = true;
+      if (!opts.hideAlert) {
+        $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('You are sending all your stable amount. Transaction fee will be automatically excluded!'), 'fi-alert', () => {
+          available /= vm.unitValue;
+          vm.bSendAll = true;
+          form.amount.$setViewValue(`${available}`);
+          form.amount.$render();
+          $scope.amountBlur();
+        });
+      }
+    };
+
+    vm.cancelSendAll = () => {
+      const form = $scope.sendForm;
+      $rootScope.alreadyEnteredAmount = null;
+      $rootScope.alreadyEnteredSendAll = null;
+      form.amount.$setViewValue('');
+      vm.lockAmount = false;
+      vm.bSendAll = false;
+      form.amount.$render();
     };
 
     vm.openDestinationAddressModal = function (wallets, address) {
