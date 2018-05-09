@@ -169,15 +169,11 @@
         },
 
         awesomeNotify(type, icon, title, content, userData) {
-          this.restore(() => {
-            return this.makeNotification(type, false, icon, title, content, userData);
-          });
+          this.restore(() => this.makeNotification(type, false, icon, title, content, userData));
         },
 
         notify(image, title, content, userData) {
-          this.restore(() => {
-            return this.makeNotification('custom', image, true, title, content, userData);
-          });
+          this.restore(() => this.makeNotification('custom', image, true, title, content, userData));
         },
 
         makeNotification(type, image, icon, title, content, userData) {
@@ -262,9 +258,7 @@
 
         clear(callBack) {
           notifications = [];
-          this.save(() => {
-            return callBack();
-          });
+          this.save(() => callBack());
         },
 
         unreadNotifications(callBack) {
