@@ -14,7 +14,7 @@ if ($isFirstRun) {
   npm install node-sass@4.5.3
   npm install npm@5.5.1
   npm install npm-check-updates@2.13.0
-  npm install nw@0.26.2
+  npm install nw@0.24.3
   npm install nw-gyp@3.6.2
 }
 
@@ -32,7 +32,6 @@ Write-Host "Copied sqlite3 lib bindings"
 
 if ($isTestnet) {
   (Get-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js").replace("exports.version = '1.0';", "exports.version = '1.0t';") | Set-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js"
-  (Get-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js").replace("exports.alt = '1';", "exports.alt = '2';") | Set-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js"
   Write-Host "testnetified byteballcore constants"
 }
 
