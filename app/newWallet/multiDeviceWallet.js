@@ -120,12 +120,10 @@ class MultiDeviceWallet extends Component {
                             always go to the one and only address the wallet contains.
                         </Text>
 
-                        <View style={StyleSheet.flatten([styles.singleAddressContainer, container.m20b])}>
-                            <Text
-                                style={StyleSheet.flatten([styles.singleAddressText, font.weight700, font.size10])}>{'Single address wallet'.toUpperCase()}</Text>
-                            <DagSwitch style={styles.singleAddressControl} value={this.state.isSingleAddress}
-                                       onValueChange={this.onSingleAddressChange.bind(this)}/>
-                        </View>
+                        <DagSwitch label={'Single address wallet'.toUpperCase()}
+                                   containerStyle={container.m20b}
+                                   value={this.state.isSingleAddress}
+                                   onValueChange={this.onSingleAddressChange.bind(this)}/>
 
                         <DagSelect label={'total number of co-signers'.toUpperCase()}
                                    onValueChange={this.onTotalNumberChange.bind(this)}
@@ -158,17 +156,7 @@ class MultiDeviceWallet extends Component {
 }
 
 const styles = StyleSheet.create({
-    singleAddressContainer: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    singleAddressControl: {
-        position: 'absolute',
-        right: 0
-    },
-    singleAddressText: {
-        color: '#aaaaaa'
-    }
+
 });
 
 export default MultiDeviceWallet;

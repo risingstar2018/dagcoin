@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 import {container, font, text} from "../../../styles/main";
-import DagIconButton from "../../../controls/dagIconButton";
+import DagSimpleButton from "../../../controls/dagSimpleButton";
 
 class ContactListItem extends Component {
     constructor() {
@@ -16,15 +16,15 @@ class ContactListItem extends Component {
 
     renderStartIcon() {
         if (this.props.contact.isFavorite) {
-            return (<DagIconButton onClick={() => this.props.onRemoveFavoriteClick(this.props.contact)}
+            return (<DagSimpleButton onClick={() => this.props.onRemoveFavoriteClick(this.props.contact)}
                                    style={container.m20r}>
                 <Image style={styles.starIcon} source={require('../../../../img/star.png')} />
-            </DagIconButton>);
+            </DagSimpleButton>);
         } else {
-            return (<DagIconButton onClick={() => this.props.onSetFavoriteClick(this.props.contact)}
+            return (<DagSimpleButton onClick={() => this.props.onSetFavoriteClick(this.props.contact)}
                                    style={container.m20r}>
                 <Image style={styles.starIcon} source={require('../../../../img/star_border.png')} />
-            </DagIconButton>);
+            </DagSimpleButton>);
         }
     }
 
@@ -34,11 +34,11 @@ class ContactListItem extends Component {
                 <View style={StyleSheet.flatten([styles.avatarContainer, container.m15l, container.m15r])}>
                     <Image source={require('../../../../img/avatar.png')} style={StyleSheet.flatten([styles.avatar])}/>
                 </View>
-                <DagIconButton style={container.flex} onClick={() => this.props.onContactClick(this.props.contact)}>
+                <DagSimpleButton style={container.flex} onClick={() => this.props.onContactClick(this.props.contact)}>
                     <Text style={StyleSheet.flatten([text.textRed, font.weight700])}>
                         {this.props.contact.firstName} {this.props.contact.lastName}
                     </Text>
-                </DagIconButton>
+                </DagSimpleButton>
                 {this.renderStartIcon()}
             </View>
         );
