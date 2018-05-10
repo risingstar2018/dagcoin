@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (() => {
   'use strict';
 
@@ -139,8 +140,9 @@
       console.log(`will send payment to ${address}`);
       backButton.dontDeletePath = true;
       go.send(() => {
-        // $rootScope.$emit('Local/SetTab', 'send', true);
-        $rootScope.$emit('paymentRequest', address, amount, 'base', correspondent.device_address);
+        // to say send.controller that the amount is DUMMY_AMOUNT_FOR_CLEARING so clear the amount
+        const newAmount = typeof amount === 'undefined' ? PaymentRequest.DUMMY_AMOUNT_FOR_CLEARING : amount;
+        $rootScope.$emit('paymentRequest', address, newAmount, 'base', correspondent.device_address);
       });
     };
 

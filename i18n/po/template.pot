@@ -1211,7 +1211,7 @@ msgstr ""
 msgid "Send addresses by email"
 msgstr ""
 
-#: public/views/walletHome.html:231
+#: send.template.html:22
 msgid "Send all"
 msgstr ""
 
@@ -1925,4 +1925,8 @@ msgstr ""
 
 #: preferencesHubSettings.controller.js:23
 msgid "Hub successfully changed, please restart the application."
+msgstr ""
+
+#: send.template.html:24
+msgid "Cancel Send all"
 msgstr ""

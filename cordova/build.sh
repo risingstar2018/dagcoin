@@ -22,7 +22,6 @@ PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
 APPLICATION_NAME=Dagcoin
-ANDROID_PACKAGE=
 
 if [ -z "CURRENT_OS" ]
 then

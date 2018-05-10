@@ -20,6 +20,8 @@
             <span class="available" translate>Available <span>{{index.baseBalance.stable / 1e6}}</span></span>
             <a ng-click="send.setSendAll()" ng-show="!send.lockAmount && index.baseBalance.stable > 0"
                style="text-transform: none; margin-left: 10px" translate>Send all</a>
+            <a ng-click="send.cancelSendAll()" ng-show="alreadyEnteredSendAll"
+               style="text-transform: none; margin-left: 10px" translate>Cancel Send all</a>
           </div>
 
 

@@ -1,6 +1,9 @@
 $isTestnet = $false
-
+ 
 Write-Host "Started creation of Windows packages"
+
+(Get-Content ..\Gruntfile.js).replace('0.14.7', '0.24.3') | Set-Content ..\Gruntfile.js
+Write-Host "Chanaged nwjs version"
 
 cd ..\
 $currentProjectDirectory = (Get-Item -Path ".\" -Verbose).FullName
@@ -23,15 +26,14 @@ Write-Host "Copied sqlite3 lib bindings"
 
 if ($isTestnet) {
   (Get-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js").replace("exports.version = '1.0';", "exports.version = '1.0t';") | Set-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js"
-  (Get-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js").replace("exports.alt = '1';", "exports.alt = '2';") | Set-Content "$($currentProjectDirectory)\node_modules\byteballcore\constants.js"
   Write-Host "testnetified byteballcore constants"
   
   grunt desktop:testnet
   Write-Host "Grunt desktop completed"
   
   Write-Host "Started copying node_modules"
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-TN-Wallet\win32\ -recurse -Force
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-TN-Wallet\win64\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\DagWallet-tn\win32\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\DagWallet-tn\win64\ -recurse -Force
   Write-Host "Copied node_modules"
   
   Write-Host "Started grunt inno task"
@@ -43,8 +45,8 @@ if ($isTestnet) {
   Write-Host "Grunt desktop completed"
   
   Write-Host "Started copying node_modules"
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-Wallet\win32\ -recurse -Force
-  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\Dagcoin-Wallet\win64\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\DagWallet\win32\ -recurse -Force
+  Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\DagWallet\win64\ -recurse -Force
   Write-Host "Copied node_modules"
   
   Write-Host "Started grunt inno task"
