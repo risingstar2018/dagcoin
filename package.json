@@ -16,6 +16,7 @@
     "react-dom": "^16.0.0",
     "react-native": "^0.55.2",
     "react-native-bottom-toolbar": "^4.1.1",
+    "react-native-checkbox": "^2.0.0",
     "react-native-cli": "^2.0.1",
     "react-native-document-picker": "^2.1.0",
     "react-native-radio-buttons": "1.0.0",
