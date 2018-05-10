@@ -217,4 +217,8 @@ const font = StyleSheet.create({
     }
 });
 
-export { container, text, font };
+const controls = StyleSheet.create({
+    label: StyleSheet.flatten([{color: '#aaaaaa'}, font.size10, font.weight700])
+});
+
+export { container, text, font, controls };

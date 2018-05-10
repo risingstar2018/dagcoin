@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet, View, Text, TextInput, Platform
 } from 'react-native';
-import {container, font, text} from "../styles/main";
+import {container, font, text, controls} from "../styles/main";
 
 class DagTextInput extends Component {
     constructor() {
@@ -51,7 +51,7 @@ class DagTextInput extends Component {
         };
 
         if (this.props.label) {
-            return (<Text style={StyleSheet.flatten([styles.label, font.size10, font.weight700, container.m5b, this.props.labelStyle])}>
+            return (<Text style={StyleSheet.flatten([controls.label, container.m5b, this.props.labelStyle])}>
                 {this.props.label} {renderAsterisk()}
             </Text>);
         }
@@ -124,9 +124,6 @@ DagTextInput.defaultProps = {
 
 const styles = StyleSheet.create({
     inputContainer: {
-    },
-    label: {
-        color: '#aaaaaa'
     },
     input: {
         borderRadius: 5,

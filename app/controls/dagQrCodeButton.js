@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet, Image
 } from 'react-native';
-import DagIconButton from "./dagIconButton";
+import DagSimpleButton from "./dagSimpleButton";
 import {container} from "../styles/main";
 
 class DagQrCodeButton extends Component {
@@ -17,9 +17,9 @@ class DagQrCodeButton extends Component {
 
     render() {
         return (
-            <DagIconButton style={StyleSheet.flatten([container.p20])} onClick={this.onQrCodeScanClick.bind(this)}>
+            <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onQrCodeScanClick.bind(this)}>
                 <Image style={styles.menuIcon} style={styles.image} source={require('../../img/barcode-scan.png')}></Image>
-            </DagIconButton>
+            </DagSimpleButton>
         );
     }
 }

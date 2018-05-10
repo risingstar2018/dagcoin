@@ -9,26 +9,44 @@ import DagListView from "../../controls/dagListView/dagListView";
 import SettingsPageLayout from "../settingsPageLayout";
 import Navigator from '../../navigator/navigationManager';
 import { routes } from '../../navigator/routes';
+import DagModalManager from "../../controls/dagModal/dagModalManager";
+import DagChangeWalletTypeModal from "../../controls/dagModal/modals/dagChangeWalletTypeModal";
+import {connect} from "react-redux";
+import { changeWalletType } from '../../actions/generalActions';
+import {FULL_WALLET, LIGHT_WALLET} from "../../constants/walletType";
 
 class SystemSettings extends Component {
-    constructor() {
-        super();
+    onChangeWalletType() {
+        const newWalletType = this.props.walletType === LIGHT_WALLET ? FULL_WALLET : LIGHT_WALLET;
+        this.props.changeWalletType(newWalletType);
+        DagModalManager.hide();
+    }
+
+    onCancel() {
+        DagModalManager.hide();
     }
 
     render() {
         const options = [
             {
                 title: 'Device name',
-                description: 'Stub Device Name',
+                description: this.props.deviceName,
                 onClick: () => {
                     Navigator.to(this, routes.DeviceNameSettings);
                 }
             },
             {
                 title: 'Change Wallet type',
-                description: 'Stub Wallet type',
+                description: this.props.walletType === LIGHT_WALLET ? 'light wallet' : 'full wallet',
                 onClick: () => {
-                    console.log('Change Wallet Type');
+                    if (this.props.walletType === LIGHT_WALLET) {
+                        DagModalManager.show(<DagChangeWalletTypeModal
+                            onChange={this.onChangeWalletType.bind(this)}
+                            onCancel={this.onCancel.bind(this)} />);
+                    }
+                    else {
+                        this.onChangeWalletType();
+                    }
                 }
             }
         ];
@@ -45,4 +63,15 @@ const styles = StyleSheet.create({
 
 });
 
-export default SystemSettings;
+function mapStateToProps(state) {
+    return {
+        deviceName: state.general.deviceName,
+        walletType: state.general.walletType
+    };
+}
+
+const mapDispatchToProps = {
+    changeWalletType
+};
+
+export default SystemSettingsWrapper = connect(mapStateToProps, mapDispatchToProps)(SystemSettings);

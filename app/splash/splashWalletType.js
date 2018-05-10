@@ -11,20 +11,20 @@ import DagRadioGroup from '../controls/dagRadioGroup';
 import { container, text, font } from "../styles/main";
 import BackgroundLayout from "../general/backgroundLayout";
 import BasePageLayout from "../general/basePageLayout";
+import {FULL_WALLET, LIGHT_WALLET} from "../constants/walletType";
 
 class SplashWalletType extends Component {
     constructor(){
         super();
 
         this.state = {
-            selectedType: 'light'
+            selectedType: LIGHT_WALLET
         };
     }
 
     onSetWalletTypeClick() {
         Navigator.to(this, routes.SplashDeviceName, {
-            walletType: this.state.selectedType,
-            registrationType: this.props.navParams.registrationType
+            walletType: this.state.selectedType
         });
     }
 
@@ -38,7 +38,7 @@ class SplashWalletType extends Component {
         const options = [
             {
                 label: 'DOWNLOAD THE ENTIRE DAGCOIN DATABASE',
-                value: 'full',
+                value: FULL_WALLET,
                 text: 'The wallet will contain the most current ' +
                 'state of the entire Dagcoin database. This option is better ' +
                 'for privacy but will take several gigabytes of storage and the initial sync will take several days. ' +
@@ -46,7 +46,7 @@ class SplashWalletType extends Component {
             },
             {
                 label: 'KEEP ONLY DATA RELEVANT TO YOU',
-                value: 'light',
+                value: LIGHT_WALLET,
                 text: 'The wallet will contain minimum information relevant to you. The wallet vendor will be able to know ' +
                 'some of your balances and will be able to see which transactions are yours, but you can start using the ' +
                 'wallet immediately and the wallet is fully functional.'
@@ -73,6 +73,7 @@ class SplashWalletType extends Component {
 
 const styles = StyleSheet.create({
     container: {
+
     }
 });
 
