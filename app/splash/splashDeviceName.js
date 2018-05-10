@@ -13,6 +13,8 @@ import {validators} from "../controls/dagForm";
 import DagForm from "../controls/dagForm";
 import BackgroundLayout from "../general/backgroundLayout";
 import BasePageLayout from "../general/basePageLayout";
+import {changeWalletType, changeDeviceName} from "../actions/generalActions";
+import {connect} from "react-redux";
 
 class SplashDeviceName extends Component {
     constructor() {
@@ -33,6 +35,8 @@ class SplashDeviceName extends Component {
     }
 
     onGetStartedClick() {
+        this.props.changeWalletType(this.props.navParams.walletType);
+        this.props.changeDeviceName(this.state.deviceName);
         Navigator.to(this, routes.Wallet);
     }
 
@@ -86,10 +90,8 @@ class SplashDeviceName extends Component {
             <BackgroundLayout style={container.p0}>
                 <BasePageLayout>
                     <View style={StyleSheet.flatten([styles.container])}>
-                        <Text
-                            style={StyleSheet.flatten([text.textBrand, font.weight700, font.size16])}>{"WELCOME TO DAGCOIN"}</Text>
-                        <Text
-                            style={StyleSheet.flatten([text.textGray, font.weight200, font.size14])}>{"A wallet for decentralized value"}</Text>
+                        <Text style={StyleSheet.flatten([text.textBrand, font.weight700, font.size16])}>{"WELCOME TO DAGCOIN"}</Text>
+                        <Text style={StyleSheet.flatten([text.textGray, font.weight200, font.size14])}>{"A wallet for decentralized value"}</Text>
 
                         <Image style={StyleSheet.flatten([styles.brand, container.m40b, container.m40t])}
                                source={require('../../img/icon-splash-brand.png')} />
@@ -118,4 +120,16 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SplashDeviceName;
+function mapStateToProps(state) {
+    return {
+        deviceName: state.general.deviceName,
+        walletType: state.general.walletType
+    };
+}
+
+const mapDispatchToProps = {
+    changeWalletType,
+    changeDeviceName
+};
+
+export default SplashDeviceNameWrapper = connect(mapStateToProps, mapDispatchToProps)(SplashDeviceName);

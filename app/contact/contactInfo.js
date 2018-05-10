@@ -11,7 +11,7 @@ import BasePageLayout from "../general/basePageLayout";
 import DagButton from "../controls/dagButton";
 
 import {container, font, text} from "../styles/main";
-import DagIconButton from "../controls/dagIconButton";
+import DagSimpleButton from "../controls/dagSimpleButton";
 import DagModalManager from "../controls/dagModal/dagModalManager";
 import DagActionsModal from "../controls/dagModal/modals/dagActionsModal";
 import { deleteContact } from '../actions/contactsActions';
@@ -50,9 +50,9 @@ class ContactInfo extends Component {
 
     renderMoreButton() {
         return (
-            <DagIconButton style={container.p20} onClick={this.onMoreButtonClick.bind(this)}>
+            <DagSimpleButton style={container.p20} onClick={this.onMoreButtonClick.bind(this)}>
                 <Image style={styles.image} source={require('../../img/more_horiz-red.png')} />
-            </DagIconButton>
+            </DagSimpleButton>
         );
     }
 

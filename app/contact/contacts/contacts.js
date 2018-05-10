@@ -10,7 +10,7 @@ import DagTabView from "../../controls/dagTabView";
 import GeneralLayout from "../../general/generalLayout";
 import PageHeader from "../../general/pageHeader";
 import NoContacts from "./components/noContacts";
-import DagIconButton from "../../controls/dagIconButton";
+import DagSimpleButton from "../../controls/dagSimpleButton";
 import ContactsList from "./contactsList";
 import FavoriteList from "./favoriteList";
 import {connect} from "react-redux";
@@ -78,9 +78,9 @@ class Contacts extends Component {
 
     renderNewContactButton() {
         return (
-            <DagIconButton style={StyleSheet.flatten([container.p20])} onClick={this.onNewContactClick.bind(this)}>
+            <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onNewContactClick.bind(this)}>
                 <Image source={require('../../../img/add.png')} style={styles.addIcon} />
-            </DagIconButton>
+            </DagSimpleButton>
         );
     }
 

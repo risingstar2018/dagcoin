@@ -11,6 +11,7 @@ import DagRadioGroup from '../controls/dagRadioGroup';
 import { container, text, font } from "../styles/main";
 import BackgroundLayout from "../general/backgroundLayout";
 import BasePageLayout from "../general/basePageLayout";
+import {LIGHT_WALLET} from "../constants/walletType";
 
 class SplashRegistration extends Component {
     constructor(){
@@ -22,7 +23,17 @@ class SplashRegistration extends Component {
     }
 
     onSetRegistrationTypeClick() {
-        Navigator.to(this, routes.SplashWalletType, { registrationType: this.state.selectedType });
+        switch (this.state.selectedType) {
+            case 'default':
+                Navigator.to(this, routes.SplashDeviceName, { walletType: LIGHT_WALLET });
+                break;
+            case 'backup':
+                Navigator.to(this, routes.BackupSettings);
+                break;
+            case 'custom':
+                Navigator.to(this, routes.SplashWalletType);
+                break;
+        }
     }
 
     onRegistrationTypeChange(value) {

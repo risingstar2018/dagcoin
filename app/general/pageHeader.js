@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 import {container, font, text} from "../styles/main";
-import DagIconButton from "../controls/dagIconButton";
+import DagSimpleButton from "../controls/dagSimpleButton";
 import NavigationManager from "../navigator/navigationManager";
 
 class PageHeader extends Component {
@@ -40,9 +40,9 @@ class PageHeader extends Component {
                 : require('../../img/chevron-left-thin-red.png');
 
             return (
-                <DagIconButton style={StyleSheet.flatten([container.p20])} onClick={this.onBackClick.bind(this)}>
+                <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onBackClick.bind(this)}>
                     <Image style={styles.backIcon} source={icon} />
-                </DagIconButton>
+                </DagSimpleButton>
             );
         }
         return null;
@@ -55,9 +55,9 @@ class PageHeader extends Component {
                 : require('../../img/menu-red.png');
 
             return (
-                <DagIconButton style={StyleSheet.flatten([container.p20])} onClick={this.onMenuClick.bind(this)}>
+                <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onMenuClick.bind(this)}>
                     <Image style={styles.menuIcon} source={icon} />
-                </DagIconButton>
+                </DagSimpleButton>
             );
         }
         return null;

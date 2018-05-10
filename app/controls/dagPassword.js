@@ -5,8 +5,7 @@ import {
 } from 'react-native';
 import {container} from "../styles/main";
 import DagTextInput from "./dagTextInput";
-import DagIconButton from "./dagIconButton";
-import DagSetPasswordModal from "./dagModal/modals/dagSetPasswordModal";
+import DagSimpleButton from "./dagSimpleButton";
 
 class DagPassword extends Component {
     constructor() {
@@ -27,22 +26,12 @@ class DagPassword extends Component {
 
     renderVisibilityIcon() {
         if (this.props.canChangeVisibility) {
-            if (this.state.isVisible) {
-                return (
-                    <DagIconButton style={styles.visibilityButtonContainer}
-                                   onClick={this.onVisibilityToggle.bind(this)}>
-                        <Image style={styles.visibilityIcon} source={require('../../img/hide_pass.png')} />
-                    </DagIconButton>
-                );
-            }
-            else {
-                return (
-                    <DagIconButton style={styles.visibilityButtonContainer}
-                                   onClick={this.onVisibilityToggle.bind(this)}>
-                        <Image style={styles.visibilityIcon} source={require('../../img/show_pass.png')} />
-                    </DagIconButton>
-                );
-            }
+            const icon = this.state.isVisible ? require('../../img/hide_pass.png') : require('../../img/show_pass.png');
+
+            return (<DagSimpleButton style={[styles.visibilityButtonContainer, container.p15]}
+                                     onClick={this.onVisibilityToggle.bind(this)}>
+                <Image style={styles.visibilityIcon} source={icon} />
+            </DagSimpleButton>);
         }
         return null;
     }
@@ -68,9 +57,9 @@ DagPassword.defaultProps = {
 const styles = StyleSheet.create({
     visibilityButtonContainer: {
         position: 'absolute',
-        right: 15,
         top: 0,
         bottom: 0,
+        right: 0,
         justifyContent: 'center'
     },
     visibilityIcon: {

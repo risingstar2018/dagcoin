@@ -4,7 +4,7 @@ import {
     StyleSheet, TouchableOpacity
 } from 'react-native';
 
-class DagIconButton extends Component {
+class DagSimpleButton extends Component {
     constructor() {
         super();
     }
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default DagIconButton;
+export default DagSimpleButton;

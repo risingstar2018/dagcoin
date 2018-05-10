@@ -7,26 +7,30 @@ import {
 import {container, text, font} from "../../styles/main";
 import SettingsPageLayout from "../settingsPageLayout";
 import DagButton from "../../controls/dagButton";
-import DagTextInput  from "../../controls/dagTextInput";
+import DagTextInput from "../../controls/dagTextInput";
 import {validators} from "../../controls/dagForm";
 import DagForm from "../../controls/dagForm";
+import {connect} from "react-redux";
+import {changeDeviceName} from "../../actions/generalActions";
+import Navigator from "../../navigator/navigationManager";
 
 class DeviceNameSettings extends Component {
     constructor() {
         super();
 
         this.state = {
-            deviceName: 'Stub Device Name'
+            deviceName: ''
         };
     }
 
     onSaveClick() {
-        console.log(this.state.deviceName);
+        this.props.changeDeviceName(this.state.deviceName);
+        Navigator.back();
     }
 
-    onDeviceNameChange(text) {
+    componentWillMount() {
         this.setState({
-            deviceName: text
+            deviceName: this.props.deviceName
         });
     }
 
@@ -35,17 +39,18 @@ class DeviceNameSettings extends Component {
             <SettingsPageLayout canBack={true} title={'Device Name'.toUpperCase()}>
                 <View style={styles.container}>
                     <View style={StyleSheet.flatten([styles.controlsContainer, container.p40t, container.p40l, container.p40r, container.m20b])}>
-                        <Text style={StyleSheet.flatten([text.textGray, font.weight700, font.size11])}></Text>
 
                         <DagForm>
-                            <DagTextInput label={'Device name'} validators={[validators.required()]} style={StyleSheet.flatten([container.m20b])}
-                                          onValueChange={this.onDeviceNameChange.bind(this)}
+                            <DagTextInput label={'Device name'} validators={[validators.required()]}
+                                          style={StyleSheet.flatten([container.m20b])}
+                                          onValueChange={(value) => this.setState({deviceName: value})}
                                           value={this.state.deviceName}/>
-                            <DagButton text={"SAVE"} type={'submit'} onClick={this.onSaveClick.bind(this)} />
+                            <DagButton text={"SAVE"} type={'submit'} onClick={this.onSaveClick.bind(this)}/>
                         </DagForm>
                     </View>
 
-                    <Text style={StyleSheet.flatten([text.textGray, font.weight700, font.size11])}>Device name is visible to other devices you communicate with.</Text>
+                    <Text style={StyleSheet.flatten([text.textGray, font.weight700, font.size11])}>Device name is
+                        visible to other devices you communicate with.</Text>
                 </View>
             </SettingsPageLayout>
         );
@@ -62,4 +67,15 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DeviceNameSettings;
+function mapStateToProps(state) {
+    return {
+        deviceName: state.general.deviceName
+    }
+}
+
+const mapDispatchToProps = {
+    changeDeviceName: changeDeviceName
+};
+
+export default SplashDeviceNameWrapper = connect(mapStateToProps, mapDispatchToProps)(DeviceNameSettings);
+
