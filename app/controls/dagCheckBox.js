@@ -4,19 +4,12 @@ import CheckBox from 'react-native-checkbox';
 import {StyleSheet, Text, View} from 'react-native';
 
 class DagCheckBox extends Component {
-    constructor(props){
-        super(props);
-
-        this.state = {
-            isChecked : this.props.value
-        };
+    constructor(){
+        super();
     }
 
     onClick() {
-        this.setState({ isChecked : !this.state.isChecked},
-            () => {
-                this.props.onValueChange(this.state.isChecked)
-            });
+        this.props.onValueChange(!this.props.value)
     }
 
     render() {
@@ -26,7 +19,7 @@ class DagCheckBox extends Component {
                     checkedImage = {require('../../img/check_box.png')}
                     uncheckedImage = {require('../../img/check_box_outline_blank.png')}
                     onChange={this.onClick.bind(this)}
-                    checked={this.state.isChecked}
+                    checked={this.props.value}
                     label=''
                     checkboxStyle={StyleSheet.flatten([styles.checkbox, this.props.checkboxStyle])}
                     containerStyle = {StyleSheet.flatten([styles.checkBoxContainer, this.props.checkboxContainer])}
