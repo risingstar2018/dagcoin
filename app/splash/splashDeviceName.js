@@ -37,7 +37,8 @@ class SplashDeviceName extends Component {
     onGetStartedClick() {
         this.props.changeWalletType(this.props.navParams.walletType);
         this.props.changeDeviceName(this.state.deviceName);
-        Navigator.to(this, routes.Wallet);
+        Navigator.clearHistory();
+        Navigator.to(this, routes.Home);
     }
 
     onDeviceNameChange(text) {

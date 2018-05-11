@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "babel-plugin-react-native-web": "^0.5.4",
+    "qr.js": "0.0.0",
     "lodash": "^4.17.10",
     "react": "^16.0.0",
     "react-addons-create-fragment": "^15.4.2",
@@ -23,6 +24,7 @@
     "react-native-cli": "^2.0.1",
     "react-native-device-info": "^0.21.5",
     "react-native-document-picker": "^2.1.0",
+    "react-native-qrcode-svg": "^5.0.6",
     "react-native-drawer": "github:root-two/react-native-drawer",
     "react-native-fs": "^2.9.12",
     "react-native-radio-buttons": "1.0.0",

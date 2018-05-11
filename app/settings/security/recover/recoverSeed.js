@@ -27,15 +27,15 @@ class RecoverSeed extends Component {
         return (
             <BasePageLayout style={StyleSheet.flatten([container.p30, container.p15t])}>
                 <DagForm>
-                    <Text style={StyleSheet.flatten([container.m5b, font.size11, font.weight700])}>{'Your wallet seed:'.toUpperCase()}</Text>
                     <DagTextInput value={this.state.seed}
+                                  label={'Your wallet seed:'}
                                   multiline={true}
                                   style={container.m20b}
                                   onValueChange={(value) => this.setState({seed: value})}
                                   validators={[validators.required()]}
                     />
                     <DagButton text={'Recover'.toUpperCase()}
-                               style={container.m15b}
+                               style={container.m20b}
                                type={'submit'}
                                onClick={this.onRecoverClick.bind(this)}
                             />

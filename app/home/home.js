@@ -9,8 +9,9 @@ import PageHeader from "../general/pageHeader";
 import DagBottomMenu from "../controls/dagMenu/dagBottomMenu";
 import BackgroundLayout from "../general/backgroundLayout";
 import {container} from "../styles/main";
+import Receive from "./receive";
 
-class Wallet extends Component {
+class Home extends Component {
     constructor() {
         super();
 
@@ -20,7 +21,7 @@ class Wallet extends Component {
                 { title: 'My Wallet', inactiveIcon: require('../../img/wallet-gray.png'), activeIcon: require('../../img/wallet-red.png') },
                 { title: 'Receive', inactiveIcon: require('../../img/download3-gray.png'), activeIcon: require('../../img/download3-red.png') },
                 { title: 'Send', inactiveIcon: require('../../img/paperplane-gray.png'), activeIcon: require('../../img/paperplane-red.png') },
-                { title: 'Send', inactiveIcon: require('../../img/paired_devices-gray.png'), activeIcon: require('../../img/paired_devices-red.png') }
+                { title: 'Paired Devices', inactiveIcon: require('../../img/paired_devices-gray.png'), activeIcon: require('../../img/paired_devices-red.png') }
             ]
         }
     }
@@ -33,10 +34,13 @@ class Wallet extends Component {
 
     renderContent() {
         switch (this.state.selectedItem) {
+            case 0:
+                return null;
             case 1:
+                return (<Receive {...this.props} />);
             case 2:
+                return null;
             case 3:
-            case 4:
                 return null;
         }
     }
@@ -64,4 +68,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Wallet;
+export default Home;

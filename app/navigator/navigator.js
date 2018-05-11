@@ -1,9 +1,10 @@
 import React from 'react'
-import {Animated} from 'react-native'
-import { getView } from './routes';
+import {Animated, View, Platform, BackHandler} from 'react-native'
+import {getView} from './routes';
 import NavigationManager from './navigationManager';
+import DagModalContainer from "../controls/dagModal/dagModalContainer";
 
-DEFAULT_FX = {prop: 'opacity', fromValue: 0, toValue: 1}
+DEFAULT_FX = {prop: 'opacity', fromValue: 0, toValue: 1};
 
 export default class Navigator extends React.Component {
     constructor() {
@@ -23,7 +24,6 @@ export default class Navigator extends React.Component {
     navParamsHistory = [];  // array of View navParams (to keep view navParams before transitioning for going back)
     navParams = null;
     stateHistory = [];       // array of Previous View States (to keep view state before transitioning for going back)
-    lastState = null;
 
     startViewAnimation(fx) {
         Animated.timing(this.state.fxValue, fx).start()
@@ -31,6 +31,16 @@ export default class Navigator extends React.Component {
 
     componentDidMount() {
         this.startViewAnimation(DEFAULT_FX)
+    }
+
+    canBack() {
+        return this.history.length > 1;
+    }
+
+    clearHistory() {
+        this.history = [];
+        this.stateHistory = [];
+        this.navParamsHistory = [];
     }
 
     back = () => {
@@ -81,8 +91,7 @@ export default class Navigator extends React.Component {
 
         return (
             <Animated.View style={{flex: 1, [currentFx.prop]: this.state.fxValue}}>
-                <this.currentComp nav={this} navParams={this.navParams} lastState={this.lastState}
-                                  appState={this.props.appState}/>
+                <this.currentComp navParams={this.navParams}/>
             </Animated.View>
         )
     }

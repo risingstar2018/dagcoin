@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View,Text, Dimensions
+    StyleSheet, View, Text
 } from 'react-native';
 
 import { container, text, font } from "../styles/main";
@@ -11,8 +11,6 @@ import Navigator from '../navigator/navigationManager';
 import { routes } from '../navigator/routes';
 import BasePageLayout from "../general/basePageLayout";
 import DagCheckBox from "../controls/dagCheckBox";
-
-const screenWidth = Dimensions.get('window').width;
 
 class ConfirmationScreen extends Component {
     constructor() {
@@ -24,6 +22,11 @@ class ConfirmationScreen extends Component {
             checkbox2: false,
             checkbox3: false
         }
+    }
+
+    onConfirmClick() {
+        Navigator.clearHistory();
+        Navigator.to(this, routes.SplashRegistration);
     }
 
     renderTermsContainer() {
@@ -43,7 +46,7 @@ class ConfirmationScreen extends Component {
                 </View>
                 <View>
                     <DagButton
-                        onClick={() => Navigator.to(this, routes.SplashRegistration)}
+                        onClick={this.onConfirmClick.bind(this)}
                         disabled={!this.state.checkbox1 || !this.state.checkbox2 || !this.state.checkbox3}
                         text={"CONFIRM & FINISH"} />
                 </View>

@@ -13,7 +13,7 @@ import SystemSettings from "../settings/system/systemSettings";
 import BackupSettings from "../settings/security/backup/backupSettings";
 import SplashWalletType from "../splash/splashWalletType";
 import ConfirmationScreen from "../intro/confirmationScreen";
-import Wallet from "../wallet/wallet";
+import Home from "../home/home";
 import Intro from "../intro/introScreen";
 import NewContact from "../contact/newContact";
 import EditContact from "../contact/editContact";
@@ -38,7 +38,7 @@ export const routes = {
 
     NewWallet: 'NewWallet',
 
-    Wallet: 'Wallet',
+    Home: 'Home',
 
     NewContact: 'NewContact',
     EditContact: 'EditContact',
@@ -82,8 +82,8 @@ export function getView(name) {
         case routes.NewWallet:
             return NewWallet;
 
-        case routes.Wallet:
-            return Wallet;
+        case routes.Home:
+            return Home;
 
         case routes.NewContact:
             return NewContact;
