@@ -63,6 +63,7 @@
           });
         }
 
+        const imageDivId = attrs.imageDivId;
         attrs.$observe('url', (url) => {
           if (url && url.length > 20) {
             perform(url, {
@@ -75,7 +76,11 @@
                 alert(err);
               } else {
                 const src = canvas.toDataURL();
-                element.html(`<img width="220" src="${src}">`);
+                if (imageDivId) {
+                  document.getElementById(imageDivId).src = `${src}`;
+                } else {
+                  element.html(`<img width="220" src="${src}">`);
+                }
               }
             });
           }
