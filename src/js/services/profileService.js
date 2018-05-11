@@ -137,6 +137,19 @@
       });
     }
 
+    /**
+     * in network.js exports.light_vendor_url property value is setting null so that
+     * causes requestFromLightVendor method infinitive mode
+     * So that it hub is set by this method
+     * @param hub
+     */
+    function initNetwork(hub) {
+      const device = require('core/device.js');
+      const lightWallet = require('core/light_wallet.js');
+      device.setDeviceHub(hub);
+      lightWallet.setLightVendorHost(hub);
+    }
+
     root.bindProfile = function (profile, cb) {
       breadcrumbs.add('bindProfile');
       root.profile = profile;
@@ -158,10 +171,12 @@
             const firstWc = root.walletClients[lodash.keys(root.walletClients)[0]];
             if (root.profile.xPrivKeyEncrypted) {
               console.log('priv key is encrypted, will wait for UI and request password');
+              initNetwork(config.hub);
               // assuming bindProfile is called on encrypted keys only at program startup
               unlockWalletAndInitDevice();
               device.setDeviceAddress(root.profile.my_device_address);
             } else if (config.touchId) {
+              initNetwork(config.hub);
               unlockWalletWithFingerprintAndInitDevice();
               device.setDeviceAddress(root.profile.my_device_address);
             } else if (root.profile.xPrivKey) {

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Version=@version
-Name=Dagcoin@type Wallet
+Name=DagWallet @type
 Comment=A wallet for decentralized value
 Exec=/usr/share/Dagcoin-wallet@type/dagcoin-wallet@exec-post
 Icon=/usr/share/Dagcoin-wallet@type/icon_256x256.png
