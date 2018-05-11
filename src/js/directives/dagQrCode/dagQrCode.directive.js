@@ -11,9 +11,9 @@
     .module('copayApp.directives')
     .directive('dagQrCode', dagQrCode);
 
-  dagQrCode.$inject = [];
+  dagQrCode.$inject = ['sharedService'];
 
-  function dagQrCode() {
+  function dagQrCode(sharedService) {
     return {
       restrict: 'E',
       scope: {},
@@ -65,6 +65,11 @@
 
         attrs.$observe('url', (url) => {
           if (url && url.length > 20) {
+            const cacheData = sharedService.getCachedData(url);
+            if (cacheData) {
+              element.html(`<img width="220" src="${cacheData}">`);
+              return;
+            }
             perform(url, {
               r: 213,
               g: 31,
@@ -75,6 +80,7 @@
                 alert(err);
               } else {
                 const src = canvas.toDataURL();
+                sharedService.addCachedData(url, src);
                 element.html(`<img width="220" src="${src}">`);
               }
             });
