@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, /*CheckBox, */Text, Dimensions
+    StyleSheet, View,Text, Dimensions
 } from 'react-native';
 
 import { container, text, font } from "../styles/main";

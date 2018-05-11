@@ -10,8 +10,6 @@ class DagCheckBox extends Component {
         this.state = {
             isChecked : this.props.value
         };
-
-        this.onClick = this.onClick.bind(this);
     }
 
     onClick() {
@@ -19,7 +17,6 @@ class DagCheckBox extends Component {
             () => {
                 this.props.onValueChange(this.state.isChecked)
             });
-
     }
 
     render() {
@@ -28,13 +25,13 @@ class DagCheckBox extends Component {
                 <CheckBox
                     checkedImage = {require('../../img/check_box.png')}
                     uncheckedImage = {require('../../img/check_box_outline_blank.png')}
-                    onChange={this.onClick}
+                    onChange={this.onClick.bind(this)}
                     checked={this.state.isChecked}
                     label=''
                     checkboxStyle={StyleSheet.flatten([styles.checkbox, this.props.checkboxStyle])}
                     containerStyle = {StyleSheet.flatten([styles.checkBoxContainer, this.props.checkboxContainer])}
                 />
-                <Text onPress={this.onClick} style={StyleSheet.flatten([styles.label, this.props.labelStyle])}>
+                <Text onPress={this.onClick.bind(this)} style={StyleSheet.flatten([styles.label, this.props.labelStyle])}>
                     {this.props.label}
                 </Text>
             </View>
