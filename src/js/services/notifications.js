@@ -2,8 +2,8 @@
   'use strict';
 
   angular.module('copayApp.services')
-  .factory('notification', ['$timeout',
-    function ($timeout) {
+  .factory('notification', ['$timeout', 'storageService', 'profileService', 'lodash',
+    function ($timeout, storageService, profileService, lodash) {
       let notifications = [];
 
       const queue = [];
@@ -41,10 +41,16 @@
           enabled: true,
         },
         details: true,
-        localStorage: false,
+        localStorage: true,
         html5Mode: false,
         html5DefaultIcon: 'img/icons/dagcoin.ico',
       };
+
+      function notificationsKey() {
+        const fc = profileService.focusedClient;
+        const network = fc.credentials.network;
+        return `notifications-${network}`;
+      }
 
       function html5Notify(icon, title, content, ondisplay, onclose) {
         if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
@@ -163,23 +169,11 @@
         },
 
         awesomeNotify(type, icon, title, content, userData) {
-          /**
-           * Supposed to wrap the makeNotification method for drawing icons using font-awesome
-           * rather than an image.
-           *
-           * Need to find out how I'm going to make the API take either an image
-           * resource, or a font-awesome icon and then display either of them.
-           * Also should probably provide some bits of color, could do the coloring
-           * through classes.
-           */
-          // image = '<i class="icon-' + image + '"></i>';
-          return this.makeNotification(type, false, icon, title, content, userData);
+          this.restore(() => this.makeNotification(type, false, icon, title, content, userData));
         },
 
         notify(image, title, content, userData) {
-          // Wraps the makeNotification method for displaying notifications with images
-          // rather than icons
-          return this.makeNotification('custom', image, true, title, content, userData);
+          this.restore(() => this.makeNotification('custom', image, true, title, content, userData));
         },
 
         makeNotification(type, image, icon, title, content, userData) {
@@ -191,6 +185,7 @@
             content,
             timestamp: +new Date(),
             userData,
+            isRead: false
           };
 
           notifications.push(notification);
@@ -223,29 +218,55 @@
             });
           }
 
-          this.save();
+          this.save(() => {});
           return notification;
         },
 
+        markAllAsRead() {
+          this.restore(() => {
+            lodash.each(notifications, (notification) => {
+              notification.isRead = true;
+            });
+
+            this.save(() => {});
+          });
+        },
 
         /* ============ PERSISTENCE METHODS ============ */
 
-        save() {
-          // Save all the notifications into localStorage
+        save(callBack) {
           if (settings.localStorage) {
-            localStorage.setItem('notifications', JSON.stringify(notifications));
+            const eventBus = require('core/event_bus.js');
+
+            storageService.set(notificationsKey(), JSON.stringify(notifications), callBack);
+            eventBus.emit('notifications_updated');
           }
         },
 
-        restore() {
-          // Load all notifications from localStorage
+        restore(callBack) {
+          storageService.get(notificationsKey(), (error, notificationsList) => {
+            if (notificationsList) {
+              const json = JSON.parse(notificationsList);
+              notifications = json;
+            } else {
+              notifications = [];
+            }
+
+            callBack(notifications);
+          });
         },
 
-        clear() {
+        clear(callBack) {
           notifications = [];
-          this.save();
+          this.save(() => callBack());
         },
 
+        unreadNotifications(callBack) {
+          this.restore(() => {
+            const unreadNotifications = lodash.filter(notifications, { isRead: false });
+            return callBack(unreadNotifications);
+          });
+        },
       };
     },
   ]);
