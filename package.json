@@ -6,10 +6,13 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && react-native run-android",
     "test": "jest",
-    "web": "webpack-dev-server --port 3000 --config web/webpack.config.dev.js --inline --hot --colors"
+    "web": "webpack-dev-server --port 3000 --config web/webpack.config.dev.js --inline --hot --colors",
+    "build": "webpack --config web/webpack.config.dev.js",
+    "desktop": "nw ./web/src/"
   },
   "dependencies": {
     "babel-plugin-react-native-web": "^0.5.4",
+    "lodash": "^4.17.10",
     "react": "^16.0.0",
     "react-addons-create-fragment": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",
@@ -18,7 +21,10 @@
     "react-native-bottom-toolbar": "^4.1.1",
     "react-native-checkbox": "^2.0.0",
     "react-native-cli": "^2.0.1",
+    "react-native-device-info": "^0.21.5",
     "react-native-document-picker": "^2.1.0",
+    "react-native-drawer": "github:root-two/react-native-drawer",
+    "react-native-fs": "^2.9.12",
     "react-native-radio-buttons": "1.0.0",
     "react-native-side-menu": "^1.1.3",
     "react-native-svg": "^6.3.1",
@@ -29,6 +35,7 @@
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
+    "sjcl": "^1.0.7",
     "svgs": "^3.2.1",
     "url-loader": "^0.5.7"
   },
@@ -54,7 +61,8 @@
     "react-test-renderer": "16.3.1",
     "redux-devtools": "^3.4.1",
     "svg-loader": "0.0.2",
-    "webpack": "^1.13.1",
+    "webpack": "^1.15.0",
+    "webpack-cli": "^2.1.3",
     "webpack-dev-server": "^1.14.1"
   },
   "jest": {
