@@ -8,7 +8,7 @@
               title="{{ 'Scan address' | translate }}">
   </qr-scanner>
   <a id="address-share" ng-if="index.isCordova && tab === 'wallet.receive' && index.isComplete"
-     ng-click="home.shareAddress(home.addr[index.walletId])">
+     ng-click="home.shareAddress()">
     <svg-icon name="share"></svg-icon>
   </a>
   <a title="{{ 'Add a new device' | translate }}" dag-state-transition="slide-left" ng-if="tab === 'wallet.correspondentDevices'" ui-sref="addCorrespondentDevice">
