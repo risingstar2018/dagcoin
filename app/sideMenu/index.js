@@ -4,7 +4,7 @@ import Navigator from '../navigator/navigationManager';
 import { routes } from '../navigator/routes';
 
 import {
-    View, Text, StyleSheet, Image, TouchableOpacity, Dimensions
+    View, Text, StyleSheet, Image, TouchableOpacity
 } from 'react-native';
 
 import { container, text, font } from '../styles/main';

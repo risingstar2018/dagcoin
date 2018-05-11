@@ -1,0 +1,16 @@
+{
+  "name": "dagcoin desktop",
+  "main": "index.html",
+  "window": {
+    "title": "Dagcoin wallet",
+    "toolbar": true,
+    "show": true,
+    "visible": true,
+    "resizable": false,
+    "frame": true,
+    "width": 400,
+    "height": 600,
+    "position": "center",
+    "fullscreen": false
+  }
+}

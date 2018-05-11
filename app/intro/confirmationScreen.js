@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, CheckBox, Text
+    StyleSheet, View, Text
 } from 'react-native';
 
 import { container, text, font } from "../styles/main";
@@ -10,6 +10,7 @@ import DagButton from "../controls/dagButton";
 import Navigator from '../navigator/navigationManager';
 import { routes } from '../navigator/routes';
 import BasePageLayout from "../general/basePageLayout";
+import DagCheckBox from "../controls/dagCheckBox";
 
 class ConfirmationScreen extends Component {
     constructor() {
@@ -36,17 +37,12 @@ class ConfirmationScreen extends Component {
         return (
             <View style={StyleSheet.flatten([styles.termsContainer])}>
                 <View style={StyleSheet.flatten([styles.checkboxContainer])}>
-                    <View style={styles.checkBox}>
-                        <CheckBox
-                            style={container.m10t}
-                            value={this.state.checkbox3}
-                            onValueChange={(value) => this.setState({checkbox3: value})}
-                        />
-                        <Text
-                            style={StyleSheet.flatten([container.m15b, container.m15l])}>
-                            I have read, understood and agree to terms of use.
-                        </Text>
-                    </View>
+                    <DagCheckBox
+                        label="I have read, understood and agree to terms of use."
+                        labelStyle = {StyleSheet.flatten([container.m15l])}
+                        value={this.state.checkbox3}
+                        onValueChange={(value) => this.setState({checkbox3: value})}
+                    />
                 </View>
                 <View>
                     <DagButton
@@ -66,14 +62,18 @@ class ConfirmationScreen extends Component {
                     <Text style={StyleSheet.flatten([text.textCenter, container.m10t])}>As a security precaution we would like to go over some major points</Text>
                 </View>
                 <View style={StyleSheet.flatten([styles.checkboxContainer, container.p40l, container.p40r])}>
-                    <View style={styles.checkBox}>
-                        <CheckBox style={container.m10t} value={this.state.checkbox1} onValueChange={(value) => this.setState({checkbox1: value})} />
-                        <Text style={StyleSheet.flatten([container.m15b, container.m15l])}>I understand that my funds are held securely on this device, not by a company.</Text>
-                    </View>
-                    <View style={styles.checkBox}>
-                        <CheckBox style={container.m10t} value={this.state.checkbox2} onValueChange={(value) => this.setState({checkbox2: value})} />
-                        <Text style={StyleSheet.flatten([container.m15b, container.m15l])}>I understand that if this app is moved to another device or deleted, my dagcoin can only be recovered with the backup phrase.</Text>
-                    </View>
+                    <DagCheckBox
+                        label="I understand that my funds are held securely on this device, not by a company."
+                        labelStyle = {StyleSheet.flatten([container.m15l])}
+                        value={this.state.checkbox1}
+                        onValueChange={(value) => this.setState({checkbox1: value})}
+                    />
+                    <DagCheckBox
+                        label="I understand that if this app is moved to another device or deleted, my dagcoin can only be recovered with the backup phrase."
+                        labelStyle = {StyleSheet.flatten([container.m15l])}
+                        value={this.state.checkbox2}
+                        onValueChange={(value) => this.setState({checkbox2: value})}
+                    />
                 </View>
                 {this.renderTermsContainer()}
             </BasePageLayout>
@@ -82,12 +82,6 @@ class ConfirmationScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    checkboxContainer: {
-        flexDirection: 'column'
-    },
-    checkBox: {
-        flexDirection: 'row'
-    },
     termsContainer: {
         alignSelf: 'stretch',
         flexDirection: 'column',

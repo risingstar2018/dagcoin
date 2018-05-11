@@ -31,8 +31,10 @@ module.exports = {
         ]
     },
     output: {
+        path: path.join(__dirname, 'src'),
         filename: 'bundle.js'
     },
+    watch: true,
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
@@ -47,5 +49,8 @@ module.exports = {
         alias: {
             'react-native': 'react-native-web'
         }
+    },
+    node: {
+        fs: 'empty'
     }
 };
