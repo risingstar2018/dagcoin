@@ -9,7 +9,7 @@ class DagModalContainer extends Component {
     constructor() {
         super();
 
-        DagModalManager.registerModal(this);
+        DagModalManager.registerContainer(this);
     }
 
     update() {
@@ -21,7 +21,7 @@ class DagModalContainer extends Component {
             return null;
         }
 
-        return (<View style={styles.container}>
+        return (<View style={[styles.container]}>
             {DagModalManager.content}
         </View>);
     }

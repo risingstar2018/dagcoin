@@ -1,19 +1,41 @@
 class DagModalManager {
-    static modalContainer = null;
-    static content = null;
+    static container = null; //container
+    static content = null; //modal
+    static modal = null; //modal (core)
 
-    static registerModal(modalContainer) {
-        DagModalManager.modalContainer = modalContainer;
+    static registerContainer(container) {
+        DagModalManager.container = container;
+    }
+
+    static registerModal(modal) {
+        DagModalManager.modal = modal;
     }
 
     static show(content) {
         DagModalManager.content = content;
-        DagModalManager.modalContainer.update();
+        DagModalManager.container.update();
     }
 
     static hide() {
         DagModalManager.content = null;
-        DagModalManager.modalContainer.update();
+        DagModalManager.modal = null;
+        DagModalManager.container.update();
+    }
+
+    static close() {
+        if (DagModalManager.modal.props.onClose) {
+            DagModalManager.modal.props.onClose();
+        }
+
+        DagModalManager.hide();
+    }
+
+    static canClose() {
+        return DagModalManager.modal && DagModalManager.modal.props.backdrop;
+    }
+
+    static isOpened() {
+        return !!DagModalManager.content;
     }
 }
 

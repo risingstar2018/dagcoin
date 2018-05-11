@@ -6,6 +6,12 @@ import {
 import DagModalManager from "./dagModalManager";
 
 class DagModal extends Component {
+    constructor() {
+        super();
+
+        DagModalManager.registerModal(this);
+    }
+
     onBackdropClick() {
         this.props.onClose();
         DagModalManager.hide();

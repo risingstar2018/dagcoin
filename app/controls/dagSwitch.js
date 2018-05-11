@@ -27,8 +27,8 @@ class DagSwitch extends Component {
         return this.props.innerCircleStyle || {
             shadowColor: '#000000',
             shadowOpacity: 0.4,
-            shadowOffset: {  width: -0.5,  height: 1 },
-            shadowRadius: 2,
+            shadowOffset: {  width: 0,  height: 1 },
+            shadowRadius: 3,
             elevation: 3
         }
     }
@@ -40,7 +40,7 @@ class DagSwitch extends Component {
 
         if (this.props.label) {
             return (<DagSimpleButton style={[container.flex, container.p10t, container.p10b]} onClick={() => { this.props.onValueChange(!this.props.value); }}>
-                <Text style={StyleSheet.flatten([controls.label, this.props.labelStyle])}>{this.props.label}</Text>
+                <Text style={StyleSheet.flatten([controls.label, this.props.labelStyle])}>{this.props.label.toUpperCase()}</Text>
             </DagSimpleButton>);
         }
 

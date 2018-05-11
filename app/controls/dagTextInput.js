@@ -52,7 +52,7 @@ class DagTextInput extends Component {
 
         if (this.props.label) {
             return (<Text style={StyleSheet.flatten([controls.label, container.m5b, this.props.labelStyle])}>
-                {this.props.label} {renderAsterisk()}
+                {this.props.label.toUpperCase()} {renderAsterisk()}
             </Text>);
         }
 

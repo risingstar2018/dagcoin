@@ -65,10 +65,10 @@ class FullBackup extends Component {
                                  placeholder={'Repeat password'}
                                  onValueChange={this.onConfirmPasswordChange.bind(this)}/>
 
-                    <View style={StyleSheet.flatten([styles.compressContainer, container.m20b])}>
-                        <Text style={StyleSheet.flatten([text.textGray, font.size14])}>Compress the file? (Slower)</Text>
-                        <DagSwitch style={styles.compressControl} value={this.state.compress} onValueChange={this.onCompressChange.bind(this)} />
-                    </View>
+                    <DagSwitch label="Compress the file? (Slower)"
+                               containerStyle={container.m20b}
+                               value={this.state.compress}
+                               onValueChange={this.onCompressChange.bind(this)} />
 
                     <DagButton onClick={this.onExportClick.bind(this)}
                                type={'submit'}
