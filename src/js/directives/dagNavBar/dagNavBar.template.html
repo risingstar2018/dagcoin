@@ -1,10 +1,10 @@
 <div class="navbar-container" ng-class="{'invert':invert}">
     <div class="navbar-container-triggers">
-        <a dag-state-transition="{{goBackTransition || 'slide-right'}}" ng-show="showBack" ng-click="goStateBack();">
+        <a dag-state-transition="{{goBackTransition || 'slide-right'}}" ng-show="showBack" ng-click="goStateBack();" class="navbar-back-icon">
             <svg-icon name="chevron-left-thin" class="back-button"></svg-icon>
         </a>
 
-        <span title="{{ 'Preferences' | translate }}" ng-click="openMenu()" ng-show="!showBack">
+        <span title="{{ 'Preferences' | translate }}" ng-click="openMenu()" ng-show="!showBack" class="navbar-preferences-icon">
           <svg-icon name="menu2"></svg-icon>
         </span>
     </div>
@@ -12,5 +12,11 @@
 
     <div class="navbar-container-triggers navbar-container-triggers-right">
         <ng-transclude></ng-transclude>
+    </div>
+    <div class="navbar-container-triggers navbar-container-triggers-right" ng-show="!showBack && showNotificationIcon">
+      <span title="{{ 'Notifications' | translate }}" ng-click="openNotifications()" class="navbar-notification-icon">
+        <svg-icon ng-show="!hasUnreadNotifications" name="notifications"></svg-icon>
+        <svg-icon ng-show="hasUnreadNotifications" name="notifications_active"></svg-icon>
+      </span>
     </div>
 </div>
