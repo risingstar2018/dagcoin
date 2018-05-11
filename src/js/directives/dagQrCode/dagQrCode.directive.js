@@ -68,7 +68,11 @@
           if (url && url.length > 20) {
             const cacheData = sharedService.getCachedData(url);
             if (cacheData) {
-              element.html(`<img width="220" src="${cacheData}">`);
+              if (imageDivId) {
+                document.getElementById(imageDivId).src = `${cacheData}`;
+              } else {
+                element.html(`<img width="220" src="${cacheData}">`);
+              }
               return;
             }
             perform(url, {
@@ -82,7 +86,6 @@
               } else {
                 const src = canvas.toDataURL();
                 sharedService.addCachedData(url, src);
-                element.html(`<img width="220" src="${src}">`);
                 if (imageDivId) {
                   document.getElementById(imageDivId).src = `${src}`;
                 } else {
