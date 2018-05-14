@@ -24,7 +24,8 @@ class SplashWalletType extends Component {
 
     onSetWalletTypeClick() {
         Navigator.to(this, routes.SplashDeviceName, {
-            walletType: this.state.selectedType
+            walletType: this.state.selectedType,
+            sideMenu: false
         });
     }
 

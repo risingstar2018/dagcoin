@@ -4,43 +4,16 @@ import {
     StyleSheet, View
 } from 'react-native';
 
-import SideMenu from "react-native-side-menu";
-
-import DagModalContainer from "../controls/dagModal/dagModalContainer";
-
-import { getMenu } from '../sideMenu';
-import DagToast from "../controls/dagToast/dagToast";
-
 class GeneralLayout extends Component {
     constructor() {
         super();
-
-        this.state = {
-            isMenuOpen: false
-        }
-    }
-
-    toggleMenu() {
-        this.setState({
-            isMenuOpen: !this.state.isMenuOpen
-        });
     }
 
     render() {
-        const { children } = this.props;
-
-        const childrenWithProps = React.Children.map(children, child =>
-            React.cloneElement(child, { toggleMenu: this.toggleMenu.bind(this) })
-        );
-
         return (
-            <SideMenu menu={getMenu()} isOpen={this.state.isMenuOpen}>
-                <View style={StyleSheet.flatten([styles.container, this.props.style])}>
-                    <DagToast />
-                    <DagModalContainer />
-                    {childrenWithProps}
-                </View>
-            </SideMenu>
+            <View style={StyleSheet.flatten([styles.container, this.props.style])}>
+                {this.props.children}
+            </View>
         );
     }
 }

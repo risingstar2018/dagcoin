@@ -1,8 +1,11 @@
 import {BackHandler, Platform} from "react-native";
 import DagModalManager from "../controls/dagModal/dagModalManager";
 import NavigationManager from "../navigator/navigationManager";
+import DagToastManager, {POSITION} from "../controls/dagToast/dagToastManager";
 
 class BackButtonHandler {
+    static shownExitMessage = false;
+
     static register() {
         if (Platform.OS !== 'android') {
             return;
@@ -18,7 +21,17 @@ class BackButtonHandler {
                 NavigationManager.back();
                 return true;
             }
-            return false;
+
+            if (!BackButtonHandler.shownExitMessage) {
+                BackButtonHandler.shownExitMessage = true;
+                DagToastManager.show('Press again to exit', POSITION.BOTTOM);
+                setTimeout(() => {
+                    BackButtonHandler.shownExitMessage = false;
+                }, 2000);
+                return true;
+            } else {
+                return false;
+            }
         });
     }
 }

@@ -25,13 +25,13 @@ class SplashRegistration extends Component {
     onSetRegistrationTypeClick() {
         switch (this.state.selectedType) {
             case 'default':
-                Navigator.to(this, routes.SplashDeviceName, { walletType: LIGHT_WALLET });
+                Navigator.to(this, routes.SplashDeviceName, { walletType: LIGHT_WALLET, sideMenu: false });
                 break;
             case 'backup':
-                Navigator.to(this, routes.BackupSettings);
+                Navigator.to(this, routes.BackupSettings, { sideMenu: false });
                 break;
             case 'custom':
-                Navigator.to(this, routes.SplashWalletType);
+                Navigator.to(this, routes.SplashWalletType, { sideMenu: false });
                 break;
         }
     }
