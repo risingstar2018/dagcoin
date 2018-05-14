@@ -9,6 +9,7 @@ import SideMenu from "react-native-side-menu";
 import DagModalContainer from "../controls/dagModal/dagModalContainer";
 
 import { getMenu } from '../sideMenu';
+import DagToast from "../controls/dagToast/dagToast";
 
 class GeneralLayout extends Component {
     constructor() {
@@ -35,6 +36,7 @@ class GeneralLayout extends Component {
         return (
             <SideMenu menu={getMenu()} isOpen={this.state.isMenuOpen}>
                 <View style={StyleSheet.flatten([styles.container, this.props.style])}>
+                    <DagToast />
                     <DagModalContainer />
                     {childrenWithProps}
                 </View>

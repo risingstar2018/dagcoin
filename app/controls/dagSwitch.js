@@ -4,14 +4,11 @@ import { Switch } from 'react-native-switch';
 import {
     StyleSheet, Text, View
 } from 'react-native';
-import {container, controls} from "../styles/main";
-import DagSimpleButton from "./dagSimpleButton";
+import DagFormControl, {LABEL_POSITION} from "./dagFormControl";
 
 class DagSwitch extends Component {
     constructor() {
         super();
-
-        this.renderLabel = this.renderLabel.bind(this);
     }
 
     getSwitchContainerStyle() {
@@ -33,43 +30,30 @@ class DagSwitch extends Component {
         }
     }
 
-    renderLabel() {
-        if (this.props.renderLabel) {
-            return this.props.renderLabel();
-        }
-
-        if (this.props.label) {
-            return (<DagSimpleButton style={[container.flex, container.p10t, container.p10b]} onClick={() => { this.props.onValueChange(!this.props.value); }}>
-                <Text style={StyleSheet.flatten([controls.label, this.props.labelStyle])}>{this.props.label.toUpperCase()}</Text>
-            </DagSimpleButton>);
-        }
-
-        return null;
-    }
-
     render() {
         return (
-            <View style={StyleSheet.flatten([styles.container, this.props.containerStyle])}>
-                {this.renderLabel()}
-                <Switch value={this.props.value}
-                        disabled={this.props.disabled}
-                        renderActiveText={false}
-                        renderInActiveText={false}
-                        backgroundActive={this.props.backgroundActive}
-                        backgroundInactive={this.props.backgroundInactive}
-                        circleActiveColor={this.props.circleActiveColor}
-                        circleInActiveColor={this.props.circleInActiveColor}
-                        circleBorderWidth={this.props.circleBorderWidth}
-                        onValueChange={this.props.onValueChange}
-                        circleBorderActiveColor={this.props.circleBorderActiveColor}
-                        circleBorderInactiveColor={this.props.circleBorderInactiveColor}
-                        containerStyle={this.getSwitchContainerStyle()}
-                        innerCircleStyle={this.getInnerCircleStyle()}
-                        switchWidthMultiplier={this.props.switchWidthMultiplier}
-                        barHeight={this.props.barHeight}
-                        switchLeftPx={this.props.switchLeftPx}
-                        switchRightPx={this.props.switchRightPx} />
-            </View>
+            <DagFormControl {...this.props}
+                            labelPosition={LABEL_POSITION.LEFT}
+                            onLabelClick={() => { this.props.onValueChange(!this.props.value); }}>
+                    <Switch value={this.props.value}
+                            disabled={this.props.disabled}
+                            renderActiveText={false}
+                            renderInActiveText={false}
+                            backgroundActive={this.props.backgroundActive}
+                            backgroundInactive={this.props.backgroundInactive}
+                            circleActiveColor={this.props.circleActiveColor}
+                            circleInActiveColor={this.props.circleInActiveColor}
+                            circleBorderWidth={this.props.circleBorderWidth}
+                            onValueChange={this.props.onValueChange}
+                            circleBorderActiveColor={this.props.circleBorderActiveColor}
+                            circleBorderInactiveColor={this.props.circleBorderInactiveColor}
+                            containerStyle={this.getSwitchContainerStyle()}
+                            innerCircleStyle={this.getInnerCircleStyle()}
+                            switchWidthMultiplier={this.props.switchWidthMultiplier}
+                            barHeight={this.props.barHeight}
+                            switchLeftPx={this.props.switchLeftPx}
+                            switchRightPx={this.props.switchRightPx} />
+            </DagFormControl>
         );
     }
 }
@@ -94,10 +78,7 @@ DagSwitch.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    }
+
 });
 
 export default DagSwitch;

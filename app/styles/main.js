@@ -143,6 +143,9 @@ const container = StyleSheet.create({
     flex: {
         flex: 1
     },
+    wrap: {
+        flexWrap: 'wrap'
+    },
     flexRight: {
         alignItems: 'flex-end'
     },

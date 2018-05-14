@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import {
     StyleSheet, View, Text, TextInput, Platform
 } from 'react-native';
-import {container, font, text, controls} from "../styles/main";
+import {font} from "../styles/main";
+import DagFormControl from "./dagFormControl";
 
 class DagTextInput extends Component {
     constructor() {
@@ -14,14 +15,16 @@ class DagTextInput extends Component {
             focused: false
         };
 
-        this.renderLabel = this.renderLabel.bind(this);
-        this.renderErrors = this.renderErrors.bind(this);
         this.isInvalid = this.isInvalid.bind(this);
     }
 
     onValueChange(value) {
         this.setState({isDirty: true});
         this.props.onValueChange(value);
+    }
+
+    onLabelClick() {
+        this.refs.input.focus();
     }
 
     isInvalid() {
@@ -38,56 +41,12 @@ class DagTextInput extends Component {
         }
     }
 
-    renderLabel() {
-        if (this.props.renderLabel) {
-            return this.props.renderLabel();
-        }
-
-        const renderAsterisk = () => {
-            if (this.props.required) {
-                return (<Text style={text.textRed}>*</Text>);
-            }
-            return null;
-        };
-
-        if (this.props.label) {
-            return (<Text style={StyleSheet.flatten([controls.label, container.m5b, this.props.labelStyle])}>
-                {this.props.label.toUpperCase()} {renderAsterisk()}
-            </Text>);
-        }
-
-        return null;
-    }
-
-    renderErrors() {
-        if (this.props.renderErrors) {
-            return this.props.renderErrors(this.props.errors);
-        }
-
-        if (this.isInvalid() && this.props.errors && this.props.errors.length) {
-            return (<View>
-                {
-                    this.props.errors.map((err, i) => {
-                        return (
-                            <Text key={'error-'+i} style={StyleSheet.flatten([text.textRed, font.size10, font.weight700, container.m5t, this.props.errorStyle])}>
-                                {err}
-                            </Text>
-                        );
-                    })
-                }
-            </View>);
-        }
-
-        return null;
-    }
-
     render() {
         return (
-            <View style={StyleSheet.flatten([this.props.containerStyle])}>
-                {this.renderLabel()}
-
+            <DagFormControl {...this.props} onLabelClick={this.onLabelClick.bind(this)} isDirty={this.state.isDirty}>
                 <View style={StyleSheet.flatten([styles.inputContainer, this.props.inputContainerStyle])}>
                     <TextInput
+                        ref={"input"}
                         underlineColorAndroid='rgba(0,0,0,0)'
                         onFocus={() => this.setState({focused: true})}
                         onBlur={() => this.setState({focused: false})}
@@ -109,9 +68,7 @@ class DagTextInput extends Component {
                     />
                     {this.props.children}
                 </View>
-
-                {this.renderErrors()}
-            </View>
+            </DagFormControl>
         );
     }
 }

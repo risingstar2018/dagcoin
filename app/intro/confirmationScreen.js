@@ -71,6 +71,7 @@ class ConfirmationScreen extends Component {
                     <DagCheckBox
                         label="I understand that if this app is moved to another device or deleted, my dagcoin can only be recovered with the backup phrase."
                         labelStyle = {StyleSheet.flatten([container.m15l])}
+                        containerStyle={container.m40b}
                         value={this.state.checkbox2}
                         onValueChange={(value) => this.setState({checkbox2: value})}
                     />

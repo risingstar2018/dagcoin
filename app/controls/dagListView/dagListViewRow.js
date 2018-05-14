@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image } from 'react-native';
 
 import {container} from '../../styles/main';
+import DagSimpleButton from "../dagSimpleButton";
 
 const styles = StyleSheet.create({
     container: {
@@ -76,7 +77,7 @@ const RenderDescription = (props) => {
 };
 
 const DagListViewRow = (props) => {
-    return (<TouchableOpacity style={styles.container} disabled={!props.onClick} onPress={() => props.onClick && props.onClick()}>
+    return (<DagSimpleButton style={styles.container} disabled={!props.onClick} onClick={() => props.onClick && props.onClick()}>
         {RenderIcon(props)}
         <View style={StyleSheet.flatten([styles.contentContainer, container.m15l])}>
             <Text style={StyleSheet.flatten([styles.title])}>
@@ -86,7 +87,7 @@ const DagListViewRow = (props) => {
         </View>
         {RenderChildren(props)}
         {RenderChevron(props)}
-    </TouchableOpacity>);
+    </DagSimpleButton>);
 };
 
 export default DagListViewRow;

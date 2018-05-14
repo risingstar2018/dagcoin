@@ -30,7 +30,7 @@ class RecoverSeed extends Component {
                     <DagTextInput value={this.state.seed}
                                   label={'Your wallet seed:'}
                                   multiline={true}
-                                  style={container.m20b}
+                                  containerStyle={container.m20b}
                                   onValueChange={(value) => this.setState({seed: value})}
                                   validators={[validators.required()]}
                     />

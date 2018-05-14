@@ -33,7 +33,9 @@ class RecoverBackup extends Component {
     }
 
     onFileSelected(file) {
-        console.log(file);
+        this.setState({
+            file: file
+        });
     }
 
     render() {
@@ -41,7 +43,11 @@ class RecoverBackup extends Component {
             <BasePageLayout style={StyleSheet.flatten([container.p40, container.m40t])}>
                 <DagForm style={container.m5b}>
                     <DagFileInput onValueChange={this.onFileSelected.bind(this)}
+                                  validators={[validators.required()]}
+                                  value={this.state.file}
+                                  label={'Your wallet file'}
                                   style={container.m20b}/>
+                    
                     <DagPassword style={container.m20b}
                                  label={'Password'}
                                  validators={[

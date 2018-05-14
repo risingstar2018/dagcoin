@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import {
     StyleSheet, Picker, View, Text, Platform
 } from 'react-native';
-import {container, font, text, controls} from "../styles/main";
+import {font} from "../styles/main";
+import DagFormControl, {LABEL_POSITION} from "./dagFormControl";
 
 class DagSelect extends Component {
     constructor() {
@@ -13,8 +14,6 @@ class DagSelect extends Component {
             isDirty: false
         };
 
-        this.renderLabel = this.renderLabel.bind(this);
-        this.renderErrors = this.renderErrors.bind(this);
         this.isInvalid = this.isInvalid.bind(this);
     }
 
@@ -27,62 +26,22 @@ class DagSelect extends Component {
         return this.props.invalid && (this.state.isDirty || this.props.isSubmitted);
     }
 
-    getSelectStyles() {
-        return null;
-    }
-
-    renderLabel() {
-        if (this.props.renderLabel) {
-            return this.props.renderLabel();
-        }
-
-        if (this.props.label) {
-            return (<Text style={StyleSheet.flatten([controls.label, container.m5b, this.props.labelStyle])}>
-                {this.props.label}
-            </Text>);
-        }
-
-        return null;
-    }
-
-    renderErrors() {
-        if (this.props.renderErrors) {
-            return this.props.renderErrors(this.props.errors);
-        }
-
-        if (this.isInvalid() && this.props.errors && this.props.errors.length) {
-            return (<View>
-                {
-                    this.props.errors.map((err, i) => {
-                        return (
-                            <Text key={'error-'+i} style={StyleSheet.flatten([text.textRed, font.size10, font.weight700, container.m5t, this.props.errorStyle])}>
-                                {err}
-                            </Text>
-                        );
-                    })
-                }
-            </View>);
-        }
-
-        return null;
-    }
-
     render() {
         return (
-            <View style={StyleSheet.flatten([this.props.containerStyle])}>
-                {this.renderLabel()}
-
+            <DagFormControl labelPosition={LABEL_POSITION.TOP}
+                            {...this.props}
+                            isDirty={this.state.isDirty}>
                 <View style={StyleSheet.flatten([
                     styles.selectContainer,
                     this.props.selectContainerStyle,
                     this.props.style,
                     this.isInvalid() ? styles.invalid: null])}>
                     <Picker selectedValue={this.props.value}
+                            ref={"picker"}
                             onValueChange={this.onValueChange.bind(this)}
                             itemStyle={StyleSheet.flatten([font.size14, this.props.itemStyle])}
                             style={StyleSheet.flatten([
-                                styles.select,
-                                this.getSelectStyles()
+                                styles.select
                             ])}
                             enabled={!this.props.disabled}>
                         {
@@ -92,9 +51,7 @@ class DagSelect extends Component {
                         }
                     </Picker>
                 </View>
-
-                {this.renderErrors()}
-            </View>
+            </DagFormControl>
         );
     }
 }
