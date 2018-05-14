@@ -160,6 +160,9 @@ const container = StyleSheet.create({
     },
     center: {
         alignItems: 'center'
+    },
+    backgroundDefaultApp: {
+        backgroundColor: '#f9f9f9'
     }
 });
 

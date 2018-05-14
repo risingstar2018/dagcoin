@@ -21,7 +21,7 @@ class IntroScreen extends Component {
 
         this.state = {
             activeSlide: 0
-        }
+        };
     }
 
     getButtons() {
@@ -114,7 +114,7 @@ class IntroScreen extends Component {
             <BasePageLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <View style={StyleSheet.flatten([styles.skipContainer, container.m20b])}>
-                        <DagButton onClick={this.changeSlide.bind(this, 2)}
+                        <DagButton onClick={this.navigate.bind(this)}
                                    style={StyleSheet.flatten([container.transparent, container.noBorder, styles.skipButton])}
                                    textStyle={styles.skipButtonText}
                                    text={"SKIP"} />
@@ -134,7 +134,7 @@ class IntroScreen extends Component {
     }
 
     navigate() {
-        Navigator.to(this, routes.ConfirmationScreen);
+        Navigator.to(this, routes.ConfirmationScreen, { sideMenu: false });
     }
 }
 

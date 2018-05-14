@@ -2,13 +2,24 @@ import React from 'react'
 import {Animated, View, Platform, BackHandler} from 'react-native'
 import {getView} from './routes';
 import NavigationManager from './navigationManager';
-import DagModalContainer from "../controls/dagModal/dagModalContainer";
+import DagSideMenuManager from "../sideMenu/dagSideMenuManager";
 
 DEFAULT_FX = {prop: 'opacity', fromValue: 0, toValue: 1};
 
+const defaultNavParams = {
+    permanent: false,
+    sideMenu: true
+};
+
+const ACTIONS = {
+    INIT: "INIT",
+    BACK: "BACK",
+    LINK_TO: "LINK_TO"
+};
+
 export default class Navigator extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         NavigationManager.registerNavigator(this);
 
@@ -17,6 +28,8 @@ export default class Navigator extends React.Component {
             view: null,
             fxValue: new Animated.Value(0)
         };
+
+        this.init();
     }
 
     currentComp = null;
@@ -24,6 +37,20 @@ export default class Navigator extends React.Component {
     navParamsHistory = [];  // array of View navParams (to keep view navParams before transitioning for going back)
     navParams = null;
     stateHistory = [];       // array of Previous View States (to keep view state before transitioning for going back)
+
+    init() {
+        const initial = this.props.initial;
+        const view = initial.component;
+        this.navParams = Object.assign({}, defaultNavParams, initial.navParams);
+        this.processNavParams(this.navParams, ACTIONS.INIT);
+
+        this.history = [view];
+        this.lastState = null;
+        this.stateHistory = [this.lastState];
+        this.navParamsHistory = [this.navParams];
+        const {component} = this.getViewObject(view);
+        this.currentComp = component;
+    }
 
     startViewAnimation(fx) {
         Animated.timing(this.state.fxValue, fx).start()
@@ -43,26 +70,44 @@ export default class Navigator extends React.Component {
         this.navParamsHistory = [];
     }
 
-    back = () => {
+    back() {
+        this.navParams = this.navParamsHistory[this.navParamsHistory.length - 1];
+        this.processNavParams(this.navParams, ACTIONS.BACK);
+
         this.lastState = this.stateHistory[this.stateHistory.length - 1];
         this.stateHistory.pop();
         this.history.pop();
         this.navParamsHistory.pop();
-        this.navParams = this.navParamsHistory[this.navParamsHistory.length - 1];
         const lastViewId = this.history[this.history.length - 1];
-        this.setState({currentView: lastViewId})
+
+        this.setState({currentView: lastViewId});
     };
 
-    linkTo = (context, viewId, navParams) => {
+    processNavParams(navParams, action) {
+        if (!navParams.sideMenu) {
+            DagSideMenuManager.disable();
+        } else {
+            DagSideMenuManager.enable();
+        }
+
+        if (navParams.permanent && action === ACTIONS.LINK_TO) {
+            this.clearHistory();
+        }
+    }
+
+    linkTo(context, viewId, navParams) {
+        this.navParams = Object.assign({}, defaultNavParams, navParams);
+        this.processNavParams(this.navParams, ACTIONS.LINK_TO);
+
         this.history.push(viewId);
         this.stateHistory.push(context.state);
-        this.navParamsHistory.push(navParams);
-        this.navParams = navParams;
+        this.navParamsHistory.push(this.navParams);
         const {fx} = this.getViewObject(viewId);
-        this.setState({currentView: viewId, fxValue: new Animated.Value(fx.fromValue)})
+
+        this.setState({currentView: viewId, fxValue: new Animated.Value(fx.fromValue)});
     };
 
-    getViewObject = (viewId) => {
+    getViewObject(viewId) {
         const obj = getView(viewId);
         if (typeof obj === 'object') {
             // example: views={{ personDetails: { component: PersonDetails, fx: fxObject } }}
@@ -80,13 +125,6 @@ export default class Navigator extends React.Component {
             this.currentComp = component;
             currentFx = fx;
             this.startViewAnimation(fx);
-        } else {
-            this.history = [this.props.initial];
-            this.lastState = null;
-            this.stateHistory = [this.lastState];
-            this.navParamsHistory = [this.navParams];
-            const {component} = this.getViewObject(this.props.initial);
-            this.currentComp = component;
         }
 
         return (
