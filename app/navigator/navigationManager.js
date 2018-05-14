@@ -19,8 +19,4 @@ export default class NavigationManager {
     static to(context, viewId, navParams) {
         NavigationManager.navigator.linkTo(context, viewId, navParams);
     };
-
-    static clearHistory() {
-        NavigationManager.navigator.clearHistory();
-    };
 }

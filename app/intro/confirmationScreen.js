@@ -25,8 +25,7 @@ class ConfirmationScreen extends Component {
     }
 
     onConfirmClick() {
-        Navigator.clearHistory();
-        Navigator.to(this, routes.SplashRegistration);
+        Navigator.to(this, routes.SplashRegistration, { permanent: true, sideMenu: false });
     }
 
     renderTermsContainer() {
