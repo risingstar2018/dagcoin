@@ -26,6 +26,7 @@
     });
 
     $scope.$on('$destroy', () => {
+      console.log('WalletCtrl initialized');
       disableAddrListener();
       disableOngoingProcessListener();
       $rootScope.hideMenuBar = false;
