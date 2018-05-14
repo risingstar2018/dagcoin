@@ -19,42 +19,45 @@
     const successMsg = gettextCatalog.getString('Backup words deleted');
     let jsZip = null;
     let Zip = null;
-    vm.show = false;
-    vm.error = null;
-    vm.passError = null;
-    vm.success = null;
-    vm.password = null;
-    vm.repeatpassword = null;
-    vm.exporting = false;
-    vm.bCompression = false;
-    vm.connection = null;
-    vm.isCordova = Device.cordova;
 
-    if (vm.isCordova) {
-      const JSZip = require('jszip');
-      jsZip = new JSZip();
-      vm.text = gettextCatalog.getString(`To protect your funds, please use multisig wallets with redundancy, 
+    const viewContentLoaded = function () {
+      vm.show = false;
+      vm.error = null;
+      vm.passError = null;
+      vm.success = null;
+      vm.password = null;
+      vm.repeatpassword = null;
+      vm.exporting = false;
+      vm.bCompression = false;
+      vm.connection = null;
+      vm.isCordova = Device.cordova;
+      if (vm.isCordova) {
+        const JSZip = require('jszip');
+        jsZip = new JSZip();
+        vm.text = gettextCatalog.getString(`To protect your funds, please use multisig wallets with redundancy, 
           e.g. 1-of-2 wallet with one key on this device and another key on your laptop computer. 
           Just the wallet seed is not enough.`);
-    } else {
-      const desktopApp = require('core/desktop_app.js');
-      const appDataDir = desktopApp.getAppDataDir();
-      Zip = require('zip');
-      vm.text = gettextCatalog.getString(`To restore your wallets, you will need a full backup of Dagcoin data at ${appDataDir}.  
+      } else {
+        const desktopApp = require('core/desktop_app.js');
+        const appDataDir = desktopApp.getAppDataDir();
+        Zip = require('zip');
+        vm.text = gettextCatalog.getString(`To restore your wallets, you will need a full backup of Dagcoin data at ${appDataDir}.  
                      Better yet, use multisig wallets with redundancy, 
                      e.g. 1-of-2 wallet with one key on this device and another key on your smartphone.  
                      Just the wallet seed is not enough.`);
-    }
+      }
 
-    setWords(fc.getMnemonic());
-    if (fc.credentials && !fc.credentials.mnemonicEncrypted && !fc.credentials.mnemonic) {
-      vm.deleted = true;
-    }
+      setWords(fc.getMnemonic());
+      if (fc.credentials && !fc.credentials.mnemonicEncrypted && !fc.credentials.mnemonic) {
+        vm.deleted = true;
+      }
 
-    vm.toggle = toggle;
-    vm.walletExportPC = walletExportPC;
-    vm.walletExportCordova = walletExportCordova;
-    vm.walletExport = walletExport;
+      vm.toggle = toggle;
+      vm.walletExportPC = walletExportPC;
+      vm.walletExportCordova = walletExportCordova;
+      vm.walletExport = walletExport;
+      console.log('BackupCtrl initialized');
+    };
 
     vm.delete = function () {
       confirmDialog.show(msg, (ok) => {
@@ -263,6 +266,7 @@
       return false;
     }
 
+    $scope.$on('$viewContentLoaded', viewContentLoaded);
     $scope.$on('$destroy', () => {
       profileService.lockFC();
     });
