@@ -42,7 +42,7 @@ class DeviceNameSettings extends Component {
 
                         <DagForm>
                             <DagTextInput label={'Device name'} validators={[validators.required()]}
-                                          style={StyleSheet.flatten([container.m20b])}
+                                          containerStyle={StyleSheet.flatten([container.m20b])}
                                           onValueChange={(value) => this.setState({deviceName: value})}
                                           value={this.state.deviceName}/>
                             <DagButton text={"SAVE"} type={'submit'} onClick={this.onSaveClick.bind(this)}/>

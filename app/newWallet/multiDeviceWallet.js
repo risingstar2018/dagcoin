@@ -112,7 +112,7 @@ class MultiDeviceWallet extends Component {
                                       label={'Wallet name'.toUpperCase()}
                                       placeholder={'New wallet'}
                                       validators={[validators.required()]}
-                                      style={StyleSheet.flatten([container.m20b])}
+                                      containerStyle={StyleSheet.flatten([container.m20b])}
                                       onValueChange={this.onWalletNameChange.bind(this)}/>
 
                         <Text style={StyleSheet.flatten([container.m20b, font.size14])}>

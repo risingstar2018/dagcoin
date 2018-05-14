@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 
 import CheckBox from 'react-native-checkbox';
 import {StyleSheet, Text, View} from 'react-native';
+import DagFormControl, {LABEL_POSITION} from "./dagFormControl";
+import {font} from "../styles/main";
 
 class DagCheckBox extends Component {
     constructor(){
@@ -14,37 +16,32 @@ class DagCheckBox extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <DagFormControl {...this.props}
+                            labelPosition={LABEL_POSITION.RIGHT}
+                            onLabelClick={this.onClick.bind(this)}
+                            inlineContainerStyle={styles.inlineContainer}
+                            labelStyle={StyleSheet.flatten([font.size11, this.props.labelStyle])}>
                 <CheckBox
                     checkedImage = {require('../../img/check_box.png')}
                     uncheckedImage = {require('../../img/check_box_outline_blank.png')}
                     onChange={this.onClick.bind(this)}
                     checked={this.props.value}
-                    label=''
                     checkboxStyle={StyleSheet.flatten([styles.checkbox, this.props.checkboxStyle])}
-                    containerStyle = {StyleSheet.flatten([styles.checkBoxContainer, this.props.checkboxContainer])}
+                    label=''
+                    containerStyle = {StyleSheet.flatten([this.props.checkBoxContainerStyle])}
                 />
-                <Text onPress={this.onClick.bind(this)} style={StyleSheet.flatten([styles.label, this.props.labelStyle])}>
-                    {this.props.label}
-                </Text>
-            </View>
+            </DagFormControl>
         );
     }
 }
 
 const styles = StyleSheet.create({
-
-    label: {
-        color: '#000',
-        marginTop: 5
+    inlineContainer: {
+        alignItems: 'flex-start'
     },
-    container: {
-        flexDirection: 'row',
-        paddingBottom: 20
-    },
-    checkBoxContainer: {
-    },
-    checkBox: {
+    checkbox: {
+        width: 20,
+        height: 20
     }
 });
 

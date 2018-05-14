@@ -64,13 +64,13 @@ class SplashDeviceName extends Component {
         } else {
             return (<View style={styles.deviceNameContainer}>
                 <Text
-                    style={StyleSheet.flatten([text.textGray, font.weight700, font.size11])}>{"Please name this device".toUpperCase()}</Text>
+                    style={StyleSheet.flatten([text.textGray, text.textCenter, font.weight700, font.size11])}>{"Please name this device".toUpperCase()}</Text>
 
                 <View style={StyleSheet.flatten([styles.controlsContainer])}>
                     <DagForm>
                         <DagTextInput
                             validators={[validators.required()]}
-                            style={StyleSheet.flatten([container.m20t, container.m40b])}
+                            containerStyle={StyleSheet.flatten([container.m20t, container.m40b])}
                             onValueChange={this.onDeviceNameChange.bind(this)}
                             value={this.state.deviceName}
                         />

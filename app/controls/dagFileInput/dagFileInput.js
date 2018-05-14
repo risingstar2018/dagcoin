@@ -4,6 +4,8 @@ import {
     StyleSheet, TouchableOpacity, View, Text, Platform
 } from 'react-native';
 import {container, text} from "../../styles/main";
+import DagSimpleButton from "../dagSimpleButton";
+import DagFormControl from "../dagFormControl";
 
 class DagFile extends Component {
     constructor() {
@@ -11,8 +13,13 @@ class DagFile extends Component {
 
         this.state = {
             defaultName: 'Choose file',
-            name: ''
+            name: '',
+            isDirty: false
         }
+    }
+
+    isInvalid() {
+        return this.props.invalid && (this.state.isDirty || this.props.isSubmitted);
     }
 
     onClick() {
@@ -24,19 +31,32 @@ class DagFile extends Component {
             this.props.onValueChange(null);
             this.setState({name: ''});
         });
+
+        setTimeout(() => {
+            this.setState({
+                isDirty: true
+            });
+        }, 500);
     }
 
     render() {
         return (
-            <TouchableOpacity
-                onPress={this.onClick.bind(this)}
-                style={StyleSheet.flatten([styles.container, container.p15, this.props.style])}
-                disabled={this.props.disabled}
-            >
-                <View>
-                    <Text style={text.textGray}>{this.state.name || this.state.defaultName}</Text>
-                </View>
-            </TouchableOpacity>
+            <DagFormControl {...this.props} isDirty={this.state.isDirty} onLabelClick={this.onClick.bind(this)}>
+                <DagSimpleButton
+                    onClick={this.onClick.bind(this)}
+                    style={StyleSheet.flatten([
+                        container.p15,
+                        styles.container,
+                        this.isInvalid() ? styles.invalid: null,
+                        this.props.style
+                    ])}
+                    disabled={this.props.disabled}
+                >
+                    <View>
+                        <Text style={text.textGray}>{this.state.name || this.state.defaultName}</Text>
+                    </View>
+                </DagSimpleButton>
+            </DagFormControl>
         );
     }
 }
@@ -51,12 +71,17 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         backgroundColor: '#fff',
         borderWidth: 2,
-        borderColor: '#ccc'
+        borderColor: '#ccc',
+        paddingLeft: 22,
+        paddingRight: 22
     },
     text: {
         textAlign: 'center',
         color: '#ccc',
         fontWeight: '600'
+    },
+    invalid: {
+        borderColor: '#d51f26'
     }
 });
 

@@ -57,7 +57,7 @@ class NewContact extends Component {
                                           validators.maxLength(32)
                                       ]}
                                       value={this.state.address}
-                                      style={container.m15b}
+                                      containerStyle={container.m15b}
                                       required={true}
                                       maxLength={32}
                                       onValueChange={(value) => {this.setState({address: value})}}/>
@@ -68,7 +68,7 @@ class NewContact extends Component {
                                           validators.maxLength(50)
                                       ]}
                                       value={this.state.firstName}
-                                      style={container.m15b}
+                                      containerStyle={container.m15b}
                                       required={true}
                                       maxLength={50}
                                       onValueChange={(value) => {this.setState({firstName: value})}}/>
@@ -78,7 +78,7 @@ class NewContact extends Component {
                                           validators.maxLength(50)
                                       ]}
                                       value={this.state.lastName}
-                                      style={container.m15b}
+                                      containerStyle={container.m15b}
                                       maxLength={50}
                                       onValueChange={(value) => {this.setState({lastName: value})}}/>
 
@@ -89,7 +89,7 @@ class NewContact extends Component {
                                       ]}
                                       maxLength={254}
                                       value={this.state.email}
-                                      style={container.m15b}
+                                      containerStyle={container.m15b}
                                       onValueChange={(value) => {this.setState({email: value})}}/>
 
                         <DagTextInput label={'Description'.toUpperCase()}
@@ -98,7 +98,7 @@ class NewContact extends Component {
                                       ]}
                                       maxLength={300}
                                       value={this.state.description}
-                                      style={container.m15b}
+                                      containerStyle={container.m15b}
                                       multiline={true}
                                       onValueChange={(value) => {this.setState({description: value})}}/>
 
