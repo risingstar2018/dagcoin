@@ -882,7 +882,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                 $rootScope.$emit('Local/ResetVisibility', () => { });
               }
             });
-          } else {
+          } else if (tab.startsWith('wallet')) {
             $state.go(tab, params, { reload: true });
           }
         });
