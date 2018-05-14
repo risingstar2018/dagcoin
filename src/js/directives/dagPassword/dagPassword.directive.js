@@ -104,6 +104,10 @@
               return cb(err, pass);
             }
           };
+          // to display password modal immediately
+          $timeout(() => {
+            $rootScope.$apply();
+          });
         });
 
         /**
