@@ -1,4 +1,4 @@
-language: android
+language: node_js
 node_js:
   - '8.10.0'
 android:
@@ -15,6 +15,7 @@ env:
     - PATH=${ANDROID_HOME}/:${ANDROID_HOME}/tools/${ANDROID_HOME}/:${ANDROID_HOME}/tools/bin/:${ANDROID_HOME}/platform-tools/:${PATH}
 before_script:
   - "export DISPLAY=:99.0"
+  - sudo apt-get install -y npm
   - "sh -e /etc/init.d/xvfb start"
   - mkdir /home/travis/build/dagcoin/dagcoin/cordova/project-ANDROID
   - mkdir /home/travis/build/dagcoin/dagcoin/cordova/project-ANDROID/www
