@@ -20,6 +20,7 @@
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
+      console.log('ReceiveCtrl initialized');
       const conf = require('core/conf.js');
       vm.addr = {};
       vm.walletId = indexScope.walletId;
@@ -37,7 +38,7 @@
     eventBus.on('new_wallet_address', onNewWalletAddress);
 
     const destroy = function () {
-      console.log('receive controller $destroy');
+      console.log('ReceiveCtrl $destroy');
       eventBus.removeListener('new_wallet_address', onNewWalletAddress);
     };
 

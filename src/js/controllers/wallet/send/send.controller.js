@@ -40,6 +40,7 @@
      * Make all initialization of controller in this method
      */
     const viewContentLoaded = function () {
+      console.log('SendCtrl initialized');
       const request = lodash.assign(new PaymentRequest(), $stateParams);
       $scope.sendForm.$setPristine();
       if (profileService.focusedClient) {
@@ -93,7 +94,7 @@
     };
 
     const destroy = () => {
-      console.log('send controller $destroy');
+      console.log('SendCtrl $destroy');
       $rootScope.hideMenuBar = false;
     };
 

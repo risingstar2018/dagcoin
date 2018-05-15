@@ -12,6 +12,7 @@
     let shownExitMessage = false;
 
     $rootScope.$on('$stateChangeSuccess', (event, to, toParams, from, fromParams) => {
+      console.log(`$stateChangeSuccess :: to:${to.name}`);
       const lastState = arrHistory.length ? arrHistory[arrHistory.length - 1] : null;
       if (from.name === '' || (lastState && !(to.name === lastState.to && lodash.isEqual(toParams, lastState.toParams)))) {
         arrHistory.push({ to: to.name, toParams, from: from.name, fromParams });
@@ -19,9 +20,6 @@
       if (to.name === 'wallet') {
         $state.go('wallet.home');
         $rootScope.$emit('Local/SetTab', 'wallet.home');
-      } else {
-        $state.go(to.name);
-        $rootScope.$emit('Local/SetTab', to.name);
       }
       root.menuOpened = false;
     });
