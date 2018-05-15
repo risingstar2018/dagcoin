@@ -1866,6 +1866,22 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
       }
     }
 
+    &.offer_contract {
+      background: #efefef;
+      .modal-content-header {
+        padding: 0;
+
+        svg {
+          width: 46px;
+          height: 23px;
+        }
+      }
+      .modal-content-body {
+
+        max-height: 85vh;
+      }
+    }
+
     &.transactions_details {
       background: #efefef;
 

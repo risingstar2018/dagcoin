@@ -16,10 +16,15 @@
       stable: 'stable'
     };
     service.currentWallet = null;
+    service.cachedData = {};
     service.hasBalance = hasBalance;
     service.hasBytes = hasBytes;
     service.getCurrentWallet = getCurrentWallet;
     service.setCurrentWallet = setCurrentWallet;
+    service.getCurrentReceiveAddress = getCurrentReceiveAddress;
+    service.setCurrentReceiveAddress = setCurrentReceiveAddress;
+    service.getCachedData = getCachedData;
+    service.addCachedData = addCachedData;
 
     let currentBalance = null;
 
@@ -54,6 +59,22 @@
      */
     function setCurrentWallet(wallet) {
       service.currentWallet = wallet;
+    }
+
+    function getCurrentReceiveAddress() {
+      return service.currentReceiveAddress;
+    }
+
+    function setCurrentReceiveAddress(addr) {
+      service.currentReceiveAddress = addr;
+    }
+
+    function addCachedData(key, value) {
+      service.cachedData[key] = value;
+    }
+
+    function getCachedData(key) {
+      return service.cachedData[key];
     }
 
     return service;

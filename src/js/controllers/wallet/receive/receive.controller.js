@@ -7,10 +7,10 @@
     .controller('ReceiveCtrl', ReceiveCtrl);
 
   ReceiveCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'profileService', 'configService', 'gettextCatalog', 'utilityService',
-                        '$modal', 'animationService', 'addressService', 'ENV'];
+                        '$modal', 'animationService', 'addressService', 'sharedService', 'ENV'];
 
   function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
-                       $modal, animationService, addressService, ENV) {
+                       $modal, animationService, addressService, sharedService, ENV) {
     const eventBus = require('core/event_bus.js');
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('core/breadcrumbs.js');
@@ -157,6 +157,7 @@
             vm.addrError = err;
           } else if (addr) {
             vm.addr[fc.credentials.walletId] = addr;
+            sharedService.setCurrentReceiveAddress(addr);
           }
 
           $timeout(() => {
