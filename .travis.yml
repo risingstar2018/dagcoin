@@ -1,4 +1,4 @@
-language: android
+language: node_js
 node_js:
   - '8.10.0'
 android:
@@ -8,9 +8,13 @@ android:
     - tools
     - build-tools-26.0.2
     - android-26
+env:
+  global:
+    - ANDROID_HOME=/usr/local/android-sdk
+    - ANDROID_SDK_ROOT=/usr/local/android-sdk
+    - PATH=${ANDROID_HOME}/:${ANDROID_HOME}/tools/:${ANDROID_HOME}/:${ANDROID_HOME}/tools/bin/:${ANDROID_HOME}/platform-tools/:${PATH}
 before_script:
   - "export DISPLAY=:99.0"
-  - sudo apt-get install -y npm
   - "sh -e /etc/init.d/xvfb start"
   - mkdir /home/travis/build/dagcoin/dagcoin/cordova/project-ANDROID
   - mkdir /home/travis/build/dagcoin/dagcoin/cordova/project-ANDROID/www
@@ -22,12 +26,22 @@ before_install:
   - npm install -g cordova@~7.1.0
   - npm install -g cordova-android@~6.3.0
   - npm install -g phonegap
+  - cd $HOME
+  - wget https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip -O $HOME/android-sdk.tgz
+  - mkdir android
+  - unzip android-sdk.tgz -d android/sdk
+  - export PATH=$PATH:$HOME/android/sdk/tools:$HOME/android/sdk/tools/bin
+  - cd ${TRAVIS_BUILD_DIR}
 install:
   - gem install fastlane
   - gem install sass
   - bower install
   - npm install
   - bundle install
+  - echo y | sdkmanager 'ndk-bundle'
+  - echo y | sdkmanager 'cmake;3.6.3155560'
+  - export ANDROID_HOME=$HOME/android/sdk
+  - export ANDROID_NDK_HOME=$HOME/android/sdk/ndk-bundle
 script:
   - npm test
   - fastlane beta
