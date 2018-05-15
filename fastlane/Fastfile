@@ -20,7 +20,7 @@ platform :android do
 
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
 
-    sh "cd project-ANDROID"
+    sh "cd ../../byteballbuilds/project-ANDROID"
     
     sh "cordova build android"
 
