@@ -1832,7 +1832,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 }
 
 .reveal-modal {
-  overflow-y: auto;
+  overflow-y: initial;
   position: fixed;
   height: auto;
   min-height: min-content;
