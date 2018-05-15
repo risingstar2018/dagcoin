@@ -14,6 +14,7 @@ before_script:
   - cordova platform rm android
   - cordova platform add android
   - mkdir /home/travis/build/dagcoin/dagcoin/cordova/project-ANDROID
+  - mkdir /home/travis/build/dagcoin/dagcoin/cordova/project-ANDROID/www
   - sleep 3
 before_install:
   - npm install -g bower
