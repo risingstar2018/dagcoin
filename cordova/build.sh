@@ -256,7 +256,6 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 	checkOK
   
   cd $PROJECT
-  cordova prepare
   cordova build android
 fi
 

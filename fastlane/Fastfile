@@ -18,7 +18,7 @@ platform :android do
   desc "Submit a new Build with testnet configuration to hockey app"
   lane :beta do
 
-    sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
+    sh "../cordova/build.sh ANDROID dagcoin --dbgjs --clear testnet"
 
     #Dir.chdir("../cordova/project-ANDROID") do
      # sh "cordova build android"
