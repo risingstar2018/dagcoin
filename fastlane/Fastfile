@@ -19,6 +19,7 @@ platform :android do
   lane :beta do
 
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
+
     sh "cd ../dagbuild/project-ANDROID && cordova build android"
 
 
