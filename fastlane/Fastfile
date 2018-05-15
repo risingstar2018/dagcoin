@@ -20,7 +20,9 @@ platform :android do
 
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
 
-    sh "cd ../../byteballbuilds/project-ANDROID && cordova build android"
+    sh "cd ../../byteballbuilds/project-ANDROID"
+    
+    sh "cordova build android"
 
 
     apk_location = sh('cd ../../byteballbuilds/project-ANDROID/platforms/android/build/outputs/apk/ && echo "$(pwd)/android-debug.apk\c"')
