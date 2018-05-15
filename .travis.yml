@@ -29,6 +29,8 @@ before_install:
   - wget https://dl.google.com/android/repository/build-tools_r26.0.2-linux.zip -O $HOME/android-build-tools.tgz
   - unzip android-build-tools.tgz -d android/sdk
   - mv android/sdk/android-8.1.0 android/sdk/build-tools
+  - ls android/sdk
+  - ls android/sdk/build-tools
   - cd ${TRAVIS_BUILD_DIR}
 install:
   - gem install fastlane
