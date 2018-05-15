@@ -19,8 +19,8 @@ before_install:
   - npm install -g bower
   - npm install -g grunt-cli
   - npm install -g codecov
-  - npm install -g cordova@~7.1.0
-  - npm install -g cordova-android@~6.3.0
+  - npm install -g cordova
+  - npm install -g cordova-android
   - npm install -g phonegap
 install:
   - gem install fastlane
