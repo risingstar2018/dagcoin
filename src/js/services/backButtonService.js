@@ -19,8 +19,11 @@
       }
       if (to.name === 'wallet') {
         $state.go('wallet.home');
-        $rootScope.$emit('Local/SetTab', 'wallet.home');
+        $rootScope.$emit('Local/SetTabForVariable', 'wallet.home');
+      } else {
+        $rootScope.$emit('Local/SetTabForVariable', to.name);
       }
+
       root.menuOpened = false;
     });
 
