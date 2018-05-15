@@ -20,6 +20,7 @@ before_install:
   - npm install -g codecov
   - npm install -g cordova
 install:
+  - gem install fastlane
   - gem install sass
   - bower install
   - npm install
