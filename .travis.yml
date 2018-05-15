@@ -10,9 +10,9 @@ android:
     - android-26
 env:
   global:
-    - ANDROID_HOME=/usr/local/share/android-sdk
-    - ANDROID_SDK_ROOT=/usr/local/share/android-sdk
-    - PATH=${ANDROID_HOME}/:${ANDROID_HOME}/tools/:${ANDROID_HOME}/platform-tools/:${PATH}
+    - ANDROID_HOME=/usr/local/android-sdk
+    - ANDROID_SDK_ROOT=/usr/local/android-sdk
+    - PATH=${ANDROID_HOME}/:${ANDROID_HOME}/tools/${ANDROID_HOME}/:${ANDROID_HOME}/tools/bin/:${ANDROID_HOME}/platform-tools/:${PATH}
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
