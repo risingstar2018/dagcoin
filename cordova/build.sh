@@ -23,8 +23,6 @@ CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
 APPLICATION_NAME=Dagcoin
 
-mkdir $BUILDDIR/../dagbuild
-
 if [ -z "CURRENT_OS" ]
 then
  echo "Build.sh WP8|ANDROID|IOS"
