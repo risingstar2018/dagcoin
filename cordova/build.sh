@@ -81,6 +81,7 @@ if [ ! -d $PROJECT ]; then
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
 		echo -e "${OpenColor}${Green}* Adding Android platform... ${CloseColor}"
+    cordova platform add android
 		cordova platforms add android
 		checkOK
 	fi
