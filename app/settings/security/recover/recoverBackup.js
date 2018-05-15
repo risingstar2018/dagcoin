@@ -30,6 +30,8 @@ class RecoverBackup extends Component {
     onImportClick() {
         console.log('Import');
         console.log(this.state);
+        this.state.file.getStream().then((x) => {
+        });
     }
 
     onFileSelected(file) {
@@ -47,7 +49,7 @@ class RecoverBackup extends Component {
                                   value={this.state.file}
                                   label={'Your wallet file'}
                                   style={container.m20b}/>
-                    
+
                     <DagPassword style={container.m20b}
                                  label={'Password'}
                                  validators={[

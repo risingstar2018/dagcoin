@@ -37,7 +37,7 @@ class SplashDeviceName extends Component {
     onGetStartedClick() {
         this.props.changeWalletType(this.props.navParams.walletType);
         this.props.changeDeviceName(this.state.deviceName);
-        Navigator.to(this, routes.Home, { permanent: true });
+        Navigator.to(this, routes.Wallet, { permanent: true });
     }
 
     onDeviceNameChange(text) {
@@ -61,27 +61,24 @@ class SplashDeviceName extends Component {
                 </View>
             </View>);
         } else {
-            return (<View style={styles.deviceNameContainer}>
-                <Text
-                    style={StyleSheet.flatten([text.textGray, text.textCenter, font.weight700, font.size11])}>{"Please name this device".toUpperCase()}</Text>
+            return (
+                <DagForm style={StyleSheet.flatten([styles.deviceNameContainer])}>
+                    <DagTextInput
+                        label={"Please name this device".toUpperCase()}
+                        labelStyle={[text.textCenter, text.textGray, font.size11, container.m20b]}
+                        validators={[validators.required()]}
+                        containerStyle={StyleSheet.flatten([container.m40b])}
+                        onValueChange={this.onDeviceNameChange.bind(this)}
+                        value={this.state.deviceName}
+                    />
 
-                <View style={StyleSheet.flatten([styles.controlsContainer])}>
-                    <DagForm>
-                        <DagTextInput
-                            validators={[validators.required()]}
-                            containerStyle={StyleSheet.flatten([container.m20t, container.m40b])}
-                            onValueChange={this.onDeviceNameChange.bind(this)}
-                            value={this.state.deviceName}
-                        />
-
-                        <DagButton
-                            type={'submit'}
-                            text={"CONTINUE"}
-                            onClick={this.onSetDeviceNameClick.bind(this)}
-                        />
-                    </DagForm>
-                </View>
-            </View>);
+                    <DagButton
+                        type={'submit'}
+                        text={"CONTINUE"}
+                        onClick={this.onSetDeviceNameClick.bind(this)}
+                    />
+                </DagForm>
+            );
         }
     }
 
@@ -109,9 +106,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     deviceNameContainer: {
-        width: 250,
-    },
-    controlsContainer: {
         width: 250
     },
     brand: {

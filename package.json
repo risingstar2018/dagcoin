@@ -24,7 +24,6 @@
     "react-native-cli": "^2.0.1",
     "react-native-device-info": "^0.21.5",
     "react-native-document-picker": "^2.1.0",
-    "react-native-drawer": "github:root-two/react-native-drawer",
     "react-native-easy-toast": "^1.1.0",
     "react-native-fs": "^2.9.12",
     "react-native-qrcode-svg": "^5.0.6",

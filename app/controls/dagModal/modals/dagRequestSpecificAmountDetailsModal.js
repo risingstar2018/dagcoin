@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, Text, Image
+    StyleSheet, View, Text, Image, Platform
 } from 'react-native';
 
 import {container, font, text} from "../../../styles/main";
 import DagModal from "../dagModal";
 import DagQrCode from "../../dagQrCode/dagQrCode";
 import DagSimpleButton from "../../dagSimpleButton";
+import {connect} from "react-redux";
 
 class DagRequestSpecificAmountDetailsModal extends Component {
     constructor() {
@@ -18,8 +19,22 @@ class DagRequestSpecificAmountDetailsModal extends Component {
         };
     }
 
+    renderShareButton() {
+        if (Platform.OS === 'web') {
+            return;
+        }
+
+        return (
+            <View style={[container.m30b, container.center]}>
+                <DagSimpleButton style={[container.p10b, container.p10t, container.p20l, container.p20r, styles.shareButton]}>
+                    <Text style={[text.textGray, font.size11]}>{'share address'.toUpperCase()}</Text>
+                </DagSimpleButton>
+            </View>
+        );
+    }
+
     render() {
-        const qrCodeValue = JSON.stringify({address: this.props.address, amount: this.props.amount});
+        const qrCodeValue = `${this.props.protocol}:${this.props.address}?amount=${this.props.amount}`;
 
         return (
             <DagModal onClose={this.props.onCancel}
@@ -36,11 +51,7 @@ class DagRequestSpecificAmountDetailsModal extends Component {
                     <DagQrCode style={[container.center, container.m30]}
                                value={qrCodeValue}/>
 
-                    <View style={[container.m30b, container.center]}>
-                        <DagSimpleButton style={[container.p10b, container.p10t, container.p20l, container.p20r, styles.shareButton]}>
-                            <Text style={[text.textGray, font.size11]}>{'share address'.toUpperCase()}</Text>
-                        </DagSimpleButton>
-                    </View>
+                    {this.renderShareButton()}
 
                     <View style={[styles.title, container.p15]}>
                         <Text style={[font.size11, font.weight700, styles.titleText]}>{'Details'.toUpperCase()}</Text>
@@ -93,5 +104,10 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DagRequestSpecificAmountDetailsModal;
+function mapStateToProps(state) {
+    return {
+        protocol: state.general.protocol
+    }
+}
 
+export default DagRequestSpecificAmountDetailsModalWrapper = connect(mapStateToProps, null)(DagRequestSpecificAmountDetailsModal);

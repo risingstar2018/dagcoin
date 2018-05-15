@@ -1,3 +1,10 @@
+const getStream = (file) => {
+    const fs = window.require('fs');
+    return new Promise((resolve, reject) => {
+        resolve(fs.createReadStream(file.path));
+    });
+};
+
 const select = () => {
     return new Promise((resolve, reject) => {
         const x = document.createElement("input");
@@ -14,4 +21,4 @@ const select = () => {
     })
 };
 
-export {select};
+export {select, getStream};

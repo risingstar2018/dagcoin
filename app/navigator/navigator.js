@@ -1,10 +1,10 @@
 import React from 'react'
-import {Animated, View, Platform, BackHandler} from 'react-native'
+import {Animated, View, Platform} from 'react-native'
 import {getView} from './routes';
 import NavigationManager from './navigationManager';
 import DagSideMenuManager from "../sideMenu/dagSideMenuManager";
 
-DEFAULT_FX = {prop: 'opacity', fromValue: 0, toValue: 1};
+DEFAULT_FX = {prop: 'opacity', fromValue: 1, toValue: 1};
 
 const defaultNavParams = {
     permanent: false,
@@ -53,21 +53,16 @@ export default class Navigator extends React.Component {
     }
 
     startViewAnimation(fx) {
-        Animated.timing(this.state.fxValue, fx).start()
+        Animated.timing(this.state.fxValue, fx).start();
     }
 
     componentDidMount() {
-        this.startViewAnimation(DEFAULT_FX)
+        this.startViewAnimation(DEFAULT_FX);
     }
 
     canBack() {
-        return this.history.length > 1;
-    }
-
-    clearHistory() {
-        this.history = [];
-        this.stateHistory = [];
-        this.navParamsHistory = [];
+        return this.navParamsHistory.length
+            && !this.navParamsHistory[this.navParamsHistory.length - 1].permanent;
     }
 
     back() {
@@ -88,10 +83,6 @@ export default class Navigator extends React.Component {
             DagSideMenuManager.disable();
         } else {
             DagSideMenuManager.enable();
-        }
-
-        if (navParams.permanent && action === ACTIONS.LINK_TO) {
-            this.clearHistory();
         }
     }
 
