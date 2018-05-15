@@ -254,6 +254,8 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 
 	cp -R android/res/* $PROJECT/platforms/android/res
 	checkOK
+  
+  cd $PROJECT
   cordova build android
 fi
 
