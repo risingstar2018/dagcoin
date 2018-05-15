@@ -18,11 +18,11 @@ platform :android do
   desc "Submit a new Build with testnet configuration to hockey app"
   lane :beta do
 
-    sh "../cordova/build.sh ANDROID dagcoin --dbgjs --clear testnet"
+    sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
 
-    #Dir.chdir("../cordova/project-ANDROID") do
+    # Dir.chdir("../cordova/project-ANDROID") do
      # sh "cordova build android"
-    #end
+    # end
 
     apk_location = sh('cd ../cordova/project-ANDROID/platforms/android/build/outputs/apk/ && echo "$(pwd)/android-debug.apk\c"')
     # This '\c' at the end of the line needed to remove the last character (new line) from the echo result. Path is not recognizable by hokey plugin with it.

@@ -28,7 +28,7 @@ then
  echo "Build.sh WP8|ANDROID|IOS"
 fi
 
-CLEAR=false
+CLEAR=true
 DBGJS=false
 
 if [[ $2 == "--clear" || $3 == "--clear" ]]
