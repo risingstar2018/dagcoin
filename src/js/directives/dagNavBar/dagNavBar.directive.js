@@ -39,7 +39,7 @@
 
         const eventBus = require('core/event_bus.js');
 
-        $scope.showNotificationIcon = () => (!!$stateParams.backTo || !!$scope.goBack) || $rootScope.tab === 'wallet.home';
+        $scope.showNotificationIcon = () => (!!$stateParams.backTo || !!$scope.goBack) && $rootScope.tab === 'wallet.home';
 
         $scope.checkUnreadNotifications = () => {
           notification.unreadNotifications((notifications) => {
