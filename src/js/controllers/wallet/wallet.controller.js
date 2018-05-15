@@ -6,9 +6,9 @@
     .module('copayApp.controllers')
     .controller('WalletCtrl', WalletCtrl);
 
-  WalletCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$log', 'lodash', 'Device'];
+  WalletCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$log', 'lodash', 'Device', 'sharedService'];
 
-  function WalletCtrl($scope, $rootScope, $timeout, $log, lodash, Device) {
+  function WalletCtrl($scope, $rootScope, $timeout, $log, lodash, Device, sharedService) {
     const self = this;
     $rootScope.hideMenuBar = false;
     $rootScope.wpInputFocused = false;
@@ -26,6 +26,7 @@
     });
 
     $scope.$on('$destroy', () => {
+      console.log('WalletCtrl initialized');
       disableAddrListener();
       disableOngoingProcessListener();
       $rootScope.hideMenuBar = false;
@@ -107,11 +108,12 @@
       }
     };
 
-    this.shareAddress = function (addr) {
+    this.shareAddress = function () {
       if (isCordova) {
         if (Device.android || Device.windows) {
           window.ignoreMobilePause = true;
         }
+        const addr = sharedService.getCurrentReceiveAddress();
         window.plugins.socialsharing.share(addr, null, null, null);
       }
     };

@@ -11,9 +11,9 @@
     .module('copayApp.directives')
     .directive('dagQrCode', dagQrCode);
 
-  dagQrCode.$inject = [];
+  dagQrCode.$inject = ['sharedService'];
 
-  function dagQrCode() {
+  function dagQrCode(sharedService) {
     return {
       restrict: 'E',
       scope: {},
@@ -63,8 +63,18 @@
           });
         }
 
+        const imageDivId = attrs.imageDivId;
         attrs.$observe('url', (url) => {
           if (url && url.length > 20) {
+            const cacheData = sharedService.getCachedData(url);
+            if (cacheData) {
+              if (imageDivId) {
+                document.getElementById(imageDivId).src = `${cacheData}`;
+              } else {
+                element.html(`<img width="220" src="${cacheData}">`);
+              }
+              return;
+            }
             perform(url, {
               r: 213,
               g: 31,
@@ -75,7 +85,12 @@
                 alert(err);
               } else {
                 const src = canvas.toDataURL();
-                element.html(`<img width="220" src="${src}">`);
+                sharedService.addCachedData(url, src);
+                if (imageDivId) {
+                  document.getElementById(imageDivId).src = `${src}`;
+                } else {
+                  element.html(`<img width="220" src="${src}">`);
+                }
               }
             });
           }

@@ -1832,7 +1832,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 }
 
 .reveal-modal {
-  overflow-y: auto;
+  overflow-y: initial;
   position: fixed;
   height: auto;
   min-height: min-content;
@@ -1863,6 +1863,22 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     &.destination_address {
       .destination_address_body {
         max-height: 75vh;
+      }
+    }
+
+    &.offer_contract {
+      background: #efefef;
+      .modal-content-header {
+        padding: 0;
+
+        svg {
+          width: 46px;
+          height: 23px;
+        }
+      }
+      .modal-content-body {
+
+        max-height: 85vh;
       }
     }
 

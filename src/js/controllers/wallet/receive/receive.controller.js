@@ -7,10 +7,10 @@
     .controller('ReceiveCtrl', ReceiveCtrl);
 
   ReceiveCtrl.$inject = ['$scope', '$rootScope', '$timeout', 'profileService', 'configService', 'gettextCatalog', 'utilityService',
-                        '$modal', 'animationService', 'addressService', 'ENV'];
+                        '$modal', 'animationService', 'addressService', 'sharedService', 'ENV'];
 
   function ReceiveCtrl($scope, $rootScope, $timeout, profileService, configService, gettextCatalog, utilityService,
-                       $modal, animationService, addressService, ENV) {
+                       $modal, animationService, addressService, sharedService, ENV) {
     const eventBus = require('core/event_bus.js');
     const isCordova = utilityService.isCordova;
     const breadcrumbs = require('core/breadcrumbs.js');
@@ -20,6 +20,7 @@
     const indexScope = $scope.index;
 
     const viewContentLoaded = function () {
+      console.log('ReceiveCtrl initialized');
       const conf = require('core/conf.js');
       vm.addr = {};
       vm.walletId = indexScope.walletId;
@@ -37,7 +38,7 @@
     eventBus.on('new_wallet_address', onNewWalletAddress);
 
     const destroy = function () {
-      console.log('receive controller $destroy');
+      console.log('ReceiveCtrl $destroy');
       eventBus.removeListener('new_wallet_address', onNewWalletAddress);
     };
 
@@ -156,6 +157,7 @@
             vm.addrError = err;
           } else if (addr) {
             vm.addr[fc.credentials.walletId] = addr;
+            sharedService.setCurrentReceiveAddress(addr);
           }
 
           $timeout(() => {
