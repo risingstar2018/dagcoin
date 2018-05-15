@@ -23,10 +23,8 @@ install:
   - gem install sass
   - bower install
   - npm install
-  - echo y | android update sdk -u --filter android-22,android-23
 script:
   - npm test
-  - cordova prepare
   - fastlane beta
 #  - codecov --token=f33366c3-862d-4bdf-b956-c9ace7bb9739
 cache:
