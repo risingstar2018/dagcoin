@@ -19,6 +19,7 @@ before_install:
   - npm install -g grunt-cli
   - npm install -g codecov
   - npm install -g cordova
+  - npm install -g phonegap
 install:
   - gem install fastlane
   - gem install sass
