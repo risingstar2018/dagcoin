@@ -19,8 +19,6 @@ platform :android do
   lane :beta do
 
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
-    sh "cd ../dagbuild"
-    sh "ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
     sh "cd ../dagbuild/project-ANDROID && cordova build android"
 
 
