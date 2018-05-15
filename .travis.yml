@@ -24,9 +24,10 @@ install:
   - gem install sass
   - bower install
   - npm install
+  - bundle install
 script:
   - npm test
-  - bundle exec fastlane beta
+  - fastlane beta
 #  - codecov --token=f33366c3-862d-4bdf-b956-c9ace7bb9739
 cache:
   directories:
