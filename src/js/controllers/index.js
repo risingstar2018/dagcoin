@@ -868,6 +868,17 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
         });
 
+        /**
+         * Just for setting tab variable
+         */
+        $rootScope.$on('Local/SetTabForVariable', (event, tab) => {
+          $rootScope.tab = tab;
+          self.tab = tab;
+          $timeout(() => {
+            $rootScope.$apply();
+          });
+        });
+
         $rootScope.$on('Local/SetTab', (event, tab, params) => {
           if (self.tab === tab && lodash.isEmpty(params)) {
             return;

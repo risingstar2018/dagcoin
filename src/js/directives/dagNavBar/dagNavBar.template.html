@@ -13,7 +13,7 @@
     <div class="navbar-container-triggers navbar-container-triggers-right">
         <ng-transclude></ng-transclude>
     </div>
-    <div class="navbar-container-triggers navbar-container-triggers-right" ng-show="!showBack && showNotificationIcon">
+    <div class="navbar-container-triggers navbar-container-triggers-right" ng-show="showNotificationIcon()">
       <span title="{{ 'Notifications' | translate }}" ng-click="openNotifications()" class="navbar-notification-icon">
         <svg-icon ng-show="!hasUnreadNotifications" name="notifications"></svg-icon>
         <svg-icon ng-show="hasUnreadNotifications" name="notifications_active"></svg-icon>
