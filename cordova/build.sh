@@ -17,11 +17,13 @@ checkOK() {
 
 # Configs
 BUILDDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT="$BUILDDIR/dagbuild/project-$1"
+PROJECT="$BUILDDIR/../dagbuild/project-$1"
 
 CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
 APPLICATION_NAME=Dagcoin
+
+mkdir $BUILDDIR/../dagbuild
 
 if [ -z "CURRENT_OS" ]
 then
@@ -74,7 +76,7 @@ echo "Project directory is $PROJECT"
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
 	echo -e "${OpenColor}${Green}* Creating project... ${CloseColor}"
-	cordova create dagbuild/project-$1 ${ANDROID_PACKAGE} Dagcoin
+	cordova create ../dagbuild/project-$1 ${ANDROID_PACKAGE} Dagcoin
 	checkOK
 
 	cd $PROJECT
