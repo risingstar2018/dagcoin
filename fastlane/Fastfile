@@ -20,7 +20,7 @@ platform :android do
 
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
 
-    sh "cd ../dagbuild/project-ANDROID && cordova build android"
+    sh "cd dagbuild/project-ANDROID && cordova build android"
 
 
     apk_location = sh('cd ../dagbuild/project-ANDROID/platforms/android/build/outputs/apk/ && echo "$(pwd)/android-debug.apk\c"')
