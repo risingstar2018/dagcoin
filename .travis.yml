@@ -1,4 +1,4 @@
-language: node_js
+language: android
 node_js:
   - '8.10.0'
 android:
@@ -8,11 +8,6 @@ android:
     - tools
     - build-tools-26.0.2
     - android-26
-env:
-  global:
-    - ANDROID_HOME=/usr/local/android-sdk
-    - ANDROID_SDK_ROOT=/usr/local/android-sdk
-    - PATH=${ANDROID_HOME}/:${ANDROID_HOME}/tools/${ANDROID_HOME}/:${ANDROID_HOME}/tools/bin/:${ANDROID_HOME}/platform-tools/:${PATH}
 before_script:
   - "export DISPLAY=:99.0"
   - sudo apt-get install -y npm
