@@ -15,6 +15,7 @@
     vm.balanceIsHidden = $rootScope.balanceIsHidden;
 
     const viewContentLoaded = function () {
+      console.log('HomeCtrl initialized');
       go.redirectToTabIfNeeded();
     };
 

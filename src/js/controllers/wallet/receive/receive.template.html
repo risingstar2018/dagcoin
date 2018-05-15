@@ -15,19 +15,10 @@
 
       <div ng-click="receive.copyAddress(receive.addr[receive.walletId])"
            ng-show="receive.addr[receive.walletId] || receive.generatingAddress">
-        <dag-qr-code url="{{receive.protocol}}:{{receive.addr[receive.walletId]}}"></dag-qr-code>
+        <dag-qr-code url="{{receive.protocol}}:{{receive.addr[receive.walletId]}}" image-div-id="receive-address-img"></dag-qr-code>
 
-        <div ng-show="receive.generatingAddress" style="position:relative; top:-226px; height:0px">
-          <div style="height:220px; width:220px; margin:auto; background: url(img/qr.png) white">
-            <div class="spinner" style="margin-top:80px">
-              <div class="rect1"></div>
-              <div class="rect2"></div>
-              <div class="rect3"></div>
-              <div class="rect4"></div>
-              <div class="rect5"></div>
-            </div>
-          </div>
-        </div>
+        <img width="220" id="receive-address-img" src="img/empty-qr.png" />
+
         <div ng-show="!receive.isCordova" ng-class="{'visible': tooltipCopiedShown}"
              class="tooltip radius tip-top" translate>
           <svg-icon name="done"></svg-icon>
