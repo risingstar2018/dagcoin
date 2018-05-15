@@ -7,6 +7,7 @@ import {
 import {container} from "../styles/main";
 import DagListView from "../controls/dagListView/dagListView";
 import SettingsPageLayout from "./settingsPageLayout";
+import {connect} from "react-redux";
 
 class AboutDeviceSettings extends Component {
     constructor() {
@@ -17,7 +18,7 @@ class AboutDeviceSettings extends Component {
         const options = [
             {
                 title: 'Device address',
-                description: '0O766XKUNAK2U24ISKJKSTQ3YIU5QW44L (stub)'
+                description: this.props.address
             }
         ];
 
@@ -33,4 +34,10 @@ const styles = StyleSheet.create({
 
 });
 
-export default AboutDeviceSettings;
+function mapStateToProps(state) {
+    return {
+        address: state.general.deviceAddress
+    }
+}
+
+export default AboutDeviceSettingsWrapper = connect(mapStateToProps, null)(AboutDeviceSettings);

@@ -1,5 +1,11 @@
 import {DocumentPicker, DocumentPickerUtil} from "react-native-document-picker";
 
+const getStream = (file) => {
+    return new Promise((resolve, reject) => {
+        resolve(null);
+    });
+};
+
 const select = () => {
     return new Promise((resolve, reject) => {
         DocumentPicker.show({
@@ -19,4 +25,4 @@ const select = () => {
     })
 };
 
-export {select};
+export {select, getStream};

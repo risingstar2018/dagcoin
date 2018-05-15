@@ -28,7 +28,7 @@ class SplashRegistration extends Component {
                 Navigator.to(this, routes.SplashDeviceName, { walletType: LIGHT_WALLET, sideMenu: false });
                 break;
             case 'backup':
-                Navigator.to(this, routes.BackupSettings, { sideMenu: false });
+                Navigator.to(this, routes.RecoverSettings, { sideMenu: false });
                 break;
             case 'custom':
                 Navigator.to(this, routes.SplashWalletType, { sideMenu: false });
