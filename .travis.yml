@@ -40,6 +40,7 @@ install:
   - bundle install
   - export ANDROID_HOME=$HOME/android/sdk
   - export PATH=${PATH}:${ANDROID_HOME}/:${ANDROID_HOME}/tools/:${ANDROID_HOME}/tools/bin/:${ANDROID_HOME}/platform-tools/:${ANDROID_HOME}/build-tools/:${ANDROID_HOME}/build-tools/26.0.2/
+  - yes | sdkmanager --licenses
 script:
   - npm test
   - fastlane beta
