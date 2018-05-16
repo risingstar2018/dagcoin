@@ -18,6 +18,8 @@ platform :android do
   desc "Submit a new Build with testnet configuration to hockey app"
   lane :beta do
 
+    sh "../devbuilds/testnetify.sh"
+    
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
 
     # Dir.chdir("../cordova/project-ANDROID") do
