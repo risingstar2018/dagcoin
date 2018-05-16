@@ -18,6 +18,7 @@ platform :android do
   desc "Submit a new Build with testnet configuration to hockey app"
   lane :beta do
 
+    sh "chmod 775 ../devbuilds/testnetify.sh"
     sh "../devbuilds/testnetify.sh"
     
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"

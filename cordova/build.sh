@@ -209,7 +209,7 @@ checkOK
 
 cd $BUILDDIR
 
-echo -e "${Green}* Changing confix.xml...${CloseColor}"
+echo -e "${Green}* Changing config.xml...${CloseColor}"
 cp config.xml $PROJECT/config.xml
 sed "s/@UNIVERSAL_LINK_HOST/${UNIVERSAL_LINK_HOST}/g;s/@APPLICATION_NAME/${APPLICATION_NAME}/g;s/@ANDROID_PACKAGE/${ANDROID_PACKAGE}/g" < config.xml > $PROJECT/config.xml
 checkOK
@@ -256,6 +256,8 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 	checkOK
   
   cd $PROJECT
+  
+  echo -e "Starting cordova build"
   cordova build android
 fi
 
