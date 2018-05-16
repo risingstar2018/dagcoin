@@ -72,6 +72,7 @@ echo "Project directory is $PROJECT"
 
 
 if [ ! -d $PROJECT ]; then
+  mkdir $PROJECT
 	cd $BUILDDIR
 	echo -e "${OpenColor}${Green}* Creating project... ${CloseColor}"
 	cordova create project-$1 ${ANDROID_PACKAGE} Dagcoin
