@@ -10,7 +10,7 @@ import SettingsPageLayout from "../settingsPageLayout";
 import Navigator from '../../navigator/navigationManager';
 import { routes } from '../../navigator/routes';
 import DagModalManager from "../../controls/dagModal/dagModalManager";
-import DagChangeWalletTypeModal from "../../controls/dagModal/modals/dagChangeWalletTypeModal";
+import ChangeWalletTypeModal from "../../controls/dagModal/modals/changeWalletTypeModal";
 import {connect} from "react-redux";
 import { changeWalletType } from '../../actions/generalActions';
 import {FULL_WALLET, LIGHT_WALLET} from "../../constants/walletType";
@@ -40,7 +40,7 @@ class SystemSettings extends Component {
                 description: this.props.walletType === LIGHT_WALLET ? 'light wallet' : 'full wallet',
                 onClick: () => {
                     if (this.props.walletType === LIGHT_WALLET) {
-                        DagModalManager.show(<DagChangeWalletTypeModal
+                        DagModalManager.show(<ChangeWalletTypeModal
                             onChange={this.onChangeWalletType.bind(this)}
                             onCancel={this.onCancel.bind(this)} />);
                     }

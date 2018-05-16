@@ -10,7 +10,7 @@ import DagSimpleButton from "../controls/dagSimpleButton";
 import {connect} from "react-redux";
 import BasePageLayout from "../general/basePageLayout";
 import DagModalManager from "../controls/dagModal/dagModalManager";
-import DagRequestSpecificAmountModal from "../controls/dagModal/modals/dagRequestSpecificAmountModal";
+import RequestSpecificAmountModal from "../controls/dagModal/modals/requestSpecificAmountModal";
 import DagToastManager, {POSITION} from "../controls/dagToast/dagToastManager";
 import HomeLayout, {MENU_ITEMS} from "./homeLayout";
 import PageHeader from "../general/pageHeader";
@@ -21,7 +21,7 @@ class Receive extends Component {
     }
 
     onRequestSpecificAmount() {
-        DagModalManager.show(<DagRequestSpecificAmountModal
+        DagModalManager.show(<RequestSpecificAmountModal
             address={this.props.address}
             onCancel={DagModalManager.hide} />)
     }

@@ -8,7 +8,7 @@ import DagButton from "../../dagButton";
 import { container, font, text } from "../../../styles/main";
 import DagModal from "../dagModal";
 
-class DagChangeWalletTypeModal extends Component {
+class ChangeWalletTypeModal extends Component {
     constructor() {
         super();
     }
@@ -49,7 +49,7 @@ class DagChangeWalletTypeModal extends Component {
     }
 }
 
-DagChangeWalletTypeModal.defaultProps = {
+ChangeWalletTypeModal.defaultProps = {
     onChange: () => {},
     onCancel: () => {},
 };
@@ -80,6 +80,6 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DagChangeWalletTypeModal;
+export default ChangeWalletTypeModal;
 
 

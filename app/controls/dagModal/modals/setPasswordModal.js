@@ -10,7 +10,7 @@ import DagButton from "../../dagButton";
 import { container, font, text } from "../../../styles/main";
 import DagModal from "../dagModal";
 
-class DagSetPasswordModal extends Component {
+class SetPasswordModal extends Component {
     constructor() {
         super();
 
@@ -131,6 +131,6 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DagSetPasswordModal;
+export default SetPasswordModal;
 
 

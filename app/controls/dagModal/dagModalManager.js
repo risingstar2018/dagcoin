@@ -31,7 +31,7 @@ class DagModalManager {
     }
 
     static canClose() {
-        return DagModalManager.modal && DagModalManager.modal.props.backdrop;
+        return DagModalManager.modal && DagModalManager.modal.props.canClose;
     }
 
     static isOpened() {
