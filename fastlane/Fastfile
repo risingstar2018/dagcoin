@@ -32,13 +32,13 @@ platform :android do
 
     hockey(
       api_token: ENV['HOCKEY_TOKEN'],
-      notes: "Package is built from " + sh("git rev-parse --abbrev-ref HEAD"),
+      notes: "Package is built from " + ENV['BRANCH'],
       release_type: "beta",
       apk: "#{apk_location.to_s}"
     )
 
     slack(
-      message: "Successfully deployed new Android app. Package is built from " + sh("git rev-parse --abbrev-ref HEAD"),
+      message: "Successfully deployed new Android app. Package is built from " + ENV['BRANCH'],
       slack_url: ENV['SLACK_URL']
     )
   end
