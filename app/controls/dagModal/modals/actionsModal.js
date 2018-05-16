@@ -8,7 +8,7 @@ import DagButton from "../../dagButton";
 import { container } from "../../../styles/main";
 import DagModal from "../dagModal";
 
-class DagActionsModal extends Component {
+class ActionsModal extends Component {
     render() {
         return (
             <DagModal style={styles.modal}>
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DagActionsModal;
+export default ActionsModal;

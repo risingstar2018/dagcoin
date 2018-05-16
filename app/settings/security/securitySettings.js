@@ -11,7 +11,7 @@ import DagSwitch from "../../controls/dagSwitch";
 import DagModalManager from "../../controls/dagModal/dagModalManager";
 import Navigator from '../../navigator/navigationManager';
 import { routes } from '../../navigator/routes';
-import DagSetPasswordModal from "../../controls/dagModal/modals/dagSetPasswordModal";
+import SetPasswordModal from "../../controls/dagModal/modals/setPasswordModal";
 
 class SecuritySettings extends Component {
     constructor() {
@@ -55,7 +55,7 @@ class SecuritySettings extends Component {
             DagModalManager.hide();
         }
         else {
-            DagModalManager.show(<DagSetPasswordModal onCancel={this.onPasswordCancel.bind(this)} onSetPassword={this.onPasswordSet.bind(this)}/>);
+            DagModalManager.show(<SetPasswordModal onCancel={this.onPasswordCancel.bind(this)} onSetPassword={this.onPasswordSet.bind(this)}/>);
         }
     }
 

@@ -13,7 +13,7 @@ import DagButton from "../controls/dagButton";
 import {container, font, text} from "../styles/main";
 import DagSimpleButton from "../controls/dagSimpleButton";
 import DagModalManager from "../controls/dagModal/dagModalManager";
-import DagActionsModal from "../controls/dagModal/modals/dagActionsModal";
+import ActionsModal from "../controls/dagModal/modals/actionsModal";
 import { deleteContact } from '../actions/contactsActions';
 import Navigator from "../navigator/navigationManager";
 import routes from "../navigator/routes";
@@ -29,7 +29,7 @@ class ContactInfo extends Component {
 
     onMoreButtonClick() {
         const contact = this.props.navParams.contact;
-        DagModalManager.show(<DagActionsModal actions={[
+        DagModalManager.show(<ActionsModal actions={[
             {
                 label: 'Edit',
                 action: () => {

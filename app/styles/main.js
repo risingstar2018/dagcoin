@@ -1,8 +1,11 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const container = StyleSheet.create({
     m0: {
         margin: 0
+    },
+    m5: {
+        margin: 5
     },
     m10: {
         margin: 10
@@ -34,6 +37,9 @@ const container = StyleSheet.create({
     m40t: {
         marginTop: 40
     },
+    m3b: {
+        marginBottom: 3
+    },
     m5b: {
         marginBottom: 5
     },
@@ -52,6 +58,12 @@ const container = StyleSheet.create({
     m40b: {
         marginBottom: 40
     },
+    m5l: {
+        marginLeft: 5
+    },
+    m10l: {
+        marginLeft: 10
+    },
     m15l: {
         marginLeft: 15
     },
@@ -66,6 +78,9 @@ const container = StyleSheet.create({
     },
     p0: {
         padding: 0
+    },
+    p5: {
+        padding: 5
     },
     p10: {
         padding: 10
@@ -227,4 +242,14 @@ const controls = StyleSheet.create({
     label: StyleSheet.flatten([{color: '#34495e'}, font.size10, font.weight700])
 });
 
-export { container, text, font, controls };
+const heading = StyleSheet.create({
+    h3: StyleSheet.flatten([{
+            color: '#2c3e50'
+        },
+        font.size16,
+        font.weight600,
+        text.textCenter
+    ])
+});
+
+export {container, text, font, controls, heading};

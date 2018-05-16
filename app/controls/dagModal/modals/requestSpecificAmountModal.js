@@ -5,14 +5,14 @@ import {
 } from 'react-native';
 import DagButton from "../../dagButton";
 
-import {container, font, text} from "../../../styles/main";
+import {container, font, heading, text} from "../../../styles/main";
 import DagModal from "../dagModal";
 import DagTextInput from "../../dagTextInput";
 import DagForm, {validators} from "../../dagForm";
 import DagModalManager from "../dagModalManager";
-import DagRequestSpecificAmountDetailsModal from "./dagRequestSpecificAmountDetailsModal";
+import RequestSpecificAmountDetailsModal from "./requestSpecificAmountDetailsModal";
 
-class DagRequestSpecificAmountModal extends Component {
+class RequestSpecificAmountModal extends Component {
     constructor() {
         super();
 
@@ -22,7 +22,7 @@ class DagRequestSpecificAmountModal extends Component {
     }
 
     onGenerateClick() {
-        DagModalManager.show(<DagRequestSpecificAmountDetailsModal
+        DagModalManager.show(<RequestSpecificAmountDetailsModal
             amount={this.state.amount}
             address={this.props.address}
             onCancel={this.props.onCancel} />);
@@ -37,7 +37,7 @@ class DagRequestSpecificAmountModal extends Component {
                         <Image source={require('../../../../img/dag-symbol.png')}
                                style={[styles.dagSymbol, container.m10b]} />
 
-                        <Text style={StyleSheet.flatten([font.size16, font.weight600, styles.header, text.textCenter, container.m20b])}>
+                        <Text style={StyleSheet.flatten([heading.h3, container.m20b])}>
                             Request specific amount
                         </Text>
 
@@ -64,16 +64,13 @@ class DagRequestSpecificAmountModal extends Component {
     }
 }
 
-DagRequestSpecificAmountModal.defaultProps = {
+RequestSpecificAmountModal.defaultProps = {
     onCancel: () => {},
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },
-    header: {
-        color: 'rgb(52, 73, 94)'
     },
     dagSymbol: {
         width: 40,
@@ -93,5 +90,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DagRequestSpecificAmountModal;
+export default RequestSpecificAmountModal;
 

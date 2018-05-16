@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, TouchableOpacity, Dimensions
+    StyleSheet, View, TouchableOpacity, Image
 } from 'react-native';
 import DagModalManager from "./dagModalManager";
+import DagSimpleButton from "../dagSimpleButton";
+import {container} from "../../styles/main";
 
 class DagModal extends Component {
     constructor() {
@@ -12,19 +14,30 @@ class DagModal extends Component {
         DagModalManager.registerModal(this);
     }
 
-    onBackdropClick() {
+    onCloseClick() {
         this.props.onClose();
         DagModalManager.hide();
+    }
+
+    renderCloseButton() {
+        if (!this.props.canClose) {
+            return null;
+        }
+
+        return (<DagSimpleButton onClick={this.onCloseClick.bind(this)} style={styles.closeButton}>
+            <Image source={require('../../../img/close.png')} style={[styles.closeButtonIcon, container.m5]} />
+        </DagSimpleButton>);
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity onPress={this.onBackdropClick.bind(this)}
-                                  disabled={!this.props.backdrop}
+                <TouchableOpacity onPress={this.onCloseClick.bind(this)}
+                                  disabled={!this.props.canClose}
                                   style={StyleSheet.flatten([styles.backdrop, this.props.backdropStyle])}>
                 </TouchableOpacity>
                 <View style={StyleSheet.flatten([styles.modal, this.props.style])}>
+                    {this.renderCloseButton()}
                     {this.props.children}
                 </View>
             </View>
@@ -33,13 +46,23 @@ class DagModal extends Component {
 }
 
 DagModal.defaultProps = {
-    backdrop: true,
+    canClose: true,
     onClose: () => {}
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    closeButton: {
+        position: 'absolute',
+        right: 15,
+        top: 15,
+        zIndex: 10
+    },
+    closeButtonIcon: {
+        width: 16,
+        height: 16
     },
     backdrop: {
         position: 'absolute',
