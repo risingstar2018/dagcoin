@@ -1,11 +1,8 @@
-import { Platform } from 'react-native-web';
-
 import WebFileStorageAdapter from './webFileStorageAdapter';
-import MobileFileStorageAdapter from './mobileFileStorageAdapter';
 
 class FileStorage {
     constructor() {
-        this.adapter = Platform.OS === 'web' ? new WebFileStorageAdapter : new MobileFileStorageAdapter;
+        this.adapter = new WebFileStorageAdapter();
     }
 
     async get(path) {
