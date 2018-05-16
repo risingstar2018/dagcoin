@@ -39,7 +39,13 @@ platform :android do
 
     slack(
       message: "Successfully deployed new Android app. Package is built from " + ENV['BRANCH'],
-      slack_url: ENV['SLACK_URL']
+      slack_url: ENV['SLACK_URL'],
+      payload: {  # Optional, lets you specify any number of your own Slack attachments.
+        "Build Date" => Time.new.to_s,
+        "Built By" => "Travis CI",
+        "Git Branch" => ENV['BRANCH']
+      },
+      default_payloads: [:git_author, :last_git_commit_hash],
     )
   end
 end
