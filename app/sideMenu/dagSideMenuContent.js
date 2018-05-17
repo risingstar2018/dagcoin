@@ -10,6 +10,7 @@ import {
 import { container, text, font } from '../styles/main';
 import DagSimpleButton from "../controls/dagSimpleButton";
 import DagSideMenuManager from "./dagSideMenuManager";
+import DagSvg from "../controls/dagSvg/dagSvg";
 
 class DagSideMenuContent extends Component {
     constructor() {
@@ -19,22 +20,22 @@ class DagSideMenuContent extends Component {
             menuItems: [
                 {
                     component: routes.NewWallet,
-                    icon: require('../../img/add_black.png'),
+                    icon: require('../../svg/add.svg'),
                     text: 'Add new wallet'
                 },
                 {
                     component: routes.Contacts,
-                    icon: require('../../img/contacts.png'),
+                    icon: require('../../svg/contacts.svg'),
                     text: 'Address Book'
                 },
                 {
                     component: routes.BackupSettings,
-                    icon: require('../../img/share.png'),
+                    icon: require('../../svg/share.svg'),
                     text: 'Paired Devices'
                 },
                 {
                     component: routes.GlobalSettings,
-                    icon: require('../../img/settings.png'),
+                    icon: require('../../svg/settings.svg'),
                     text: 'Settings'
                 }
             ]
@@ -51,9 +52,8 @@ class DagSideMenuContent extends Component {
             onClick={this.onLinkClick.bind(this, item.component)}
             style={StyleSheet.flatten([container.m30b, styles.menuItem])}
         >
-            <View style={StyleSheet.flatten([container.m15r, styles.menuIcon])}>
-                <Image style={StyleSheet.flatten([styles.menuIconImage])}
-                       source={item.icon} />
+            <View style={StyleSheet.flatten([container.m15r])}>
+                <DagSvg width={16} height={16} fill={'#000000'} source={item.icon} />
             </View>
             <View style={StyleSheet.flatten([styles.menuItemText])}>
                 <Text style={StyleSheet.flatten([text.textCenter, font.size16, font.weight400])}>{item.text}</Text>
@@ -113,13 +113,6 @@ const styles = StyleSheet.create({
     },
     menuItemText: {
 
-    },
-    menuIcon: {
-
-    },
-    menuIconImage: {
-        width: 16,
-        height: 16
     }
 });
 
