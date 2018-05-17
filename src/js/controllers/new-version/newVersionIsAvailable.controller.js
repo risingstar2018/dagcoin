@@ -11,14 +11,9 @@
     $scope.version = newVersion.version;
 
     $scope.openDownloadLink = function () {
-      let link = '';
+      let link = `https://github.com/dagcoin/dagcoin/releases/tag/v${newVersion.version}`;
       if (navigator && navigator.app) {
-        link = 'https://play.google.com/store/apps/details?id=org.dagcoin';
-        if (newVersion.version.match('t$')) {
-          link += '.testnet';
-        }
-      } else {
-        link = `https://github.com/dagcoin/dagcoin/releases/tag/v${newVersion.version}`;
+        link = 'https://play.google.com/store/apps/details?id=org.dagcoin.client';
       }
       go.openExternalLink(link);
       $modalInstance.close('closed result');
