@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         nwjsAppName: 'DagWallet-tn',
         nwjsFlavor: 'sdk',
         nwjsCFBundleURLName: 'DagWallet-tn action',
-        nwjsCFBundleURLScheme: 'DAGWALLET-TN',
+        nwjsCFBundleURLScheme: 'DagWallet-tn',
 
         // inno setup
         innosetupTemplateMyAppName: 'DagWallet-tn',
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
         nwjsAppName: 'DagWallet',
         nwjsFlavor: 'normal',
         nwjsCFBundleURLName: 'DagWallet action',
-        nwjsCFBundleURLScheme: 'DAGWALLET',
+        nwjsCFBundleURLScheme: 'DagWallet',
 
         // inno setup
         innosetupTemplateMyAppName: 'DagWallet',
@@ -379,7 +379,7 @@ module.exports = function (grunt) {
         macPlist: {
           CFBundleURLTypes: [{
             CFBundleURLName: '<%= process.env.nwjsCFBundleURLName %>',
-            CFBundleURLSchemes: ['<%= process.env.nwjsCFBundleURLSchemes %>']
+            CFBundleURLSchemes: ['<%= process.env.nwjsCFBundleURLScheme %>']
           }],
           LSHasLocalizedDisplayName: 0
           /* CFBundleIconFile: 'nw.icns', */
