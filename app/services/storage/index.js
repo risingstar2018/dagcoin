@@ -138,4 +138,4 @@ class StorageService {
     }
 }
 
-export default this.StorageService;
+export default StorageService;

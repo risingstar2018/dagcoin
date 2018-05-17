@@ -1,5 +1,8 @@
 import fs from 'fs';
 import os from 'os';
+import path from 'path';
+
+import { Platform } from 'react-native';
 
 class WebFileStorageAdapter {
     async get(path) {
@@ -21,7 +24,7 @@ class WebFileStorageAdapter {
     }
 
     getDir() {
-        return os.homedir();
+        return Platform.OS === 'web' ? nw.App.dataPath: os.homedir();
     }
 
     async remove(path) {
@@ -38,11 +41,14 @@ class WebFileStorageAdapter {
         });
     };
 
-    async create(path, value) {
+    async create(file, value) {
         const dir = this.getDir();
 
+        const filePath = path.join(dir, file);
+
         return new Promise((resolve, reject) => {
-            fs.writeFile(`${dir}/${path}`, value, 'utf8', (err) => {
+            fs.writeFile(filePath, value.toString(), 'utf8', (err) => {
+                console.log(err.message);
                 if (err) {
                     return reject(err);
                 }

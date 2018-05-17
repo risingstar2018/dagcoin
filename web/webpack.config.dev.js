@@ -9,7 +9,9 @@ module.exports = {
         historyApiFallback: true
     },
     devtool: 'source-map',
+    //target: "node-webkit", // nw.js
     entry: [
+        'babel-polyfill',
         path.join(__dirname, '../index.web.js')
     ],
     module: {
@@ -47,7 +49,8 @@ module.exports = {
             path.join(__dirname, '..', 'node_modules')
         ],
         alias: {
-            'react-native': 'react-native-web'
+            'react-native': path.join(__dirname, '../app/native-libraries/MockReactNative.js'),
+            'NativeModules': path.join(__dirname, '../app/native-libraries/MockNativeModules.js')
         }
     },
     node: {
