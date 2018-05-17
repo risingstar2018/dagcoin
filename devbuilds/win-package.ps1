@@ -31,6 +31,16 @@ if ($isTestnet) {
   grunt desktop:testnet
   Write-Host "Grunt desktop completed"
   
+  Write-Host "Start changing .exe internal resources"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet-tn\win32\DagWallet-tn.exe --set-version-string "FileDescription" "DaqWallet-tn"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet-tn\win32\DagWallet-tn.exe --set-version-string "ProductName" "DagWallet-tn"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet-tn\win32\DagWallet-tn.exe --set-version-string "LegalCopyright" "Copyright 2018 Dagcoin"
+  
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet-tn\win64\DagWallet-tn.exe --set-version-string "FileDescription" "DaqWallet-tn"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet-tn\win64\DagWallet-tn.exe --set-version-string "ProductName" "DagWallet-tn"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet-tn\win64\DagWallet-tn.exe --set-version-string "LegalCopyright" "Copyright 2018 Dagcoin"
+  Write-Host "Changed .exe resources"
+  
   Write-Host "Started copying node_modules"
   Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\DagWallet-tn\win32\ -recurse -Force
   Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\DagWallet-tn\win64\ -recurse -Force
@@ -43,6 +53,16 @@ if ($isTestnet) {
 } else {
   grunt desktop:live
   Write-Host "Grunt desktop completed"
+  
+  Write-Host "Start changing .exe internal resources"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet\win32\DagWallet.exe --set-version-string "FileDescription" "DaqWallet"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet\win32\DagWallet.exe --set-version-string "ProductName" "DagWallet"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet\win32\DagWallet.exe --set-version-string "LegalCopyright" "Copyright 2018 Dagcoin"
+  
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet\win64\DagWallet.exe --set-version-string "FileDescription" "DaqWallet"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet\win64\DagWallet.exe --set-version-string "ProductName" "DagWallet"
+  devbuilds\rcedit-x64 ..\byteballbuilds\DagWallet\win64\DagWallet.exe --set-version-string "LegalCopyright" "Copyright 2018 Dagcoin"
+  Write-Host "Changed .exe resources"
   
   Write-Host "Started copying node_modules"
   Copy-Item -Path "$($currentProjectDirectory)\node_modules" -Destination ..\byteballbuilds\DagWallet\win32\ -recurse -Force
