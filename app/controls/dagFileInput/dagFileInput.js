@@ -7,6 +7,7 @@ import {container, text} from "../../styles/main";
 import DagSimpleButton from "../dagSimpleButton";
 import DagFormControl from "../dagFormControl";
 import FileWrapper from "../../classes/fileWrapper";
+import FileManager from "./manager/index";
 
 class DagFile extends Component {
     constructor() {
@@ -24,9 +25,8 @@ class DagFile extends Component {
     }
 
     onClick() {
-        const manager = Platform.OS === 'web' ? require('./web/index') : require('./mobile/index');
-        manager.select().then((file) => {
-            this.props.onValueChange(new FileWrapper(file, manager));
+        FileManager.select().then((file) => {
+            this.props.onValueChange(new FileWrapper(file, FileManager));
             this.setState({name: file.name});
         }, () => {
             this.props.onValueChange(null);

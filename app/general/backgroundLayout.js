@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 
 import { container } from '../styles/main';
+import DagSvg from '../controls/dagSvg/dagSvg';
 
 class BackgroundLayout extends Component {
     render() {
@@ -14,8 +15,19 @@ class BackgroundLayout extends Component {
                     {this.props.children}
                 </View>
                 <View style={styles.bgContainer}>
-                    <Image source={require('../../img/bgshape1.png')} style={styles.bgshape1}></Image>
-                    <Image source={require('../../img/bgshape2.png')} style={styles.bgshape2}></Image>
+                    <DagSvg width={250}
+                            height={300}
+                            source={require('../../svg/bgshape1.svg')}
+                            fill={'#f2f2f2'}
+                            style={styles.bgshape1}
+                    />
+
+                    <DagSvg width={200}
+                            height={200}
+                            fill={'#f2f2f2'}
+                            source={require('../../svg/bgshape2.svg')}
+                            style={styles.bgshape2}
+                    />
                 </View>
             </View>
         );
@@ -38,16 +50,12 @@ const styles = StyleSheet.create({
     bgshape2: {
         position: 'absolute',
         top: 0,
-        right: 0,
-        width: 200,
-        height: 200
+        right: 0
     },
     bgshape1: {
         position: 'absolute',
         bottom: 0,
-        left: -150,
-        width: 250,
-        height: 300
+        left: -150
     }
 });
 

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
 import {
-    StyleSheet, View, Image
+    StyleSheet, View
 } from 'react-native';
 import {container} from "../styles/main";
 import DagTextInput from "./dagTextInput";
 import DagSimpleButton from "./dagSimpleButton";
+import DagSvg from "./dagSvg/dagSvg";
 
 class DagPassword extends Component {
     constructor() {
@@ -26,11 +27,15 @@ class DagPassword extends Component {
 
     renderVisibilityIcon() {
         if (this.props.canChangeVisibility) {
-            const icon = this.state.isVisible ? require('../../img/hide_pass.png') : require('../../img/show_pass.png');
+            const icon = this.state.isVisible ? require('../../svg/hide_pass.svg') : require('../../svg/show_pass.svg');
 
             return (<DagSimpleButton style={[styles.visibilityButtonContainer, container.p15]}
                                      onClick={this.onVisibilityToggle.bind(this)}>
-                <Image style={styles.visibilityIcon} source={icon} />
+                <DagSvg width={18}
+                        height={18}
+                        source={icon}
+                        fill={'#cccccc'}
+                />
             </DagSimpleButton>);
         }
         return null;

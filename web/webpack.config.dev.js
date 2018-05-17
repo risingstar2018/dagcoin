@@ -47,7 +47,8 @@ module.exports = {
             path.join(__dirname, '..', 'node_modules')
         ],
         alias: {
-            'react-native': 'react-native-web'
+            'react-native': 'react-native-web',
+            'react-native-svg': 'svgs'
         }
     },
     node: {

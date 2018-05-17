@@ -8,6 +8,7 @@ import {container, font, text} from "../styles/main";
 import DagSimpleButton from "../controls/dagSimpleButton";
 import NavigationManager from "../navigator/navigationManager";
 import DagSideMenuManager from "../sideMenu/dagSideMenuManager";
+import DagSvg from '../controls/dagSvg/dagSvg';
 
 class PageHeader extends Component {
     constructor() {
@@ -36,13 +37,17 @@ class PageHeader extends Component {
 
     renderBackIcon() {
         if (!!this.props.canBack) {
-            const icon = this.props.color === 'red'
-                ? require('../../img/chevron-left-thin-white.png')
-                : require('../../img/chevron-left-thin-red.png');
+            const icon = require('../../svg/chevron-left-thin.svg');
+            const color = this.props.color === 'red' ? '#ffffff' : '#d51f26';
 
             return (
                 <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onBackClick.bind(this)}>
-                    <Image style={styles.backIcon} source={icon} />
+                    <DagSvg width={16}
+                            height={16}
+                            source={icon}
+                            fill={color}
+                            style={styles.backIcon}
+                    />
                 </DagSimpleButton>
             );
         }
@@ -51,13 +56,17 @@ class PageHeader extends Component {
 
     renderMenuIcon() {
         if (!!this.props.hasMenu) {
-            const icon = this.props.color === 'red'
-                ? require('../../img/menu-white.png')
-                : require('../../img/menu-red.png');
+            const icon = require('../../svg/menu.svg');
+            const color = this.props.color === 'red' ? '#ffffff' : '#d51f26';
 
             return (
                 <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onMenuClick.bind(this)}>
-                    <Image style={styles.menuIcon} source={icon} />
+                    <DagSvg width={27}
+                            height={27}
+                            source={icon}
+                            fill={color}
+                            style={styles.menuIcon}
+                    />
                 </DagSimpleButton>
             );
         }
@@ -102,13 +111,9 @@ const styles = StyleSheet.create({
         height: 50
     },
     backIcon: {
-        width: 16,
-        height: 16,
         alignSelf: 'flex-start'
     },
     menuIcon: {
-        width: 27,
-        height: 27,
         alignSelf: 'flex-start'
     },
     textContainer: {

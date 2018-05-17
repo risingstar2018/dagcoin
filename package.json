@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "babel-plugin-react-native-web": "^0.5.4",
+    "buffer": "^5.1.0",
     "lodash": "^4.17.10",
     "qr.js": "0.0.0",
     "react": "^16.0.0",
@@ -39,7 +40,6 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "sjcl": "^1.0.7",
-    "svgs": "^3.2.1",
     "url-loader": "^0.5.7",
     "react-native-crypto": "^2.1.0",
     "dns.js": "^1.0.1",
@@ -50,11 +50,13 @@
     "react-native-level-fs": "^3.0.0",
     "react-native-udp": "^2.1.0",
     "stream-browserify": "^1.0.0",
+    "svgs": "^3.2.1",
     "timers-browserify": "^1.0.1",
     "url": "~0.10.1",
     "react-native-tcp": "^3.2.1",
     "readable-stream": "1.0.33",
     "react-native-randombytes": "^3.0.0"
+    "xmldom": "^0.1.27"
   },
   "devDependencies": {
     "@earnest/eslint-config-es7": "^4.0.3",

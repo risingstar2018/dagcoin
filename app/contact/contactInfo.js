@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import DagSvg from '../controls/dagSvg/dagSvg';
 
 import {
     StyleSheet, Image, View, Text
@@ -51,7 +52,11 @@ class ContactInfo extends Component {
     renderMoreButton() {
         return (
             <DagSimpleButton style={container.p20} onClick={this.onMoreButtonClick.bind(this)}>
-                <Image style={styles.image} source={require('../../img/more_horiz-red.png')} />
+                <DagSvg width={30}
+                        height={30}
+                        source={require('../../svg/more_horiz.svg')}
+                        fill={'#d51f26'}
+                />
             </DagSimpleButton>
         );
     }
@@ -85,10 +90,6 @@ class ContactInfo extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },
-    image: {
-        width: 30,
-        height: 30
     },
     avatarContainer: {
         borderRadius: 80,

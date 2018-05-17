@@ -3,14 +3,14 @@ import Navigator from '../navigator/navigationManager';
 import { routes } from '../navigator/routes';
 
 import {
-    StyleSheet, View, Image, Text
+    StyleSheet, View, Text
 } from 'react-native';
 
 import { container } from "../styles/main";
 
 import Button from "./button";
 import DagButton from "../controls/dagButton";
-
+import DagSvg from "../controls/dagSvg/dagSvg";
 import BasePageLayout from "../general/basePageLayout";
 
 const SLIDES_COUNT = 3;
@@ -49,13 +49,15 @@ class IntroScreen extends Component {
     render() {
         const slides = [
             <View style={styles.slide}>
-                <Image
-                    style={styles.image}
-                    source={require('../../img/safe.png')}
-                    resizeMode="contain"
+                <DagSvg width={150}
+                        height={150}
+                        source={require('../../svg/safe.svg')}
                 />
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
-                    <Image style={styles.imageLogo} source={require('../../img/Dagcoin_logo.png')} />
+                    <DagSvg width={119}
+                            height={22}
+                            source={require('../../svg/dagcoin_logo.svg')}
+                    />
                     <Text>is secure</Text>
                 </View>
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
@@ -73,9 +75,15 @@ class IntroScreen extends Component {
                 </View>
             </View>,
             <View style={styles.slide}>
-                <Image style={StyleSheet.flatten([styles.image])} source={require('../../img/transfer.png')} />
+                <DagSvg width={150}
+                        height={150}
+                        source={require('../../svg/transfer.svg')}
+                />
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
-                    <Image style={styles.imageLogo} source={require('../../img/Dagcoin_logo.png')} />
+                    <DagSvg width={119}
+                            height={22}
+                            source={require('../../svg/dagcoin_logo.svg')}
+                    />
                     <Text>is darn fast.</Text>
                 </View>
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
@@ -93,9 +101,15 @@ class IntroScreen extends Component {
                 </View>
             </View>,
             <View style={styles.slide}>
-                <Image style={styles.image} source={require('../../img/business.png')} />
+                <DagSvg width={150}
+                        height={150}
+                        source={require('../../svg/business.svg')}
+                />
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
-                    <Image style={styles.imageLogo} source={require('../../img/Dagcoin_logo.png')} />
+                    <DagSvg width={119}
+                            height={22}
+                            source={require('../../svg/dagcoin_logo.svg')}
+                    />
                     <Text>is right for you.</Text>
                 </View>
                 <View style={StyleSheet.flatten([styles.textContainer, container.m20t])}>
@@ -147,14 +161,6 @@ const styles = StyleSheet.create({
     skipContainer: {
         flex: 1,
         alignItems: 'flex-end'
-    },
-    image: {
-        width: 150,
-        height: 150
-    },
-    imageLogo: {
-        width: 119,
-        height: 22
     },
     textContainer: {
         marginTop: 5,

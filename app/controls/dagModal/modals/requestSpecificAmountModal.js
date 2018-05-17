@@ -11,6 +11,7 @@ import DagTextInput from "../../dagTextInput";
 import DagForm, {validators} from "../../dagForm";
 import DagModalManager from "../dagModalManager";
 import RequestSpecificAmountDetailsModal from "./requestSpecificAmountDetailsModal";
+import DagSvg from "../../dagSvg/dagSvg";
 
 class RequestSpecificAmountModal extends Component {
     constructor() {
@@ -34,9 +35,12 @@ class RequestSpecificAmountModal extends Component {
                       style={StyleSheet.flatten([container.p30, container.m20t])}>
                 <View style={[styles.container]}>
                     <DagForm>
-                        <Image source={require('../../../../img/dag-symbol.png')}
-                               style={[styles.dagSymbol, container.m10b]} />
-
+                        <DagSvg width={40}
+                                height={40}
+                                source={require('../../../../svg/dag-symbol.svg')}
+                                fill={'#3e4042'}
+                                style={[styles.dagSymbol, container.m10b]}
+                        />
                         <Text style={StyleSheet.flatten([heading.h3, container.m20b])}>
                             Request specific amount
                         </Text>
@@ -47,8 +51,11 @@ class RequestSpecificAmountModal extends Component {
                                       placeholder={'Amount'}
                                       onValueChange={(value) => this.setState({amount: value})}>
                             <View style={styles.dIconContainer}>
-                                <Image source={require('../../../../img/icon-d.png')}
-                                       style={[styles.dIcon]} />
+                                <DagSvg width={15}
+                                        height={15}
+                                        source={require('../../../../svg/dag-symbol.svg')}
+                                        fill={'#bbbbbb'}
+                                />
                             </View>
                         </DagTextInput>
 
@@ -73,8 +80,6 @@ const styles = StyleSheet.create({
         flex: 1
     },
     dagSymbol: {
-        width: 40,
-        height: 40,
         alignSelf: 'center'
     },
     dIconContainer: {
@@ -83,10 +88,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         right: 15,
         justifyContent: 'center'
-    },
-    dIcon: {
-        width: 15,
-        height: 15
     }
 });
 

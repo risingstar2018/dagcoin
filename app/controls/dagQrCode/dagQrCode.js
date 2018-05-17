@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import QRCode from 'react-native-qrcode-svg';
 
 import {
     StyleSheet, Platform, View
@@ -10,11 +11,16 @@ class DagQrCode extends Component {
     }
 
     render() {
-        this.component = (Platform.OS === 'web' ? require('./web/index') : require('./mobile/index')).default;
-
-        return (<View style={this.props.style}>
-            <this.component {...this.props} />
-        </View>);
+        return (
+            <View style={this.props.style}>
+                <QRCode value={this.props.value}
+                        color={this.props.color}
+                        backgroundColor={this.props.backgroundColor}
+                        logo={this.props.logo}
+                        size={this.props.size}
+                />
+            </View>
+        );
     }
 }
 

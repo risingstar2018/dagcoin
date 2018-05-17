@@ -6,6 +6,7 @@ import {
 
 import {container, font, text} from "../../../styles/main";
 import DagSimpleButton from "../../../controls/dagSimpleButton";
+import DagSvg from "../../../controls/dagSvg/dagSvg";
 
 class ContactListItem extends Component {
     constructor() {
@@ -18,12 +19,18 @@ class ContactListItem extends Component {
         if (this.props.contact.isFavorite) {
             return (<DagSimpleButton onClick={() => this.props.onRemoveFavoriteClick(this.props.contact)}
                                    style={container.m20r}>
-                <Image style={styles.starIcon} source={require('../../../../img/star.png')} />
+                <DagSvg width={24}
+                        height={24}
+                        fill={'#ffc153'}
+                        source={require('../../../../svg/star.svg')} />
             </DagSimpleButton>);
         } else {
             return (<DagSimpleButton onClick={() => this.props.onSetFavoriteClick(this.props.contact)}
                                    style={container.m20r}>
-                <Image style={styles.starIcon} source={require('../../../../img/star_border.png')} />
+                <DagSvg width={24}
+                        height={24}
+                        fill={'#ffc153'}
+                        source={require('../../../../svg/star_border.svg')} />
             </DagSimpleButton>);
         }
     }
@@ -61,10 +68,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 3,
         paddingBottom: 3
-    },
-    starIcon: {
-        width: 24,
-        height: 24
     },
     avatarContainer: {
         borderRadius: 40,

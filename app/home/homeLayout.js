@@ -26,10 +26,10 @@ class HomeLayout extends Component {
         this.state = {
             selectedItem: this.props.selectedMenuItem,
             menuItems: [
-                { title: 'My Wallet', component: routes.Wallet, inactiveIcon: require('../../img/wallet-gray.png'), activeIcon: require('../../img/wallet-red.png') },
-                { title: 'Receive', component: routes.Receive, inactiveIcon: require('../../img/download3-gray.png'), activeIcon: require('../../img/download3-red.png') },
-                { title: 'Send', component: routes.Send, inactiveIcon: require('../../img/paperplane-gray.png'), activeIcon: require('../../img/paperplane-red.png') },
-                { title: 'Paired Devices', component: routes.PairedDevices, inactiveIcon: require('../../img/paired_devices-gray.png'), activeIcon: require('../../img/paired_devices-red.png') }
+                { title: 'My Wallet', component: routes.Wallet, icon: require('../../svg/wallet.svg')},
+                { title: 'Receive', component: routes.Receive, icon: require('../../svg/download3.svg')},
+                { title: 'Send', component: routes.Send, icon: require('../../svg/paperplane.svg')},
+                { title: 'Paired Devices', component: routes.PairedDevices, icon: require('../../svg/paired_devices.svg')}
             ]
         }
     }

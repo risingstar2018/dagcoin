@@ -16,6 +16,7 @@ import FavoriteList from "./favoriteList";
 import {connect} from "react-redux";
 import {container} from "../../styles/main";
 import { addFavoriteContact, removeFavoriteContact } from '../../actions/contactsActions';
+import DagSvg from '../../controls/dagSvg/dagSvg';
 
 class Contacts extends Component {
     constructor() {
@@ -79,7 +80,12 @@ class Contacts extends Component {
     renderNewContactButton() {
         return (
             <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onNewContactClick.bind(this)}>
-                <Image source={require('../../../img/add.png')} style={styles.addIcon} />
+                <DagSvg width={16}
+                        height={16}
+                        source={require('../../../svg/add.svg')}
+                        fill={'#ffffff'}
+                        style={styles.addIcon}
+                />
             </DagSimpleButton>
         );
     }
@@ -107,8 +113,6 @@ const styles = StyleSheet.create({
     },
     bookImage: {},
     addIcon: {
-        width: 16,
-        height: 16,
         alignSelf: 'flex-end'
     }
 });

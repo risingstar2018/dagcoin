@@ -14,6 +14,7 @@ import RequestSpecificAmountModal from "../controls/dagModal/modals/requestSpeci
 import DagToastManager, {POSITION} from "../controls/dagToast/dagToastManager";
 import HomeLayout, {MENU_ITEMS} from "./homeLayout";
 import PageHeader from "../general/pageHeader";
+import DagSvg from '../controls/dagSvg/dagSvg';
 
 class Receive extends Component {
     constructor() {
@@ -42,7 +43,11 @@ class Receive extends Component {
 
         return (
             <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onShareButtonClick.bind(this)}>
-                <Image source={require('../../img/share-white.png')} style={styles.shareIcon} />
+                <DagSvg width={20}
+                        height={20}
+                        source={require('../../svg/share.svg')}
+                        fill={'#ffffff'}
+                />
             </DagSimpleButton>
         );
     }
@@ -73,10 +78,6 @@ class Receive extends Component {
 }
 
 const styles = StyleSheet.create({
-    shareIcon: {
-        width: 20,
-        height: 20
-    }
 });
 
 function mapStateToProps(state) {

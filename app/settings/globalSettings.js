@@ -56,7 +56,7 @@ class GlobalSettings extends Component {
                 onClick: () => {
                     Navigator.to(this, routes.SystemSettings);
                 },
-                icon: require('../../img/website.png')
+                icon: require('../../svg/website.svg')
             },
             {
                 title: 'Security',
@@ -64,7 +64,7 @@ class GlobalSettings extends Component {
                 onClick: () => {
                     Navigator.to(this, routes.SecuritySettings);
                 },
-                icon: require('../../img/shield.png')
+                icon: require('../../svg/shield.svg')
             },
         ];
 
@@ -75,7 +75,7 @@ class GlobalSettings extends Component {
                 onClick: () => {
                     Navigator.to(this, routes.AboutDeviceSettings);
                 },
-                icon: require('../../img/responsive.png')
+                icon: require('../../svg/responsive.svg')
             },
             {
                 title: 'About Dagcoin',
@@ -83,7 +83,7 @@ class GlobalSettings extends Component {
                 onClick: () => {
                     Navigator.to(this, routes.AboutDagcoinSettings);
                 },
-                icon: require('../../img/certificate.png')
+                icon: require('../../svg/certificate.svg')
             },
         ];
 

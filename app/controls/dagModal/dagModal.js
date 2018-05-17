@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, TouchableOpacity, Image
+    StyleSheet, View, TouchableOpacity
 } from 'react-native';
 import DagModalManager from "./dagModalManager";
 import DagSimpleButton from "../dagSimpleButton";
 import {container} from "../../styles/main";
+import DagSvg from "../dagSvg/dagSvg";
 
 class DagModal extends Component {
     constructor() {
@@ -20,12 +21,16 @@ class DagModal extends Component {
     }
 
     renderCloseButton() {
-        if (!this.props.canClose) {
+        if (!this.props.canClose || this.props.hideCloseButton) {
             return null;
         }
 
         return (<DagSimpleButton onClick={this.onCloseClick.bind(this)} style={styles.closeButton}>
-            <Image source={require('../../../img/close.png')} style={[styles.closeButtonIcon, container.m5]} />
+            <DagSvg width={24}
+                    height={24}
+                    source={require('../../../svg/close.svg')}
+                    fill={'#a5b2bf'}
+            />
         </DagSimpleButton>);
     }
 
@@ -46,6 +51,7 @@ class DagModal extends Component {
 }
 
 DagModal.defaultProps = {
+    hideCloseButton: false,
     canClose: true,
     onClose: () => {}
 };
@@ -59,10 +65,6 @@ const styles = StyleSheet.create({
         right: 15,
         top: 15,
         zIndex: 10
-    },
-    closeButtonIcon: {
-        width: 16,
-        height: 16
     },
     backdrop: {
         position: 'absolute',

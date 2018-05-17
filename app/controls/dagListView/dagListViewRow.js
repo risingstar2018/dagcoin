@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Image } from 'react-native';
 
 import {container} from '../../styles/main';
 import DagSimpleButton from "../dagSimpleButton";
+import DagSvg from "../dagSvg/dagSvg";
 
 const styles = StyleSheet.create({
     container: {
@@ -47,7 +48,11 @@ const RenderChildren = (props) => {
 const RenderIcon = (props) => {
     if (props.icon) {
         return (
-            <Image source={props.icon} style={StyleSheet.flatten([styles.photo, container.m10])}/>
+            <DagSvg width={24}
+                    height={24}
+                    source={props.icon}
+                    style={container.m10}
+            />
         );
     }
 
@@ -57,7 +62,11 @@ const RenderIcon = (props) => {
 const RenderChevron = (props) => {
     if (props.onClick) {
         return (
-            <Image source={require('../../../img/chevron-thin-right.png')} style={styles.chevron}/>
+            <DagSvg width={10}
+                    height={10}
+                    fill={'#4e4e4e'}
+                    source={require('../../../svg/chevron-thin-right.svg')}
+            />
         );
     }
 

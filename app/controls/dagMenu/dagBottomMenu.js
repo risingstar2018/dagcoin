@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, Text, Image, Dimensions, View
+    StyleSheet, Text, Dimensions, View
 } from 'react-native';
 import BottomToolbar from 'react-native-bottom-toolbar';
+import DagSvg from '../dagSvg/dagSvg';
 
 class DagBottomMenu extends Component {
     constructor() {
@@ -18,15 +19,18 @@ class DagBottomMenu extends Component {
                 key={'menu-item-' + index}
                 title="Wallet"
                 onPress={this.props.onMenuChange.bind(this)}
-                IconElement={this.renderMenuItemContent(this.props.selectedItem === index, item.title, item.inactiveIcon, item.activeIcon)}
+                IconElement={this.renderMenuItemContent(this.props.selectedItem === index, item.title, item.icon)}
             />
         );
     }
 
-    renderMenuItemContent(isActive, title, inactiveIcon, activeIcon) {
-        const icon = isActive ? activeIcon || inactiveIcon : inactiveIcon;
+    renderMenuItemContent(isActive, title, icon) {
         return (<View style={StyleSheet.flatten([styles.tab, isActive ? styles.activeTab : null])}>
-            <Image style={styles.menuIcon} source={icon} />
+            <DagSvg width={20}
+                    height={20}
+                    source={icon}
+                    fill={isActive ? '#d51f26' : '#cecece'}
+            />
             <Text style={StyleSheet.flatten([styles.actionTitle, isActive ? styles.activeActionTitle : null])}>{title}</Text>
         </View>);
     }
@@ -75,10 +79,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: (Dimensions.get('window').width - 20) / 4,
         alignItems: 'center'
-    },
-    menuIcon: {
-        width: 20,
-        height: 20
     },
     activeActionTitle: {
         color: '#d51f26'
