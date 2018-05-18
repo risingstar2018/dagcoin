@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, Text, Platform
+    StyleSheet, Text, Platform, View
 } from 'react-native';
 
 import {container, font, text} from "../../../styles/main";
@@ -11,13 +11,15 @@ import DagPassword from "../../../controls/dagPassword";
 import DagButton from "../../../controls/dagButton";
 import DagForm from "../../../controls/dagForm";
 import DagFileInput from "../../../controls/dagFileInput/dagFileInput";
+import SotorageService from "../../../services/storage/index";
 
 class RecoverBackup extends Component {
     constructor() {
         super();
 
         this.state = {
-            password: ''
+            password: '',
+            result: ''
         }
     }
 
@@ -38,12 +40,26 @@ class RecoverBackup extends Component {
         this.setState({
             file: file
         });
+
+        const ss = new SotorageService();
+
+        ss.set('testprop', 'testvalue').then(() => {
+            ss.get('testprop').then((result) => {
+                this.setState({result: result});
+            }, (err1) => {
+                this.setState({result: 'err read'});
+            });
+        }, (err2) => {
+            this.setState({result: 'err write: '});
+        });
     }
 
     render() {
         return (
             <BasePageLayout style={StyleSheet.flatten([container.p40, container.m40t])}>
                 <DagForm style={container.m5b}>
+                    <View><Text>{this.state.result}</Text></View>
+
                     <DagFileInput onValueChange={this.onFileSelected.bind(this)}
                                   validators={[validators.required()]}
                                   value={this.state.file}

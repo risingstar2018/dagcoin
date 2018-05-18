@@ -1,12 +1,17 @@
-import fs from 'fs';
-import os from 'os';
+class FileStorageAdapter {
+    desktopApp = require('core/desktop_app.js');
 
-class WebFileStorageAdapter {
-    async get(path) {
-        const dir = this.getDir();
+    constructor() {
+        this.fs = window.require('fs');
+    }
 
+    getAppDataDir() {
+        return this.desktopApp.getAppDataDir();
+    }
+
+    read(path) {
         return new Promise((resolve, reject) => {
-            fs.readFile(`${dir}/${path}`, (err, data) => {
+            this.fs.readFile(path, "utf8", (err, data) => {
                 if (err) {
                     return reject(err);
                 }
@@ -16,19 +21,9 @@ class WebFileStorageAdapter {
         });
     }
 
-    set(path, value) {
-        return this.create(path, value);
-    }
-
-    getDir() {
-        return os.homedir();
-    }
-
-    async remove(path) {
-        const dir = this.getDir();
-
+    remove(path) {
         return new Promise((resolve, reject) => {
-            fs.unlink(`${dir}/${path}`, (err) => {
+            this.fs.unlink(path, (err) => {
                 if (err) {
                     return reject(err);
                 }
@@ -38,11 +33,9 @@ class WebFileStorageAdapter {
         });
     };
 
-    async create(path, value) {
-        const dir = this.getDir();
-
+    write(path, value) {
         return new Promise((resolve, reject) => {
-            fs.writeFile(`${dir}/${path}`, value, 'utf8', (err) => {
+            this.fs.writeFile(path, value, 'utf8', (err) => {
                 if (err) {
                     return reject(err);
                 }
@@ -53,4 +46,4 @@ class WebFileStorageAdapter {
     }
 }
 
-export default WebFileStorageAdapter;
+export default FileStorageAdapter;
