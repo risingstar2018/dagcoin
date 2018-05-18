@@ -20,7 +20,7 @@ class StorageService {
                 resolve(this.settings);
             }
 
-            this.storage.read(`${path}/${StorageService.fileName}`).then((result) => {
+            this.storage.read(`${this.path}/${this.fileName}`).then((result) => {
                 const json = JSON.parse(result);
                 this.settings = json;
                 resolve(this.settings);
@@ -35,7 +35,7 @@ class StorageService {
             this.getSettings().then((settings) => {
                 settings[key] = value;
 
-                this.storage.write(JSON.stringify(settings))
+                this.storage.write(`${this.path}/${this.fileName}`, JSON.stringify(settings))
                     .then(resolve, reject);
             });
         }));
@@ -43,7 +43,7 @@ class StorageService {
 
     get(key) {
         return new Promise(((resolve, reject) => {
-            this.storage.read(`${path}/${StorageService.fileName}`).then((result) => {
+            this.storage.read(`${this.path}/${this.fileName}`).then((result) => {
                 const json = JSON.parse(result);
                 resolve(json[key]);
             }, reject);
@@ -54,7 +54,7 @@ class StorageService {
         return new Promise(((resolve, reject) => {
             this.getSettings().then((settings) => {
                 delete settings[key];
-                this.storage.write(JSON.stringify(settings))
+                this.storage.write(`${this.path}/${this.fileName}`, JSON.stringify(settings))
                     .then(resolve, reject);
             });
         }));

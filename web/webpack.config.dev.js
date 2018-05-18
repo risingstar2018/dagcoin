@@ -50,7 +50,8 @@ module.exports = {
             'react-native': 'react-native-web'
         }
     },
-    node: {
-        fs: 'empty'
+    externals:{
+        fs: "commonjs fs",
+        path: "commonjs path"
     }
 };
