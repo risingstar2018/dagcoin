@@ -102,7 +102,7 @@
     </ul>
 
     <h4 translate>Transaction status</h4>
-    <ul class="transaction-status-list">
+    <ul class="transaction-status-list" style="margin-bottom: 5px;">
       <li ng-if="btx.time" class="first-row">
         <svg-icon title="hourglass_empty"></svg-icon>
         <span class="tx-status-list-title"><strong translate>Status</strong>:</span>
@@ -124,8 +124,9 @@
         </div>
       </li>
     </ul>
-    <div class="make-new-payment" ng-if="showMakeNewPayment">
-      <button ng-click="makeNewPayment()" class="btn btn_confirmed-full" translate>Make new payment</button>
-    </div>
+    <button class="btn btn_red tiny" ng-if="showMakeNewPayment" ng-click="makeNewPayment()">
+      <svg-icon name="make-new-payment"></svg-icon>
+      <span translate>Make new payment</span>
+    </button>
   </div>
 </div>
