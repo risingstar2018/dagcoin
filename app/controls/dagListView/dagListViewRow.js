@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import {View, Text, StyleSheet, Image } from 'react-native';
 
 import {container} from '../../styles/main';
@@ -85,18 +85,20 @@ const RenderDescription = (props) => {
     return null;
 };
 
-const DagListViewRow = (props) => {
-    return (<DagSimpleButton style={styles.container} disabled={!props.onClick} onClick={() => props.onClick && props.onClick()}>
-        {RenderIcon(props)}
-        <View style={StyleSheet.flatten([styles.contentContainer, container.m15l])}>
-            <Text style={StyleSheet.flatten([styles.title])}>
-                {props.title}
-            </Text>
-            {RenderDescription(props)}
-        </View>
-        {RenderChildren(props)}
-        {RenderChevron(props)}
-    </DagSimpleButton>);
-};
+class DagListViewRow extends PureComponent {
+    render() {
+        return (<DagSimpleButton style={styles.container} disabled={!this.props.onClick} onClick={() => this.props.onClick && this.props.onClick()}>
+            {RenderIcon(this.props)}
+            <View style={StyleSheet.flatten([styles.contentContainer, container.m15l])}>
+                <Text style={StyleSheet.flatten([styles.title])}>
+                    {this.props.title}
+                </Text>
+                {RenderDescription(this.props)}
+            </View>
+            {RenderChildren(this.props)}
+            {RenderChevron(this.props)}
+        </DagSimpleButton>);
+    }
+}
 
 export default DagListViewRow;

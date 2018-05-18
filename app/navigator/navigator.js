@@ -87,6 +87,10 @@ export default class Navigator extends React.Component {
     }
 
     linkTo(context, viewId, navParams) {
+        if (this.state.currentView === viewId) {
+            return;
+        }
+
         this.navParams = Object.assign({}, defaultNavParams, navParams);
         this.processNavParams(this.navParams, ACTIONS.LINK_TO);
 
@@ -96,7 +100,7 @@ export default class Navigator extends React.Component {
         const {fx} = this.getViewObject(viewId);
 
         this.setState({currentView: viewId, fxValue: new Animated.Value(fx.fromValue)});
-    };
+    }
 
     getViewObject(viewId) {
         const obj = getView(viewId);
@@ -107,7 +111,7 @@ export default class Navigator extends React.Component {
             // example: views={{ contactUs: ContactUs }}
             return {component: obj, fx: DEFAULT_FX}
         }
-    };
+    }
 
     render() {
         let currentFx = DEFAULT_FX;

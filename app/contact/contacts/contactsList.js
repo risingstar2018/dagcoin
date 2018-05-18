@@ -11,6 +11,7 @@ import ContactListItem from "./components/contactListItem";
 import ContactListGroup from "./components/contactListGroup";
 
 import {container} from "../../styles/main";
+import {connect} from "react-redux";
 
 class ContactsList extends Component {
     constructor() {
@@ -54,7 +55,6 @@ class ContactsList extends Component {
 }
 
 ContactsList.defaultProps = {
-    contacts: [],
     onContactClick: (contact) => {},
     onSetFavoriteClick: (contact) => {},
     onRemoveFavoriteClick: (contact) => {},
@@ -66,4 +66,10 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ContactsList;
+function mapStateToProps(state) {
+    return {
+        contacts: state.contacts
+    }
+}
+
+export default ContactsListWrapper = connect(mapStateToProps)(ContactsList);

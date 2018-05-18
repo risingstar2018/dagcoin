@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import React, {Component} from 'react';
+import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 
 import {
     StyleSheet
@@ -16,16 +16,13 @@ class DagTabView extends Component {
         };
 
         this.onIndexChange = this.onIndexChange.bind(this);
-        this.getNavigationState = this.getNavigationState.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
     }
 
-    onIndexChange(index){
-        this.setState({ index });
+    onIndexChange(index) {
+        this.setState({index});
         this.props.onTabChange(index);
     }
-
-    renderScene = ({ route }) => this.props.tabs[route.key].view;
 
     renderHeader(props) {
         const tabBarStyles = getTabBarStyles(this.props.color);
@@ -34,12 +31,13 @@ class DagTabView extends Component {
             <TabBar {...props}
                     style={tabBarStyles.tabBar}
                     labelStyle={StyleSheet.flatten([tabBarStyles.tabBarLabel, font.size12, font.weight700])}
-                    indicatorStyle={StyleSheet.flatten([tabBarStyles.tabBarIndicator])} />
+                    indicatorStyle={StyleSheet.flatten([tabBarStyles.tabBarIndicator])}/>
         );
     }
 
-    getNavigationState() {
+    componentWillMount() {
         let routes = [];
+        let scene = {};
 
         if (!this.props.tabs) {
             this.props.tabs = [];
@@ -48,23 +46,24 @@ class DagTabView extends Component {
         this.props.tabs.forEach((tab, i) => {
             routes.push({
                 key: i.toString(),
-                title: tab.title
+                title: tab.title,
+                view: tab.view
             });
+
+            scene[i.toString()] = () => tab.view;
         });
 
-        return {
-            index: this.state.index,
-            routes: routes
-        };
+        this.setState({
+            routes: routes,
+            scene: SceneMap(scene)
+        });
     }
 
     render() {
-        const navigationState = this.getNavigationState();
-
         return (
             <TabViewAnimated
-                navigationState={navigationState}
-                renderScene={this.renderScene}
+                navigationState={this.state}
+                renderScene={this.state.scene}
                 renderHeader={this.renderHeader}
                 onIndexChange={this.onIndexChange}
             />
@@ -75,12 +74,9 @@ class DagTabView extends Component {
 DagTabView.defaultProps = {
     color: 'white',
     tabs: [],
-    onTabChange: (index) => {}
+    onTabChange: (index) => {
+    }
 };
-
-const styles = StyleSheet.create({
-
-});
 
 function getTabBarStyles(color) {
     if (color === 'red') {

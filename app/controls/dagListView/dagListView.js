@@ -1,21 +1,16 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
-    StyleSheet, View, ListView, Text
+    StyleSheet, View, FlatList, Text
 } from 'react-native';
 import DagListViewRow from "./dagListViewRow";
 import {container, font} from "../../styles/main";
 
-class DagListView extends Component {
+class DagListView extends PureComponent {
     constructor() {
         super();
 
         this.renderTitle = this.renderTitle.bind(this);
-    }
-
-    getDataSource(options) {
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        return ds.cloneWithRows(options);
     }
 
     renderTitle() {
@@ -28,19 +23,27 @@ class DagListView extends Component {
         return null;
     }
 
-    render() {
-        let ds = this.getDataSource(this.props.options);
+    renderSeparator(index, total) {
+        if (index === total - 1) {
+            return null;
+        }
 
+        return (<View style={styles.separator} />);
+    }
+
+    render() {
         return (
             <View style={this.props.style}>
                 {this.renderTitle()}
-                <ListView style={StyleSheet.flatten([styles.container])}
-                    dataSource={ds}
-                    renderRow={(data) => <DagListViewRow {...data} />}
-                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
-                />
-            </View>
-            );
+                <View style={StyleSheet.flatten([styles.container])}>
+                    {this.props.options.map((o, i) => {
+                        return (<View key={i}>
+                            <DagListViewRow {...o} />
+                            {this.renderSeparator(i, this.props.options.length)}
+                        </View>);
+                    })}
+                </View>
+            </View>);
     }
 }
 
