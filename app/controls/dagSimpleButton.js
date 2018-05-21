@@ -12,6 +12,7 @@ class DagSimpleButton extends Component {
     render() {
         return (
             <TouchableOpacity onPress={this.props.onClick}
+                              onLongPress={this.props.onLongPress}
                               style={StyleSheet.flatten([this.props.style])}
                               disabled={this.props.disabled}>
                 {this.props.children}

@@ -33,7 +33,9 @@ export default {
         walletType: '',
         focusedWallet: {
             address: 'HCKESQ5UM4JQH5IA2FH27ZNBMUSCZ62W',
+            balance: 3.4874833,
             name: 'Wallet #1'
-        }
+        },
+        visibility: true
     }
 };

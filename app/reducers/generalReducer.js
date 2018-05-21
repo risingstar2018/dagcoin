@@ -7,6 +7,8 @@ export default (state = initialState.general, action) => {
             return Object.assign(state, { walletType: action.walletType });
         case types.CHANGE_DEVICE_NAME:
             return Object.assign(state, { deviceName: action.deviceName });
+        case types.TOGGLE_VISIBILITY:
+            return Object.assign(state, { visibility: !state.visibility});
         default:
             return state;
     }

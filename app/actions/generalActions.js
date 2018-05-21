@@ -11,3 +11,9 @@ export const changeDeviceName = (deviceName) => {
         dispatch({type: types.CHANGE_DEVICE_NAME, deviceName: deviceName});
     };
 };
+
+export const toggleVisibility = () => {
+    return dispatch => {
+        dispatch({type: types.TOGGLE_VISIBILITY});
+    };
+};
