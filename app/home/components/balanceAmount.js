@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {
-    StyleSheet, View, Text, TouchableWithoutFeedback, Image, Platform
+    StyleSheet, View, Text, TouchableWithoutFeedback, Image, Platform, Dimensions
 } from 'react-native';
 import { toggleVisibility } from '../../actions/generalActions';
 import {connect} from "react-redux";
@@ -12,7 +12,7 @@ class BalanceAmount extends Component {
     walletAmount() {
         if (this.props.visibility)
             return (
-                <View>
+                <View style={styles.mainContainer}>
                     <View style={styles.balanceContainer}>
                         <Image source={require('../../../img/icon-d-home.png')} style={styles.dagIcon}/>
                         <Text style={styles.bigNum}>{this.props.balance.toString().split(".")[0]}</Text>
@@ -24,7 +24,7 @@ class BalanceAmount extends Component {
             );
         else
             return (
-                <View>
+                <View style={styles.mainContainer}>
                     <View style={styles.circle}>
                         <Image source={require('../../../img/hidden.png')} style={styles.icon}/>
                     </View>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         width:'100%',
         top: 50,
         position: 'absolute',
-        zIndex: 1
+        zIndex: 100
     },
     icon: {
         width: 80,
@@ -86,8 +86,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        width:'100%',
-        left: 50
+        left: Platform.OS === 'android' ? '35%' : '25%',
+        // width:'100%',
+        // left: (Dimensions.get('window').width / 2) - '500%'
+    },
+    mainContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     dagIcon: {
         width: 30,
