@@ -11,7 +11,6 @@ import {container} from "../styles/main";
 import Receive from "./receive";
 import {routes} from '../navigator/routes';
 import Navigator from '../navigator/navigationManager';
-import BalanceAmount from './components/balanceAmount';
 
 const MENU_ITEMS = {
     WALLET: 0,
@@ -43,7 +42,6 @@ class HomeLayout extends Component {
     render() {
         return (
             <GeneralLayout style={StyleSheet.flatten([styles.container])}>
-                <BalanceAmount />
                 <BackgroundLayout style={StyleSheet.flatten([styles.container, container.p0])}>
                     {this.props.children}
                     <DagBottomMenu
