@@ -1,10 +1,8 @@
 import React from 'react'
-import {Animated, View, Platform} from 'react-native'
+import {View, Platform} from 'react-native'
 import {getView} from './routes';
 import NavigationManager from './navigationManager';
 import DagSideMenuManager from "../sideMenu/dagSideMenuManager";
-
-DEFAULT_FX = {prop: 'opacity', fromValue: 1, toValue: 1};
 
 const defaultNavParams = {
     permanent: false,
@@ -25,8 +23,7 @@ export default class Navigator extends React.Component {
 
         this.state = {
             currentView: null,
-            view: null,
-            fxValue: new Animated.Value(0)
+            view: null
         };
 
         this.init();
@@ -48,16 +45,8 @@ export default class Navigator extends React.Component {
         this.lastState = null;
         this.stateHistory = [this.lastState];
         this.navParamsHistory = [this.navParams];
-        const {component} = this.getViewObject(view);
+        const component = getView(view);
         this.currentComp = component;
-    }
-
-    startViewAnimation(fx) {
-        Animated.timing(this.state.fxValue, fx).start();
-    }
-
-    componentDidMount() {
-        this.startViewAnimation(DEFAULT_FX);
     }
 
     canBack() {
@@ -87,41 +76,29 @@ export default class Navigator extends React.Component {
     }
 
     linkTo(context, viewId, navParams) {
+        if (this.state.currentView === viewId) {
+            return;
+        }
+
         this.navParams = Object.assign({}, defaultNavParams, navParams);
         this.processNavParams(this.navParams, ACTIONS.LINK_TO);
 
         this.history.push(viewId);
         this.stateHistory.push(context.state);
         this.navParamsHistory.push(this.navParams);
-        const {fx} = this.getViewObject(viewId);
 
-        this.setState({currentView: viewId, fxValue: new Animated.Value(fx.fromValue)});
-    };
-
-    getViewObject(viewId) {
-        const obj = getView(viewId);
-        if (typeof obj === 'object') {
-            // example: views={{ personDetails: { component: PersonDetails, fx: fxObject } }}
-            return {component: obj.component, fx: obj.fx}
-        } else {
-            // example: views={{ contactUs: ContactUs }}
-            return {component: obj, fx: DEFAULT_FX}
-        }
+        this.setState({currentView: viewId});
     };
 
     render() {
-        let currentFx = DEFAULT_FX;
         if (this.state.currentView) {
-            const {component, fx} = this.getViewObject(this.state.currentView);
-            this.currentComp = component;
-            currentFx = fx;
-            this.startViewAnimation(fx);
+            this.currentComp = getView(this.state.currentView);
         }
 
         return (
-            <Animated.View style={{flex: 1, [currentFx.prop]: this.state.fxValue}}>
+            <View style={{flex: 1}}>
                 <this.currentComp navParams={this.navParams}/>
-            </Animated.View>
+            </View>
         )
     }
 }

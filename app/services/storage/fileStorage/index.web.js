@@ -1,12 +1,44 @@
+function getAppName() {
+    return require('../../../../package.json').name
+}
+
+function getAppsDataDir(){
+    switch(window.nw.process.platform){
+        case 'win32': return window.nw.process.env.LOCALAPPDATA + "/" + getAppName();
+        case 'linux': return window.nw.process.env.HOME + '/.config' + "/" + getAppName();
+        case 'darwin': return window.nw.process.env.HOME + '/Library/Application Support' + "/" + getAppName();
+        default: throw Error("unknown platform "+window.nw.process.platform);
+    }
+}
+
 class FileStorageAdapter {
-    desktopApp = require('core/desktop_app.js');
+    fs = window.require('fs');
+    desktopApp = null;
 
     constructor() {
-        this.fs = window.require('fs');
+        //this.desktopApp = require('core/desktop_app.js');
     }
 
     getAppDataDir() {
-        return this.desktopApp.getAppDataDir();
+        return getAppsDataDir(); //this.desktopApp.getAppDataDir();
+    }
+
+    prepareDir(path) {
+        return new Promise(((resolve, reject) => {
+            this.fs.exists(path, (exists) => {
+                if (exists) {
+                    resolve();
+                } else {
+                    fs.mkdir(path, (err) => {
+                        if (!err) {
+                            resolve();
+                        } else {
+                            reject(err);
+                        }
+                    });
+                }
+            })
+        }));
     }
 
     read(path) {
@@ -41,9 +73,39 @@ class FileStorageAdapter {
                 }
 
                 return resolve();
-            })
+            });
         });
     }
 }
 
-export default FileStorageAdapter;
+class BrowserFileStorageAdapter {
+    getAppDataDir() {
+        return '';
+    }
+
+    prepareDir(path) {
+        return new Promise(((resolve, reject) => {
+            resolve();
+        }));
+    }
+
+    read(path) {
+        return new Promise((resolve, reject) => {
+            return resolve("{}");
+        });
+    }
+
+    remove(path) {
+        return new Promise((resolve, reject) => {
+            return resolve();
+        });
+    };
+
+    write(path, value) {
+        return new Promise((resolve, reject) => {
+            return resolve();
+        });
+    }
+}
+
+export default window && window.nw ? FileStorageAdapter : BrowserFileStorageAdapter;
