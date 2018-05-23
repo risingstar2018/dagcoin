@@ -27,7 +27,8 @@ class BaseStorage {
                     this.hash = JSON.parse(result);
                     resolve(this.hash);
                 }, () => {
-                    resolve({});
+                    this.hash = {};
+                    resolve(this.hash);
                 });
             }, reject);
         });

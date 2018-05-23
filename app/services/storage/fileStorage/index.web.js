@@ -1,26 +1,13 @@
-function getAppName() {
-    return require('../../../../package.json').name
-}
-
-function getAppsDataDir(){
-    switch(window.nw.process.platform){
-        case 'win32': return window.nw.process.env.LOCALAPPDATA + "/" + getAppName();
-        case 'linux': return window.nw.process.env.HOME + '/.config' + "/" + getAppName();
-        case 'darwin': return window.nw.process.env.HOME + '/Library/Application Support' + "/" + getAppName();
-        default: throw Error("unknown platform "+window.nw.process.platform);
-    }
-}
-
 class FileStorageAdapter {
     fs = window.require('fs');
     desktopApp = null;
 
     constructor() {
-        //this.desktopApp = require('core/desktop_app.js');
+        this.desktopApp = window.require('core/desktop_app.js');
     }
 
     getAppDataDir() {
-        return getAppsDataDir(); //this.desktopApp.getAppDataDir();
+        return this.desktopApp.getAppDataDir();
     }
 
     prepareDir(path) {
@@ -79,6 +66,8 @@ class FileStorageAdapter {
 }
 
 class BrowserFileStorageAdapter {
+    cache = "{}";
+
     getAppDataDir() {
         return '';
     }
@@ -91,18 +80,20 @@ class BrowserFileStorageAdapter {
 
     read(path) {
         return new Promise((resolve, reject) => {
-            return resolve("{}");
+            return resolve(this.cache);
         });
     }
 
     remove(path) {
         return new Promise((resolve, reject) => {
+            this.cache = "{}";
             return resolve();
         });
     };
 
     write(path, value) {
         return new Promise((resolve, reject) => {
+            this.cache = value;
             return resolve();
         });
     }
