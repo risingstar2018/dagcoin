@@ -1,10 +1,6 @@
 class FileStorageAdapter {
     fs = window.require('fs');
-    desktopApp = null;
-
-    constructor() {
-        this.desktopApp = window.require('core/desktop_app.js');
-    }
+    desktopApp = window.require('core/desktop_app.js');
 
     getAppDataDir() {
         return this.desktopApp.getAppDataDir();
@@ -16,7 +12,7 @@ class FileStorageAdapter {
                 if (exists) {
                     resolve();
                 } else {
-                    fs.mkdir(path, (err) => {
+                    this.fs.mkdir(path, (err) => {
                         if (!err) {
                             resolve();
                         } else {
