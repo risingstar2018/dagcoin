@@ -1,12 +1,13 @@
+import {getAppDataDir} from 'core/desktop_app';
+
 class FileStorageAdapter {
-    desktopApp = require('core/desktop_app.js');
 
     constructor() {
         this.fs = window.require('fs');
     }
 
     getAppDataDir() {
-        return this.desktopApp.getAppDataDir();
+        return getAppDataDir();
     }
 
     read(path) {

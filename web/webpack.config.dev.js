@@ -13,6 +13,7 @@ module.exports = {
         path.join(__dirname, '../index.web.js')
     ],
     module: {
+        noParse: /node_modules\/core\//,
         loaders: [
             {
                 test: /\.js$/,
