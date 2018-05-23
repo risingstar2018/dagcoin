@@ -1,5 +1,5 @@
 {
-  "name": "dagcoin desktop",
+  "name": "dagcoin-desktop",
   "main": "index.html",
   "window": {
     "title": "Dagcoin wallet",
