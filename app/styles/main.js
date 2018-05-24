@@ -202,6 +202,18 @@ const text = StyleSheet.create({
     },
     textBrand: {
         color: '#d52026'
+    },
+    textWarning: {
+        color: '#ffa500'
+    },
+    textGold: {
+        color: '#ffc153'
+    },
+    textRed: {
+        color: '#d51f26'
+    },
+    textGreen: {
+        color: '#48be18'
     }
 });
 
@@ -244,8 +256,8 @@ const controls = StyleSheet.create({
 
 const heading = StyleSheet.create({
     h3: StyleSheet.flatten([{
-            color: '#2c3e50'
-        },
+        color: '#2c3e50'
+    },
         font.size16,
         font.weight600,
         text.textCenter

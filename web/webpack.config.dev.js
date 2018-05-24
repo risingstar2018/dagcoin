@@ -53,6 +53,10 @@ module.exports = {
     },
     externals:{
         fs: "commonjs fs",
-        path: "commonjs path"
+        path: "commonjs path",
+        sqlite3: 'commonjs sqlite3',
+        mysql: 'commonjs mysql',
+        ws: 'commonjs ws',
+        socks: 'commonjs socks'
     }
 };
