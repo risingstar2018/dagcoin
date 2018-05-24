@@ -14,22 +14,22 @@ class BalanceAmount extends Component {
             return (
                 <View style={styles.mainContainer}>
                     <View style={styles.balanceContainer}>
-                        <Image source={require('../../../img/icon-d-home.png')} style={styles.dagIcon}/>
+                        <Image source={require('../../../img/dag-home.png')} style={styles.dagIcon}/>
                         <Text style={styles.bigNum}>{this.props.balance.toString().split(".")[0]}</Text>
                         <Text style={styles.smallNum}>{this.props.balance.toString().split(".")[1]}</Text>
                     </View>
-                    <Text style={styles.invisibleText}>Wallet Balance</Text>
-                    <Text style={styles.textHint}>TAP AND HOLD TO HIDE IT</Text>
+                    <Text style={styles.walletText}>Wallet balance</Text>
+                    <Text style={styles.textHint}>TAP AND HOLD BALANCE TO HIDE IT</Text>
                 </View>
             );
         else
             return (
                 <View style={styles.mainContainer}>
                     <View style={styles.circle}>
-                        <Image source={require('../../../img/hidden.png')} style={styles.icon}/>
+                        <Image source={require('../../../img/eye.png')} style={styles.icon}/>
                     </View>
-                    <Text style={styles.invisibleText}>Balance Hidden</Text>
-                    <Text style={styles.textHint}>TAP AND HOLD TO MAKE VISIBLE</Text>
+                    <Text style={styles.balanceHiddenText}>Balance Hidden</Text>
+                    <Text style={styles.textHint}>TAP AND HOLD BALANCE TO MAKE VISIBLE</Text>
                 </View>
             );
     }
@@ -60,33 +60,46 @@ const styles = StyleSheet.create({
         zIndex: 100
     },
     icon: {
-        width: 80,
-        height: 80,
-        alignSelf: 'flex-end',
-        margin: 20
+        resizeMode: 'contain',
+        height: 40,
+        width: 40,
     },
     circle: {
         backgroundColor: '#fff',
         borderRadius: 60,
-        alignSelf: 'center',
+        height: 70,
+        width: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10
     },
-    invisibleText: {
-        marginTop: 15,
+    walletText: {
+        marginTop: 5,
         alignSelf: 'center',
         color: '#fff',
-        fontWeight: '900'
+        fontWeight: '500',
+        fontFamily: 'sans-serif',
+        fontSize: 10,
+        opacity: 0.6
+    },
+    balanceHiddenText: {
+        marginTop: 5,
+        alignSelf: 'center',
+        color: '#fff',
+        fontWeight: '500'
     },
     textHint: {
         fontWeight: '100',
-        marginTop: 20,
+        marginTop: 10,
         color: '#fff',
         alignSelf: 'center',
+        opacity: 0.6
     },
     balanceContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        left: Platform.OS === 'android' ? '35%' : '25%',
+        // left: Platform.OS === 'android' ? '35%' : '25%',
         // width:'100%',
         // left: (Dimensions.get('window').width / 2) - '500%'
     },
@@ -95,28 +108,41 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     dagIcon: {
-        width: 30,
+        textAlign: 'center',
+        width: 50,
         height: 30,
+        resizeMode: 'contain',
+        left: 15,
+        bottom: 5
     },
     bigNum: {
+        textAlign: 'center',
+        width: 50,
         fontSize: 70,
-        marginLeft: 15,
+        marginLeft: 7,
         color: '#fff',
         textShadowColor: '#a8191e',
         textShadowOffset: {width: 2, height: 2},
         textShadowRadius: 2,
-        fontWeight: '900'
+        fontWeight: 'bold',
+        fontFamily: Platform.OS === 'android' ? 'Roboto' : 'Arial'
     },
     smallNum: {
+        textAlign: 'center',
+        width: 50,
+        overflowWrap: 'normal',
         alignSelf: 'flex-start',
         fontSize: 35,
-        paddingTop: 5,
-        marginLeft: 10,
+        paddingTop: 2,
+        marginLeft: 2,
         color: '#fff',
         textShadowColor: '#a8191e',
         textShadowOffset: {width: 2, height: 2},
         textShadowRadius: 2,
-        fontWeight: '900'
+        fontWeight: 'bold',
+        fontFamily: Platform.OS === 'android' ? 'Roboto' : 'Arial',
+        fontStyle: 'italic'
+        // fontFamily: 'Roboto, Helvetica Neue, Helvetica, Arial, sans-serif'
     }
 });
 
