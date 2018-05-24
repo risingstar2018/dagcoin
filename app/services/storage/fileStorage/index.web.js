@@ -1,12 +1,27 @@
 class FileStorageAdapter {
-    desktopApp = require('core/desktop_app.js');
-
-    constructor() {
-        this.fs = window.require('fs');
-    }
+    fs = window.require('fs');
+    desktopApp = require('core/desktop_app');
 
     getAppDataDir() {
         return this.desktopApp.getAppDataDir();
+    }
+
+    prepareDir(path) {
+        return new Promise(((resolve, reject) => {
+            this.fs.exists(path, (exists) => {
+                if (exists) {
+                    resolve();
+                } else {
+                    this.fs.mkdir(path, (err) => {
+                        if (!err) {
+                            resolve();
+                        } else {
+                            reject(err);
+                        }
+                    });
+                }
+            })
+        }));
     }
 
     read(path) {
@@ -41,9 +56,43 @@ class FileStorageAdapter {
                 }
 
                 return resolve();
-            })
+            });
         });
     }
 }
 
-export default FileStorageAdapter;
+class BrowserFileStorageAdapter {
+    cache = "{}";
+
+    getAppDataDir() {
+        return '';
+    }
+
+    prepareDir(path) {
+        return new Promise(((resolve, reject) => {
+            resolve();
+        }));
+    }
+
+    read(path) {
+        return new Promise((resolve, reject) => {
+            return resolve(this.cache);
+        });
+    }
+
+    remove(path) {
+        return new Promise((resolve, reject) => {
+            this.cache = "{}";
+            return resolve();
+        });
+    };
+
+    write(path, value) {
+        return new Promise((resolve, reject) => {
+            this.cache = value;
+            return resolve();
+        });
+    }
+}
+
+export default window && window.nw ? FileStorageAdapter : BrowserFileStorageAdapter;

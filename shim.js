@@ -16,7 +16,6 @@ if (window && window.nw) {
     process.platform = window.nw.process.platform;
     process.mainModule = window.nw.process.mainModule;
     process.mainModule.paths = process.mainModule.paths.map(x => x.replaceAll('\\','/'));
-
 }
 
 // global.location = global.location || { port: 80 }
