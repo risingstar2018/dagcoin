@@ -29,7 +29,7 @@ class BalanceAmount extends Component {
                         <Image source={require('../../../img/eye.png')} style={styles.icon}/>
                     </View>
                     <Text style={styles.balanceHiddenText}>Balance Hidden</Text>
-                    <Text style={styles.textHint}>TAP AND HOLD BALANCE TO MAKE VISIBLE</Text>
+                    <Text style={styles.textHint}>TAP AND HOLD BALANCE TO MAKE IT VISIBLE</Text>
                 </View>
             );
     }
@@ -40,7 +40,7 @@ class BalanceAmount extends Component {
 
     render() {
         return (
-            <DagSimpleButton onLongPress={this.onVisibilityChange.bind(this)} style={styles.banner} >
+            <DagSimpleButton activeOpacity={1} onLongPress={this.onVisibilityChange.bind(this)} style={styles.banner} >
                 {this.walletAmount()}
             </DagSimpleButton>
         );
@@ -99,21 +99,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        // left: Platform.OS === 'android' ? '35%' : '25%',
-        // width:'100%',
-        // left: (Dimensions.get('window').width / 2) - '500%'
+        width:'100%'
     },
     mainContainer: {
         justifyContent: 'center',
         alignItems: 'center',
+        width: '100%'
     },
     dagIcon: {
-        textAlign: 'center',
         width: 50,
         height: 30,
         resizeMode: 'contain',
         left: 15,
-        bottom: 5
+        bottom: Platform.OS === 'android' ? -4 : 5
     },
     bigNum: {
         textAlign: 'center',
@@ -129,11 +127,11 @@ const styles = StyleSheet.create({
     },
     smallNum: {
         textAlign: 'center',
-        width: 50,
-        overflowWrap: 'normal',
+        width: Platform.OS === 'android' ? 143 : 117,
+        marginRight: Platform.OS === 'android' ? -85  : -66,
         alignSelf: 'flex-start',
         fontSize: 35,
-        paddingTop: 2,
+        paddingTop: Platform.OS === 'android' ? 11 : 2,
         marginLeft: 2,
         color: '#fff',
         textShadowColor: '#a8191e',
@@ -142,7 +140,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: Platform.OS === 'android' ? 'Roboto' : 'Arial',
         fontStyle: 'italic'
-        // fontFamily: 'Roboto, Helvetica Neue, Helvetica, Arial, sans-serif'
     }
 });
 
