@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const DIRECTORY = path.join(__dirname);
+console.log('directory: ' + DIRECTORY);
 
 module.exports = {
     devServer: {
@@ -13,7 +14,7 @@ module.exports = {
         path.join(__dirname, '../index.web.js')
     ],
     module: {
-        noParse: /desktop_app/,
+        noParse: /node_modules\/core\/$/,
         loaders: [
             {
                 test: /\.js$/,
@@ -51,6 +52,7 @@ module.exports = {
             'react-native': 'react-native-web'
         }
     },
+    target: 'web',
     externals:{
         fs: "commonjs fs",
         path: "commonjs path",
