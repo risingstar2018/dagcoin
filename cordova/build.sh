@@ -17,7 +17,7 @@ checkOK() {
 
 # Configs
 BUILDDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
+PROJECT="$BUILDDIR/project-$1"
 
 CURRENT_OS=$1
 UNIVERSAL_LINK_HOST=false
@@ -28,7 +28,7 @@ then
  echo "Build.sh WP8|ANDROID|IOS"
 fi
 
-CLEAR=false
+CLEAR=true
 DBGJS=false
 
 if [[ $2 == "--clear" || $3 == "--clear" ]]
@@ -72,16 +72,18 @@ echo "Project directory is $PROJECT"
 
 
 if [ ! -d $PROJECT ]; then
+  mkdir $PROJECT
 	cd $BUILDDIR
 	echo -e "${OpenColor}${Green}* Creating project... ${CloseColor}"
-	cordova create ../../byteballbuilds/project-$1 ${ANDROID_PACKAGE} Dagcoin
+	cordova create project-$1 ${ANDROID_PACKAGE} Dagcoin
 	checkOK
 
 	cd $PROJECT
 
 	if [ $CURRENT_OS == "ANDROID" ]; then
 		echo -e "${OpenColor}${Green}* Adding Android platform... ${CloseColor}"
-		cordova platforms add android
+    cordova platform rm android
+    cordova platform add android
 		checkOK
 	fi
 
@@ -193,6 +195,7 @@ fi
 
 echo -e "${OpenColor}${Green}* Copying files...${CloseColor}"
 cd $BUILDDIR/..
+mkdir $PROJECT/www
 cp -af public/** $PROJECT/www
 checkOK
 
@@ -206,7 +209,7 @@ checkOK
 
 cd $BUILDDIR
 
-echo -e "${Green}* Changing confix.xml...${CloseColor}"
+echo -e "${Green}* Changing config.xml...${CloseColor}"
 cp config.xml $PROJECT/config.xml
 sed "s/@UNIVERSAL_LINK_HOST/${UNIVERSAL_LINK_HOST}/g;s/@APPLICATION_NAME/${APPLICATION_NAME}/g;s/@ANDROID_PACKAGE/${ANDROID_PACKAGE}/g" < config.xml > $PROJECT/config.xml
 checkOK
@@ -251,6 +254,11 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 
 	cp -R android/res/* $PROJECT/platforms/android/res
 	checkOK
+  
+  cd $PROJECT
+  
+  echo -e "Starting cordova build"
+  cordova build android
 fi
 
 if [ $CURRENT_OS == "IOS" ]; then

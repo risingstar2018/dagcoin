@@ -1,20 +1,48 @@
 language: node_js
 node_js:
   - '8.10.0'
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-26.0.2
+    - android-26
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - sleep 3
 before_install:
   - npm install -g bower
   - npm install -g grunt-cli
   - npm install -g codecov
+  - npm install -g cordova@~7.1.0
+  - npm install -g cordova-android@~6.3.0
+  - npm install -g phonegap
+  - cd $HOME
+  - wget https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip -O $HOME/android-sdk.tgz
+  - mkdir android
+  - unzip android-sdk.tgz -d android/sdk
+  - wget https://dl.google.com/android/repository/platform-tools_r27.0.1-linux.zip -O $HOME/android-platform-tools.tgz
+  - unzip android-platform-tools.tgz -d android/sdk
+  - wget https://dl.google.com/android/repository/build-tools_r26.0.2-linux.zip -O $HOME/android-build-tools.tgz
+  - unzip android-build-tools.tgz -d android/sdk
+  - mkdir android/sdk/build-tools/
+  - mkdir android/sdk/build-tools/26.0.2/
+  - mv android/sdk/android-8.1.0 android/sdk/build-tools/26.0.2
+  - cd ${TRAVIS_BUILD_DIR}
 install:
+  - gem install fastlane
   - gem install sass
   - bower install
   - npm install
+  - bundle install
+  - export ANDROID_HOME=$HOME/android/sdk
+  - export PATH=${PATH}:${ANDROID_HOME}/:${ANDROID_HOME}/tools/:${ANDROID_HOME}/tools/bin/:${ANDROID_HOME}/platform-tools/:${ANDROID_HOME}/build-tools/:${ANDROID_HOME}/build-tools/26.0.2/
+  - yes | sdkmanager --licenses
 script:
   - npm test
+  - fastlane beta
 #  - codecov --token=f33366c3-862d-4bdf-b956-c9ace7bb9739
 cache:
   directories:

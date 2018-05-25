@@ -9,7 +9,7 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-setup_travis
+# setup_travis
 
 default_platform(:android)
 
@@ -18,24 +18,34 @@ platform :android do
   desc "Submit a new Build with testnet configuration to hockey app"
   lane :beta do
 
+    sh "chmod 775 ../devbuilds/testnetify.sh"
+    sh "../devbuilds/testnetify.sh"
+    
     sh "../cordova/build.sh ANDROID dagcoin --dbgjs testnet"
 
-    sh "cd ../../byteballbuilds/project-ANDROID && cordova build android"
+    # Dir.chdir("../cordova/project-ANDROID") do
+     # sh "cordova build android"
+    # end
 
-
-    apk_location = sh('cd ../../byteballbuilds/project-ANDROID/platforms/android/build/outputs/apk/ && echo "$(pwd)/android-debug.apk\c"')
+    apk_location = sh('cd ../cordova/project-ANDROID/platforms/android/build/outputs/apk/ && echo "$(pwd)/android-debug.apk\c"')
     # This '\c' at the end of the line needed to remove the last character (new line) from the echo result. Path is not recognizable by hokey plugin with it.
 
     hockey(
       api_token: ENV['HOCKEY_TOKEN'],
-      notes: "Package is built from " + sh("git rev-parse --abbrev-ref HEAD"),
+      notes: "Package is built from " + ENV['BRANCH'],
       release_type: "beta",
       apk: "#{apk_location.to_s}"
     )
 
     slack(
-      message: "Successfully deployed new Android app. Package is built from " + sh("git rev-parse --abbrev-ref HEAD"),
-      slack_url: ENV['SLACK_URL']
+      message: "Successfully deployed new Android app. Package is built from " + ENV['BRANCH'],
+      slack_url: ENV['SLACK_URL'],
+      payload: {  # Optional, lets you specify any number of your own Slack attachments.
+        "Build Date" => Time.new.to_s,
+        "Built By" => "Travis CI",
+        "Git Branch" => ENV['BRANCH']
+      },
+      default_payloads: [:git_author, :last_git_commit_hash],
     )
   end
 end
