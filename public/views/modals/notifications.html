@@ -16,7 +16,10 @@
       </div>
     </div>
     <div ng-show="notifications.length > 0" class="notification-buttons">
-      <button ng-click="clearNotifications()" class="btn btn_confirmed-full" translate>Clear notifications</button>
+      <button ng-click="clearNotifications()" class="btn btn_red tiny">
+        <svg-icon name="delete"></svg-icon>
+        <span translate>Clear notifications</span>
+      </button>
     </div>
     <div ng-show="notifications.length <= 0" class="no-notifications-container">
       <p translate>There are no notifications</p>
