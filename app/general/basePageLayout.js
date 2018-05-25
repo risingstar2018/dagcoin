@@ -9,7 +9,7 @@ import { container } from "../styles/main";
 class BasePageLayout extends Component {
     render() {
         return (
-            <ScrollView style={StyleSheet.flatten([container.p40, styles.container, this.props.style])}>
+            <ScrollView keyboardShouldPersistTaps='handled' style={StyleSheet.flatten([container.p40, styles.container, this.props.style])}>
                 {this.props.children}
             </ScrollView>
         );

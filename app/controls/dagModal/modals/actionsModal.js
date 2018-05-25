@@ -12,7 +12,7 @@ import DagSimpleButton from "../../dagSimpleButton";
 class ActionsModal extends Component {
     render() {
         return (
-            <DagModal style={styles.modal}>
+            <DagModal style={styles.modal} hideCloseButton={true}>
                 <View style={StyleSheet.flatten([styles.container, container.p15])}>
                     {this.props.actions.map((a, i) => {
                         return (
