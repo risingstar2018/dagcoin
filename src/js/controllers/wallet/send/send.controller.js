@@ -522,7 +522,7 @@
      */
     vm.submitForm = function () {
       if ($scope.index.arrBalances.length === 0) {
-        vm.setSendError(gettextCatalog('no balances yet'));
+        vm.setSendError(gettextCatalog.getString('no balances yet'));
         return console.log('send payment: no balances yet');
       }
       const fc = profileService.focusedClient;
