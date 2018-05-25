@@ -76,7 +76,7 @@
         </div>
       </li>
 
-      <li class="line-b p20" ng-show="info.isCordova">
+      <li class="line-b p20" ng-if="info.isCordova">
         <button class="btn btn_red"
                 ng-click="info.sendAddrs()"
                 ng-disabled="info.loading">
