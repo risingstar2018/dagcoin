@@ -5,8 +5,9 @@ import {
 } from 'react-native';
 import DagButton from "../../dagButton";
 
-import { container, font, text } from "../../../styles/main";
+import {button, container, font, text} from "../../../styles/main";
 import DagModal from "../dagModal";
+import DagSimpleButton from "../../dagSimpleButton";
 
 class ChangeWalletTypeModal extends Component {
     constructor() {
@@ -36,12 +37,11 @@ class ChangeWalletTypeModal extends Component {
 
                     <View style={StyleSheet.flatten([container.m15l, container.m15r, container.m20t])}>
                         <DagButton text={'Change it'.toUpperCase()}
-                                   textStyle={StyleSheet.flatten([font.size16])}
                                    onClick={this.onChangeClick.bind(this)}/>
-                        <DagButton style={StyleSheet.flatten([container.noBorder, styles.cancelButton])}
-                                  textStyle={StyleSheet.flatten([text.textRed, font.size16])}
-                                  text={'Cancel'.toUpperCase()}
-                                  onClick={this.onCancelClick.bind(this)}/>
+                        <DagSimpleButton style={StyleSheet.flatten([container.noBorder, container.p15, styles.cancelButton])}
+                                         onClick={this.onCancelClick.bind(this)}>
+                            <Text style={StyleSheet.flatten([text.textRed, button.text])}>{'Cancel'.toUpperCase()}</Text>
+                        </DagSimpleButton>
                     </View>
                 </View>
             </DagModal>

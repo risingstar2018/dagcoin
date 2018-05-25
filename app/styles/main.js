@@ -34,6 +34,9 @@ const container = StyleSheet.create({
     m20t: {
         marginTop: 20
     },
+    m30t: {
+        marginTop: 30
+    },
     m40t: {
         marginTop: 40
     },
@@ -96,6 +99,9 @@ const container = StyleSheet.create({
     },
     p40: {
         padding: 40
+    },
+    p50: {
+        padding: 50
     },
     p10t: {
         paddingTop: 10
@@ -221,6 +227,9 @@ const font = StyleSheet.create({
     size16: {
         fontSize: 16
     },
+    size22: {
+        fontSize: 22
+    },
     size24: {
         fontSize: 24
     },
@@ -252,4 +261,12 @@ const heading = StyleSheet.create({
     ])
 });
 
-export {container, text, font, controls, heading};
+const button = StyleSheet.create({
+    text: StyleSheet.flatten([
+        font.weight600,
+        font.size16,
+        text.textCenter
+    ])
+});
+
+export {container, text, font, controls, heading, button};

@@ -55,7 +55,6 @@ class RequestSpecificAmountModal extends Component {
                         <DagButton text={'Generate qr code'.toUpperCase()}
                                    type={'submit'}
                                    style={container.m20t}
-                                   textStyle={font.size16}
                                    onClick={this.onGenerateClick.bind(this)} />
                     </DagForm>
                 </View>

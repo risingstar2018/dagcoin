@@ -26,7 +26,7 @@ class BackupSettings extends Component {
 
         return (
             <GeneralLayout style={StyleSheet.flatten([styles.container, this.props.style])}>
-                <PageHeader canBack={true} title={'Backup'.toUpperCase()}></PageHeader>
+                <PageHeader canBack={true} title={'Backup'.toUpperCase()} />
                 <DagTabView tabs={tabs}/>
             </GeneralLayout>
         );

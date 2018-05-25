@@ -6,6 +6,7 @@ import {
 import BasePageLayout from "../../../general/basePageLayout";
 import {container, font, text} from "../../../styles/main";
 import DagButton from "../../../controls/dagButton";
+import DagSimpleButton from "../../../controls/dagSimpleButton";
 
 class BackupSeed extends Component {
     constructor() {
@@ -74,10 +75,9 @@ class BackupSeed extends Component {
                 </View>
 
                 <View>
-                    <DagButton onClick={this.onDeleteWordsClick.bind(this)}
-                               style={StyleSheet.flatten([container.transparent, container.noBorder, container.p0])}>
+                    <DagSimpleButton onClick={this.onDeleteWordsClick.bind(this)}>
                         <Text style={StyleSheet.flatten([text.textRed, font.size11, text.textCenter, font.weight600])}>{'Delete words'.toUpperCase()}</Text>
-                    </DagButton>
+                    </DagSimpleButton>
                 </View>
             </View>);
         }
@@ -97,9 +97,9 @@ class BackupSeed extends Component {
         return (
             <View>
                 <View style={container.m15b}>
-                    <DagButton onClick={this.onMnemonicToggle.bind(this)} style={StyleSheet.flatten([container.p10, container.noBorder, container.transparent, styles.button])}>
+                    <DagSimpleButton onClick={this.onMnemonicToggle.bind(this)} style={StyleSheet.flatten([container.p10, styles.button])}>
                         <Text style={StyleSheet.flatten([styles.buttonText, font.size11])}>{buttonText.toUpperCase()}</Text>
-                    </DagButton>
+                    </DagSimpleButton>
                 </View>
 
                 {this.renderMnemonic()}

@@ -5,13 +5,23 @@ import {
 } from 'react-native';
 
 import {connect} from "react-redux";
-import BasePageLayout from "../general/basePageLayout";
-import HomeLayout, {MENU_ITEMS} from "./homeLayout";
-import PageHeader from "../general/pageHeader";
+import BasePageLayout from "../../general/basePageLayout";
+import HomeLayout, {MENU_ITEMS} from "../homeLayout";
+import PageHeader from "../../general/pageHeader";
+import BuyDags from "./buyDags";
+import WalletInfo from "./walletInfo";
 
 class Wallet extends Component {
     constructor() {
         super();
+    }
+
+    renderContent() {
+        if (this.props.transactions.length === 0) {
+            return (<BuyDags/>);
+        }
+
+        return (<WalletInfo/>);
     }
 
     render() {
@@ -20,9 +30,7 @@ class Wallet extends Component {
                 <PageHeader color={'red'}
                             hasMenu={true}
                             title={this.props.walletName.toUpperCase()} />
-                <BasePageLayout>
-                    <Text>Wallet</Text>
-                </BasePageLayout>
+                {this.renderContent()}
             </HomeLayout>
         );
     }
@@ -35,7 +43,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         address: state.general.focusedWallet.address,
-        walletName: state.general.focusedWallet.name
+        walletName: state.general.focusedWallet.name,
+        transactions: state.general.focusedWallet.transactions
     }
 }
 

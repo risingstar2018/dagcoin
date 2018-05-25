@@ -6,12 +6,13 @@ import {
     StyleSheet, View, Image, Text
 } from 'react-native';
 
-import { container } from "../styles/main";
+import {button, container} from "../styles/main";
 
 import Button from "./button";
 import DagButton from "../controls/dagButton";
 
 import BasePageLayout from "../general/basePageLayout";
+import DagSimpleButton from "../controls/dagSimpleButton";
 
 const SLIDES_COUNT = 3;
 
@@ -66,10 +67,10 @@ class IntroScreen extends Component {
                 </View>
                 {this.getButtons()}
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
-                    <DagButton onClick={this.changeSlide.bind(this, 1)}
-                               style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
-                               textStyle={styles.nextButtonText}
-                               text={"GOT IT"} />
+                    <DagSimpleButton onClick={this.changeSlide.bind(this, 1)}
+                                     style={StyleSheet.flatten([container.p15, styles.nextButton])}>
+                        <Text style={[styles.nextButtonText, button.text]}>GOT IT</Text>
+                    </DagSimpleButton>
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -86,10 +87,10 @@ class IntroScreen extends Component {
                 </View>
                 {this.getButtons()}
                 <View style={StyleSheet.flatten([container.m40t, container.m40t])}>
-                    <DagButton onClick={this.changeSlide.bind(this, 2)}
-                               style={StyleSheet.flatten([container.transparent, container.noBorder, styles.nextButton])}
-                               textStyle={styles.nextButtonText}
-                               text={"AWESOME"} />
+                    <DagSimpleButton onClick={this.changeSlide.bind(this, 2)}
+                               style={StyleSheet.flatten([container.p15, styles.nextButton])}>
+                        <Text style={[styles.nextButtonText, button.text]}>AWESOME</Text>
+                    </DagSimpleButton>
                 </View>
             </View>,
             <View style={styles.slide}>
@@ -110,14 +111,15 @@ class IntroScreen extends Component {
                 </View>
             </View>
         ];
+
         return (
             <BasePageLayout>
                 <View style={StyleSheet.flatten([styles.container])}>
                     <View style={StyleSheet.flatten([styles.skipContainer, container.m20b])}>
-                        <DagButton onClick={this.navigate.bind(this)}
-                                   style={StyleSheet.flatten([container.transparent, container.noBorder, styles.skipButton])}
-                                   textStyle={styles.skipButtonText}
-                                   text={"SKIP"} />
+                        <DagSimpleButton onClick={this.navigate.bind(this)}
+                                   style={StyleSheet.flatten([styles.skipButton, container.p15])}>
+                            <Text style={[styles.skipButtonText, button.text]}>SKIP</Text>
+                        </DagSimpleButton>
                     </View>
                     <View style={container.m40t}>
                         {slides[this.state.activeSlide]}
@@ -172,8 +174,7 @@ const styles = StyleSheet.create({
         width: 200,
     },
     nextButton: {
-        width: 250,
-        shadowRadius: 0
+        width: 250
     },
     nextButtonText: {
         color: "#a8191e"

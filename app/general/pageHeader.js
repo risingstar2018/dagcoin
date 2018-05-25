@@ -57,7 +57,7 @@ class PageHeader extends Component {
 
             return (
                 <DagSimpleButton style={StyleSheet.flatten([container.p20])} onClick={this.onMenuClick.bind(this)}>
-                    <Image style={styles.menuIcon} source={icon} />
+                    <Image alt="Preferences" title="Preferences" style={styles.menuIcon} source={icon} />
                 </DagSimpleButton>
             );
         }
@@ -75,7 +75,9 @@ class PageHeader extends Component {
                     {this.renderBackIcon()}
                     {this.renderMenuIcon()}
                 </View>
-                <View style={StyleSheet.flatten([styles.textContainer])}>
+                <View style={StyleSheet.flatten([styles.textContainer])}
+                      alt={this.props.title}
+                      title={this.props.title}>
                     <Text style={StyleSheet.flatten([
                         font.size16,
                         font.weight600,

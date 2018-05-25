@@ -7,6 +7,7 @@ import DagButton from "../../dagButton";
 
 import { container } from "../../../styles/main";
 import DagModal from "../dagModal";
+import DagSimpleButton from "../../dagSimpleButton";
 
 class ActionsModal extends Component {
     render() {
@@ -15,10 +16,9 @@ class ActionsModal extends Component {
                 <View style={StyleSheet.flatten([styles.container, container.p15])}>
                     {this.props.actions.map((a, i) => {
                         return (
-                            <DagButton key={i} onClick={a.action}
-                                       style={StyleSheet.flatten([container.m0, container.p0, container.noBorder, container.transparent])}>
+                            <DagSimpleButton key={i} onClick={a.action}>
                                 <Text style={container.p10}>{a.label}</Text>
-                            </DagButton>
+                            </DagSimpleButton>
                         );
                     })}
                 </View>

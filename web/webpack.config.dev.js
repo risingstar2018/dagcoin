@@ -47,7 +47,8 @@ module.exports = {
             path.join(__dirname, '..', 'node_modules')
         ],
         alias: {
-            'react-native': 'react-native-web'
+            'react-native': 'react-native-web',
+            'react-native-linear-gradient': 'react-native-web-linear-gradient'
         }
     },
     externals:{

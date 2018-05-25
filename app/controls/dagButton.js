@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {
     StyleSheet, TouchableOpacity, View, Text
 } from 'react-native';
-import {container} from "../styles/main";
+import {container, button, font} from "../styles/main";
 
 class DagButton extends Component {
     constructor() {
@@ -16,37 +17,44 @@ class DagButton extends Component {
         if (this.props.children) {
             return this.props.children;
         } else {
-            return (<Text style={StyleSheet.flatten([styles.text, this.props.textStyle])}>
+            return (<Text style={StyleSheet.flatten([styles.text, button.text, this.props.textStyle])}>
                 { this.props.text }
                 </Text>);
         }
     }
 
     render() {
+        const gradientColors = this.props.disabled
+            ? ['#ccc', '#ccc']
+            : ['#d51f26', '#a8191e'];
+
         return (
-            <TouchableOpacity onPress={() => this.props.onClick()}
-                              style={StyleSheet.flatten([
-                                  styles.container,
-                                  container.p15,
-                                  this.props.disabled ? styles.disabled : styles.enabled,
-                                  this.props.style])}
-                              disabled={this.props.disabled}>
-                {this.renderContent()}
-            </TouchableOpacity>
+            <LinearGradient
+                style={StyleSheet.flatten([
+                    styles.container,
+                    container.p15,
+                    this.props.disabled ? styles.disabled : styles.enabled,
+                    this.props.style])}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 1 }}
+                colors={gradientColors} >
+                <TouchableOpacity style={container.flex}
+                                  onPress={() => this.props.onClick()}
+                                  disabled={this.props.disabled}>
+                        {this.renderContent()}
+                </TouchableOpacity>
+            </LinearGradient>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#a8191e',
         borderRadius: 5,
         shadowRadius: 2
     },
     text: {
-        textAlign: 'center',
-        color: '#fff',
-        fontWeight: '600'
+        color: '#fff'
     },
     enabled: {
         shadowColor: '#d51f26',
@@ -54,7 +62,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
     },
     disabled: {
-        backgroundColor: '#ccc',
         shadowRadius: 0
     }
 });

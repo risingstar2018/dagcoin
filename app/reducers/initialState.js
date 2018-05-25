@@ -33,7 +33,8 @@ export default {
         walletType: '',
         focusedWallet: {
             address: 'HCKESQ5UM4JQH5IA2FH27ZNBMUSCZ62W',
-            name: 'Wallet #1'
+            name: 'Wallet #1',
+            transactions: []
         }
     }
 };

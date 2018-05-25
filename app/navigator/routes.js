@@ -13,7 +13,7 @@ import SystemSettings from "../settings/system/systemSettings";
 import BackupSettings from "../settings/security/backup/backupSettings";
 import SplashWalletType from "../splash/splashWalletType";
 import ConfirmationScreen from "../intro/confirmationScreen";
-import Wallet from "../home/wallet";
+import Wallet from "../home/wallet/wallet";
 import Receive from "../home/receive";
 import Send from "../home/send";
 import PairedDevices from "../home/pairedDevices";

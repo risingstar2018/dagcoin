@@ -7,8 +7,9 @@ import DagForm, {validators} from "../../dagForm";
 import DagPassword from "../../dagPassword";
 import DagButton from "../../dagButton";
 
-import { container, font, text } from "../../../styles/main";
+import {button, container, font, text} from "../../../styles/main";
 import DagModal from "../dagModal";
+import DagSimpleButton from "../../dagSimpleButton";
 
 class SetPasswordModal extends Component {
     constructor() {
@@ -83,10 +84,10 @@ class SetPasswordModal extends Component {
                                      onValueChange={this.onPasswordChange.bind(this)}/>
 
                         <View style={styles.buttonsContainer}>
-                            <DagButton style={StyleSheet.flatten([styles.button, styles.cancelButton, container.m15r])}
-                                       textStyle={styles.cancelButtonText}
-                                       text={'CANCEL'}
-                                       onClick={this.onCancelClick.bind(this)} />
+                            <DagSimpleButton style={StyleSheet.flatten([styles.button, styles.cancelButton, container.m15r])}
+                                             onClick={this.onCancelClick.bind(this)}>
+                                <Text style={[styles.cancelButtonText, button.text]}>CANCEL</Text>
+                            </DagSimpleButton>
                             <DagButton style={StyleSheet.flatten([styles.button, container.m15l])}
                                        text={'SET'}
                                        type={'submit'}
