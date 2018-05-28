@@ -13,6 +13,7 @@ src/js/**/*.css
 
 # cordova
 cordova/project/*
+cordova/project-ANDROID/*
 cordova/*.keystore
 
 # node-webkit
