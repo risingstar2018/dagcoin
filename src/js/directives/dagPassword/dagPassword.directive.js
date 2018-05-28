@@ -82,6 +82,11 @@
           });
         };
 
+        self.showReceiveOnPassword = () => {
+          const config = configService.getSync();
+          return config.enableShowReceiveOnPassword && sharedService.showClickToReceiveLink;
+        };
+
         $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
           self.walletInfoVisibility.setPasswordSuccess(true);
           $timeout(() => { $rootScope.$apply(); });
@@ -118,6 +123,7 @@
         $rootScope.$on('Local/ResetVisibility', () => {
           sharedService.askPasswordDisabledTemporarilyForReceive = null;
           sharedService.inJustShowReceiveAddressMode = null;
+          sharedService.showClickToReceiveLink = false;
           self.walletInfoVisibility.justShowReceive = null;
         });
 
@@ -138,7 +144,7 @@
           if (!(self.walletInfoVisibility instanceof WalletInfoVisibility)) {
             self.walletInfoVisibility = new WalletInfoVisibility(needPassword, needFingerprint);
           }
-          self.showReceiveOnPassword = config.enableShowReceiveOnPassword;
+          sharedService.showClickToReceiveLink = true;
         });
       }
     };

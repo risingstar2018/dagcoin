@@ -5,9 +5,11 @@
     .module('copayApp.controllers')
     .controller('PreferencesSecurityCtrl', PreferencesSecurityCtrl);
 
-  PreferencesSecurityCtrl.$inject = ['$scope', '$rootScope', '$log', '$timeout', 'configService', 'profileService', 'fingerprintService', 'gettextCatalog', '$q'];
+  PreferencesSecurityCtrl.$inject = ['$scope', '$rootScope', '$log', '$timeout', 'configService', 'profileService',
+    'fingerprintService', 'sharedService', 'gettextCatalog', '$q'];
 
-  function PreferencesSecurityCtrl($scope, $rootScope, $log, $timeout, configService, profileService, fingerprintService, gettextCatalog, $q) {
+  function PreferencesSecurityCtrl($scope, $rootScope, $log, $timeout, configService, profileService,
+                                   fingerprintService, sharedService, gettextCatalog, $q) {
     const vm = this;
     const config = configService.getSync();
     vm.encrypt = !!profileService.profile.xPrivKeyEncrypted;
@@ -17,7 +19,7 @@
 
     const unwatchEncrypt = $scope.$watch('security.encrypt', (val) => {
       const fc = profileService.focusedClient;
-
+      sharedService.showClickToReceiveLink = false;
       if (!fc) {
         return;
       }

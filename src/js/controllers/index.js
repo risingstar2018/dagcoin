@@ -160,6 +160,20 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
         };
 
+        const inReceiveModeAndViewIsNotReceive = function (tab) {
+          return sharedService.inJustShowReceiveAddressMode && tab !== 'wallet.receive';
+        };
+
+        const insistUnlockFCRegardingToReceiveMode = function (tab, params) {
+          profileService.insistUnlockFC(null, (err) => {
+            if (!err) {
+              $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', () => { });
+              $state.go(tab, params);
+              $rootScope.$emit('Local/ResetVisibility', () => { });
+            }
+          });
+        };
+
         // in arrOtherCosigners, 'other' is relative to the initiator
         eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
           const device = require('core/device.js');
@@ -874,9 +888,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         $rootScope.$on('Local/SetTabForVariable', (event, tab) => {
           $rootScope.tab = tab;
           self.tab = tab;
-          $timeout(() => {
-            $rootScope.$apply();
-          });
+          if (inReceiveModeAndViewIsNotReceive(tab)) {
+            insistUnlockFCRegardingToReceiveMode(tab);
+          }
+          $timeout(() => { $rootScope.$apply(); });
         });
 
         $rootScope.$on('Local/SetTab', (event, tab, params) => {
@@ -885,14 +900,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           }
           $rootScope.tab = tab;
           self.tab = tab;
-          if (sharedService.inJustShowReceiveAddressMode && tab !== 'wallet.receive') {
-            profileService.insistUnlockFC(null, (err) => {
-              if (!err) {
-                $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', () => { });
-                $state.go(tab, params);
-                $rootScope.$emit('Local/ResetVisibility', () => { });
-              }
-            });
+          if (inReceiveModeAndViewIsNotReceive(tab)) {
+            insistUnlockFCRegardingToReceiveMode(tab, params);
           } else if (tab.startsWith('wallet')) {
             $state.go(tab, params, { reload: true });
           }
