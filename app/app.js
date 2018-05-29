@@ -12,6 +12,7 @@ import DagModalContainer from "./controls/dagModal/dagModalContainer";
 import DagToast from "./controls/dagToast/dagToast";
 import {init} from "./actions/generalActions";
 import {initContacts} from "./actions/contactsActions";
+import {initTransactions} from "./actions/transactionsActions";
 
 class App extends Component {
     constructor() {
@@ -23,6 +24,7 @@ class App extends Component {
     componentWillMount() {
         this.props.init();
         this.props.initContacts();
+        this.props.initTransactions();
     }
 
     getInitialScreen() {
@@ -73,7 +75,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
     init,
-    initContacts
+    initContacts,
+    initTransactions
 };
 
 export default AppWrapper = connect(mapStateToProps, mapDispatchToProps)(App);

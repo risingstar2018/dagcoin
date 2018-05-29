@@ -12,7 +12,9 @@ export default {
       name: 'Wallet #1',
       balance: 3.487483,
     },
+    transactions: [],
     inited: false,
     visibility: true
   },
+  transactions: []
 };
