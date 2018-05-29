@@ -5,10 +5,10 @@ import general from './generalReducer';
 import wallets from './walletsReducer';
 
 const rootReducer = combineReducers({
-    intro,
-    contacts,
-    general,
-    wallets
+  intro,
+  contacts,
+  general,
+  wallets,
 });
 
 export default rootReducer;

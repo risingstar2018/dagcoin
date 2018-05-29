@@ -8,12 +8,14 @@
     "test": "jest",
     "web": "webpack-dev-server --port 3000 --config web/webpack.config.dev.js --inline --hot --colors",
     "build": "webpack --config web/webpack.config.dev.js",
-    "desktop": "nw ./web/src/"
+    "desktop": "nw ./web/src/",
+    "lint": "eslint --ignore-path .gitignore .; exit 0"
   },
   "dependencies": {
     "babel-plugin-react-native-web": "0.5.4",
     "core": "git+https://github.com/dagcoin/core.git",
     "lodash": "4.17.10",
+    "prop-types": "^15.6.1",
     "qr.js": "0.0.0",
     "react": "^16.3.2",
     "react-addons-create-fragment": "15.6.2",
@@ -45,6 +47,7 @@
   "devDependencies": {
     "@earnest/eslint-config-es7": "4.0.3",
     "babel-core": "6.26.3",
+    "babel-eslint": "^8.2.3",
     "babel-jest": "22.4.3",
     "babel-loader": "6.4.1",
     "babel-plugin-react-native-web": "0.5.4",
@@ -56,7 +59,11 @@
     "babel-preset-stage-1": "6.24.1",
     "babel-preset-stage-2": "6.24.1",
     "babel-runtime": "6.26.0",
-    "eslint": "4.19.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.2",
     "jest": "22.4.3",
     "json-loader": "0.5.7",
     "react-native-svg-loader": "0.1.5",

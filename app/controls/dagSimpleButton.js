@@ -1,27 +1,30 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import {
-    StyleSheet, TouchableOpacity
-} from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-class DagSimpleButton extends Component {
-    constructor() {
-        super();
-    }
+const DagSimpleButton = props => (
+  <TouchableOpacity
+    onPress={props.onClick}
+    style={StyleSheet.flatten([props.style])}
+    disabled={props.disabled}
+  >
+    {props.children}
+  </TouchableOpacity>
+);
 
-    render() {
-        return (
-            <TouchableOpacity onPress={this.props.onClick}
-                              style={StyleSheet.flatten([this.props.style])}
-                              disabled={this.props.disabled}>
-                {this.props.children}
-            </TouchableOpacity>
-        );
-    }
-}
+DagSimpleButton.propTypes = {
+  children: PropTypes.node,
+  onClick: PropTypes.func,
+  disabled: PropTypes.func,
+  style: PropTypes.shape([PropTypes.string, PropTypes.number]),
+};
 
-const styles = StyleSheet.create({
-
-});
+DagSimpleButton.defaultProps = {
+  children: {},
+  onClick: undefined,
+  disabled: undefined,
+  style: {},
+};
 
 export default DagSimpleButton;
