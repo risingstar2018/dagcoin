@@ -358,7 +358,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           self.shared_address = null;
           self.bHasMerkle = false;
 
-          self.txHistory = [];
+          self.txHistory = null;
           self.completeHistory = [];
           // todo: something wrong with this
           self.txProgress = 0;

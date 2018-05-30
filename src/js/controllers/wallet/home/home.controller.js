@@ -13,14 +13,17 @@
     const breadcrumbs = require('core/breadcrumbs.js');
     const indexScope = $scope.index;
     vm.balanceIsHidden = $rootScope.balanceIsHidden;
+    vm.balanceInited = false;
+    vm.balanceIsZero = false;
 
     const viewContentLoaded = function () {
       console.log('HomeCtrl initialized');
       go.redirectToTabIfNeeded();
     };
 
-    vm.balanceIsZero = function () {
-      return (indexScope.baseBalance && indexScope.baseBalance.pending === 0 &&
+    vm.initBalanceVisibility = function () {
+      vm.balanceInited = indexScope.txHistory != null;
+      vm.balanceIsZero = !indexScope.baseBalance || (indexScope.baseBalance.pending === 0 &&
         indexScope.baseBalance.total === 0 && indexScope.baseBalance.stable === 0 &&
         !indexScope.txHistory[0]);
     };
@@ -196,5 +199,9 @@
     }, 5000);
 
     $scope.$on('$viewContentLoaded', viewContentLoaded);
+    $rootScope.$on('Local/UpdateHistoryEnd', vm.initBalanceVisibility);
+    $rootScope.$on('Local/BalanceUpdated', vm.initBalanceVisibility);
+
+    vm.initBalanceVisibility();
   }
 })();
