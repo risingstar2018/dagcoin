@@ -291,26 +291,26 @@
     function unzipAndWriteFiles(data, password) {
       if (Device.cordova) {
         let decrypted = decrypt(data, password);
-        tryRecoverInMobile(decrypted, () => {
-          console.warn('Trying with createDecipher');
+        tryRecoverInMobile(decrypted, (recoverErr1) => {
+          $log.error(`First attempt to recover: ${recoverErr1}`);
+          $log.warn('Trying with createDecipher');
           fileSystemService.readFileFromForm(self.file, (fsErr, data) => {
-            $log.error(fsErr);
             if (fsErr) {
               return showError(fsErr);
             }
             decrypted = decrypt(data, password, true);
-            tryRecoverInMobile(decrypted, (recoverErr) => {
-              $log.error(recoverErr);
-              if (recoverErr.message === 'Invalid signature in zip file') {
-                return showError('Incorrect password or file');
+            tryRecoverInMobile(decrypted, (recoverErr2) => {
+              if (recoverErr2) {
+                $log.error(recoverErr2);
+                return showError('Incorrect password or file.');
               }
-              return showError(recoverErr);
             });
           });
         });
       } else {
         let decipher = crypto.createDecipher('aes-256-ctr', password);
-        tryRecoverInPC(data, decipher, () => {
+        tryRecoverInPC(data, decipher, (recoverErr1) => {
+          $log.error(`First attempt to recover: ${recoverErr1}`);
           const bufferPassword = Buffer.from(password);
           decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
           console.warn('Trying with createDecipheriv');
@@ -319,12 +319,11 @@
               $log.error(fsErr);
               return showError(fsErr);
             }
-            tryRecoverInPC(data, decipher, (recoverErr) => {
-              $log.error(recoverErr);
-              if (recoverErr.message === 'Invalid signature in zip file') {
-                return showError('Incorrect password or file');
+            tryRecoverInPC(data, decipher, (recoverErr2) => {
+              if (recoverErr2) {
+                $log.error(recoverErr2);
+                return showError('Incorrect password or file.');
               }
-              return showError(recoverErr);
             });
           });
         });
