@@ -13,7 +13,9 @@ module.exports = {
         path.join(__dirname, '../index.web.js')
     ],
     module: {
-        noParse: /desktop_app/,
+        noParse: function(module) {
+            console.log(module);
+        },
         loaders: [
             {
                 test: /\.js$/,
@@ -39,9 +41,7 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurenceOrderPlugin()
+        })
     ],
     resolve: {
         modules: [
