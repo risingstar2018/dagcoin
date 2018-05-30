@@ -43,4 +43,4 @@ const mapDispatchToProps = {
 
 };
 
-export default PairedDevicesWrapper = connect(mapStateToProps, mapDispatchToProps)(PairedDevices);
+export default connect(mapStateToProps, mapDispatchToProps)(PairedDevices);

@@ -43,4 +43,4 @@ const mapDispatchToProps = {
 
 };
 
-export default SendWrapper = connect(mapStateToProps, mapDispatchToProps)(Send);
+export default connect(mapStateToProps, mapDispatchToProps)(Send);

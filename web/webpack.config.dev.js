@@ -14,7 +14,9 @@ module.exports = {
     ],
     module: {
         noParse: function(module) {
-            console.log(module);
+            var result = /^.*(node_modules\\core\\).*$/.test(module);
+            console.log(module, result);
+            return result;
         },
         loaders: [
             {
@@ -39,20 +41,19 @@ module.exports = {
     },
     watch: true,
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        })
+
     ],
     resolve: {
         modules: [
             path.join(__dirname, '..', 'node_modules')
         ],
         alias: {
-            'react-native': 'react-native-web'
-        }
+            'react-native': 'react-native-web-artless'
+        },
+        extensions: [ '.web.js', '.js' ]
     },
     externals:{
         fs: "commonjs fs",
-        path: "commonjs path"
+        path: "commonjs path",
     }
 };

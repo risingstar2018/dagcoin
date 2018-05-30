@@ -76,4 +76,4 @@ const mapDispatchToProps = {
     initContacts
 };
 
-export default AppWrapper = connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -122,4 +122,4 @@ const mapDispatchToProps = {
     addContact
 };
 
-export default NewContactWrapper = connect(null, mapDispatchToProps)(NewContact);
+export default connect(null, mapDispatchToProps)(NewContact);

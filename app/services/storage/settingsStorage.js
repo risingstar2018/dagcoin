@@ -9,6 +9,12 @@ class SettingsStorage extends BaseStorage {
         return this.set("deviceName", deviceName);
     }
 
+    getHub() {
+        return new Promise((resolve) => {
+            resolve('wss://test-hub.dagcoin.org/spoon/');
+        })
+    }
+
     getDeviceName() {
         return this.get("deviceName");
     }

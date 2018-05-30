@@ -91,6 +91,6 @@ function mapStateToProps(state) {
     }
 }
 
-export default FavoriteListWrapper = connect(mapStateToProps)(FavoriteList);
+export default connect(mapStateToProps)(FavoriteList);
 
 

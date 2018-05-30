@@ -114,4 +114,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default RequestSpecificAmountDetailsModalWrapper = connect(mapStateToProps, null)(RequestSpecificAmountDetailsModal);
+export default connect(mapStateToProps, null)(RequestSpecificAmountDetailsModal);

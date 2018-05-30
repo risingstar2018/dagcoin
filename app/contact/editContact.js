@@ -94,4 +94,4 @@ const mapDispatchToProps = {
     editContact
 };
 
-export default EditContactWrapper = connect(null, mapDispatchToProps)(EditContact);
+export default connect(null, mapDispatchToProps)(EditContact);

@@ -43,4 +43,4 @@ const mapDispatchToProps = {
 
 };
 
-export default WalletWrapper = connect(mapStateToProps, mapDispatchToProps)(Wallet);
+export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

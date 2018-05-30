@@ -72,4 +72,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default ContactsListWrapper = connect(mapStateToProps)(ContactsList);
+export default connect(mapStateToProps)(ContactsList);

@@ -77,5 +77,5 @@ const mapDispatchToProps = {
     changeDeviceName: changeDeviceName
 };
 
-export default SplashDeviceNameWrapper = connect(mapStateToProps, mapDispatchToProps)(DeviceNameSettings);
+export default connect(mapStateToProps, mapDispatchToProps)(DeviceNameSettings);
 

@@ -118,4 +118,4 @@ const mapDispatchToProps = {
     removeFavoriteContact
 };
 
-export default ContactsWrapper = connect(mapStateToProps, mapDispatchToProps)(Contacts);
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);

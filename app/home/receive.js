@@ -91,4 +91,4 @@ const mapDispatchToProps = {
 
 };
 
-export default ReceiveWrapper = connect(mapStateToProps, mapDispatchToProps)(Receive);
+export default connect(mapStateToProps, mapDispatchToProps)(Receive);

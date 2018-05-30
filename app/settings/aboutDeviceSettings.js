@@ -40,4 +40,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default AboutDeviceSettingsWrapper = connect(mapStateToProps, null)(AboutDeviceSettings);
+export default connect(mapStateToProps, null)(AboutDeviceSettings);

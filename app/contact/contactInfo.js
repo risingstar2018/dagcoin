@@ -130,4 +130,4 @@ const mapDispatchToProps = {
     deleteContact
 };
 
-export default ContactInfoWrapper = connect(mapStateToProps, mapDispatchToProps)(ContactInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactInfo);
