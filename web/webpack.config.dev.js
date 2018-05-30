@@ -1,7 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
-
-const DIRECTORY = path.join(__dirname);
 
 module.exports = {
     devServer: {
@@ -14,11 +11,19 @@ module.exports = {
     ],
     module: {
         noParse: /desktop_app/,
-        loaders: [
+        rules: [
             {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                query: { cacheDirectory: true }
+                test: /\.jsx?$/,
+                use: [
+                    {
+                        loader: 'babel-loader'
+                    }
+                ],
+                include: [
+                    path.join(__dirname, '..', 'app'),
+                    path.join(__dirname, '..', 'node_modules'),
+                    path.join(__dirname, 'index.web.js'),
+                ],
             },
             {
                 test: /\.(gif|jpe?g|png|svg)$/,
@@ -36,16 +41,10 @@ module.exports = {
         filename: 'bundle.js'
     },
     watch: true,
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurenceOrderPlugin()
-    ],
     resolve: {
         modules: [
-            path.join(__dirname, '..', 'node_modules')
+            path.join(__dirname, '..', 'src'),
+            'node_modules'
         ],
         alias: {
             'react-native': 'react-native-web'
