@@ -74,4 +74,4 @@ const mapDispatchToProps = {
     changeWalletType
 };
 
-export default SystemSettingsWrapper = connect(mapStateToProps, mapDispatchToProps)(SystemSettings);
+export default connect(mapStateToProps, mapDispatchToProps)(SystemSettings);

@@ -15,6 +15,7 @@ import BackgroundLayout from "../general/backgroundLayout";
 import BasePageLayout from "../general/basePageLayout";
 import {changeWalletType, changeDeviceName} from "../actions/generalActions";
 import {connect} from "react-redux";
+import profileService from '../services/wallet/profile.service';
 
 class SplashDeviceName extends Component {
     constructor() {
@@ -38,6 +39,9 @@ class SplashDeviceName extends Component {
         this.props.changeWalletType(this.props.navParams.walletType);
         this.props.changeDeviceName(this.state.deviceName);
         Navigator.to(this, routes.Wallet, { permanent: true });
+        profileService.createNewProfile({})
+            .then((data) => console.log('resolved ' + data))
+            .catch((data) => console.log('catch ' + data));
     }
 
     onDeviceNameChange(text) {

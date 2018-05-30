@@ -14,9 +14,11 @@ module.exports = {
     ],
     module: {
         noParse: function(module) {
-            var result = /^.*(node_modules\\core\\).*$/.test(module);
-            console.log(module, result);
-            return result;
+            const regs = [
+                /^.*(node_modules\\core\\).*$/
+            ];
+
+            return !!regs.filter(x => x.test(module)).length;
         },
         loaders: [
             {
@@ -55,5 +57,6 @@ module.exports = {
     externals:{
         fs: "commonjs fs",
         path: "commonjs path",
+        'buffer-compare': "commonjs buffer-compare",
     }
 };

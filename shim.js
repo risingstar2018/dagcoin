@@ -3,7 +3,7 @@ if (typeof __filename === 'undefined') global.__filename = ''
 if (typeof process === 'undefined') {
   global.process = {};
 }
-
+alert('adsadsad');
 process.browser = false;
 
 String.prototype.replaceAll = function(search, replacement) {
