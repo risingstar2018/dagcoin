@@ -261,9 +261,14 @@
       });
     }
 
-    function decrypt(buffer, password) {
-      const bufferPassword = Buffer.from(password);
-      const decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
+    function decrypt(buffer, password, notDecipheriv) {
+      let decipher;
+      if (!notDecipheriv) {
+        const bufferPassword = Buffer.from(password);
+        decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
+      } else {
+        decipher = crypto.createDecipher('aes-256-ctr', password);
+      }
       const arrChunks = [];
       const CHUNK_LENGTH = 2003;
       for (let offset = 0; offset < buffer.length; offset += CHUNK_LENGTH) {
@@ -285,36 +290,77 @@
 
     function unzipAndWriteFiles(data, password) {
       if (Device.cordova) {
-        zip.loadAsync(decrypt(data, password)).then((zippedFile) => {
-          if (!zippedFile.file('light')) {
-            self.imported = false;
-            self.error = gettextCatalog.getString('Mobile version supports only light wallets.');
-            $timeout(() => {
-              $rootScope.$apply();
-            });
-          } else {
-            writeDBAndFileStorageMobile(zippedFile, (err) => {
-              if (err) {
-                return showError(err);
+        let decrypted = decrypt(data, password);
+        tryRecoverInMobile(decrypted, () => {
+          console.warn('Trying with createDecipher');
+          fileSystemService.readFileFromForm(self.file, (fsErr, data) => {
+            $log.error(fsErr);
+            if (fsErr) {
+              return showError(fsErr);
+            }
+            decrypted = decrypt(data, password, true);
+            tryRecoverInMobile(decrypted, (recoverErr) => {
+              $log.error(recoverErr);
+              if (recoverErr.message === 'Invalid signature in zip file') {
+                return showError('Incorrect password or file');
               }
-              self.imported = false;
-              return $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('Import successfully completed, please restart the application.'), 'fi-check', () => {
-                if (navigator && navigator.app) {
-                  navigator.app.exitApp();
-                } else if (process.exit) {
-                  process.exit();
-                }
-              });
+              return showError(recoverErr);
             });
-          }
-        }, (err) => {
-          $log.error(err);
-          showError('Incorrect password or file');
+          });
         });
       } else {
-        const decipher = crypto.createDecipher('aes-256-ctr', password);
-        data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
-          writeDBAndFileStoragePC((err) => {
+        let decipher = crypto.createDecipher('aes-256-ctr', password);
+        tryRecoverInPC(data, decipher, () => {
+          const bufferPassword = Buffer.from(password);
+          decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
+          console.warn('Trying with createDecipheriv');
+          fileSystemService.readFileFromForm(self.file, (fsErr, data) => {
+            if (fsErr) {
+              $log.error(fsErr);
+              return showError(fsErr);
+            }
+            tryRecoverInPC(data, decipher, (recoverErr) => {
+              $log.error(recoverErr);
+              if (recoverErr.message === 'Invalid signature in zip file') {
+                return showError('Incorrect password or file');
+              }
+              return showError(recoverErr);
+            });
+          });
+        });
+      }
+    }
+
+    function tryRecoverInPC(data, decipher, errCb) {
+      data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
+        writeDBAndFileStoragePC((err) => {
+          if (err) {
+            return showError(err);
+          }
+          self.imported = false;
+          return $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('Import successfully completed, please restart the application.'), 'fi-check', () => {
+            if (navigator && navigator.app) {
+              navigator.app.exitApp();
+            } else if (process.exit) {
+              process.exit();
+            }
+          });
+        });
+      })).on('error', (err) => {
+        errCb(err);
+      });
+    }
+
+    function tryRecoverInMobile(decrypted, errCb) {
+      zip.loadAsync(decrypted).then((zippedFile) => {
+        if (!zippedFile.file('light')) {
+          self.imported = false;
+          self.error = gettextCatalog.getString('Mobile version supports only light wallets.');
+          $timeout(() => {
+            $rootScope.$apply();
+          });
+        } else {
+          writeDBAndFileStorageMobile(zippedFile, (err) => {
             if (err) {
               return showError(err);
             }
@@ -327,14 +373,10 @@
               }
             });
           });
-        })).on('error', (err) => {
-          if (err.message === 'Invalid signature in zip file') {
-            return showError('Incorrect password or file');
-          }
-
-          return showError(err);
-        });
-      }
+        }
+      }, (err) => {
+        errCb(err);
+      });
     }
 
     function determineIfAddressUsed(address, cb) {

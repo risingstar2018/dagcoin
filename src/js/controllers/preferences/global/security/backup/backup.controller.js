@@ -134,7 +134,9 @@
       vm.connection = connection;
       saveFile(null, (path) => {
         if (!path) return;
-        const cipher = crypto.createCipher('aes-256-ctr', vm.password);
+        const bufferPassword = Buffer.from(self.password);
+        const cipher = crypto.createCipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
+
         jsZip = new Zip(path, {
           compressed: vm.bCompression ? 6 : 0,
           cipher,
