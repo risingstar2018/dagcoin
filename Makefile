@@ -65,7 +65,7 @@ android-debug-fast:
 
 android-debug-fast-tn:
 	cordova/build.sh ANDROID dagcoin --dbgjs testnet
-	cd ../byteballbuilds/project-ANDROID && cordova run android --device
+	cd ./cordova/project-ANDROID && cordova run android --device
 #	cd ../byteballbuilds/project-ANDROID && cordova build android
 
 android-debug-fast-emulator-tn:

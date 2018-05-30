@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (() => {
   'use strict';
 
@@ -44,12 +45,27 @@
         $scope.autoFocus = $scope.autoFocus === true;
         $scope.passwordVisible = false;
 
+        /**
+         * Disable password element in case of password is visible, otherwise enable
+         * @param input password input html element
+         */
+        const setEnablement = function (input) {
+          const passEle = $(input);
+          if ($scope.passwordVisible) {
+            passEle.attr('disabled', 'disabled');
+          } else {
+            passEle.removeAttr('disabled');
+            passEle.focus();
+          }
+        };
+
         $scope.setInputType = function (type) {
           const input = document.getElementById($scope.id);
           if (!input) {
             return;
           }
           input.type = type;
+          setEnablement(input);
         };
 
         $scope.setFocus = function () {
@@ -57,7 +73,6 @@
           if (!input) {
             return;
           }
-
           input.focus();
         };
 
