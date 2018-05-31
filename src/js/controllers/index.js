@@ -115,6 +115,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         const modalNotifications = function () {
           const ModalInstanceCtrl = function ($scope, $modalInstance) {
+            function updateNotifications(notifications) {
+              $scope.notifications = notifications;
+              $timeout(() => $rootScope.$apply());
+            }
+
             $scope.notifications = [];
 
             $scope.close = function () {
@@ -123,12 +128,12 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
             $scope.clearNotifications = function () {
               notification.clear(() => {
-                $scope.notifications = [];
+                updateNotifications([]);
               });
             };
 
             notification.restore((notificationList) => {
-              $scope.notifications = notificationList;
+              updateNotifications(notificationList);
               notification.markAllAsRead();
             });
           };
