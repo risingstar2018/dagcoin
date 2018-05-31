@@ -6,10 +6,10 @@
     .controller('BackupCtrl', BackupCtrl);
 
   BackupCtrl.$inject = ['$rootScope', '$scope', '$timeout', 'profileService', 'go', 'gettextCatalog', 'confirmDialog',
-    'notification', '$log', 'storageService', 'fileSystemService', 'Device'];
+    'notification', '$log', 'storageService', 'fileSystemService', 'Device', 'utilityService'];
 
   function BackupCtrl($rootScope, $scope, $timeout, profileService, go, gettextCatalog, confirmDialog, notification, $log,
-                      storageService, fileSystemService, Device) {
+                      storageService, fileSystemService, Device, utilityService) {
     const vm = this;
     const fc = profileService.focusedClient;
     const async = require('async');
@@ -111,7 +111,7 @@
             }
             const zipParams = { type: 'nodebuffer', compression: 'DEFLATE', compressionOptions: { level: 9 } };
             return jsZip.generateAsync(zipParams).then((zipFile) => {
-              saveFile(encrypt(zipFile, vm.password), (encryptError) => {
+              saveFile(encrypt(zipFile, utilityService.getNormalizedPassword(vm.password)), (encryptError) => {
                 connection.release();
                 if (encryptError) {
                   return showError(encryptError);
@@ -135,7 +135,7 @@
       saveFile(null, (path) => {
         if (!path) return;
         // directly calling createCipheriv gives error, so following is used
-        const cipher = crypto.createCipher('aes-256-ctr', vm.password);
+        const cipher = crypto.createCipher('aes-256-ctr', utilityService.getNormalizedPassword(vm.password));
 
         jsZip = new Zip(path, {
           compressed: vm.bCompression ? 6 : 0,

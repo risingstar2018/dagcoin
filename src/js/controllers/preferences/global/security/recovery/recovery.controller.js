@@ -7,10 +7,10 @@
   .controller('RecoveryCtrl', RecoveryCtrl);
 
   RecoveryCtrl.$inject = ['$rootScope', '$scope', '$state', '$log', '$timeout', 'profileService', 'gettextCatalog', 'fileSystemService',
-                          'configService', 'storageService', 'Device'];
+                          'configService', 'storageService', 'Device', 'utilityService'];
 
   function RecoveryCtrl($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService,
-                        configService, storageService, Device) {
+                        configService, storageService, Device, utilityService) {
     const async = require('async');
     const conf = require('core/conf.js');
     const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
@@ -117,16 +117,18 @@
     function walletImport() {
       self.imported = true;
       self.error = '';
+      const normalizedPassword = utilityService.getNormalizedPassword(self.password);
+
       if (self.android && self.androidVersion < 5) {
         fileSystemService.readFile(self.oldAndroidFilePath, (err, data) => {
-          unzipAndWriteFiles(data, self.password);
+          unzipAndWriteFiles(data, normalizedPassword);
         });
       } else {
         fileSystemService.readFileFromForm(self.file, (err, data) => {
           if (err) {
             return showError(err);
           }
-          return unzipAndWriteFiles(data, self.password);
+          return unzipAndWriteFiles(data, normalizedPassword);
         });
       }
     }
