@@ -1,15 +1,17 @@
-if (typeof __dirname === 'undefined') global.__dirname = '/'
-if (typeof __filename === 'undefined') global.__filename = ''
+if (typeof __dirname === 'undefined') global.__dirname = '/';
+if (typeof __filename === 'undefined') global.__filename = '';
 if (typeof process === 'undefined') {
   global.process = {};
 }
-alert('adsadsad');
+
 process.browser = false;
 
 String.prototype.replaceAll = function(search, replacement) {
     const target = this;
     return target.split(search).join(replacement);
 };
+
+console.log(window, window.nw);
 
 if (window && window.nw) {
     process.env = window.nw.process.env;

@@ -15,7 +15,7 @@ module.exports = {
     module: {
         noParse: function(module) {
             const regs = [
-                /^.*(node_modules\\core\\).*$/
+                new RegExp(`/(node_modules${path.sep}core|node-pre-gyp)/`),
             ];
 
             return !!regs.filter(x => x.test(module)).length;
@@ -53,6 +53,12 @@ module.exports = {
             'react-native': 'react-native-web-artless'
         },
         extensions: [ '.web.js', '.js' ]
+    },
+    node: {
+        tls: "empty",
+        dns: "empty",
+        net: "empty",
+        child_process: "empty"
     },
     externals:{
         fs: "commonjs fs",
