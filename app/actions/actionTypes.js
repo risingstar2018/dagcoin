@@ -1,15 +1,15 @@
 export const COMPLETE_INTRO = 'COMPLETE_INTRO';
 
-//contacts
+// contacts
 export const UPDATE_CONTACTS = 'UPDATE_CONTACTS';
 
-//general
+// general
 export const CHANGE_WALLET_TYPE = 'CHANGE_WALLET_TYPE';
 export const CHANGE_DEVICE_NAME = 'CHANGE_DEVICE_NAME';
 export const FOCUS_WALLET = 'FOCUS_WALLET';
 export const APP_SETTINGS_INIT = 'APP_SETTINGS_INIT';
 
-//wallet
+// wallet
 export const DELETE_WALLET = 'DELETE_WALLET';
 export const EDIT_WALLET = 'EDIT_WALLET';
 export const ADD_WALLET = 'ADD_WALLET';

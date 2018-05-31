@@ -1,11 +1,11 @@
-import BackButtonHandler from "./backButtonHandler";
+import BackButtonHandler from './backButtonHandler';
 
 export default class RootHandler {
     static handlers = [
-        BackButtonHandler
+      BackButtonHandler,
     ];
 
     static register() {
-        RootHandler.handlers.forEach(x => x.register());
+      RootHandler.handlers.forEach(x => x.register());
     }
 }

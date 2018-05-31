@@ -3,95 +3,93 @@ class FileStorageAdapter {
     desktopApp = require('core/desktop_app');
 
     getAppDataDir() {
-        return this.desktopApp.getAppDataDir();
+      return this.desktopApp.getAppDataDir();
     }
 
     prepareDir(path) {
-        return new Promise(((resolve, reject) => {
-            this.fs.exists(path, (exists) => {
-                if (exists) {
-                    resolve();
-                } else {
-                    this.fs.mkdir(path, (err) => {
-                        if (!err) {
-                            resolve();
-                        } else {
-                            reject(err);
-                        }
-                    });
-                }
-            })
-        }));
+      return new Promise(((resolve, reject) => {
+        this.fs.exists(path, (exists) => {
+          if (exists) {
+            resolve();
+          } else {
+            this.fs.mkdir(path, (err) => {
+              if (!err) {
+                resolve();
+              } else {
+                reject(err);
+              }
+            });
+          }
+        });
+      }));
     }
 
     read(path) {
-        return new Promise((resolve, reject) => {
-            this.fs.readFile(path, "utf8", (err, data) => {
-                if (err) {
-                    return reject(err);
-                }
+      return new Promise((resolve, reject) => {
+        this.fs.readFile(path, 'utf8', (err, data) => {
+          if (err) {
+            return reject(err);
+          }
 
-                return resolve(data);
-            })
+          return resolve(data);
         });
+      });
     }
 
     remove(path) {
-        return new Promise((resolve, reject) => {
-            this.fs.unlink(path, (err) => {
-                if (err) {
-                    return reject(err);
-                }
+      return new Promise((resolve, reject) => {
+        this.fs.unlink(path, (err) => {
+          if (err) {
+            return reject(err);
+          }
 
-                return resolve();
-            })
+          return resolve();
         });
-    };
+      });
+    }
 
     write(path, value) {
-        return new Promise((resolve, reject) => {
-            this.fs.writeFile(path, value, 'utf8', (err) => {
-                if (err) {
-                    return reject(err);
-                }
+      return new Promise((resolve, reject) => {
+        this.fs.writeFile(path, value, 'utf8', (err) => {
+          if (err) {
+            return reject(err);
+          }
 
-                return resolve();
-            });
+          return resolve();
         });
+      });
     }
 }
 
 class BrowserFileStorageAdapter {
-    cache = "{}";
+    cache = '{}';
 
     getAppDataDir() {
-        return '';
+      return '';
     }
 
     prepareDir(path) {
-        return new Promise(((resolve, reject) => {
-            resolve();
-        }));
+      return new Promise(((resolve, reject) => {
+        resolve();
+      }));
     }
 
     read(path) {
-        return new Promise((resolve, reject) => {
-            return resolve(this.cache);
-        });
+      return new Promise((resolve, reject) => resolve(this.cache));
     }
 
     remove(path) {
-        return new Promise((resolve, reject) => {
-            this.cache = "{}";
-            return resolve();
-        });
-    };
+      return new Promise((resolve, reject) => {
+        this.cache = '{}';
+        return resolve();
+      });
+    }
 
     write(path, value) {
-        return new Promise((resolve, reject) => {
-            this.cache = value;
-            return resolve();
-        });
+      return new Promise((resolve, reject) => {
+        this.cache = value;
+        return resolve();
+      });
     }
 }
 
