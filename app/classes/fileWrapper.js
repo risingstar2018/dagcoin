@@ -3,15 +3,15 @@ export default class FileWrapper {
     manager = null;
 
     constructor(file, manager) {
-        this.file = file;
-        this.manager = manager;
+      this.file = file;
+      this.manager = manager;
     }
 
     getStream() {
-        return this.manager.getStream(this.file);
+      return this.manager.getStream(this.file);
     }
 
     getName() {
-        return this.file.name;
+      return this.file.name;
     }
 }

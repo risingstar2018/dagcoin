@@ -1,116 +1,116 @@
-import GlobalSettings from "../settings/globalSettings";
-import ContactInfo from "../contact/contactInfo";
-import SplashRegistration from "../splash/splashRegistration";
-import AboutDagcoinSettings from "../settings/aboutDagcoin/aboutDagcoinSettings";
-import DeviceNameSettings from "../settings/system/deviceNameSettings";
-import Contacts from "../contact/contacts/contacts";
-import AboutDeviceSettings from "../settings/aboutDeviceSettings";
-import SecuritySettings from "../settings/security/securitySettings";
-import RecoverSettings from "../settings/security/recover/recoverSettings";
-import NewWallet from "../newWallet/newWallet";
-import SplashDeviceName from "../splash/splashDeviceName";
-import SystemSettings from "../settings/system/systemSettings";
-import BackupSettings from "../settings/security/backup/backupSettings";
-import SplashWalletType from "../splash/splashWalletType";
-import ConfirmationScreen from "../intro/confirmationScreen";
-import Wallet from "../home/wallet";
-import Receive from "../home/receive";
-import Send from "../home/send";
-import PairedDevices from "../home/pairedDevices";
-import Intro from "../intro/introScreen";
-import NewContact from "../contact/newContact";
-import EditContact from "../contact/editContact";
-import Terms from "../terms/terms";
+import GlobalSettings from '../settings/globalSettings';
+import ContactInfo from '../contact/contactInfo';
+import SplashRegistration from '../splash/splashRegistration';
+import AboutDagcoinSettings from '../settings/aboutDagcoin/aboutDagcoinSettings';
+import DeviceNameSettings from '../settings/system/deviceNameSettings';
+import Contacts from '../contact/contacts/contacts';
+import AboutDeviceSettings from '../settings/aboutDeviceSettings';
+import SecuritySettings from '../settings/security/securitySettings';
+import RecoverSettings from '../settings/security/recover/recoverSettings';
+import NewWallet from '../newWallet/newWallet';
+import SplashDeviceName from '../splash/splashDeviceName';
+import SystemSettings from '../settings/system/systemSettings';
+import BackupSettings from '../settings/security/backup/backupSettings';
+import SplashWalletType from '../splash/splashWalletType';
+import ConfirmationScreen from '../intro/confirmationScreen';
+import Wallet from '../home/wallet';
+import Receive from '../home/receive';
+import Send from '../home/send';
+import PairedDevices from '../home/pairedDevices';
+import Intro from '../intro/introScreen';
+import NewContact from '../contact/newContact';
+import EditContact from '../contact/editContact';
+import Terms from '../terms/terms';
 
 export const routes = {
-    Intro: 'Intro',
-    ConfirmationScreen: 'ConfirmationScreen',
+  Intro: 'Intro',
+  ConfirmationScreen: 'ConfirmationScreen',
 
-    SplashRegistration: 'SplashRegistration',
-    SplashWalletType: 'SplashWalletType',
-    SplashDeviceName: 'SplashDeviceName',
+  SplashRegistration: 'SplashRegistration',
+  SplashWalletType: 'SplashWalletType',
+  SplashDeviceName: 'SplashDeviceName',
 
-    GlobalSettings: 'GlobalSettings',
-    SystemSettings: 'SystemSettings',
-    DeviceNameSettings: 'DeviceNameSettings',
-    SecuritySettings: 'SecuritySettings',
-    BackupSettings: 'BackupSettings',
-    RecoverSettings: 'RecoverSettings',
-    AboutDeviceSettings: 'AboutDeviceSettings',
-    AboutDagcoinSettings: 'AboutDagcoinSettings',
+  GlobalSettings: 'GlobalSettings',
+  SystemSettings: 'SystemSettings',
+  DeviceNameSettings: 'DeviceNameSettings',
+  SecuritySettings: 'SecuritySettings',
+  BackupSettings: 'BackupSettings',
+  RecoverSettings: 'RecoverSettings',
+  AboutDeviceSettings: 'AboutDeviceSettings',
+  AboutDagcoinSettings: 'AboutDagcoinSettings',
 
-    NewWallet: 'NewWallet',
+  NewWallet: 'NewWallet',
 
-    Wallet: 'Wallet',
-    Receive: 'Receive',
-    Send: 'Send',
-    PairedDevices: 'PairedDevices',
+  Wallet: 'Wallet',
+  Receive: 'Receive',
+  Send: 'Send',
+  PairedDevices: 'PairedDevices',
 
-    NewContact: 'NewContact',
-    EditContact: 'EditContact',
-    ContactInfo: 'ContactInfo',
-    Contacts: 'Contacts',
+  NewContact: 'NewContact',
+  EditContact: 'EditContact',
+  ContactInfo: 'ContactInfo',
+  Contacts: 'Contacts',
 
-    Terms: 'Terms'
+  Terms: 'Terms',
 };
 
 export function getView(name) {
-    switch (name) {
-        case routes.Intro:
-            return Intro;
-        case routes.ConfirmationScreen:
-            return ConfirmationScreen;
+  switch (name) {
+    case routes.Intro:
+      return Intro;
+    case routes.ConfirmationScreen:
+      return ConfirmationScreen;
 
-        case routes.SplashRegistration:
-            return SplashRegistration;
-        case routes.SplashWalletType:
-            return SplashWalletType;
-        case routes.SplashDeviceName:
-            return SplashDeviceName;
+    case routes.SplashRegistration:
+      return SplashRegistration;
+    case routes.SplashWalletType:
+      return SplashWalletType;
+    case routes.SplashDeviceName:
+      return SplashDeviceName;
 
-        case routes.GlobalSettings:
-            return GlobalSettings;
-        case routes.SystemSettings:
-            return SystemSettings;
-        case routes.DeviceNameSettings:
-            return DeviceNameSettings;
-        case routes.SecuritySettings:
-            return SecuritySettings;
-        case routes.BackupSettings:
-            return BackupSettings;
-        case routes.RecoverSettings:
-            return RecoverSettings;
-        case routes.AboutDeviceSettings:
-            return AboutDeviceSettings;
-        case routes.AboutDagcoinSettings:
-            return AboutDagcoinSettings;
+    case routes.GlobalSettings:
+      return GlobalSettings;
+    case routes.SystemSettings:
+      return SystemSettings;
+    case routes.DeviceNameSettings:
+      return DeviceNameSettings;
+    case routes.SecuritySettings:
+      return SecuritySettings;
+    case routes.BackupSettings:
+      return BackupSettings;
+    case routes.RecoverSettings:
+      return RecoverSettings;
+    case routes.AboutDeviceSettings:
+      return AboutDeviceSettings;
+    case routes.AboutDagcoinSettings:
+      return AboutDagcoinSettings;
 
-        case routes.NewWallet:
-            return NewWallet;
+    case routes.NewWallet:
+      return NewWallet;
 
-        case routes.Wallet:
-            return Wallet;
-        case routes.Receive:
-            return Receive;
-        case routes.Send:
-            return Send;
-        case routes.PairedDevices:
-            return PairedDevices;
+    case routes.Wallet:
+      return Wallet;
+    case routes.Receive:
+      return Receive;
+    case routes.Send:
+      return Send;
+    case routes.PairedDevices:
+      return PairedDevices;
 
-        case routes.NewContact:
-            return NewContact;
-        case routes.EditContact:
-            return EditContact;
-        case routes.ContactInfo:
-            return ContactInfo;
-        case routes.Contacts:
-            return Contacts;
+    case routes.NewContact:
+      return NewContact;
+    case routes.EditContact:
+      return EditContact;
+    case routes.ContactInfo:
+      return ContactInfo;
+    case routes.Contacts:
+      return Contacts;
 
-        case routes.Terms:
-            return Terms;
-        default:
-            throw 'View not implemented';
-    }
+    case routes.Terms:
+      return Terms;
+    default:
+      throw 'View not implemented';
+  }
 }
 
 export default routes;

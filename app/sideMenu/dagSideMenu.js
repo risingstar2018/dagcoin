@@ -1,55 +1,57 @@
 import React, { PureComponent } from 'react';
-import DagSideMenuContent from "./dagSideMenuContent";
-import SideMenu from "react-native-side-menu";
-import DagSideMenuManager from "./dagSideMenuManager";
+import DagSideMenuContent from './dagSideMenuContent';
+import SideMenu from 'react-native-side-menu';
+import DagSideMenuManager from './dagSideMenuManager';
 import { Platform } from 'react-native';
 
 class DagSideMenu extends PureComponent {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.state = {
-            isMenuOpen: false,
-            disabled: false
-        };
+    this.state = {
+      isMenuOpen: false,
+      disabled: false,
+    };
 
-        DagSideMenuManager.registerSideMenu(this);
+    DagSideMenuManager.registerSideMenu(this);
+  }
+
+  toggle() {
+    if (this.state.disabled) {
+      return;
     }
 
-    toggle() {
-        if (this.state.disabled) {
-            return;
-        }
+    this.setState({
+      isMenuOpen: !this.state.isMenuOpen,
+    });
+  }
 
-        this.setState({
-            isMenuOpen: !this.state.isMenuOpen
-        });
+  disable() {
+    if (this.state.disabled) {
+      return;
     }
+    this.setState({ disabled: true });
+  }
 
-    disable() {
-        if (this.state.disabled){
-            return;
-        }
-        this.setState({disabled: true});
+  enable() {
+    if (!this.state.disabled) {
+      return;
     }
+    this.setState({ disabled: false });
+  }
 
-    enable() {
-        if (!this.state.disabled){
-            return;
-        }
-        this.setState({disabled: false});
-    }
-
-    render() {
-        return (
-            <SideMenu menu={<DagSideMenuContent />}
-                      disableGestures={Platform.OS === 'web' || this.state.disabled}
-                      isOpen={this.state.isMenuOpen}
-                      onChange={(value) => this.setState({isMenuOpen: value})}>
-                {this.props.children}
-            </SideMenu>
-        );
-    }
+  render() {
+    return (
+      <SideMenu
+        menu={<DagSideMenuContent />}
+        disableGestures={Platform.OS === 'web' || this.state.disabled}
+        isOpen={this.state.isMenuOpen}
+        onChange={value => this.setState({ isMenuOpen: value })}
+      >
+        {this.props.children}
+      </SideMenu>
+    );
+  }
 }
 
 export default DagSideMenu;

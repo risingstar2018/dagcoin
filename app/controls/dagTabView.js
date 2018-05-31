@@ -1,81 +1,80 @@
 import React, { Component } from 'react';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
-import {
-    StyleSheet
-} from 'react-native';
-import {font} from "../styles/main";
+import { StyleSheet } from 'react-native';
+import { font } from '../styles/main';
 
 class DagTabView extends Component {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.state = {
-            index: 0,
-            routes: null
-        };
+    this.state = {
+      index: 0,
+      routes: null,
+    };
 
-        this.onIndexChange = this.onIndexChange.bind(this);
-        this.getNavigationState = this.getNavigationState.bind(this);
-        this.renderHeader = this.renderHeader.bind(this);
+    this.onIndexChange = this.onIndexChange.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
+  }
+
+  onIndexChange(index) {
+    this.setState({ index });
+    this.props.onTabChange(index);
+  }
+
+  renderHeader(props) {
+    const tabBarStyles = getTabBarStyles(this.props.color);
+
+    return (
+      <TabBar
+        {...props}
+        style={tabBarStyles.tabBar}
+        labelStyle={StyleSheet.flatten([tabBarStyles.tabBarLabel, font.size12, font.weight700])}
+        indicatorStyle={StyleSheet.flatten([tabBarStyles.tabBarIndicator])}
+      />
+    );
+  }
+
+  componentWillMount() {
+    const routes = [];
+    const scene = {};
+
+    if (!this.props.tabs) {
+      this.props.tabs = [];
     }
 
-    onIndexChange(index){
-        this.setState({ index });
-        this.props.onTabChange(index);
-    }
+    this.props.tabs.forEach((tab, i) => {
+      routes.push({
+        key: i.toString(),
+        title: tab.title,
+        view: tab.view,
+      });
 
-    renderScene = ({ route }) => this.props.tabs[route.key].view;
+      scene[i.toString()] = () => tab.view;
+    });
 
-    renderHeader(props) {
-        const tabBarStyles = getTabBarStyles(this.props.color);
+    this.setState({
+      routes,
+      scene: SceneMap(scene),
+    });
+  }
 
-        return (
-            <TabBar {...props}
-                    style={tabBarStyles.tabBar}
-                    labelStyle={StyleSheet.flatten([tabBarStyles.tabBarLabel, font.size12, font.weight700])}
-                    indicatorStyle={StyleSheet.flatten([tabBarStyles.tabBarIndicator])} />
-        );
-    }
-
-    getNavigationState() {
-        let routes = [];
-
-        if (!this.props.tabs) {
-            this.props.tabs = [];
-        }
-
-        this.props.tabs.forEach((tab, i) => {
-            routes.push({
-                key: i.toString(),
-                title: tab.title
-            });
-        });
-
-        return {
-            index: this.state.index,
-            routes: routes
-        };
-    }
-
-    render() {
-        const navigationState = this.getNavigationState();
-
-        return (
-            <TabViewAnimated
-                navigationState={navigationState}
-                renderScene={this.renderScene}
-                renderHeader={this.renderHeader}
-                onIndexChange={this.onIndexChange}
-            />
-        );
-    }
+  render() {
+    return (
+      <TabViewAnimated
+        navigationState={this.state}
+        renderScene={this.state.scene}
+        renderHeader={this.renderHeader}
+        onIndexChange={this.onIndexChange}
+      />
+    );
+  }
 }
 
 DagTabView.defaultProps = {
-    color: 'white',
-    tabs: [],
-    onTabChange: (index) => {}
+  color: 'white',
+  tabs: [],
+  onTabChange: (index) => {},
 };
 
 const styles = StyleSheet.create({
@@ -83,37 +82,37 @@ const styles = StyleSheet.create({
 });
 
 function getTabBarStyles(color) {
-    if (color === 'red') {
-        return StyleSheet.create({
-            tabBar: {
-                backgroundColor: '#d51f26',
-                borderBottomColor: '#ffffff',
-                borderStyle: 'solid',
-                borderBottomWidth: 1
-            },
-            tabBarLabel: {
-                color: '#ffffff'
-            },
-            tabBarIndicator: {
-                backgroundColor: '#ffffff'
-            }
-        });
-    }
-
+  if (color === 'red') {
     return StyleSheet.create({
-        tabBar: {
-            backgroundColor: '#ffffff',
-            borderBottomColor: '#eeeeee',
-            borderStyle: 'solid',
-            borderBottomWidth: 1
-        },
-        tabBarLabel: {
-            color: '#000'
-        },
-        tabBarIndicator: {
-            backgroundColor: '#d51f26'
-        }
+      tabBar: {
+        backgroundColor: '#d51f26',
+        borderBottomColor: '#ffffff',
+        borderStyle: 'solid',
+        borderBottomWidth: 1,
+      },
+      tabBarLabel: {
+        color: '#ffffff',
+      },
+      tabBarIndicator: {
+        backgroundColor: '#ffffff',
+      },
     });
+  }
+
+  return StyleSheet.create({
+    tabBar: {
+      backgroundColor: '#ffffff',
+      borderBottomColor: '#eeeeee',
+      borderStyle: 'solid',
+      borderBottomWidth: 1,
+    },
+    tabBarLabel: {
+      color: '#000',
+    },
+    tabBarIndicator: {
+      backgroundColor: '#d51f26',
+    },
+  });
 }
 
 export default DagTabView;

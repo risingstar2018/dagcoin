@@ -1,31 +1,31 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Toast from 'react-native-easy-toast';
-import DagToastManager from "./dagToastManager";
+import DagToastManager from './dagToastManager';
 
 class DagToast extends Component {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.state = {
-            position: null,
-            style: null
-        };
+    this.state = {
+      position: null,
+      style: null,
+    };
 
-        DagToastManager.registerToast(this);
-    }
+    DagToastManager.registerToast(this);
+  }
 
-    show(content, position, duration, style) {
-        this.setState({
-            position: position,
-            style: style
-        });
+  show(content, position, duration, style) {
+    this.setState({
+      position,
+      style,
+    });
 
-        this.refs.toast.show(content, duration);
-    }
+    this.refs.toast.show(content, duration);
+  }
 
-    render() {
-        return (<Toast style={this.state.style} position={this.state.position} ref="toast"/>)
-    }
+  render() {
+    return (<Toast style={this.state.style} position={this.state.position} ref="toast" />);
+  }
 }
 
-export default DagToast
+export default DagToast;

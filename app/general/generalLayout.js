@@ -1,31 +1,29 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {
-    StyleSheet, View
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 class GeneralLayout extends Component {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    render() {
-        return (
-            <View style={StyleSheet.flatten([styles.container, this.props.style])}>
-                {this.props.children}
-            </View>
-        );
-    }
+  render() {
+    return (
+      <View style={StyleSheet.flatten([styles.container, this.props.style])}>
+        {this.props.children}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff'
-    },
-    drawerStyle: {
-        backgroundColor: '#fff'
-    }
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  drawerStyle: {
+    backgroundColor: '#fff',
+  },
 });
 
 export default GeneralLayout;
