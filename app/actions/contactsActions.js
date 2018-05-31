@@ -1,21 +1,68 @@
 import * as types from './actionTypes';
 
-export const deleteContact = contact => (dispatch) => {
-  dispatch({ type: types.DELETE_CONTACT, contact });
-};
+import contactsStorage from './../services/storage/contactsStorage';
 
-export const editContact = contact => (dispatch) => {
-  dispatch({ type: types.EDIT_CONTACT, contact });
-};
+export const deleteContact = contact => dispatch => new Promise((resolve) => {
+  contactsStorage.getContacts().then((contacts) => {
+    const newContacts = contacts.filter(c => c.address !== contact.address);
 
-export const addContact = contact => (dispatch) => {
-  dispatch({ type: types.ADD_CONTACT, contact });
-};
+    contactsStorage.setContacts(newContacts).then(() => {
+      dispatch({ type: types.UPDATE_CONTACTS, contacts: newContacts });
+      resolve();
+    });
+  });
+});
 
-export const addFavoriteContact = contact => (dispatch) => {
-  dispatch({ type: types.ADD_FAVORITE_CONTACT, contact });
-};
+export const editContact = contact => dispatch => new Promise((resolve) => {
+  contactsStorage.getContacts().then((contacts) => {
+    const c = contacts.find(c => c.address === contact.address);
+    Object.assign(c, contact);
 
-export const removeFavoriteContact = contact => (dispatch) => {
-  dispatch({ type: types.REMOVE_FAVORITE_CONTACT, contact });
-};
+    contactsStorage.setContacts(contacts).then(() => {
+      dispatch({ type: types.UPDATE_CONTACTS, contacts });
+      resolve();
+    });
+  });
+});
+
+export const addContact = contact => dispatch => new Promise((resolve) => {
+  contactsStorage.getContacts().then((contacts) => {
+    contacts.push(contact);
+
+    contactsStorage.setContacts(contacts).then(() => {
+      dispatch({ type: types.UPDATE_CONTACTS, contacts });
+      resolve();
+    });
+  });
+});
+
+export const addFavoriteContact = contact => dispatch => new Promise((resolve) => {
+  contactsStorage.getContacts().then((contacts) => {
+    const c = contacts.find(c => c.address === contact.address);
+    c.isFavorite = true;
+
+    contactsStorage.setContacts(contacts).then(() => {
+      dispatch({ type: types.UPDATE_CONTACTS, contacts });
+      resolve();
+    });
+  });
+});
+
+export const removeFavoriteContact = contact => dispatch => new Promise((resolve) => {
+  contactsStorage.getContacts().then((contacts) => {
+    const c = contacts.find(c => c.address === contact.address);
+    c.isFavorite = false;
+
+    contactsStorage.setContacts(contacts).then(() => {
+      dispatch({ type: types.UPDATE_CONTACTS, contacts });
+      resolve();
+    });
+  });
+});
+
+export const initContacts = () => dispatch => new Promise((resolve) => {
+  contactsStorage.getContacts().then((contacts) => {
+    dispatch({ type: types.UPDATE_CONTACTS, contacts });
+    resolve();
+  });
+});

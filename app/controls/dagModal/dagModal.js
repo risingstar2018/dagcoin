@@ -18,7 +18,7 @@ class DagModal extends Component {
   }
 
   renderCloseButton() {
-    if (!this.props.canClose) {
+    if (!this.props.canClose || this.props.hideCloseButton) {
       return null;
     }
 
@@ -45,6 +45,7 @@ class DagModal extends Component {
 }
 
 DagModal.defaultProps = {
+  hideCloseButton: false,
   canClose: true,
   onClose: () => {},
 };

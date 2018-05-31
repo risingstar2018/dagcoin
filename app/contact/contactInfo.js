@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import { StyleSheet, Image, View, Text } from 'react-native';
 
@@ -17,27 +16,41 @@ import { deleteContact } from '../actions/contactsActions';
 import Navigator from '../navigator/navigationManager';
 import routes from '../navigator/routes';
 
-
 class ContactInfo extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      contact: null,
+    };
+  }
+
   onSendClick() {
     console.log(this.state);
   }
 
+  componentWillMount() {
+    const contact = this.props.contacts.find(c => c.address === this.props.navParams.contact.address);
+
+    this.setState({
+      contact,
+    });
+  }
+
   onMoreButtonClick() {
-    const contact = this.props.navParams.contact;
     DagModalManager.show(<ActionsModal actions={[
             {
                 label: 'Edit',
                 action: () => {
                     DagModalManager.hide();
-                    Navigator.to(this, routes.EditContact, { contact });
+                    Navigator.to(this, routes.EditContact, { contact: this.state.contact });
                 },
             },
             {
                 label: 'Delete',
                 action: () => {
                     DagModalManager.hide();
-                    this.props.deleteContact(contact);
+                    this.props.deleteContact(this.state.contact);
                     Navigator.back();
                 },
             },
@@ -54,8 +67,6 @@ class ContactInfo extends Component {
   }
 
   render() {
-    const contact = { contact: this.props.navParams.contact }
-
     return (
       <GeneralLayout style={StyleSheet.flatten([styles.container, this.props.style])}>
         <PageHeader canBack title={'Contact'.toUpperCase()} renderCustomAction={this.renderMoreButton.bind(this)} />
@@ -64,14 +75,12 @@ class ContactInfo extends Component {
             <View style={StyleSheet.flatten([container.m10b, styles.avatarContainer])}>
               <Image style={StyleSheet.flatten([styles.avatar])} source={require('../../img/avatar.png')} />
             </View>
-            <Text style={StyleSheet.flatten([font.size16, font.weight700])}>
-              {contact.firstName} {contact.lastName}
-            </Text>
+            <Text style={StyleSheet.flatten([font.size16, font.weight700])}>{this.state.contact.firstName} {this.state.contact.lastName}</Text>
           </View>
 
           <View style={StyleSheet.flatten([container.m30b, container.p15t, container.p15b, styles.infoContainer])}>
             <Text style={StyleSheet.flatten([text.textGray, font.size12, container.m5b])}>Address</Text>
-            <Text>{contact.address}</Text>
+            <Text>{this.state.contact.address}</Text>
           </View>
 
           <DagButton text="SEND" onClick={this.onSendClick.bind(this)} />
@@ -109,18 +118,14 @@ const styles = StyleSheet.create({
   },
 });
 
+function mapStateToProps(state) {
+  return {
+    contacts: state.contacts,
+  };
+}
+
 const mapDispatchToProps = {
   deleteContact,
 };
 
-ContactInfo.propTypes = {
-  navParams: PropTypes.node,
-  deleteContact: PropTypes.func,
-};
-
-ContactInfo.defaultProps = {
-  navParams: {},
-  deleteContact: undefined,
-};
-
-export default ContactInfo = connect(null, mapDispatchToProps)(ContactInfo);
+export default ContactInfoWrapper = connect(mapStateToProps, mapDispatchToProps)(ContactInfo);

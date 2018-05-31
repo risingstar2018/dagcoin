@@ -13,7 +13,7 @@ import ContactsList from './contactsList';
 import FavoriteList from './favoriteList';
 import { connect } from 'react-redux';
 import { container } from '../../styles/main';
-import { addFavoriteContact, removeFavoriteContact } from '../../actions/contactsActions';
+import { addFavoriteContact, removeFavoriteContact, init } from '../../actions/contactsActions';
 
 class Contacts extends Component {
   constructor() {
@@ -22,6 +22,22 @@ class Contacts extends Component {
     this.renderContent = this.renderContent.bind(this);
     this.renderNoContent = this.renderNoContent.bind(this);
     this.renderTabs = this.renderTabs.bind(this);
+
+    this.tabs = [{
+      title: 'Contacts',
+      view: (<ContactsList
+        onSetFavoriteClick={this.onSetFavoriteClick.bind(this)}
+        onRemoveFavoriteClick={this.onRemoveFavoriteClick.bind(this)}
+        onContactClick={this.onContactClick.bind(this)}
+      />),
+    }, {
+      title: 'Favorites',
+      view: (<FavoriteList
+        onSetFavoriteClick={this.onSetFavoriteClick.bind(this)}
+        onRemoveFavoriteClick={this.onRemoveFavoriteClick.bind(this)}
+        onContactClick={this.onContactClick.bind(this)}
+      />),
+    }];
   }
 
   onNewContactClick() {
@@ -41,28 +57,7 @@ class Contacts extends Component {
   }
 
   renderTabs() {
-    const contacts = this.props.contacts;
-    const favorite = contacts.filter(c => c.isFavorite);
-
-    const tabs = [{
-      title: 'Contacts',
-      view: (<ContactsList
-        contacts={contacts}
-        onSetFavoriteClick={this.onSetFavoriteClick.bind(this)}
-        onRemoveFavoriteClick={this.onRemoveFavoriteClick.bind(this)}
-        onContactClick={this.onContactClick.bind(this)}
-      />),
-    }, {
-      title: 'Favorites',
-      view: (<FavoriteList
-        contacts={favorite}
-        onSetFavoriteClick={this.onSetFavoriteClick.bind(this)}
-        onRemoveFavoriteClick={this.onRemoveFavoriteClick.bind(this)}
-        onContactClick={this.onContactClick.bind(this)}
-      />),
-    }];
-
-    return (<DagTabView color="red" tabs={tabs} />);
+    return (<DagTabView color="red" tabs={this.tabs} />);
   }
 
   renderNoContent() {

@@ -5,6 +5,10 @@ class FileStorageAdapter {
     return rnfs.DocumentDirectoryPath;
   }
 
+    prepareDir() {
+        return new Promise((resolve) => resolve());
+    }
+
   read(path) {
     return rnfs.readFile(path);
   }

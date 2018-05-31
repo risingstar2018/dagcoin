@@ -10,6 +10,7 @@ import ContactListGroup from './components/contactListGroup';
 
 import { container } from '../../styles/main';
 import NoFavorites from './components/noFavorites';
+import { connect } from 'react-redux';
 
 class FavoriteList extends Component {
   constructor() {
@@ -77,7 +78,6 @@ class FavoriteList extends Component {
 }
 
 FavoriteList.defaultProps = {
-  contacts: [],
   onContactClick: (contact) => {},
   onSetFavoriteClick: (contact) => {},
   onRemoveFavoriteClick: (contact) => {},
@@ -89,5 +89,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoriteList;
+function mapStateToProps(state) {
+  return {
+    contacts: state.contacts.filter(c => c.isFavorite),
+  };
+}
+
+export default FavoriteListWrapper = connect(mapStateToProps)(FavoriteList);
 
