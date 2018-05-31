@@ -10,7 +10,9 @@ export default {
     focusedWallet: {
       address: 'HCKESQ5UM4JQH5IA2FH27ZNBMUSCZ62W',
       name: 'Wallet #1',
+      balance: 3.487483,
     },
     inited: false,
+    visibility: true
   },
 };

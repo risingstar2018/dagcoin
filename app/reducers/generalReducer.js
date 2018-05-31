@@ -11,6 +11,8 @@ export default (state = initialState.general, action) => {
       const initialState = action.initialState;
       initialState.inited = true;
       return Object.assign(state, initialState);
+    case types.TOGGLE_VISIBILITY:
+      return Object.assign(state, { visibility: !state.visibility});
     default:
       return state;
   }

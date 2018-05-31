@@ -32,3 +32,9 @@ export const init = () => dispatch => new Promise((resolve, reject) => {
     resolve();
   });
 });
+
+export const toggleVisibility = () => {
+    return dispatch => {
+        dispatch({type: types.TOGGLE_VISIBILITY});
+    };
+};

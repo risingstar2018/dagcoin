@@ -6,8 +6,10 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 const DagSimpleButton = props => (
   <TouchableOpacity
     onPress={props.onClick}
+    onLongPress={props.onLongPress}
     style={StyleSheet.flatten([props.style])}
     disabled={props.disabled}
+    activeOpacity={props.activeOpacity}
   >
     {props.children}
   </TouchableOpacity>
@@ -16,15 +18,19 @@ const DagSimpleButton = props => (
 DagSimpleButton.propTypes = {
   children: PropTypes.node,
   onClick: PropTypes.func,
+  onLongPress: PropTypes.func,
   disabled: PropTypes.func,
-  style: PropTypes.shape([PropTypes.string, PropTypes.number]),
+  style: PropTypes.shape([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
+  activeOpacity: PropTypes.number,
 };
 
 DagSimpleButton.defaultProps = {
-  children: {},
+  children: undefined,
   onClick: undefined,
+  onLongPress: undefined,
   disabled: undefined,
-  style: {},
+  style: undefined,
+  activeOpacity: 1,
 };
 
 export default DagSimpleButton;

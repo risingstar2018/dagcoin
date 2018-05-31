@@ -6,12 +6,12 @@ import { connect } from 'react-redux';
 import BasePageLayout from '../general/basePageLayout';
 import HomeLayout, { MENU_ITEMS } from './homeLayout';
 import PageHeader from '../general/pageHeader';
+import BalanceAmount from './components/balanceAmount';
 
 class Wallet extends Component {
   constructor() {
     super();
   }
-
   render() {
     return (
       <HomeLayout selectedMenuItem={MENU_ITEMS.WALLET}>
@@ -20,9 +20,7 @@ class Wallet extends Component {
           hasMenu
           title={this.props.walletName.toUpperCase()}
         />
-        <BasePageLayout>
-          <Text>Wallet</Text>
-        </BasePageLayout>
+        <BalanceAmount />
       </HomeLayout>
     );
   }
