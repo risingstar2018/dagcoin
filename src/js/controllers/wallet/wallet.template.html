@@ -26,7 +26,7 @@
       <!-- 2 -->
       <span ng-show="home.onGoingProcess && !index.anyOnGoingProcess && !index.isOffline">{{home.onGoingProcess|translate}}...</span>
       <!-- 3 -->
-      <span translate ng-show="['openingWallet', 'updatingStatus', 'updatingBalance', 'updatingPendingTxps', 'updatingHistory'].indexOf(index.onGoingProcessName) >= 0">Updating Wallet...</span>
+      <span translate ng-show="['openingWallet', 'updatingStatus', 'updatingBalance', 'updatingPendingTxps', 'updatingHistory', 'init-home'].indexOf(index.onGoingProcessName) >= 0">Updating Wallet...</span>
       <span translate ng-show="index.onGoingProcessName == 'scanning'">Scanning Wallet funds...</span>
       <span translate ng-show="index.onGoingProcessName == 'recreating'">Recreating Wallet...</span>
       <span translate ng-show="index.onGoingProcessName == 'generatingCSV'">Generating .csv file...</span>
