@@ -1005,7 +1005,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           indexEventsSupport.initMyTransactionsBecameStable();
           indexEventsSupport.initMciBecameStable();
           indexEventsSupport.initMaybeNewTransactions();
-          indexEventsSupport.initWalletApproved();
+          indexEventsSupport.initWalletApproved(() => {
+            $rootScope.$emit('Local/NewFocusedWallet');
+          });
           indexEventsSupport.initWalletDeclined();
           indexEventsSupport.initWalletCompleted();
           indexEventsSupport.initConfirmOnOtherDevice();

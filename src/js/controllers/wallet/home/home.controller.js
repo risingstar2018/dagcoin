@@ -14,7 +14,7 @@
     const indexScope = $scope.index;
     vm.balanceIsHidden = $rootScope.balanceIsHidden;
     vm.balanceInited = false;
-    vm.balanceIsZero = false;
+    vm.hasBalanceHistory = false;
 
     const viewContentLoaded = function () {
       console.log('HomeCtrl initialized');
@@ -22,10 +22,13 @@
     };
 
     vm.initBalanceVisibility = function () {
-      vm.balanceInited = indexScope.txHistory != null;
-      vm.balanceIsZero = !indexScope.baseBalance || (indexScope.baseBalance.pending === 0 &&
-        indexScope.baseBalance.total === 0 && indexScope.baseBalance.stable === 0 &&
-        !indexScope.txHistory[0]);
+      $scope.index.setOngoingProcess('init-home', true);
+
+      const hasBalance = !!indexScope.baseBalance && indexScope.baseBalance.total !== 0;
+      vm.balanceInited = hasBalance || !!indexScope.txHistory;
+      vm.noBalanceHistory = !(hasBalance || (!!indexScope.txHistory && indexScope.txHistory.length > 0));
+
+      $scope.index.setOngoingProcess('init-home', !vm.balanceInited);
     };
 
     vm.buyDagcoin = function () {
