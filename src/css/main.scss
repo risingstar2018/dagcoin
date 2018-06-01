@@ -2721,6 +2721,7 @@ canvas {
   color: #fff;
   padding: 50px 0;
   overflow: hidden;
+  min-height: 190px;
 
   &:after {
     opacity: 1;
