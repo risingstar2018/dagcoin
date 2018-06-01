@@ -117,18 +117,16 @@
     function walletImport() {
       self.imported = true;
       self.error = '';
-      const normalizedPassword = utilityService.getNormalizedPassword(self.password);
-
       if (self.android && self.androidVersion < 5) {
         fileSystemService.readFile(self.oldAndroidFilePath, (err, data) => {
-          unzipAndWriteFiles(data, normalizedPassword);
+          unzipAndWriteFiles(data, utilityService.getNormalizedPassword(self.password));
         });
       } else {
         fileSystemService.readFileFromForm(self.file, (err, data) => {
           if (err) {
             return showError(err);
           }
-          return unzipAndWriteFiles(data, normalizedPassword);
+          return unzipAndWriteFiles(data, utilityService.getNormalizedPassword(self.password));
         });
       }
     }
@@ -164,7 +162,9 @@
       });
     }
 
-    if (self.iOs) generateListFilesForIos();
+    if (self.iOs) {
+      generateListFilesForIos();
+    }
 
     function writeDBAndFileStorageMobile(zipfiles, cb) {
       const db = require('core/db');
@@ -263,14 +263,9 @@
       });
     }
 
-    function decrypt(buffer, password, notDecipheriv) {
-      let decipher;
-      if (!notDecipheriv) {
-        const bufferPassword = Buffer.from(password);
-        decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
-      } else {
-        decipher = crypto.createDecipher('aes-256-ctr', password);
-      }
+    function decrypt(buffer, password) {
+      const bufferPassword = Buffer.from(password);
+      const decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
       const arrChunks = [];
       const CHUNK_LENGTH = 2003;
       for (let offset = 0; offset < buffer.length; offset += CHUNK_LENGTH) {
@@ -292,76 +287,37 @@
 
     function unzipAndWriteFiles(data, password) {
       if (Device.cordova) {
-        let decrypted = decrypt(data, password);
-        tryRecoverInMobile(decrypted, (recoverErr1) => {
-          $log.error(`First attempt to recover: ${recoverErr1}`);
-          $log.warn('Trying with createDecipher');
-          fileSystemService.readFileFromForm(self.file, (fsErr, data) => {
-            if (fsErr) {
-              return showError(fsErr);
-            }
-            decrypted = decrypt(data, password, true);
-            tryRecoverInMobile(decrypted, (recoverErr2) => {
-              if (recoverErr2) {
-                $log.error(recoverErr2);
-                return showError('Incorrect password or file.');
-              }
+        zip.loadAsync(decrypt(data, password)).then((zippedFile) => {
+          if (!zippedFile.file('light')) {
+            self.imported = false;
+            self.error = gettextCatalog.getString('Mobile version supports only light wallets.');
+            $timeout(() => {
+              $rootScope.$apply();
             });
-          });
+          } else {
+            writeDBAndFileStorageMobile(zippedFile, (err) => {
+              if (err) {
+                return showError(err);
+              }
+              self.imported = false;
+              return $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('Import successfully completed, please restart the application.'), 'fi-check', () => {
+                if (navigator && navigator.app) {
+                  navigator.app.exitApp();
+                } else if (process.exit) {
+                  process.exit();
+                }
+              });
+            });
+          }
+        }, (err) => {
+          $log.error(err);
+          showError('Incorrect password or file');
         });
       } else {
-        let decipher = crypto.createDecipher('aes-256-ctr', password);
-        tryRecoverInPC(data, decipher, (recoverErr1) => {
-          $log.error(`First attempt to recover: ${recoverErr1}`);
-          const bufferPassword = Buffer.from(password);
-          decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
-          console.warn('Trying with createDecipheriv');
-          fileSystemService.readFileFromForm(self.file, (fsErr, data) => {
-            if (fsErr) {
-              $log.error(fsErr);
-              return showError(fsErr);
-            }
-            tryRecoverInPC(data, decipher, (recoverErr2) => {
-              if (recoverErr2) {
-                $log.error(recoverErr2);
-                return showError('Incorrect password or file.');
-              }
-            });
-          });
-        });
-      }
-    }
-
-    function tryRecoverInPC(data, decipher, errCb) {
-      data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
-        writeDBAndFileStoragePC((err) => {
-          if (err) {
-            return showError(err);
-          }
-          self.imported = false;
-          return $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('Import successfully completed, please restart the application.'), 'fi-check', () => {
-            if (navigator && navigator.app) {
-              navigator.app.exitApp();
-            } else if (process.exit) {
-              process.exit();
-            }
-          });
-        });
-      })).on('error', (err) => {
-        errCb(err);
-      });
-    }
-
-    function tryRecoverInMobile(decrypted, errCb) {
-      zip.loadAsync(decrypted).then((zippedFile) => {
-        if (!zippedFile.file('light')) {
-          self.imported = false;
-          self.error = gettextCatalog.getString('Mobile version supports only light wallets.');
-          $timeout(() => {
-            $rootScope.$apply();
-          });
-        } else {
-          writeDBAndFileStorageMobile(zippedFile, (err) => {
+        const bufferPassword = Buffer.from(password);
+        const decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
+        data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
+          writeDBAndFileStoragePC((err) => {
             if (err) {
               return showError(err);
             }
@@ -374,10 +330,13 @@
               }
             });
           });
-        }
-      }, (err) => {
-        errCb(err);
-      });
+        })).on('error', (err) => {
+          if (err.message === 'Invalid signature in zip file') {
+            return showError('Incorrect password or file');
+          }
+          return showError(err);
+        });
+      }
     }
 
     function determineIfAddressUsed(address, cb) {
