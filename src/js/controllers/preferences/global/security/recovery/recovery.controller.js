@@ -7,10 +7,10 @@
   .controller('RecoveryCtrl', RecoveryCtrl);
 
   RecoveryCtrl.$inject = ['$rootScope', '$scope', '$state', '$log', '$timeout', 'profileService', 'gettextCatalog', 'fileSystemService',
-                          'configService', 'storageService', 'Device'];
+                          'configService', 'storageService', 'Device', 'utilityService'];
 
   function RecoveryCtrl($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService,
-                        configService, storageService, Device) {
+                        configService, storageService, Device, utilityService) {
     const async = require('async');
     const conf = require('core/conf.js');
     const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
@@ -119,14 +119,14 @@
       self.error = '';
       if (self.android && self.androidVersion < 5) {
         fileSystemService.readFile(self.oldAndroidFilePath, (err, data) => {
-          unzipAndWriteFiles(data, self.password);
+          unzipAndWriteFiles(data, utilityService.getNormalizedPassword(self.password));
         });
       } else {
         fileSystemService.readFileFromForm(self.file, (err, data) => {
           if (err) {
             return showError(err);
           }
-          return unzipAndWriteFiles(data, self.password);
+          return unzipAndWriteFiles(data, utilityService.getNormalizedPassword(self.password));
         });
       }
     }
@@ -162,7 +162,9 @@
       });
     }
 
-    if (self.iOs) generateListFilesForIos();
+    if (self.iOs) {
+      generateListFilesForIos();
+    }
 
     function writeDBAndFileStorageMobile(zipfiles, cb) {
       const db = require('core/db');
@@ -312,7 +314,8 @@
           showError('Incorrect password or file');
         });
       } else {
-        const decipher = crypto.createDecipher('aes-256-ctr', password);
+        const bufferPassword = Buffer.from(password);
+        const decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
         data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
           writeDBAndFileStoragePC((err) => {
             if (err) {
@@ -331,7 +334,6 @@
           if (err.message === 'Invalid signature in zip file') {
             return showError('Incorrect password or file');
           }
-
           return showError(err);
         });
       }
