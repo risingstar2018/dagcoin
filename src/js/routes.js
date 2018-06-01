@@ -632,7 +632,7 @@
       if (isCordova) {
         document.addEventListener('resume', () => {
           $timeout(() => {
-            configService.get((err, config) => {
+            configService.get((configErr, config) => {
               // password and finger print options are read from config and profile service
               const needPassword = !!profileService.profile.xPrivKeyEncrypted;
               const needFingerprint = !!config.touchId;
