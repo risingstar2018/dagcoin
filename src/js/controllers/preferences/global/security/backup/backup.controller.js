@@ -134,9 +134,7 @@
       vm.connection = connection;
       saveFile(null, (path) => {
         if (!path) return;
-        // directly calling createCipheriv gives error, so following is used
-        // const cipher = crypto.createCipher('aes-256-ctr', utilityService.getNormalizedPassword(vm.password));
-        const password = Buffer.from(utilityService.getNormalizedPassword(vm.password));
+        const password = Buffer.from(vm.password);
         const cipher = crypto.createCipheriv('aes-256-ctr', crypto.pbkdf2Sync(password, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(password).digest().slice(0, 16));
 
         jsZip = new Zip(path, {

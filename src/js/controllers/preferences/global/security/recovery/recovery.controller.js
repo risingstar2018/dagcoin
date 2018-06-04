@@ -119,14 +119,14 @@
       self.error = '';
       if (self.android && self.androidVersion < 5) {
         fileSystemService.readFile(self.oldAndroidFilePath, (err, data) => {
-          unzipAndWriteFiles(data, utilityService.getNormalizedPassword(self.password));
+          unzipAndWriteFiles(data, self.password);
         });
       } else {
         fileSystemService.readFileFromForm(self.file, (err, data) => {
           if (err) {
             return showError(err);
           }
-          return unzipAndWriteFiles(data, utilityService.getNormalizedPassword(self.password));
+          return unzipAndWriteFiles(data, self.password);
         });
       }
     }
