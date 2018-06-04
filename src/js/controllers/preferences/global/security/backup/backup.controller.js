@@ -134,40 +134,62 @@
       vm.connection = connection;
       saveFile(null, (path) => {
         if (!path) return;
-        // directly calling createCipheriv gives error, so following is used
-        // const cipher = crypto.createCipher('aes-256-ctr', utilityService.getNormalizedPassword(vm.password));
-        const password = Buffer.from(utilityService.getNormalizedPassword(vm.password));
-        const cipher = crypto.createCipheriv('aes-256-ctr', crypto.pbkdf2Sync(password, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(password).digest().slice(0, 16));
 
-        jsZip = new Zip(path, {
-          compressed: vm.bCompression ? 6 : 0,
-          cipher,
-        });
-        storageService.getProfile((err, profile) => {
-          storageService.getConfig((storageServiceError, config) => {
-            if (storageServiceError) {
-              return showError(storageServiceError);
-            }
-            jsZip.text('profile', JSON.stringify(profile));
-            jsZip.text('config', config);
-            if (conf.bLight) {
-              jsZip.text('light', 'true');
-            }
-            return addDBAndConfToZip((addDBAndConfToZipError) => {
-              if (addDBAndConfToZipError) {
-                return showError(addDBAndConfToZipError);
-              }
-              return jsZip.end(() => {
-                connection.release();
-                vm.connection = null;
-                vm.exporting = false;
-                $timeout(() => {
-                  $rootScope.$apply();
-                  notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString('Export completed successfully', {}));
+        const fs = require('fs');
+        const pathLib = require('path');
+        fs.access(pathLib.dirname(path), fs.W_OK, (errAccess) => {
+          if (!errAccess) {
+            // directly calling createCipheriv gives error, so following is used
+            // const cipher = crypto.createCipher('aes-256-ctr', utilityService.getNormalizedPassword(vm.password));
+            const password = Buffer.from(utilityService.getNormalizedPassword(vm.password));
+            const cipher = crypto.createCipheriv('aes-256-ctr', crypto.pbkdf2Sync(password, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(password).digest().slice(0, 16));
+
+            jsZip = new Zip(path, {
+              compressed: vm.bCompression ? 6 : 0,
+              cipher,
+            });
+            storageService.getProfile((err, profile) => {
+              storageService.getConfig((storageServiceError, config) => {
+                if (storageServiceError) {
+                  return showError(storageServiceError);
+                }
+                jsZip.text('profile', JSON.stringify(profile));
+                jsZip.text('config', config);
+                if (conf.bLight) {
+                  jsZip.text('light', 'true');
+                }
+                return addDBAndConfToZip((addDBAndConfToZipError) => {
+                  if (addDBAndConfToZipError) {
+                    return showError(addDBAndConfToZipError);
+                  }
+                  return jsZip.end(() => {
+                    connection.release();
+                    vm.connection = null;
+                    vm.exporting = false;
+                    $timeout(() => {
+                      $rootScope.$apply();
+                      notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString('Export completed successfully', {}));
+                    });
+                    removeListeners();
+                  });
                 });
               });
             });
-          });
+          } else {
+            // {"errno":-13,"code":"EACCES","syscall":"access","path":"/sys"}
+            $log.error(errAccess);
+            if (errAccess.code && errAccess.code.toUpperCase() === 'EACCES' && errAccess.path) {
+              const message = gettextCatalog.getString('You do not have permission for', {});
+              $rootScope.$emit('Local/ShowAlert', `${message} :${errAccess.path}`, 'fi-alert', () => { });
+            } else {
+              $rootScope.$emit('Local/ShowAlert', JSON.stringify(errAccess), 'fi-alert', () => { });
+            }
+
+            connection.release();
+            vm.connection = null;
+            vm.exporting = false;
+            removeListeners();
+          }
         });
       });
     }
@@ -268,6 +290,12 @@
         $rootScope.$apply();
       });
       return false;
+    }
+
+    function removeListeners() {
+      window.removeEventListener('focus', () => {});
+      const inputFile = document.getElementById('nwExportInputFile');
+      inputFile.removeEventListener('onchange', () => {});
     }
 
     $scope.$on('$viewContentLoaded', viewContentLoaded);
