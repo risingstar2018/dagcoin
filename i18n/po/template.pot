@@ -1930,3 +1930,7 @@ msgstr ""
 #: send.template.html:24
 msgid "Cancel Send all"
 msgstr ""
+
+#: backup.controller.js:181
+msgid "You do not have permission for"
+msgstr ""

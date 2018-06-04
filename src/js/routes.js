@@ -632,23 +632,25 @@
       if (isCordova) {
         document.addEventListener('resume', () => {
           $timeout(() => {
-            const config = configService.getSync();
-            // password and finger print options are read from config and profile service
-            const needPassword = profileService.profile && profileService.profile.xPrivKeyEncrypted && !!profileService.profile.xPrivKeyEncrypted;
-            const needFingerprint = !!config.touchId;
-            if (needPassword) {
-              profileService.insistUnlockFC(null, (err) => {
-                if (!err) {
-                  $rootScope.$emit('Local/ProfileBound');
-                }
-              });
-            } else if (needFingerprint) {
-              profileService.insistUnlockWithFingerprintFC((err) => {
-                if (!err) {
-                  $rootScope.$emit('Local/ProfileBound');
-                }
-              });
-            }
+            configService.get((configErr, config) => {
+              // password and finger print options are read from config and profile service
+              const needPassword = profileService.profile && profileService.profile.xPrivKeyEncrypted && !!profileService.profile.xPrivKeyEncrypted;
+              const needFingerprint = !!config.touchId;
+
+              if (needPassword) {
+                profileService.insistUnlockFC(null, (err) => {
+                  if (!err) {
+                    $rootScope.$emit('Local/ProfileBound');
+                  }
+                });
+              } else if (needFingerprint) {
+                profileService.insistUnlockWithFingerprintFC((err) => {
+                  if (!err) {
+                    $rootScope.$emit('Local/ProfileBound');
+                  }
+                });
+              }
+            });
           }, 100);
         }, false);
       }
