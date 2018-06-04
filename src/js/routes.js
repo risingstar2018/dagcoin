@@ -636,6 +636,7 @@
               // password and finger print options are read from config and profile service
               const needPassword = profileService.profile && profileService.profile.xPrivKeyEncrypted && !!profileService.profile.xPrivKeyEncrypted;
               const needFingerprint = !!config.touchId;
+
               if (needPassword) {
                 profileService.insistUnlockFC(null, (err) => {
                   if (!err) {
