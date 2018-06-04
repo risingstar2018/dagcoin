@@ -180,7 +180,7 @@
             $log.error(errAccess);
             if (errAccess.code && errAccess.code.toUpperCase() === 'EACCES' && errAccess.path) {
               const message = gettextCatalog.getString('You do not have permission for', {});
-              $rootScope.$emit('Local/ShowAlert', `${message} :${errAccess.path}`, 'fi-alert', () => { });
+              $rootScope.$emit('Local/ShowAlert', `${message} ${errAccess.path}`, 'fi-alert', () => { });
             } else {
               $rootScope.$emit('Local/ShowAlert', JSON.stringify(errAccess), 'fi-alert', () => { });
             }
