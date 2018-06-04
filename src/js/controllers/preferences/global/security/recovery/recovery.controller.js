@@ -314,8 +314,7 @@
           showError('Incorrect password or file');
         });
       } else {
-        const bufferPassword = Buffer.from(password);
-        const decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
+        const decipher = crypto.createDecipher('aes-256-ctr', password);
         data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
           writeDBAndFileStoragePC((err) => {
             if (err) {
