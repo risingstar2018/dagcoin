@@ -35,7 +35,7 @@
     root.navigateSecure = function (state) {
       const config = configService.getSync();
 
-      const needPassword = !!profileService.profile.xPrivKeyEncrypted;
+      const needPassword = profileService.profile && profileService.profile.xPrivKeyEncrypted && !!profileService.profile.xPrivKeyEncrypted;
       const needFingerprint = !!config.touchId;
       const needAuth = needPassword || needFingerprint;
 

@@ -6,10 +6,10 @@
     .controller('BackupCtrl', BackupCtrl);
 
   BackupCtrl.$inject = ['$rootScope', '$scope', '$timeout', 'profileService', 'go', 'gettextCatalog', 'confirmDialog',
-    'notification', '$log', 'storageService', 'fileSystemService', 'Device'];
+    'notification', '$log', 'storageService', 'fileSystemService', 'Device', 'utilityService', 'moment'];
 
   function BackupCtrl($rootScope, $scope, $timeout, profileService, go, gettextCatalog, confirmDialog, notification, $log,
-                      storageService, fileSystemService, Device) {
+                      storageService, fileSystemService, Device, utilityService, moment) {
     const vm = this;
     const fc = profileService.focusedClient;
     const async = require('async');
@@ -111,7 +111,7 @@
             }
             const zipParams = { type: 'nodebuffer', compression: 'DEFLATE', compressionOptions: { level: 9 } };
             return jsZip.generateAsync(zipParams).then((zipFile) => {
-              saveFile(encrypt(zipFile, vm.password), (encryptError) => {
+              saveFile(encrypt(zipFile, utilityService.getNormalizedPassword(vm.password)), (encryptError) => {
                 connection.release();
                 if (encryptError) {
                   return showError(encryptError);
@@ -134,7 +134,11 @@
       vm.connection = connection;
       saveFile(null, (path) => {
         if (!path) return;
-        const cipher = crypto.createCipher('aes-256-ctr', vm.password);
+        // directly calling createCipheriv gives error, so following is used
+        // const cipher = crypto.createCipher('aes-256-ctr', utilityService.getNormalizedPassword(vm.password));
+        const password = Buffer.from(utilityService.getNormalizedPassword(vm.password));
+        const cipher = crypto.createCipheriv('aes-256-ctr', crypto.pbkdf2Sync(password, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(password).digest().slice(0, 16));
+
         jsZip = new Zip(path, {
           compressed: vm.bCompression ? 6 : 0,
           cipher,
@@ -229,7 +233,7 @@
     }
 
     function saveFile(file, cb) {
-      const backupFilename = `Dagcoin${Date.now()}.encrypted`;
+      const backupFilename = `Dagcoin-${moment(Date.now()).format('YYYY-MM-DD-HH-mm-ss')}.encrypted`;
       if (!vm.isCordova) {
         const inputFile = document.getElementById('nwExportInputFile');
         inputFile.setAttribute('nwsaveas', backupFilename);

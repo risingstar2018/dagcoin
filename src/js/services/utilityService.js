@@ -67,6 +67,20 @@
       return Device.android || Device.iOS;
     };
 
+    /**
+     * Problem occurs while directly using password from dag-password directive.
+     * So that it is reconstructed again
+     * @param password
+     * @return {string}
+     */
+    root.getNormalizedPassword = function (password) {
+      let normalizedPassword = '';
+      for (let i = 0; i < password.length; i += 1) {
+        normalizedPassword += password.charAt(i);
+      }
+      return normalizedPassword;
+    };
+
     return root;
   });
 }());

@@ -195,6 +195,8 @@ fi
 
 echo -e "${OpenColor}${Green}* Copying files...${CloseColor}"
 cd $BUILDDIR/..
+echo -e "${OpenColor}${Green}* Removing and recreating www folder${CloseColor}"
+rm -rf $PROJECT/www
 mkdir $PROJECT/www
 cp -af public/** $PROJECT/www
 checkOK

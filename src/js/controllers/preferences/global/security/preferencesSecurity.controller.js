@@ -12,7 +12,7 @@
                                    fingerprintService, sharedService, gettextCatalog, $q) {
     const vm = this;
     const config = configService.getSync();
-    vm.encrypt = !!profileService.profile.xPrivKeyEncrypted;
+    vm.encrypt = profileService.profile && profileService.profile.xPrivKeyEncrypted && !!profileService.profile.xPrivKeyEncrypted;
     vm.touchidAvailable = fingerprintService.isAvailable();
     vm.touchid = !!config.touchId;
     vm.enableShowReceiveOnPassword = config.enableShowReceiveOnPassword;
