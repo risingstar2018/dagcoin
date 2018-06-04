@@ -6,10 +6,10 @@
     .controller('BackupCtrl', BackupCtrl);
 
   BackupCtrl.$inject = ['$rootScope', '$scope', '$timeout', 'profileService', 'go', 'gettextCatalog', 'confirmDialog',
-    'notification', '$log', 'storageService', 'fileSystemService', 'Device', 'utilityService', 'moment'];
+    'notification', '$log', 'storageService', 'fileSystemService', 'Device'];
 
   function BackupCtrl($rootScope, $scope, $timeout, profileService, go, gettextCatalog, confirmDialog, notification, $log,
-                      storageService, fileSystemService, Device, utilityService, moment) {
+                      storageService, fileSystemService, Device) {
     const vm = this;
     const fc = profileService.focusedClient;
     const async = require('async');
@@ -111,7 +111,7 @@
             }
             const zipParams = { type: 'nodebuffer', compression: 'DEFLATE', compressionOptions: { level: 9 } };
             return jsZip.generateAsync(zipParams).then((zipFile) => {
-              saveFile(encrypt(zipFile, utilityService.getNormalizedPassword(vm.password)), (encryptError) => {
+              saveFile(encrypt(zipFile, vm.password), (encryptError) => {
                 connection.release();
                 if (encryptError) {
                   return showError(encryptError);

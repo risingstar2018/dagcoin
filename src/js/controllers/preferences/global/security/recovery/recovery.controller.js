@@ -7,10 +7,10 @@
   .controller('RecoveryCtrl', RecoveryCtrl);
 
   RecoveryCtrl.$inject = ['$rootScope', '$scope', '$state', '$log', '$timeout', 'profileService', 'gettextCatalog', 'fileSystemService',
-                          'configService', 'storageService', 'Device', 'utilityService'];
+                          'configService', 'storageService', 'Device'];
 
   function RecoveryCtrl($rootScope, $scope, $state, $log, $timeout, profileService, gettextCatalog, fileSystemService,
-                        configService, storageService, Device, utilityService) {
+                        configService, storageService, Device) {
     const async = require('async');
     const conf = require('core/conf.js');
     const walletDefinedByKeys = require('core/wallet_defined_by_keys.js');
