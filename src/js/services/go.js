@@ -391,6 +391,7 @@
     } else {
       console.error('uncaughtException: ', e);
     }
+    const eventBus = require('core/event_bus.js');
     eventBus.emit('uncaught_error', `Uncaught exception: ${e}`, e);
   });
 }());
