@@ -14,3 +14,6 @@ export const APP_SETTINGS_INIT = 'APP_SETTINGS_INIT';
 export const DELETE_WALLET = 'DELETE_WALLET';
 export const EDIT_WALLET = 'EDIT_WALLET';
 export const ADD_WALLET = 'ADD_WALLET';
+
+//transactions
+export const UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS';
