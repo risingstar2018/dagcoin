@@ -26,10 +26,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderColor: '#eeeeee',
         borderTopStyle: 'solid',
-        borderTopWidth: '1px',
-        paddingLeft: '15px',
-        paddingTop: '3px',
-        paddingBottom: '3px'
+        borderTopWidth: 1,
+        paddingLeft: 15,
+        paddingTop: 3,
+        paddingBottom: 3
     }
 });
 

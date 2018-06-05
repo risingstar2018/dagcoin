@@ -19,7 +19,7 @@ class TransactionListItem extends Component {
                 </View>
                 <View>
                     <Text style={StyleSheet.flatten([font.size14, styles.transactionType])}>
-                        {transaction.type}
+                        {transaction.type === 'receive' ? 'Receive' : 'Send'}
                     </Text>
                     <Text style={StyleSheet.flatten([font.size10, text.textGray])}>
                         {transaction.address}
@@ -74,19 +74,18 @@ const styles = StyleSheet.create({
     infoIcon: {
         width: 10,
         height: 16,
-        marginLeft: '5px',
-        marginRight: '15px'
+        marginLeft: 5,
+        marginRight: 15
     },
     last: {
         borderBottomWidth: 0
     },
     transactionType: {
-        textTransform: 'capitalize',
-        marginBottom: '5px'
+        marginBottom: 5
     },
     sumContainer: {
         marginLeft: 'auto',
-        marginRight: '15px',
+        marginRight: 15,
         textAlign: 'right'
     },
     sendColor: {

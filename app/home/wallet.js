@@ -50,16 +50,16 @@ const styles = StyleSheet.create({
         flex: 1
     },
     transactions: {
-        marginBottom: '50px',
+        marginBottom: 50,
         flex: 1
     },
     transactionsHeader: {
         backgroundColor: '#ffffff',
-        padding: '15px',
+        padding: 15,
         flexDirection: 'row'
     },
     exportContainer: {
-        paddingRight: '15px',
+        paddingRight: 15,
         marginLeft: 'auto',
         flexDirection: 'row',
         alignItems: 'center'
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     copyIcon: {
         width: 16,
         height: 16,
-        marginRight: '5px'
+        marginRight: 5
     }
 });
 
