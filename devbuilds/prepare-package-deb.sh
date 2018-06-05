@@ -22,7 +22,7 @@ if [ "$1" == "testnet" ]; then
 else
   Type=""
   ExecPost=""
-  ZipFilePath='../byteballbuilds/dagcoin-wallet-linux64.zip'
+  ZipFilePath='../byteballbuilds/DagWallet-linux64.zip'
   Action=linux64:live
 fi
 
