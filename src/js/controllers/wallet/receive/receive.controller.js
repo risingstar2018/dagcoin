@@ -74,7 +74,7 @@
         });
 
         $scope.submitForm = function (form) {
-          if ($scope.index.arrBalances.length === 0) {
+          if (!$scope.index.arrBalances || $scope.index.arrBalances.length === 0) {
             return console.log('openCustomizedAmountModal: no balances yet');
           }
           const amount = form.amount.$modelValue;

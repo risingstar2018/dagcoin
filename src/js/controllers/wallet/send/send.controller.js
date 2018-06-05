@@ -459,7 +459,7 @@
     };
 
     vm.canSendExternalPayment = function () {
-      if ($scope.index.arrBalances.length === 0) {
+      if (!$scope.index.arrBalances || $scope.index.arrBalances.length === 0) {
         // no balances yet, assume can send
         return true;
       }
@@ -477,7 +477,7 @@
     };
 
     vm.deviceAddressIsKnown = function () {
-      if ($scope.index.arrBalances.length === 0) {
+      if (!$scope.index.arrBalances || $scope.index.arrBalances.length === 0) {
         // no balances yet
         return false;
       }
@@ -521,7 +521,7 @@
      * @return {*}
      */
     vm.submitForm = function () {
-      if ($scope.index.arrBalances.length === 0) {
+      if (!$scope.index.arrBalances || $scope.index.arrBalances.length === 0) {
         vm.setSendError(gettextCatalog.getString('no balances yet'));
         return console.log('send payment: no balances yet');
       }
