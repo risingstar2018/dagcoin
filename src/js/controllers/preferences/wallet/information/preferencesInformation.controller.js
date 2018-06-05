@@ -48,20 +48,20 @@
           let body = `Dagcoin Wallet "${vm.walletName}" Addresses.\n\n`;
           body += '\n';
           body += addrs.map(v => (`* ${v.address} ${v.path} ${formatDate(v.createdOn)}`)).join('\n');
-
-          window.plugins.socialsharing.shareViaEmail(
-            body,
-            'Dagcoin Addresses',
-            null, // TO: must be null or an array
-            null, // CC: must be null or an array
-            null, // BCC: must be null or an array
-            null, // FILES: can be null, a string, or an array
-            () => {
-            },
-            () => {
-            }
-          );
-
+          if (vm.isCordova) {
+            window.plugins.socialsharing.shareViaEmail(
+              body,
+              'Dagcoin Addresses',
+              null, // TO: must be null or an array
+              null, // CC: must be null or an array
+              null, // BCC: must be null or an array
+              null, // FILES: can be null, a string, or an array
+              () => {
+              },
+              () => {
+              }
+            );
+          }
           $timeout(() => {
             $scope.$apply();
           }, 1000);
