@@ -735,14 +735,13 @@
     /**
      * fills the addr object of the controller
      */
-    vm.setAddress = function () {
+    vm.setAddress = function (forceNew) {
       vm.addrError = null;
       const fc = profileService.focusedClient;
       if (!fc) {
         return;
       }
 
-      const forceNew = false;
       // Address already set?
       if (!forceNew && vm.addr[fc.credentials.walletId]) {
         return;
