@@ -28,7 +28,8 @@
         };
 
         self.showPopup = function (msg, msgIcon, cb) {
-          if (window && !!window.chrome && !!window.chrome.webstore && msg.includes('access is denied for this document')) {
+          if (window && !!window.chrome && !!window.chrome.webstore
+            && typeof msg.includes === 'function' && msg.includes('access is denied for this document')) {
             return false;
           }
           $log.warn(`Showing ${msgIcon} popup:${msg}`);

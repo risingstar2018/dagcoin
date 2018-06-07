@@ -16,6 +16,7 @@ function SendCoinRequest() {
   this.merkleProof = null;
   this.amount = null;
   this.bSendAll = null;
+  this.addr = {};
   this.requestTouchidCb = () => { };
   this.createNewSharedAddressCb = () => { };
   this.sendMultiPaymentDoneBeforeCb = () => { };
@@ -73,6 +74,10 @@ function SendCoinRequestBuilder() {
   };
   this.bSendAll = function (bSendAll) {
     this.request.bSendAll = bSendAll;
+    return this;
+  };
+  this.addr = function (addr) {
+    this.request.addr = addr;
     return this;
   };
   this.requestTouchidCb = function (cb) {

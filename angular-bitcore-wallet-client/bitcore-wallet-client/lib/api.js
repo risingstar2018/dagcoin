@@ -492,6 +492,7 @@ API.prototype.sendMultiPayment = function (opts, cb) {
   const self = this;
   const coin = (this.credentials.network === 'livenet' ? '0' : '1');
   const Wallet = require('core/wallet.js');
+  console.log(`sendMultiPayment.isSingleAddress: ${self.isSingleAddress}`);
 
   opts.signWithLocalPrivateKey = function (walletId, account, isChange, addressIndex, textToSign, handleSig) {
     const path = `m/44'/${coin}'/${account}'/${isChange}/${addressIndex}`;
@@ -511,12 +512,26 @@ API.prototype.sendMultiPayment = function (opts, cb) {
     }
     Wallet.sendMultiPayment(opts, cb);
   } else {
-    // create a new change address or select first unused one
-    walletDefinedByKeys.issueOrSelectNextChangeAddress(self.credentials.walletId, (objAddr) => {
-      opts.change_address = objAddr.address;
+    if (!opts.paying_addresses) {
       opts.wallet = self.credentials.walletId;
-      Wallet.sendMultiPayment(opts, cb);
-    });
+    }
+    if (opts.change_address) {
+      return Wallet.sendMultiPayment(opts, cb);
+    }
+
+    // create a new change address or select first unused one
+    if (!self.isSingleAddress) {
+      walletDefinedByKeys.issueOrSelectNextChangeAddress(self.credentials.walletId, (objAddr) => {
+        opts.change_address = objAddr.address;
+        opts.wallet = self.credentials.walletId;
+        Wallet.sendMultiPayment(opts, cb);
+      });
+    } else {
+      walletDefinedByKeys.readAddresses(self.credentials.walletId, {}, (addresses) => {
+        opts.change_address = addresses[0].address;
+        Wallet.sendMultiPayment(opts, cb);
+      });
+    }
   }
 };
 
