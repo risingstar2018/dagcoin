@@ -17,9 +17,9 @@
           </div>
         </div>
 
-        <div class="text-center size-14" ng-show="recovery.error">
+        <div class="text-center size-14" ng-show="recovery.recoverFromSeedError">
           <span class="text-warning">
-            {{recovery.error}}
+            {{recovery.recoverFromSeedError}}
           </span>
         </div>
 
@@ -63,9 +63,9 @@
           </div>
         </div>
 
-        <div class="box-notification text-center" ng-show="recovery.error">
+        <div class="box-notification text-center" ng-show="recovery.recoverFromFullBackupError">
           <span class="text-warning">
-            {{recovery.error}}
+            {{recovery.recoverFromFullBackupError}}
           </span>
         </div>
         <form class="page-form" ng-submit="recovery.walletImport()">

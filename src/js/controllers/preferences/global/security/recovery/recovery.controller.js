@@ -42,7 +42,8 @@
     self.oldAndroidFilePath = null;
     self.oldAndroidFileName = '';
     self.isInitial = $state.includes('initialRecovery');
-    self.error = '';
+    self.recoverFromSeedError = '';
+    self.recoverFromFullBackupError = '';
     self.bLight = conf.bLight;
     self.scanning = false;
     self.inputMnemonic = '';
@@ -73,7 +74,7 @@
           const backupDirPath = `${window.cordova.file.documentsDirectory}/Byteball/`;
           fileSystemService.readFile(backupDirPath + fileName, (fileSystemServiceError, data) => {
             if (fileSystemServiceError) {
-              return showError(fileSystemServiceError);
+              return showError(fileSystemServiceError, 'full');
             }
             return unzipAndWriteFiles(data, password);
           });
@@ -83,7 +84,7 @@
 
     function recoveryForm() {
       if (self.inputMnemonic) {
-        self.error = '';
+        self.recoverFromSeedError = '';
         self.inputMnemonic = self.inputMnemonic.toLowerCase();
 
         if ((self.inputMnemonic.split(' ').length % 3 === 0) && Mnemonic.isValid(self.inputMnemonic)) {
@@ -105,7 +106,7 @@
             scanForAddressesAndWallets(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
           }
         } else {
-          self.error = gettextCatalog.getString('Seed is not valid');
+          showError(gettextCatalog.getString('Seed is not valid'), 'seed');
         }
       }
     }
@@ -116,7 +117,7 @@
 
     function walletImport() {
       self.imported = true;
-      self.error = '';
+      self.recoverFromFullBackupError = '';
       if (self.android && self.androidVersion < 5) {
         fileSystemService.readFile(self.oldAndroidFilePath, (err, data) => {
           unzipAndWriteFiles(data, self.password);
@@ -124,7 +125,7 @@
       } else {
         fileSystemService.readFileFromForm(self.file, (err, data) => {
           if (err) {
-            return showError(err);
+            return showError(err, 'full');
           }
           return unzipAndWriteFiles(data, self.password);
         });
@@ -275,10 +276,16 @@
       return Buffer.concat(arrChunks);
     }
 
-    function showError(text) {
+    function showError(text, tab) {
       $log.error(text);
       self.imported = false;
-      self.error = text;
+
+      if (tab === 'seed') {
+        self.recoverFromSeedError = text;
+      } else {
+        self.recoverFromFullBackupError = text;
+      }
+
       $timeout(() => {
         $rootScope.$apply();
       });
@@ -290,14 +297,11 @@
         zip.loadAsync(decrypt(data, password)).then((zippedFile) => {
           if (!zippedFile.file('light')) {
             self.imported = false;
-            self.error = gettextCatalog.getString('Mobile version supports only light wallets.');
-            $timeout(() => {
-              $rootScope.$apply();
-            });
+            showError(gettextCatalog.getString('Mobile version supports only light wallets.'), 'full');
           } else {
             writeDBAndFileStorageMobile(zippedFile, (err) => {
               if (err) {
-                return showError(err);
+                return showError(err, 'full');
               }
               self.imported = false;
               return $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('Import successfully completed, please restart the application.'), 'fi-check', () => {
@@ -311,14 +315,14 @@
           }
         }, (err) => {
           $log.error(err);
-          showError('Incorrect password or file');
+          showError('Incorrect password or file', 'full');
         });
       } else {
         const decipher = crypto.createDecipher('aes-256-ctr', password);
         data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
           writeDBAndFileStoragePC((err) => {
             if (err) {
-              return showError(err);
+              return showError(err, 'full');
             }
             self.imported = false;
             return $rootScope.$emit('Local/ShowAlert', gettextCatalog.getString('Import successfully completed, please restart the application.'), 'fi-check', () => {
@@ -331,9 +335,9 @@
           });
         })).on('error', (err) => {
           if (err.message === 'Invalid signature in zip file') {
-            return showError('Incorrect password or file');
+            return showError('Incorrect password or file', 'full');
           }
-          return showError(err);
+          return showError(err, 'full');
         });
       }
     }
@@ -517,11 +521,8 @@
             if (response && response.error) {
               const breadcrumbs = require('core/breadcrumbs.js');
               breadcrumbs.add(`Error scanForAddressesAndWalletsInLightClient: ${response.error}`);
-              self.error = gettextCatalog.getString('When scanning an error occurred, please try again later.');
+              showError(gettextCatalog.getString('When scanning an error occurred, please try again later.'), 'seed');
               self.scanning = false;
-              $timeout(() => {
-                $rootScope.$apply();
-              });
               return;
             }
             if (Object.keys(response).length) {
@@ -583,11 +584,8 @@
           });
         });
       } else {
-        self.error = gettextCatalog.getString('No active addresses found.');
+        showError(gettextCatalog.getString('No active addresses found.'), 'seed');
         self.scanning = false;
-        $timeout(() => {
-          $rootScope.$apply();
-        });
       }
     }
   }
