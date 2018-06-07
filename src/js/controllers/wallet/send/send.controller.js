@@ -30,6 +30,7 @@
     vm.lockAddress = false;
     vm.lockAmount = false;
     vm.invoiceTimeout = null;
+    vm.addr = {};
 
     const assocDeviceAddressesByPaymentAddress = {};
 
@@ -45,6 +46,7 @@
       $scope.sendForm.$setPristine();
       if (profileService.focusedClient) {
         vm.setSendFormInputs();
+        vm.setAddress();
       }
       if (request.isNotEmpty()) {
         const form = $scope.sendForm;
@@ -587,6 +589,7 @@
           .merkleProof(merkleProof)
           .amount(amount)
           .bSendAll(vm.bSendAll)
+          .addr(vm.addr)
           .requestTouchidCb((err) => {
             profileService.lockFC();
             indexScope.setOngoingProcess(gettextCatalog.getString('sending'), false);
@@ -726,6 +729,42 @@
         btx,
         walletSettings,
         $rootScope
+      });
+    };
+
+    /**
+     * fills the addr object of the controller
+     */
+    vm.setAddress = function (forceNew) {
+      vm.addrError = null;
+      const fc = profileService.focusedClient;
+      if (!fc) {
+        return;
+      }
+
+      // Address already set?
+      if (!forceNew && vm.addr[fc.credentials.walletId]) {
+        return;
+      }
+
+      if (indexScope.shared_address && forceNew) {
+        throw Error('attempt to generate for shared address');
+      }
+
+      if (fc.isSingleAddress && forceNew) {
+        throw Error('attempt to generate for single address wallets');
+      }
+
+      $timeout(() => {
+        addressService.getAddress(fc.credentials.walletId, forceNew, (err, addr) => {
+          vm.generatingAddress = false;
+          if (err) {
+            $rootScope.$emit('Local/ShowAlert', err, 'fi-alert', () => { });
+          } else if (addr) {
+            vm.addr[fc.credentials.walletId] = addr;
+          }
+          $timeout(() => { $scope.$digest(); });
+        });
       });
     };
 
